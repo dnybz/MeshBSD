@@ -12,8 +12,6 @@
 #include <pwd.h>
 
 extern char **environ;
-extern char *ksh_cmd;
-extern char *_ksh_name;
 
 /*
  * global data
@@ -28,42 +26,18 @@ static void	init_username(void);
  * shell initialization
  */
 
-static const char initifs[] = "IFS= \t\n";
+extern char *ksh_cmd;
+extern char *_ksh_name; 
+extern char *_ksh_version_param;
+extern char *initifs;
+extern char *initsubs;
 
-static const char initsubs[] = "${PS2=> } ${PS3=#? } ${PS4=+ }";
+extern char *initcoms[];
 
-static const char *initcoms [] = {
-	"typeset", "-r", "KSH_VERSION", NULL,
-	"typeset", "-x", "SHELL", "PATH", "HOME", NULL,
-	"typeset", "-i", "PPID", NULL,
-	"typeset", "-i", "OPTIND=1", NULL,
-	"eval", "typeset -i RANDOM MAILCHECK=\"${MAILCHECK-600}\" SECONDS=\"${SECONDS-0}\" TMOUT=\"${TMOUT-0}\"", NULL,
-	"alias",
-	 /* Standard ksh aliases */
-	  "hash=alias -t",	/* not "alias -t --": hash -r needs to work */
-	  "type=whence -v",
-#ifdef JOBS
-	  "stop=kill -STOP",
-#endif
-	  "autoload=typeset -fu",
-	  "functions=typeset -f",
-#ifdef HISTORY
-	  "history=fc -l",
-#endif /* HISTORY */
-	  "integer=typeset -i",
-	  "nohup=nohup ",
-	  "local=typeset",
-	  "r=fc -e -",
-	 /* Aliases that are builtin commands in at&t */
-	  "login=exec login",
-	  NULL,
-	/* this is what at&t ksh seems to track, with the addition of emacs */
-	"alias", "-tU",
-	  "cat", "cc", "chmod", "cp", "date", "ed", "emacs", "grep", "ls",
-	  "mail", "make", "mv", "pr", "rm", "sed", "sh", "vi", "who",
-	  NULL,
-	NULL
-};
+extern char *typeset_options;
+extern char *typeset_path;
+extern char *typeset_env;
+extern char *typeset_shell;
 
 char username[MAXLOGNAME + 1];
 
@@ -102,7 +76,12 @@ main(int argc, char *argv[])
 	char **wp;
 	struct env env;
 	pid_t ppid;
-
+/*
+ * Initialze argument vecors and 
+ * constants for builtin comands.
+ */
+	initargs(); 
+	
 	/* make sure argv[] is sane */
 	if (!*argv) {
 		char *empty_argv[] = {
@@ -203,7 +182,7 @@ main(int argc, char *argv[])
 	    (strlen(kshname) >= 3 &&
 	    !strcmp(&kshname[strlen(kshname) - 3], "/sh"))) {
 		Flag(FSH) = 1;
-		version_param = "SH_VERSION";
+		version_param = _ksh_version_param;
 	}
 
 	/* Set edit mode to emacs by default, may be overridden
@@ -399,11 +378,7 @@ main(int argc, char *argv[])
 		alarm_init();
 	} else
 		Flag(FTRACKALL) = 1;	/* set after ENV */
-/*
- * Initialze argument vecors and 
- * constants for builtin comands.
- */
-	initargs(); 
+
 	
 	shell(s, true);	/* doesn't return */
 	return (0);
