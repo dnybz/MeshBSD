@@ -27,12 +27,12 @@
 #include "sh.h"
 
 /*
- * XXX: This file should understand as workaround regarding
+ * XXX: This file should be understand as workaround regarding
  * XXX: partially refactoring activities targeting current 
  * XXX: implementation of ksh(1).
  * XXX:
  * XXX: Intentionally, I'll add more by strdup(3) performed 
- * XXX: copies of constant declared and initialized string
+ * XXX: copies of as constant declared and initialized string
  * XXX: literals.
  * XXX:
  * XXX: Further, refactoring takes place sooner or later.
@@ -48,26 +48,15 @@
  
 char *alias_cmd; 
 char *eval_cmd;
-
-char *_ksh_cmd;
-
 char *read_cmd;
-char *read_options;
-char *read_reply;
-
 char *set_cmd;  
-char *set_options; 
-
-static char *icms_sh_cmd;
-
 char *typeset_cmd;
-char *typeset_options;
-char *typeset_path;
-char *typeset_env;
-char *typeset_shell;
+char *unalias_cmd;
 
-char *unalias_cmd;  
-char *unalias_options;
+char *cu_arg_options;
+char *ct_arg_options; 
+char *read_reply;
+char *read_options;
 
 /*
  * By p_time accepted literals.
@@ -81,17 +70,17 @@ char *p_time_sys;
 char *p_time_system_nl;
 
 /*
- * Holds copy of string denotes version.
- */
-
-char *_ksh_version;
-char *_ksh_version_param;
-
-/*
  * Holds copy of string denotes shell name.
  */
-
+ 
+char *_ksh_cmd;
 char *_ksh_name;
+
+/*
+ * Holds copy of string denotes ksh(1) version.
+ */
+char *_ksh_version;
+char *_ksh_version_param;
 
 /*
  * During shell initialization used literals.
@@ -114,7 +103,8 @@ static char *icms_make_cmd;
 static char *icms_mv_cmd;
 static char *icms_pr_cmd;
 static char *icms_rm_cmd;
-static char *icms_ed_cmd;
+static char *icms_sh_cmd;
+static char *icms_sed_cmd;
 static char *icms_vi_cmd;
 static char *icms_who_cmd;
 
@@ -147,28 +137,34 @@ static char *icms_login_alias;
 char *initcoms[55];
 
 /*
+ * Used by restr_com[] as argv for shcomexec during main.
+ */	
+ 
+char *rc_arg_options;
+char *rc_arg_path;
+char *rc_arg_env;
+char *rc_arg_shell;
+
+char *_root;
+
+/*
  * Release by initargs bound ressources.
  */
 static void 	
 args_atexit(void)
 {
 	free(alias_cmd);
-
+	free(eval_cmd);
 	free(read_cmd);
+	free(set_cmd); 
+	free(typeset_cmd);
+	free(unalias_cmd);  
+	
 	free(read_options);
 	free(read_reply);
-
-	free(set_cmd);  
-	free(set_options); 
-
-	free(icms_sh_cmd);
-	free(typeset_cmd);
-
-	free(unalias_cmd);  
-	free(unalias_options);
-
-	free(icms_vi_cmd);
-	free(icms_who_cmd);
+	
+	free(cu_arg_options);
+	free(ct_arg_options); 
 	
 	free(p_time_ws);
 	free(p_time_nl);
@@ -177,9 +173,10 @@ args_atexit(void)
 	free(p_time_sys);
 	free(p_time_system_nl);
 	
+	free(_ksh_cmd);
+	free(_ksh_name);
 	free(_ksh_version);
 	free(_ksh_version_param);
-	free(_ksh_name);
 	
 	free(initifs);
 	free(initsubs);
@@ -217,9 +214,8 @@ args_atexit(void)
 	free(icms_date_cmd);
 	free(icms_ed_cmd);
 	free(icms_emacs_cmd);
-	free(eval_cmd);
 	free(icms_grep_cmd);
-	free(_ksh_cmd);
+
 	free(icms_ls_cmd);
 	free(icms_mail_cmd);
 	free(icms_make_cmd);
@@ -227,36 +223,35 @@ args_atexit(void)
 	free(icms_pr_cmd);
 	free(icms_rm_cmd);
 	free(icms_sed_cmd);
+	
+	free(icms_sh_cmd);
+	free(icms_vi_cmd);
+	free(icms_who_cmd);
+	
+	free(rc_arg_options);
+	free(rc_arg_path);
+	free(rc_arg_env);
+	free(rc_arg_shell);
+	
+	free(_root);
 }
 
 void 
 initargs(void)
 {
 	alias_cmd = strdup("alias");
-
 	eval_cmd = strdup("eval");
-	
-	_ksh_cmd = strdup("ksh");
-	
-
 	read_cmd = strdup("read");
+	set_cmd = strdup("set");  
+	typeset_cmd = strdup("typeset");
+	unalias_cmd = strdup("unalias");
+	
 	read_options = strdup("-r");
 	read_reply = strdup("REPLY");
 	
-	
-	
-	set_cmd = strdup("set");  
-	set_options = strdup("-"); 
-	
-	typeset_cmd = strdup("typeset");
-	typeset_options = strdup(;
-	typeset_path;
-	typeset_env;
-	typeset_shell;
+	ct_arg_options = strdup("-"); 
+	cu_arg_options = strdup("-ta");
 
-	unalias_cmd = strdup("unalias");  
-	unalias_options = strdup("-ta");
-	
 	p_time_ws = strdup(" ");
 	p_time_ws = strdup("\n");
 	p_time_real = strdup(" real ");
@@ -264,9 +259,10 @@ initargs(void)
 	p_time_sys = strdup("sys  ");
 	p_time_system_nl = strdup(" system\n");
 	
+	_ksh_cmd = strdup("ksh");
+	_ksh_name = strdup(kshname);	
 	_ksh_version = strdup(ksh_version);
 	_ksh_version_param = strdup("SH_VERSION");
-	_ksh_name = strdup(kshname);	
 
 	initifs = strdup("IFS= \t\n");
 	initsubs = strdup("${PS2=> } ${PS3=#? } ${PS4=+ }");
@@ -386,6 +382,13 @@ initargs(void)
 	initcoms[53] = icms_who_cmd;
 	initcoms[54] = NULL;
 	initcoms[55] = NULL;
+
+	rc_arg_options = strdup("-r");
+	rc_arg_path = strdup("PATH");
+	rc_arg_env = strdup("ENV");
+	rc_arg_shell = strdup("SHELL");
+	
+	_root = strdup("root");
 	
 	if (atexit(args_atexit) < 0)
 		err(EX_OSERR, "%s", strerror(errno));

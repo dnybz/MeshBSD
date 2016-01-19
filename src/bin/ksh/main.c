@@ -26,18 +26,22 @@ static void	init_username(void);
  * shell initialization
  */
 
-extern char *ksh_cmd;
+extern char *_ksh_cmd;
 extern char *_ksh_name; 
 extern char *_ksh_version_param;
+
 extern char *initifs;
 extern char *initsubs;
 
 extern char *initcoms[];
 
-extern char *typeset_options;
-extern char *typeset_path;
-extern char *typeset_env;
-extern char *typeset_shell;
+extern char *typeset_cmd;
+extern char *rc_arg_options;
+extern char *rc_arg_path;
+extern char *rc_arg_env;
+extern char *rc_arg_shell;
+
+extern char *_root;
 
 char username[MAXLOGNAME + 1];
 
@@ -85,7 +89,7 @@ main(int argc, char *argv[])
 	/* make sure argv[] is sane */
 	if (!*argv) {
 		char *empty_argv[] = {
-			ksh_cmd, NULL
+			_ksh_cmd, NULL
 		};
 
 		argv = empty_argv;
@@ -361,10 +365,13 @@ main(int argc, char *argv[])
 	if (is_restricted(argv[0]) || is_restricted(str_val(global("SHELL"))))
 		restricted = 1;
 	if (restricted) {
-		static const char *const restr_com[] = {
-			"typeset", "-r", "PATH",
-			"ENV", "SHELL",
-			(char *) 0
+		char *restr_com[] = {
+			typeset_cmd, 
+			rc_arg_options, 
+			rc_arg_path,
+			rc_arg_env, 
+			rc_arg_shell,
+			NULL
 		};
 		shcomexec((char **) restr_com);
 		/* After typeset command... */
@@ -391,7 +398,7 @@ init_username(void)
 	struct tbl *vp = global("USER");
 
 	if (vp->flag & ISSET)
-		p = ksheuid == 0 ? "root" : str_val(vp);
+		p = (ksheuid == 0) ? _root : str_val(vp);
 	else
 		p = getlogin();
 

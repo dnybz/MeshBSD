@@ -35,11 +35,8 @@
 #include <sys/time.h>
 #include <sys/resource.h>
 
-extern struct timeval j_usrtime, j_systime; /* computed by j_wait */
-
 extern char *set_cmd;  
-extern char *set_options; 
-
+extern char *ct_arg_options;
 extern char *read_reply;
 
 extern char *p_time_ws;
@@ -48,6 +45,8 @@ extern char *p_time_real;
 extern char *p_time_user;
 extern char *p_time_sys;
 extern char *p_time_system_nl;
+
+extern struct timeval j_usrtime, j_systime; /* computed by j_wait */
 
 static void p_time(struct shf *, int, struct timeval *, int, char *, char *);
 
@@ -642,7 +641,7 @@ c_set(char **wp)
 	if (wp[1] == NULL) {
 		char *c_typeset_argv[] = {
 			set_cmd,
-			set_options,
+			ct_arg_options,
 			NULL
 		};
 		return (c_typeset(c_typeset_argv));

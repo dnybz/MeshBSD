@@ -40,7 +40,7 @@
  */
  
 extern char *unalias_cmd;  
-extern char *unalias_options; 
+extern char *cu_arg_options; 
 
 int
 c_cd(char **wp)
@@ -916,7 +916,7 @@ c_alias(char **wp)
 	if (rflag) {
 		char *c_unalias_argv[] = {
 			unalias_cmd,
-			unalias_options,
+			cu_arg_options,
 			NULL
 		};
 

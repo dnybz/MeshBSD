@@ -112,6 +112,8 @@
 !/src/sys/net/if_bridgevar.h
 !/src/sys/net/if_vether.c
 
+!/src/sys/netgraph/ng_ether.c
+
 #
 # Bsdbox. 
 #
