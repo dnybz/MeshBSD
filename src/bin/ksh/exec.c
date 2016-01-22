@@ -36,6 +36,14 @@
 #include <ctype.h>
 #include <sys/stat.h>
 
+extern char *_ksh_name;
+
+extern char *read_cmd;
+extern char *read_options;
+extern char *read_reply;
+
+extern char *typeset_arg_underscore;
+
 /* Does ps4 get parameter substitutions done? */
 # define PS4_SUBSTITUTE(s)	substitute((s), 0)
 
@@ -51,12 +59,6 @@ static const char *dbteste_getopnd(Test_env *, Test_op, int);
 static int	dbteste_eval(Test_env *, Test_op, const char *, const char *,
 		    int);
 static void	dbteste_error(Test_env *, int, const char *);
-
-extern char *_ksh_name;
-
-extern char *read_cmd;
-extern char *read_options;
-extern char *read_reply;
 
 /*
  * execute command tree
@@ -453,7 +455,8 @@ comexec(struct op *t, struct tbl *volatile tp, char **ap, volatile int flags,
 		while (*++lastp)
 			;
 		/* setstr() can't fail here */
-		setstr(typeset("_", LOCAL, 0, INTEGER, 0), *--lastp,
+		setstr(typeset(typeset_arg_underscore, 
+			LOCAL, 0, INTEGER, 0), *--lastp,
 		    KSH_RETURN_ERROR);
 	}
 
@@ -703,7 +706,8 @@ comexec(struct op *t, struct tbl *volatile tp, char **ap, volatile int flags,
 		if (!Flag(FSH)) {
 			/* set $_ to program's full path */
 			/* setstr() can't fail here */
-			setstr(typeset("_", LOCAL|EXPORT, 0, INTEGER, 0),
+			setstr(typeset(typeset_arg_underscore, 
+				LOCAL|EXPORT, 0, INTEGER, 0),
 			    tp->val.s, KSH_RETURN_ERROR);
 		}
 

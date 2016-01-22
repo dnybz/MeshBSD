@@ -255,7 +255,7 @@ int	setstr(struct tbl *, const char *, int);
 struct tbl *setint_v(struct tbl *, struct tbl *, bool);
 void	setint(struct tbl *, long);
 int	getint(struct tbl *, long *, bool);
-struct tbl *	typeset(const char *, Tflag, Tflag, int, int);
+struct tbl *	typeset(char *, Tflag, Tflag, int, int);
 void	unset(struct tbl *, int);
 char  * skip_varname(const char *, int);
 char	*skip_wdvarname(const char *, int);

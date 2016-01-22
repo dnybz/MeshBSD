@@ -41,6 +41,7 @@
  
 extern char *unalias_cmd;  
 extern char *cu_arg_options; 
+extern char *typeset_arg_optarg;
 
 int
 c_cd(char **wp)
@@ -1288,7 +1289,7 @@ c_getopts(char **wp)
 {
 	int	argc;
 	const char *_options;
-	const char *var;
+	char *var;
 	int	optc;
 	int	ret;
 	char	buf[3];
@@ -1357,11 +1358,11 @@ c_getopts(char **wp)
 		user_opt.uoptind = user_opt.optind;
 	}
 
-	voptarg = global("OPTARG");
+	voptarg = global(typeset_arg_optarg);
 	voptarg->flag &= ~RDONLY;	/* at&t ksh clears ro and int */
 	/* Paranoia: ensure no bizarre results. */
 	if (voptarg->flag & INTEGER)
-	    typeset("OPTARG", 0, INTEGER, 0, 0);
+	    typeset(typeset_arg_optarg, 0, INTEGER, 0, 0);
 	if (user_opt.optarg == (char *) 0)
 		unset(voptarg, 0);
 	else

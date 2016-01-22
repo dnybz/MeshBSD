@@ -18,6 +18,8 @@
 #include <libgen.h>
 #include <sys/stat.h>
 
+extern char *typeset_arg_columns;
+extern char *typeset_arg_lines;
 
 static void x_sigwinch(int);
 volatile sig_atomic_t got_sigwinch;
@@ -72,14 +74,22 @@ check_sigwinch(void)
 			 * see the change cause the environ doesn't change.
 			 */
 			if (ws.ws_col) {
-				x_cols = ws.ws_col < MIN_COLS ? MIN_COLS :
-				    ws.ws_col;
+			
+				if (ws.ws_col < MIN_COLS)
+					x_cols = MIN_COLS;
+				else
+				    x_cols = ws.ws_col;
 
-				if ((vp = typeset("COLUMNS", 0, 0, 0, 0)))
+				vp = typeset(typeset_arg_columns, 0, 0, 0, 0);
+				if (vp)
 					setint(vp, (long) ws.ws_col);
 			}
-			if (ws.ws_row && (vp = typeset("LINES", 0, 0, 0, 0)))
-				setint(vp, (long) ws.ws_row);
+			
+			if (ws.ws_row) {
+				vp = typeset(typeset_arg_lines, 0, 0, 0, 0);
+				if (vp)
+					setint(vp, (long) ws.ws_row);
+			}
 		}
 	}
 }

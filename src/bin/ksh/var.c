@@ -532,11 +532,11 @@ formatstr(struct tbl *vp, const char *s)
 		int slen;
 
 		if (vp->flag & RJUST) {
-			const char *q = s + olen;
+			const char *_q = s + olen;
 			/* strip trailing spaces (at&t ksh uses q[-1] == ' ') */
-			while (q > s && isspace((unsigned char)q[-1]))
-				--q;
-			slen = q - s;
+			while (_q > s && isspace((unsigned char)_q[-1]))
+				--_q;
+			slen = _q - s;
 			if (slen > vp->u2.field) {
 				s += slen - vp->u2.field;
 				slen = vp->u2.field;
@@ -599,7 +599,7 @@ export(struct tbl *vp, const char *val)
  * LCASEV, UCASEV_AL), and optionally set its value if an assignment.
  */
 struct tbl *
-typeset(const char *var, Tflag set, Tflag clr, int field, int base)
+typeset(char *var, Tflag set, Tflag clr, int field, int base)
 {
 	struct tbl *vp;
 	struct tbl *vpbase, *t;

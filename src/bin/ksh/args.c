@@ -43,52 +43,8 @@
 #include <sysexits.h>
 
 /*
- * Various commands and options.
- */
- 
-char *alias_cmd; 
-char *eval_cmd;
-char *let_cmd;
-char *read_cmd;
-char *set_cmd;  
-char *typeset_cmd;
-char *unalias_cmd;
-
-char *cu_arg_options;
-char *ct_arg_options; 
-char *read_reply;
-char *read_options;
-
-/*
- * By p_time accepted literals.
- */
-
-char *p_time_ws;
-char *p_time_nl;
-char *p_time_real;
-char *p_time_user;
-char *p_time_sys;
-char *p_time_system_nl;
-
-/*
- * Holds copy of string denotes shell name.
- */
- 
-char *_ksh_cmd;
-char *_ksh_name;
-
-/*
- * Holds copy of string denotes ksh(1) version.
- */
-char *_ksh_version;
-char *_ksh_version_param;
-
-/*
  * During shell initialization used literals.
  */
-
-char *initifs;
-char *initsubs;
 
 static char *icms_cat_cmd;
 static char *icms_cc_cmd;
@@ -135,24 +91,77 @@ static char *icms_local_alias;
 static char *icms_r_alias;
 static char *icms_login_alias;
 
-char *initcoms[55];
+char *initcoms[55] = { 0 };
+
+char *initifs = NULL;
+char *initsubs = NULL;
+
+/*
+ * Various commands and options.
+ */
+ 
+char *alias_cmd = NULL; 
+char *eval_cmd = NULL;
+char *let_cmd = NULL;
+char *read_cmd = NULL;
+char *set_cmd = NULL;  
+char *typeset_cmd = NULL;
+char *unalias_cmd = NULL;
+
+char *cu_arg_options = NULL;
+char *ct_arg_options = NULL; 
+char *read_reply = NULL;
+char *read_options = NULL;
+
+/*
+ * By typeset accepted literals.
+ */
+
+char *typeset_arg_optarg = NULL;
+char *typeset_arg_columns = NULL;
+char *typeset_arg_lines = NULL;
+char *typeset_arg_underscore = NULL;
+
+/*
+ * By p_time accepted literals.
+ */
+
+char *p_time_ws = NULL;
+char *p_time_nl = NULL;
+char *p_time_real = NULL;
+char *p_time_user = NULL;
+char *p_time_sys = NULL;
+char *p_time_system_nl = NULL;
+
+/*
+ * Holds copy of string denotes shell name.
+ */
+ 
+char *_ksh_cmd = NULL;
+char *_ksh_name = NULL;
+
+/*
+ * Holds copy of string denotes ksh(1) version.
+ */
+char *_ksh_version = NULL;
+char *_ksh_version_param = NULL;
 
 /*
  * Used by restr_com[] as argv for shcomexec during main.
  */	
  
-char *rc_arg_options;
-char *rc_arg_path;
-char *rc_arg_env;
-char *rc_arg_shell;
+char *rc_arg_options = NULL;
+char *rc_arg_path = NULL;
+char *rc_arg_env = NULL;
+char *rc_arg_shell = NULL;
 
-char *_root;
+char *_root = NULL;
 
 /*
  * Used as fmt-string by shf_vfprintf.
  */
 
-char *_shf_null_fmt;
+char *_shf_null_fmt = NULL;
 
 /*
  * Release by initargs bound ressources.
@@ -174,6 +183,11 @@ args_atexit(void)
 	free(cu_arg_options);
 	free(ct_arg_options); 
 	
+	free(typeset_arg_optarg);
+	free(typeset_arg_columns);
+	free(typeset_arg_lines);
+	free(typeset_arg_underscore);	
+		
 	free(p_time_ws);
 	free(p_time_nl);
 	free(p_time_real);
@@ -248,6 +262,9 @@ args_atexit(void)
 void 
 initargs(void)
 {
+	if (atexit(args_atexit) < 0)
+		err(EX_OSERR, "%s", strerror(errno));
+	
 	alias_cmd = strdup("alias");
 	eval_cmd = strdup("eval");
 	let_cmd = strdup("let");
@@ -261,6 +278,11 @@ initargs(void)
 	
 	ct_arg_options = strdup("-"); 
 	cu_arg_options = strdup("-ta");
+
+	typeset_arg_optarg = strdup("OPTARG");
+	typeset_arg_columns = strdup("COLUMNS");
+	typeset_arg_lines = strdup("LINES");
+	typeset_arg_underscore = strdup("_");	
 
 	p_time_ws = strdup(" ");
 	p_time_ws = strdup("\n");
@@ -401,16 +423,7 @@ initargs(void)
 	_root = strdup("root");
 	_shf_null_fmt = strdup("(null %s)");
 	
-	if (errno == ENOMEM)
-		err(EX_OSERR, "%s", strerror(errno));
-	
-	if (atexit(args_atexit) < 0)
+	if (errno == ENOMEM) 
 		err(EX_OSERR, "%s", strerror(errno));
 }
-
-
-
-
-
-
 
