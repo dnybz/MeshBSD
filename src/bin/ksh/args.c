@@ -48,6 +48,7 @@
  
 char *alias_cmd; 
 char *eval_cmd;
+char *let_cmd;
 char *read_cmd;
 char *set_cmd;  
 char *typeset_cmd;
@@ -148,6 +149,12 @@ char *rc_arg_shell;
 char *_root;
 
 /*
+ * Used as fmt-string by shf_vfprintf.
+ */
+
+char *_shf_null_fmt;
+
+/*
  * Release by initargs bound ressources.
  */
 static void 	
@@ -155,6 +162,7 @@ args_atexit(void)
 {
 	free(alias_cmd);
 	free(eval_cmd);
+	free(let_cmd);
 	free(read_cmd);
 	free(set_cmd); 
 	free(typeset_cmd);
@@ -234,6 +242,7 @@ args_atexit(void)
 	free(rc_arg_shell);
 	
 	free(_root);
+	free(_shf_null_fmt);
 }
 
 void 
@@ -241,6 +250,7 @@ initargs(void)
 {
 	alias_cmd = strdup("alias");
 	eval_cmd = strdup("eval");
+	let_cmd = strdup("let");
 	read_cmd = strdup("read");
 	set_cmd = strdup("set");  
 	typeset_cmd = strdup("typeset");
@@ -389,6 +399,10 @@ initargs(void)
 	rc_arg_shell = strdup("SHELL");
 	
 	_root = strdup("root");
+	_shf_null_fmt = strdup("(null %s)");
+	
+	if (errno == ENOMEM)
+		err(EX_OSERR, "%s", strerror(errno));
 	
 	if (atexit(args_atexit) < 0)
 		err(EX_OSERR, "%s", strerror(errno));

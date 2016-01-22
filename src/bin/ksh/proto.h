@@ -239,9 +239,9 @@ void	setexecsig(Trap *, int);
 void	fptreef(struct shf *, int, const char *, ...);
 char *	snptreef(char *, int, const char *, ...);
 struct op *	tcopy(struct op *, Area *);
-char *	wdcopy(const char *, Area *);
-char *	wdscan(const char *, int);
-char *	wdstrip(const char *);
+char *	wdcopy(char *, Area *);
+char *	wdscan(char *, int);
+char *	wdstrip(char *);
 void	tfree(struct op *, Area *);
 /* var.c */
 void	newblock(void);

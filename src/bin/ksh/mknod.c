@@ -40,7 +40,7 @@
 #include "sh.h"
 
 int
-domknod(int argc, char **argv, mode_t mode)
+domknod(int argc __unused, char **argv, mode_t mode)
 {
 	dev_t dev;
 	char *endp;
@@ -66,7 +66,7 @@ domknod(int argc, char **argv, mode_t mode)
 		return (1);
 	}
 	dev = makedev(major, minor);
-	if (major(dev) != major || minor(dev) != minor) {
+	if ((u_int)major(dev) != major || (u_int)minor(dev) != minor) {
 		bi_errorf("major or minor number too large");
 		return (1);
 	}
@@ -78,7 +78,7 @@ domknod(int argc, char **argv, mode_t mode)
 }
 
 int
-domkfifo(int argc, char **argv, mode_t mode)
+domkfifo(int argc __unused, char **argv, mode_t mode)
 {
 	int rv = 0;
 

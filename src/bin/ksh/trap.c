@@ -59,7 +59,7 @@ alarm_init(void)
 
 /* ARGSUSED */
 static void
-alarm_catcher(int sig)
+alarm_catcher(int sig __unused)
 {
 	int errno_ = errno;
 

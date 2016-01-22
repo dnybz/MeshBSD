@@ -159,9 +159,10 @@ ktnext(struct tstate *ts)
 static int
 tnamecmp(const void *p1, const void *p2)
 {
-	char *name1 = (*(struct tbl **)p1)->name;
-	char *name2 = (*(struct tbl **)p2)->name;
-	return strcmp(name1, name2);
+	const struct tbl *t1 = p1;
+	const struct tbl *t2 = p2;
+	
+	return (strcmp(t1->name, t2->name));
 }
 
 struct tbl **

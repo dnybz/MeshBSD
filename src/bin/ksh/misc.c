@@ -99,7 +99,7 @@ str_nsave(const char *s, int n, Area *ap)
 
 /* called from expand.h:XcheckN() to grow buffer */
 char *
-Xcheck_grow_(XString *xsp, char *xp, int more)
+Xcheck_grow_(XString *xsp, char *xp, size_t more)
 {
 	char *old_beg = xsp->beg;
 
@@ -176,11 +176,11 @@ const struct option options[] = {
 int
 option(const char *n)
 {
-	int i;
+	size_t i;
 
 	for (i = 0; i < NELEM(options); i++)
 		if (options[i].name && strcmp(options[i].name, n) == 0)
-			return i;
+			return (i);
 
 	return (-1);
 }
@@ -211,7 +211,7 @@ options_fmt_entry(void *arg, int i, char *buf, int buflen)
 static void
 printoptions(int verbose)
 {
-	int i;
+	size_t i;
 
 	if (verbose) {
 		struct options_info oi;
@@ -243,7 +243,7 @@ printoptions(int verbose)
 char *
 getoptions(void)
 {
-	int i;
+	size_t i;
 	char m[(int) FNFLAGS + 1];
 	char *cp = m;
 
@@ -331,12 +331,12 @@ parse_args(char **argv,
 		char *p, *q;
 
 		/* see cmd_opts[] declaration */
-		strlcpy(cmd_opts, "o:", sizeof cmd_opts);
+		strlcpy(cmd_opts, "o:", sizeof(cmd_opts));
 		p = cmd_opts + strlen(cmd_opts);
 		/* see set_opts[] declaration */
-		strlcpy(set_opts, "A:o;s", sizeof set_opts);
+		strlcpy(set_opts, "A:o;s", sizeof(set_opts));
 		q = set_opts + strlen(set_opts);
-		for (i = 0; i < NELEM(options); i++) {
+		for (i = 0; (u_int)i < NELEM(options); i++) {
 			if (options[i].c) {
 				if (options[i].flags & OF_CMDLINE)
 					*p++ = options[i].c;
@@ -379,14 +379,14 @@ parse_args(char **argv,
 				break;
 			}
 			i = option(go.optarg);
-			if (i >= 0 && set == Flag(i))
+			if (i >= 0 && set == Flag(i)) {
 				/* Don't check the context if the flag
 				 * isn't changing - makes "set -o interactive"
 				 * work if you're already interactive.  Needed
 				 * if the output of "set +o" is to be used.
 				 */
 				;
-			else if (i >= 0 && (options[i].flags & what))
+			} else if (i >= 0 && (options[i].flags & what))
 				change_flag((enum sh_flag) i, what, set);
 			else {
 				bi_errorf("%s: bad option", go.optarg);
@@ -403,7 +403,7 @@ parse_args(char **argv,
 				sortargs = 1;
 				break;
 			}
-			for (i = 0; i < NELEM(options); i++)
+			for (i = 0; (u_int)i < NELEM(options); i++)
 				if (optc == options[i].c &&
 				    (what & options[i].flags)) {
 					change_flag((enum sh_flag) i, what,
@@ -425,11 +425,11 @@ parse_args(char **argv,
 		/* set skips lone - or + option */
 		go.optind++;
 	}
-	if (setargsp)
+	if (setargsp) {
 		/* -- means set $#/$* even if there are no arguments */
 		*setargsp = !arrayset && ((go.info & GI_MINUSMINUS) ||
 		    argv[go.optind]);
-
+	}
 	if (arrayset && (!*array || *skip_varname(array, false))) {
 		bi_errorf("%s: is not an identifier", array);
 		return (-1);
@@ -499,9 +499,9 @@ gmatch(const char *s, const char *p, int isfile)
 	 * the pattern.  If check fails, just to a strcmp().
 	 */
 	if (!isfile && !has_globbing(p, pe)) {
-		int len = pe - p + 1;
+		size_t len = pe - p + 1;
 		char tbuf[64];
-		char *t = len <= sizeof(tbuf) ? tbuf :
+		char *t = (len <= sizeof(tbuf)) ? tbuf :
 		    (char *) alloc(len, ATEMP);
 		debunk(t, p, len);
 		return (!strcmp(t, s));
@@ -824,7 +824,7 @@ qsortp(void **base,			/* base address */
 int
 xstrcmp(const void *p1, const void *p2)
 {
-	return (strcmp(*(char **)p1, *(char **)p2));
+	return (strcmp((const char *)p1, (const char *)p2));
 }
 
 /* Initialize a Getopt structure */
@@ -865,7 +865,7 @@ ksh_getopt_reset(Getopt *go, int flags)
  *	  in go->info.
  */
 int
-ksh_getopt(char **argv, Getopt *go, const char *options)
+ksh_getopt(char **argv, Getopt *go, const char *_options)
 {
 	char c;
 	char *o;
@@ -893,8 +893,8 @@ ksh_getopt(char **argv, Getopt *go, const char *options)
 	}
 	go->p++;
 	if (c == '?' || c == ':' || c == ';' || c == ',' || c == '#' ||
-	    !(o = strchr(options, c))) {
-		if (options[0] == ':') {
+	    !(o = strchr(_options, c))) {
+		if (_options[0] == ':') {
 			go->buf[0] = c;
 			go->optarg = go->buf;
 		} else {
@@ -919,7 +919,7 @@ ksh_getopt(char **argv, Getopt *go, const char *options)
 		else if (*o == ';')
 			go->optarg = (char *) 0;
 		else {
-			if (options[0] == ':') {
+			if (_options[0] == ':') {
 				go->buf[0] = c;
 				go->optarg = go->buf;
 				return (':');

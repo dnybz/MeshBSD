@@ -404,8 +404,12 @@ vfptreef(struct shf *shf, int indent, const char *fmt, va_list va)
 				tputS(p, shf);
 				break;
 			case 'd': case 'u': /* decimal */
-				n = (c == 'd') ? va_arg(va, int) :
-				    va_arg(va, unsigned int);
+				
+				if (c == 'd')
+					n = va_arg(va, int);
+				else 
+					n = va_arg(va, unsigned int);
+				
 				neg = c=='d' && n<0;
 				p = ulton((neg) ? -n : n, 10);
 				if (neg)
@@ -498,7 +502,7 @@ tcopy(struct op *t, Area *ap)
 }
 
 char *
-wdcopy(const char *wp, Area *ap)
+wdcopy(char *wp, Area *ap)
 {
 	size_t len = wdscan(wp, EOS) - wp;
 	return (memcpy(alloc(len, ap), wp, len));
@@ -506,14 +510,14 @@ wdcopy(const char *wp, Area *ap)
 
 /* return the position of prefix c in wp plus 1 */
 char *
-wdscan(const char *wp, int c)
+wdscan(char *wp, int c)
 {
 	int nest = 0;
 
-	while (1)
+	while (1) {
 		switch (*wp++) {
 		case EOS:
-			return ((char *) wp);
+			return (wp);
 		case CHAR:
 		case QCHAR:
 			wp++;
@@ -534,7 +538,7 @@ wdscan(const char *wp, int c)
 		case CSUBST:
 			wp++;
 			if (c == CSUBST && nest == 0)
-				return ((char *) wp);
+				return (wp);
 			nest--;
 			break;
 		case OPAT:
@@ -544,7 +548,7 @@ wdscan(const char *wp, int c)
 		case SPAT:
 		case CPAT:
 			if (c == wp[-1] && nest == 0)
-				return ((char *) wp);
+				return (wp);
 			if (wp[-1] == CPAT)
 				nest--;
 			break;
@@ -553,6 +557,7 @@ wdscan(const char *wp, int c)
 			    "wdscan: unknown char 0x%x (carrying on)",
 			    wp[-1]);
 		}
+	}
 }
 
 /* return a copy of wp without any of the mark up characters and
@@ -560,7 +565,7 @@ wdscan(const char *wp, int c)
  * (string is allocated from ATEMP)
  */
 char *
-wdstrip(const char *wp)
+wdstrip(char *wp)
 {
 	struct shf shf;
 	int c;

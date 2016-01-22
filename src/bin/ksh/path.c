@@ -105,18 +105,18 @@ make_path(const char *cwd, const char *file,
  * ie, simplify_path("/a/b/c/./../d/..") returns "/a/b"
  */
 void
-simplify_path(char *path)
+simplify_path(char *_path)
 {
 	char	*cur;
 	char	*t;
 	int	isrooted;
-	char	*very_start = path;
+	char	*very_start = _path;
 	char	*start;
 
-	if (!*path)
+	if (!*_path)
 		return;
 
-	if ((isrooted = path[0] == '/'))
+	if ((isrooted = _path[0] == '/'))
 		very_start++;
 
 	/* Before			After
@@ -135,7 +135,7 @@ simplify_path(char *path)
 			t++;
 
 		if (*t == '\0') {
-			if (cur == path)
+			if (cur == _path)
 				/* convert empty path to dot */
 				*cur++ = '.';
 			*cur = '\0';
@@ -172,10 +172,10 @@ simplify_path(char *path)
 
 
 void
-set_current_wd(char *path)
+set_current_wd(char *_path)
 {
 	int len;
-	char *p = path;
+	char *p = _path;
 
 	if (!p && !(p = ksh_get_wd((char *) 0, 0)))
 		p = null;
@@ -185,19 +185,19 @@ set_current_wd(char *path)
 	if (len > current_wd_size)
 		current_wd = aresize(current_wd, current_wd_size = len, APERM);
 	memcpy(current_wd, p, len);
-	if (p != path && p != null)
+	if (p != _path && p != null)
 		afree(p, ATEMP);
 }
 
 char *
-get_phys_path(const char *path)
+get_phys_path(const char *_path)
 {
 	XString xs;
 	char *xp;
 
-	Xinit(xs, xp, strlen(path) + 1, ATEMP);
+	Xinit(xs, xp, strlen(_path) + 1, ATEMP);
 
-	xp = do_phys_path(&xs, xp, path);
+	xp = do_phys_path(&xs, xp, _path);
 
 	if (!xp)
 		return ((char *) 0);
@@ -210,7 +210,7 @@ get_phys_path(const char *path)
 }
 
 static char *
-do_phys_path(XString *xsp, char *xp, const char *path)
+do_phys_path(XString *xsp, char *xp, const char *_path)
 {
 	const char *p, *q;
 	int len, llen;
@@ -218,12 +218,12 @@ do_phys_path(XString *xsp, char *xp, const char *path)
 	char lbuf[PATH];
 
 	Xcheck(*xsp, xp);
-	for (p = path; p; p = q) {
+	for (p = _path; p; p = q) {
 		while (*p == '/')
 			p++;
 		if (!*p)
 			break;
-		len = (q = strchr(p, '/')) ? q - p : strlen(p);
+		len = (q = strchr(p, '/')) ? (size_t)(q - p) : strlen(p);
 		if (len == 1 && p[0] == '.')
 			continue;
 		if (len == 2 && p[0] == '.' && p[1] == '.') {

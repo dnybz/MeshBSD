@@ -54,6 +54,8 @@ static	int	symbol;		/* yylex value */
 #define	tpeek(cf) \
 	((reject) ? (symbol) : (REJECT, symbol = yylex(cf)))
 
+extern char *let_cmd;
+
 static void
 yyparse(void)
 {
@@ -279,11 +281,7 @@ get_command(int cf)
 		break;
 
 	case MDPAREN:
-	  {
-		static const char let_cmd[] = {
-			CHAR, 'l', CHAR, 'e',
-			CHAR, 't', EOS
-		};
+
 		/* Leave KEYWORD in syniocf (allow if (( 1 )) then ...) */
 		t = newtp(TCOM);
 		t->lineno = source->line;
@@ -292,7 +290,6 @@ get_command(int cf)
 		musthave(LWORD,LETEXPR);
 		XPput(args, yylval.cp);
 		break;
-	  }
 
 	case DBRACKET: /* [[ .. ]] */
 		/* Leave KEYWORD in syniocf (allow if [[ -n 1 ]] then ...) */
@@ -652,7 +649,7 @@ const	struct tokeninfo {
 	{ "|&",		COPROC,	false },
 	/* and some special cases... */
 	{ "newline",	'\n',	false },
-	{ 0 }
+	{ NULL, 0x0, false }
 };
 
 void
@@ -801,18 +798,19 @@ inalias(struct source *s)
  * in normal shell input, so these can be interpreted unambiguously
  * in the evaluation pass.
  */
-static const char dbtest_or[] = { CHAR, '|', CHAR, '|', EOS };
-static const char dbtest_and[] = { CHAR, '&', CHAR, '&', EOS };
-static const char dbtest_not[] = { CHAR, '!', EOS };
-static const char dbtest_oparen[] = { CHAR, '(', EOS };
-static const char dbtest_cparen[] = { CHAR, ')', EOS };
-const char *const dbtest_tokens[] = {
+static char dbtest_or[] = { CHAR, '|', CHAR, '|', EOS };
+static char dbtest_and[] = { CHAR, '&', CHAR, '&', EOS };
+static char dbtest_not[] = { CHAR, '!', EOS };
+static char dbtest_oparen[] = { CHAR, '(', EOS };
+static char dbtest_cparen[] = { CHAR, ')', EOS };
+
+char *dbtest_tokens[] = {
 	dbtest_or, dbtest_and, dbtest_not,
 	dbtest_oparen, dbtest_cparen
 };
-const char db_close[] = { CHAR, ']', CHAR, ']', EOS };
-const char db_lthan[] = { CHAR, '<', EOS };
-const char db_gthan[] = { CHAR, '>', EOS };
+char db_close[] = { CHAR, ']', CHAR, ']', EOS };
+char db_lthan[] = { CHAR, '<', EOS };
+char db_gthan[] = { CHAR, '>', EOS };
 
 /* Test if the current token is a whatever.  Accepts the current token if
  * it is.  Returns 0 if it is not, non-zero if it is (in the case of
@@ -843,8 +841,14 @@ dbtestp_isa(Test_env *te, Test_meta meta)
 		if (meta == TM_BINOP && c == REDIR &&
 		    (yylval.iop->flag == IOREAD || yylval.iop->flag == IOWRITE)) {
 			ret = 1;
-			save = wdcopy(yylval.iop->flag == IOREAD ?
-			    db_lthan : db_gthan, ATEMP);
+/*
+ * XXX; This more readable then before.
+ */			
+			if (yylval.iop->flag == IOREAD)
+				save = wdcopy(db_lthan, ATEMP);
+			else 
+				save = wdcopy(db_gthan, ATEMP);			
+
 		} else if (uqword && (ret = (int) test_isop(te, meta, ident)))
 			save = yylval.cp;
 	} else /* meta == TM_END */
@@ -861,7 +865,7 @@ dbtestp_isa(Test_env *te, Test_meta meta)
 }
 
 static const char *
-dbtestp_getopnd(Test_env *te, Test_op op, int do_eval)
+dbtestp_getopnd(Test_env *te, Test_op op __unused, int do_eval __unused)
 {
 	int c = tpeek(ARRAYVAR);
 
@@ -875,8 +879,9 @@ dbtestp_getopnd(Test_env *te, Test_op op, int do_eval)
 }
 
 static int
-dbtestp_eval(Test_env *te, Test_op op, const char *opnd1, const char *opnd2,
-    int do_eval)
+dbtestp_eval(Test_env *te __unused, Test_op op __unused, 
+	const char *opnd1 __unused, const char *opnd2 __unused,
+    int do_eval __unused)
 {
 	return (1);
 }

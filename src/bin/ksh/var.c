@@ -36,7 +36,7 @@ void
 newblock(void)
 {
 	struct block *l;
-	static char *const empty[] = {null};
+	char *empty[] = {null};
 
 	l = (struct block *) alloc(sizeof(struct block), ATEMP);
 	l->flags = 0;
@@ -309,7 +309,7 @@ str_val(struct tbl *vp)
 		else
 			n = (vp->val.i < 0) ? -vp->val.i : vp->val.i;
 		base = (vp->type == 0) ? 10 : vp->type;
-		if (base < 2 || base > strlen(digits))
+		if (base < 2 || (u_int)base > strlen(digits))
 			base = 10;
 
 		*--s = '\0';
@@ -349,15 +349,23 @@ intval(struct tbl *vp)
 
 /* set variable to string value */
 int
-setstr(struct tbl *vq, const char *s, int error_ok)
+setstr(struct tbl *vq, const char *s0, int error_ok)
 {
-	const char *fs = NULL;
+	char *fs = NULL, *s = strdup(s0);
 	int no_ro_check = error_ok & 0x4;
 	error_ok &= ~0x4;
+	
+	if (!s) {
+		if (!error_ok)
+			errorf(null);
+			
+		return (0);
+	}
 	if ((vq->flag & RDONLY) && !no_ro_check) {
 		warningf(true, "%s: is read only", vq->name);
 		if (!error_ok)
 			errorf(null);
+		free(s);
 		return (0);
 	}
 	if (!(vq->flag&INTEGER)) { /* string dest */
@@ -381,14 +389,17 @@ setstr(struct tbl *vq, const char *s, int error_ok)
 			vq->flag |= ALLOC;
 		}
 	} else {		/* integer dest */
-		if (!v_evaluate(vq, s, error_ok, true))
+		if (!v_evaluate(vq, s, error_ok, true)) {
+			free(s);
 			return (0);
+		}
 	}
 	vq->flag |= ISSET;
 	if ((vq->flag&SPECIAL))
 		setspec(vq);
 	if (fs)
-		afree((char *)fs, ATEMP);
+		afree(fs, ATEMP);
+	free(s);
 	return (1);
 }
 

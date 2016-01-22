@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include "ksh_limval.h"
 
+extern char *_shf_null_fmt;
 
 /* flags to shf_emptybuf() */
 #define EB_READSW	0x01	/* about to switch to reading */
@@ -291,7 +292,7 @@ shf_flush(struct shf *shf)
 		}
 		return (0);
 	} else if (shf->flags & SHF_WRITING)
-		return (shf)_emptybuf(shf, 0);
+		return (shf_emptybuf(shf, 0));
 
 	return (0);
 }
@@ -1083,7 +1084,7 @@ shf_vfprintf(struct shf *shf, const char *fmt, va_list args)
 
 		case 's':
 			if (!(s = va_arg(args, char *)))
-				s = "(null %s)";
+				s = _shf_null_fmt; /* XXX */
 			len = strlen(s);
 			break;
 
