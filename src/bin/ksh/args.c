@@ -91,7 +91,7 @@ static char *icms_local_alias;
 static char *icms_r_alias;
 static char *icms_login_alias;
 
-char *initcoms[55] = { 0 };
+char *initcoms[56] = { 0 };
 
 char *initifs = NULL;
 char *initsubs = NULL;
