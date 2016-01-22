@@ -776,7 +776,7 @@ unset(struct tbl *vp, int array_ref)
  * argument if there is no legal name, returns * a pointer to the terminating
  * null if whole string is legal).
  */
-char *
+const char *
 skip_varname(const char *s, int aok)
 {
 	int alen;
@@ -787,11 +787,11 @@ skip_varname(const char *s, int aok)
 		if (aok && *s == '[' && (alen = array_ref_len(s)))
 			s += alen;
 	}
-	return ((char *) s);
+	return (s);
 }
 
 /* Return a pointer to the first character past any legal variable name.  */
-char *
+const char *
 skip_wdvarname(const char *s,
     int aok)				/* skip array de-reference? */
 {
@@ -819,14 +819,14 @@ skip_wdvarname(const char *s,
 			}
 		}
 	}
-	return ((char *) s);
+	return (s);
 }
 
 /* Check if coded string s is a variable name */
 int
 is_wdvarname(const char *s, int aok)
 {
-	char *p = skip_wdvarname(s, aok);
+	const char *p = skip_wdvarname(s, aok);
 
 	return (p != s && p[0] == EOS);
 }
@@ -835,7 +835,7 @@ is_wdvarname(const char *s, int aok)
 int
 is_wdvarassign(const char *s)
 {
-	char *p = skip_wdvarname(s, true);
+	const char *p = skip_wdvarname(s, true);
 
 	return (p != s && p[0] == CHAR && p[1] == '=');
 }
@@ -1035,7 +1035,7 @@ setspec(struct tbl *vp)
 		break;
 	case V_RANDOM:
 		vp->flag &= ~SPECIAL;
-		srand_deterministic((unsigned int)intval(vp));
+		srand((unsigned int)intval(vp));
 		vp->flag |= SPECIAL;
 		break;
 	case V_SECONDS:
@@ -1171,14 +1171,14 @@ array_ref_len(const char *cp)
  * Make a copy of the base of an array name
  */
 char *
-arrayname(const char *str)
+arrayname(char *str)
 {
 	const char *p;
 
-	if ((p = strchr(str, '[')) == 0)
+	if ((p = strchr(str, '[')) == 0) {
 		/* Shouldn't happen, but why worry? */
-		return ((char *) str);
-
+		return (str);
+	}
 	return (str_nsave(str, p - str, ATEMP));
 }
 

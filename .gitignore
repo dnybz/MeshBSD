@@ -2,7 +2,6 @@
 !/.gitignore
 !/LICENSE
 !/README
-!/src/COPYRIGHT
 
 #
 # MeshBSD
@@ -64,6 +63,9 @@
 !/MeshBSD/programs/ubnt-mkfwimage/Makefile
 !/MeshBSD/programs/ubnt-mkfwimage/fw.h
 !/MeshBSD/programs/ubnt-mkfwimage/mkfwimage.c
+
+!/releases
+!/src/COPYRIGHT
 
 #
 # Etc.

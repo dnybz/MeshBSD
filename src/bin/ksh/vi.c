@@ -236,7 +236,7 @@ x_vi(char *buf, size_t len)
 
 	x_putc('\r'); x_putc('\n'); x_flush();
 
-	if (c == -1 || len <= es->linelen)
+	if (c == -1 || len <= (size_t)es->linelen)
 		return (-1);
 
 	if (es->cbuf != buf)
@@ -1701,10 +1701,10 @@ grabsearch(int save, int start, int fwd, char *pat)
 }
 
 static void
-redraw_line(int newline)
+redraw_line(int _newline)
 {
-	(void) memset(wbuf[win], ' ', wbuf_len);
-	if (newline) {
+	(void)memset(wbuf[win], ' ', wbuf_len);
+	if (_newline) {
 		x_putc('\r');
 		x_putc('\n');
 	}
@@ -1892,7 +1892,7 @@ ed_mov_opt(int col, char *wb)
 
 /* replace word with all expansions (ie, expand word*) */
 static int
-expand_word(int command)
+expand_word(int _command)
 {
 	static struct edstate *buf;
 	int rval = 0;
@@ -1902,7 +1902,7 @@ expand_word(int command)
 	int i;
 
 	/* Undo previous expansion */
-	if (command == 0 && expanded == EXPAND && buf) {
+	if (_command == 0 && expanded == EXPAND && buf) {
 		restore_edstate(es, buf);
 		buf = 0;
 		expanded = NONE;
@@ -1946,7 +1946,7 @@ expand_word(int command)
 }
 
 static int
-complete_word(int command, int count)
+complete_word(int _command, int count)
 {
 	static struct edstate *buf;
 	int rval = 0;
@@ -1959,12 +1959,12 @@ complete_word(int command, int count)
 	int is_command;
 
 	/* Undo previous completion */
-	if (command == 0 && expanded == COMPLETE && buf) {
+	if (_command == 0 && expanded == COMPLETE && buf) {
 		print_expansions(buf, 0);
 		expanded = PRINT;
 		return (0);
 	}
-	if (command == 0 && expanded == PRINT && buf) {
+	if (_command == 0 && expanded == PRINT && buf) {
 		restore_edstate(es, buf);
 		buf = 0;
 		expanded = NONE;
@@ -2051,7 +2051,7 @@ complete_word(int command, int count)
 }
 
 static int
-print_expansions(struct edstate *e, int command)
+print_expansions(struct edstate *_e, int _command __unused)
 {
 	int nwords;
 	int start, end;
@@ -2059,7 +2059,7 @@ print_expansions(struct edstate *e, int command)
 	int is_command;
 
 	nwords = x_cf_glob(XCF_COMMAND_FILE|XCF_FULLPATH,
-	    e->cbuf, e->linelen, e->cursor,
+	    _e->cbuf, _e->linelen, _e->cursor,
 	    &start, &end, &words, &is_command);
 	if (nwords == 0) {
 		vi_error();

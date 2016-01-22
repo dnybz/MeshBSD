@@ -257,14 +257,14 @@ void	setint(struct tbl *, long);
 int	getint(struct tbl *, long *, bool);
 struct tbl *	typeset(char *, Tflag, Tflag, int, int);
 void	unset(struct tbl *, int);
-char  * skip_varname(const char *, int);
-char	*skip_wdvarname(const char *, int);
+const char  * skip_varname(const char *, int);
+const char	*skip_wdvarname(const char *, int);
 int	is_wdvarname(const char *, int);
 int	is_wdvarassign(const char *);
 char **	makenv(void);
 void	change_random(void);
 int	array_ref_len(const char *);
-char *	arrayname(const char *);
+char *	arrayname(char *);
 void    set_array(const char *, int, char **);
 /* version.c */
 /* vi.c: see edit.h */
