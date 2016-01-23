@@ -20,7 +20,6 @@ SUBDIR= cat \
 	hostname \
 	kenv \
 	kill \
-	ksh \
 	ln \
 	ls \
 	mkdir \
@@ -34,6 +33,7 @@ SUBDIR= cat \
 	rm \
 	rmdir \
 	setfacl \
+	sh \
 	sleep \
 	stty \
 	sync \
