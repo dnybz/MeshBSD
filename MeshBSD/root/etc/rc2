@@ -24,7 +24,6 @@ ln -s /etc/cfg/master.passwd /etc
 ln -s /etc/cfg/myname /etc
 ln -s /etc/cfg/passwd /etc
 ln -s /etc/cfg/pf.conf /etc
-ln -s /etc/cfg/rc.conf /etc
 ln -s /etc/cfg/wpa_supplicant.conf /etc
 
 mkdir -p /etc/ppp
@@ -36,18 +35,127 @@ echo "*** Default password/login databases .."
 
 echo "*** Starting network .."
 
-. /etc/rc.conf
+. /etc/rc.subr
 
-echo "*** setting up hostname"
-/bin/hostname ${system_hostname}
+# This configures devices in the "network_list" configuration
+# file.
 
-# Bring up loopback
-echo "*** bringing up loopback .."
-/sbin/ifconfig lo0 inet 127.0.0.1/8 up
+. /etc/rc.d/rc.subr
 
-# Start network
-echo "*** Starting networking "
-/etc/rc.d/net start
+# /etc/myname contains my symbolic name
+if [ -f /etc/myname ]; then
+	hostname=`stripcom /etc/myname`
+	hostname $hostname
+else
+	hostname=`hostname`
+fi
+
+# Set the address for the loopback interface.  Bringing the interface up,
+# automatically invokes the IPv6 address ::1.
+ifconfig lo0 inet 127.0.0.1/8
+
+if ifconfig lo0 inet6 >/dev/null 2>&1; then
+	# IPv6 configurations.
+	ip6kernel=YES
+
+	# Disallow link-local unicast dest without outgoing scope identifiers.
+	route -qn add -inet6 fe80:: -prefixlen 10 ::1 -reject > /dev/null
+
+	# Disallow site-local unicast dest without outgoing scope identifiers.
+	# If you configure site-locals without scope id (it is permissible
+	# config for routers that are not on scope boundary), you may want
+	# to comment the line out.
+	route -qn add -inet6 fec0:: -prefixlen 10 ::1 -reject > /dev/null
+
+	# Disallow "internal" addresses to appear on the wire.
+	route -qn add -inet6 ::ffff:0.0.0.0 -prefixlen 96 ::1 -reject > /dev/null
+
+	# Disallow packets to malicious IPv4 compatible prefix.
+	route -qn add -inet6 ::224.0.0.0 -prefixlen 100 ::1 -reject > /dev/null
+	route -qn add -inet6 ::127.0.0.0 -prefixlen 104 ::1 -reject > /dev/null
+	route -qn add -inet6 ::0.0.0.0 -prefixlen 104 ::1 -reject > /dev/null
+	route -qn add -inet6 ::255.0.0.0 -prefixlen 104 ::1 -reject > /dev/null
+
+	# Disallow packets to malicious 6to4 prefix.
+	route -qn add -inet6 2002:e000:: -prefixlen 20 ::1 -reject > /dev/null
+	route -qn add -inet6 2002:7f00:: -prefixlen 24 ::1 -reject > /dev/null
+	route -qn add -inet6 2002:0000:: -prefixlen 24 ::1 -reject > /dev/null
+	route -qn add -inet6 2002:ff00:: -prefixlen 24 ::1 -reject > /dev/null
+
+	# Disallow packets without scope identifier.
+	route -qn add -inet6 ff01:: -prefixlen 16 ::1 -reject > /dev/null
+	route -qn add -inet6 ff02:: -prefixlen 16 ::1 -reject > /dev/null
+
+	# Completely disallow packets to IPv4 compatible prefix.
+	# This may conflict with RFC1933 under following circumstances:
+	# (1) An IPv6-only KAME node tries to originate packets to IPv4
+	#     compatible destination.  The KAME node has no IPv4 compatible
+	#     support.  Under RFC1933, it should transmit native IPv6
+	#     packets toward IPv4 compatible destination, hoping it would
+	#     reach a router that forwards the packet toward auto-tunnel
+	#     interface.
+	# (2) An IPv6-only node originates a packet to an IPv4 compatible
+	#     destination.  A KAME node is acting as an IPv6 router, and
+	#     asked to forward it.
+	# Due to rare use of IPv4 compatible addresses, and security issues
+	# with it, we disable it by default.
+	route -qn add -inet6 ::0.0.0.0 -prefixlen 96 ::1 -reject > /dev/null
+else
+	ip6kernel=NO
+fi
+
+# Look for default routes in /etc/mygate.
+[[ -z $dhcpif ]] && stripcom /etc/mygate | while read gw; do
+		[[ $gw == @(*:*) ]] && continue
+		route -qn delete default > /dev/null 2>&1
+		route -qn add -host default $gw && break
+done
+
+# Multicast routing.
+#
+# The routing to the 224.0.0.0/4 net is setup according to these rules:
+# multicast_host	multicast_router	route		comment
+# NO			NO			-reject		no multicast
+# NO			YES			none installed	daemon will run
+# YES/interface		NO			-interface	YES=def. iface
+#	   Any other combination		-reject		config error
+route -qn delete 224.0.0.0/4 > /dev/null 2>&1
+case "$multicast_host:$multicast_router" in
+NO:NO)
+	route -qn add -net 224.0.0.0/4 -interface 127.0.0.1 -reject > /dev/null
+	;;
+NO:YES)
+	;;
+*:NO)
+	maddr=`if [ "$multicast_host" = "YES" ]; then
+		ed -s '!route -qn show -inet' <<EOF
+/^default/p
+EOF
+	else
+		ed -s "!ifconfig $multicast_host" <<EOF
+/^	inet /p
+EOF
+	fi 2> /dev/null`
+	if [ "X${maddr}" != "X" ]; then
+		set $maddr
+		route -qn add -net 224.0.0.0/4 -interface $2 > /dev/null
+	else
+		route -qn add -net 224.0.0.0/4 -interface \
+			127.0.0.1 -reject > /dev/null
+	fi
+	;;
+*:*)
+	echo 'config error, multicasting disabled until rc.conf is fixed'
+	route -qn add -net 224.0.0.0/4 -interface 127.0.0.1 -reject > /dev/null
+	;;
+esac
+
+# 
+# Configure physical annd tunnel interfaces
+#
+# XXX: well, heres a good place to inherit values from rc.conf
+# 
+ifmstart "arge tun"
 
 #
 # pf(4) -- smp-pf

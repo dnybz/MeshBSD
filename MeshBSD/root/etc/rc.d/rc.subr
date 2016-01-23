@@ -1,113 +1,148 @@
 #!/bin/sh
 
-# ltr str src dst
-#	Change every $src in $str to $dst.
-#	Useful when /usr is not yet mounted and we cannot use tr(1), sed(1) nor
-#	awk(1).
-ltr()
-{
-	local _str _src _dst _out _com
-	_str=$1
-	_src=$2
-	_dst=$3
-	_out=""
+#
+#	$OpenBSD: netstart,v 1.144 2014/12/03 19:55:49 florian Exp $
 
-	IFS=${_src}
-	for _com in ${_str}; do
-		if [ -z "${_out}" ]; then
-			_out="${_com}"
-		else
-			_out="${_out}${_dst}${_com}"
-		fi
-	done
-	echo "${_out}"
+# Strip comments (and leading/trailing whitespace if IFS is set)
+# from a file and spew to stdout
+stripcom() {
+	local _l
+	[[ -f $1 ]] || return
+	while read _l; do
+		[[ -n ${_l%%#*} ]] && echo $_l
+	done<$1
 }
 
-# Creates a list of providers for GELI encryption.
-geli_make_list()
-{
-	local devices devices2
-	local provider mountpoint type options rest
+# Start the $1 interface
+ifstart() {
+	if=$1
 
-	# Create list of GELI providers from fstab.
-	while read provider mountpoint type options rest ; do
-		case ":${options}" in
-		:*noauto*)
-			noauto=yes
-			;;
-		*)
-			noauto=no
-			;;
-		esac
+	file=/etc/hostname.$if
+	if ! [ -f $file ]; then
+		echo "netstart: $file: No such file or directory"
+		return
+	fi
+	# Not using stat(1), we can't rely on having /usr yet
+	set -A stat -- `ls -nL $file`
+	if [ "${stat[0]#???????} ${stat[2]} ${stat[3]}" != "--- 0 0" ]; then
+		echo "WARNING: $file is insecure, fixing permissions"
+		chmod -LR o-rwx $file
+		chown -LR root.wheel $file
+	fi
+	# Check for ifconfig'able interface.
+	(ifconfig $if || ifconfig $if create) >/dev/null 2>&1 || return
 
-		case ":${provider}" in
-		:#*)
+	# Now parse the hostname.* file
+	while :; do
+		if [ "$cmd2" ]; then
+			# We are carrying over from the 'read dt dtaddr'
+			# last time.
+			set -- $cmd2
+			af="$1" name="$2" mask="$3" bcaddr="$4" ext1="$5" cmd2=
+			# Make sure and get any remaining args in ext2,
+			# like the read below
+			i=1
+			while [ $i -lt 6 -a -n "$1" ]; do shift; let i=i+1; done
+			ext2="$@"
+		else
+			# Read the next line or exit the while loop.
+			read af name mask bcaddr ext1 ext2 || break
+		fi
+		# $af can be "dhcp", "up", "rtsol", an address family,
+		# commands, or a comment.
+		case "$af" in
+		"#"*|"") # skip comments and empty lines
 			continue
 			;;
-		*.eli)
-			# Skip swap devices.
-			if [ "${type}" = "swap" -o "${options}" = "sw" -o "${noauto}" = "yes" ]; then
-				continue
+		"!"*) # parse commands
+			cmd="${af#*!} ${name} ${mask} ${bcaddr} ${ext1} ${ext2}"
+			;;
+		"dhcp")
+			[ "$name" = "NONE" ] && name=
+			[ "$mask" = "NONE" ] && mask=
+			[ "$bcaddr" = "NONE" ] && bcaddr=
+			cmd="ifconfig $if $name $mask $bcaddr $ext1 $ext2 down"
+			cmd="$cmd;dhclient $if"
+			dhcpif="$dhcpif $if"
+			;;
+		"rtsol")
+			rtsolif="$rtsolif $if"
+			cmd="ifconfig $if $name $mask $bcaddr $ext1 $ext2 up"
+			;;
+		*)
+			read dt dtaddr
+			if [ "$name"  = "alias" ]; then
+				# perform a 'shift' of sorts
+				alias=$name
+				name=$mask
+				mask=$bcaddr
+				bcaddr=$ext1
+				ext1=$ext2
+				ext2=
+			else
+				alias=
 			fi
-			devices="${devices} ${provider}"
+			cmd="ifconfig $if $af $alias $name"
+			case "$dt" in
+			dest)
+				cmd="$cmd $dtaddr"
+				;;
+			*)
+				cmd2="$dt $dtaddr"
+				;;
+			esac
+			case $af in
+			inet)
+				if [ ! -n "$name" ]; then
+					echo "/etc/hostname.$if: inet alone is invalid"
+					return
+				fi
+				[ "$mask" ] && cmd="$cmd netmask $mask"
+				if [ "$bcaddr" -a "X$bcaddr" != "XNONE" ]; then
+					cmd="$cmd broadcast $bcaddr"
+				fi
+				;;
+			inet6)
+				if [ ! -n "$name" ]; then
+					echo "/etc/hostname.$if: inet6 alone is invalid"
+					return
+				fi
+				[ "$mask" ] && cmd="$cmd prefixlen $mask"
+				cmd="$cmd $bcaddr"
+				;;
+			*)
+				cmd="$cmd $mask $bcaddr"
+				;;
+			esac
+			cmd="$cmd $ext1 $ext2"
 			;;
 		esac
-	done < /etc/fstab
-
-	# Append providers from geli_devices.
-	devices="${devices} ${geli_devices}"
-
-	for provider in ${devices}; do
-		provider=${provider%.eli}
-		provider=${provider#/dev/}
-		devices2="${devices2} ${provider}"
-	done
-
-	echo ${devices2}
-}
-# get_if_var if var [default]
-#	Return the value of the pseudo-hash corresponding to $if where
-#	$var is a string containg the sub-string "IF" which will be
-#	replaced with $if after the characters defined in _punct are
-#	replaced with '_'. If the variable is unset, replace it with
-#	$default if given.
-get_if_var()
-{
-	local _if _punct _punct_c _var _default prefix suffix
-
-	if [ $# -ne 2 -a $# -ne 3 ]; then
-		err 3 'USAGE: get_if_var name var [default]'
-	fi
-
-	_if=$1
-	_punct=". - / +"
-	for _punct_c in $_punct; do
-		_if=`ltr ${_if} ${_punct_c} '_'`
-	done
-	_var=$2
-	_default=$3
-
-	prefix=${_var%%IF*}
-	suffix=${_var##*IF}
-	eval echo \${${prefix}${_if}${suffix}-${_default}}
+		eval "$cmd"
+	done < /etc/hostname.$if
 }
 
-# check_if_vars if var1 var2 var3 ...
-#	Check whether the list of variables are defined.
-#	Each variable should contain the substring "IF" which will
-#	be replaced with $if as in get_if_var().
-#
-check_if_vars()
-{
-	$ifname="$1"
-	shift
-	while [ $# -ne 0 ]; do
-		val="`get_if_var $ifname $1 UNSET`"
-		if [ "x$val" -eq "xUNSET" ]; then
-			echo "*** ERROR: variable $1 is not defined for ifname $ifname"
-			return 0
-		fi
-		shift
+# Start multiple:
+#   start "$1" interfaces in order or all interfaces if empty
+#   don't start "$2" interfaces
+ifmstart() {
+	for sif in ${1:-ALL}; do
+		for hn in /etc/hostname.*; do
+			# Strip off /etc/hostname. prefix
+			if=${hn#/etc/hostname.}
+			test "$if" = "*" && continue
+
+			# Skip unwanted ifs
+			s=""
+			for xf in $2; do
+				test "$xf" = "${if%%[0-9]*}" && s="1" && break
+			done
+			test "$s" = "1" && continue
+
+			# Start wanted ifs
+			test "$sif" = "ALL" -o \
+			     "$sif" = "${if%%[0-9]*}" \
+				&& ifstart $if
+		done
 	done
-	return 1
 }
+
