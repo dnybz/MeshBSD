@@ -9,6 +9,6 @@ mount_mfs -s 1m md /etc
 
 # Populate /etc
 cp -a /c/etc/ /etc
-ln -s /usr/share/misc/termcap /etc/
+ln -s /usr/share/misc/termcap /etc
 
 exec /etc/rc2

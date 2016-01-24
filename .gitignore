@@ -79,6 +79,10 @@
 !/src/share/man/man4/Makefile
 !/src/share/man/man4/vether.4
 
+!/src/share/man/man5/Makefile
+!/src/share/man/man5/hostname.if.5
+!/src/share/man/man5/myname.5
+
 #
 # Configuration
 #

@@ -43,7 +43,7 @@ ifstart() {
 
 	file=/etc/hostname.$if
 	if ! [ -f $file ]; then
-		echo "netstart: $file: No such file or directory"
+		echo "ifstart: $file: No such file or directory"
 		return
 	fi
 
