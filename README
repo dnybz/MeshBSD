@@ -1,7 +1,7 @@
 MeshBSD (under construction)
 ============================
 
-Extensions on FreeBSD 11-RELEASE Operating System targeting Embedded Systems.
+Extensions on FreeBSD 11-RELEASE operating system targeting embedded systems.
 
  |
  | This project is at an early stage! 
@@ -36,16 +36,16 @@ Basic requirements for installing the (experimental) firmware image are:
  * Soldered header on-board, where is used for 
    serial acces throught usb cable. 
  
- * Tftp-daemon.
+ * Configured tftp(8) daemon.
  
  * At least cu(1) -- Call Unix.
    
-On host running FreeBSD, access to sereial console may performed on e. g. 
+On host running FreeBSD, access to serial console may performed on e. g. 
 priveleged terminal:   
  
  | # cu -l /dev/ttyU0 -s 115200
 
-Then, appliance (or router board) shall switched on. 
+Then, appliance (or router board) shall be switched on. 
 
  | 
  | U-Boot 1.1.4 (Jun 13 2014 - 15:14:01)
@@ -96,11 +96,11 @@ within time intervall, shown as above. Then
 
  | ap135>
 
-occours as prompt on screen, ready for input.
+occours as prompt on screen, awaiting input.
 
  | ap135> printenv 
  
-Shows environment for bootstrapping operating system.  
+Shows environment for bootstrapping an operating system.  
 
  | bootargs=console=ttyS0,115200 root=31:02 rootfstype=jffs2 init=/sbin/init mtdparts=ath-nor0:256k(u-boot),64k(u-boot-env),6336k(rootfs),1408k(uImage),64k(mib0),64k(ART)
  | bootcmd=bootm 0x9f020000
@@ -120,7 +120,7 @@ Shows environment for bootstrapping operating system.
  |
  | Environment size: 686/65532 bytes
 
-It is obvious that host shall configured by
+It is obvious that host may configured by
 
  | # ifconfig re0 inet 192.168.1.100/24 up 
  | # route add -4 192.168.1.111 192.168.1.100
@@ -136,7 +136,7 @@ where
 
  | # service inetd onestart
 
-initializes tftp daemon manually (if not mentionend in /etc/rc.conf). Then
+initializes tftp(8) daemon manually (if not mentionend in /etc/rc.conf). Then
 
  | ap135> tftpboot 0x80060000 MeshBSD.tl-wr1043ndv2.201601241407.factory.bin
 
@@ -183,7 +183,7 @@ erases contents of flash memory at 0x9f020000 through 0x7c0000 bytes offset
  | 125
  | Erased 124 sectors  
  
-The flash memory is now ready for copying the firmware after entering
+The flash memory is now ready for copying in the firmware after entering
 
  | ap135> cp.b 0x80060000 0x9f020000 0x7c0000
  | Copy to Flash... write addr: 9f020000
@@ -229,9 +229,29 @@ residing and by
   
    /etc/cfg/manifest 
 
-enlisted (and promoted) configuration file will be stored as compressed image 
-into NVRAM. At least, any configuration targeting interfaces on interface- / 
-link-layer is described by
+enlisted (and promoted) configuration file 
+
+ | *** Storing configuration files from /etc/cfg/manifest -> /dev/map/cfg..
+ | etc/cfg/group
+ | etc/cfg/hostname.arge0
+ | etc/cfg/hostname.arge1
+ | etc/cfg/inetd.conf
+ | etc/cfg/ipsec.conf
+ | etc/cfg/manifest
+ | etc/cfg/master.passwd
+ | etc/cfg/myname
+ | etc/cfg/passwd
+ | etc/cfg/pf.conf
+ | etc/cfg/ppp.conf
+ | etc/cfg/wpa_supplicant.conf
+ | 13 blocks
+ | 0+1 records in
+ | 1+0 records out
+ | 65536 bytes transferred in 0.409444 secs (160061 bytes/sec)
+ | *** Completed.
+
+will be stored as compressed image into NVRAM. At least, any configuration 
+targeting interfaces on interface- / link-layer is described by
  
    /etc/honstname.if
  
@@ -248,15 +268,14 @@ Some additional information:
 
  * Easy editor ee(1) is useable for editing ascii encoded files.
  
- * It is possible to perform nat by using pf(4) in conjunction with ppp(8).
+ * It is possible to perform NAT by pf(4) in conjunction with ppp(8).
 
- * Vice versa, handling of incoming PPPoE connections by pppoed(8) is possible.
+ * Handling of incoming PPPoE connections by pppoed(8) is possible.
  
- * Performing manually manipulation of SAD / SPD for ipsec(4) by setkey(8) is
-   possible.  
+ * Manually manipulation of SAD / SPD for ipsec(4) by setkey(8).  
 
- * Utilizing gif(4), if_vether(4) and wlan(4) in conjunction with if_bridge(4) 
-   is possible.
+ * Utilizing gif(4), if_vether(4) and wlan(4) in conjunction with 
+   if_bridge(4).
 
 Additional information about contacting
 =======================================
