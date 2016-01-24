@@ -37,7 +37,10 @@ echo "*** Starting network .."
 
 . /etc/rc.d/rc.subr
 
-# /etc/myname contains my symbolic name
+# Hostname shall be set by parsing
+# 
+#  /etc/myname
+# 
 if [ -f /etc/myname ]; then
 	hostname=`stripcom /etc/myname`
 	hostname $hostname
@@ -102,14 +105,14 @@ fi
 # 
 # Configure interfaces.
 #
-# Any configuration targeting interfaces on interface- / link-layer  
-# is described by   
-#
-#  /etc/honstname.if 
-#
-# configuration file, where its contents provides arguments for 
-# processing by ifconfig(8).
+# Any configuration targeting interfaces on 
+# interface- / link-layer is described by
 # 
+#  /etc/honstname.if
+# 
+# configuration file, where its contents provides 
+# argument-vector for processing by ifconfig(8).
+#
 ifmstart "arge tun"
 
 #
