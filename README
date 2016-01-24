@@ -17,7 +17,7 @@ TL-WR1043ndv2 (experimental)
 
 Now, there exists an experimental factory image 
 
-   MeshBSD.tl-wr1043ndv2.201601241325.factory.bin
+   MeshBSD.tl-wr1043ndv2.201601241407.factory.bin
 
 in releases directory (only) for demonstration purposes. Intentionally, 
 this software is not released for use as production system or in context 
