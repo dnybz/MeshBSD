@@ -35,11 +35,6 @@ echo "*** Default password/login databases .."
 
 echo "*** Starting network .."
 
-. /etc/rc.subr
-
-# This configures devices in the "network_list" configuration
-# file.
-
 . /etc/rc.d/rc.subr
 
 # /etc/myname contains my symbolic name
@@ -104,58 +99,22 @@ else
 	ip6kernel=NO
 fi
 
-# Look for default routes in /etc/mygate.
-[[ -z $dhcpif ]] && stripcom /etc/mygate | while read gw; do
-		[[ $gw == @(*:*) ]] && continue
-		route -qn delete default > /dev/null 2>&1
-		route -qn add -host default $gw && break
-done
-
-# Multicast routing.
-#
-# The routing to the 224.0.0.0/4 net is setup according to these rules:
-# multicast_host	multicast_router	route		comment
-# NO			NO			-reject		no multicast
-# NO			YES			none installed	daemon will run
-# YES/interface		NO			-interface	YES=def. iface
-#	   Any other combination		-reject		config error
-route -qn delete 224.0.0.0/4 > /dev/null 2>&1
-case "$multicast_host:$multicast_router" in
-NO:NO)
-	route -qn add -net 224.0.0.0/4 -interface 127.0.0.1 -reject > /dev/null
-	;;
-NO:YES)
-	;;
-*:NO)
-	maddr=`if [ "$multicast_host" = "YES" ]; then
-		ed -s '!route -qn show -inet' <<EOF
-/^default/p
-EOF
-	else
-		ed -s "!ifconfig $multicast_host" <<EOF
-/^	inet /p
-EOF
-	fi 2> /dev/null`
-	if [ "X${maddr}" != "X" ]; then
-		set $maddr
-		route -qn add -net 224.0.0.0/4 -interface $2 > /dev/null
-	else
-		route -qn add -net 224.0.0.0/4 -interface \
-			127.0.0.1 -reject > /dev/null
-	fi
-	;;
-*:*)
-	echo 'config error, multicasting disabled until rc.conf is fixed'
-	route -qn add -net 224.0.0.0/4 -interface 127.0.0.1 -reject > /dev/null
-	;;
-esac
-
 # 
-# Configure physical annd tunnel interfaces
+# Configure interfaces.
 #
-# XXX: well, heres a good place to inherit values from rc.conf
+# Any configuration targeting interfaces on interface- / link-layer  
+# is described by   
+#
+#  /etc/honstname.if 
+#
+# configuration file, where its contents provides arguments for 
+# processing by ifconfig(8).
 # 
 ifmstart "arge tun"
+
+#
+# XXX: well, heres a good place to inherit values from rc.conf
+#
 
 #
 # pf(4) -- smp-pf
