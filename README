@@ -138,14 +138,14 @@ where
 
 initializes tftp daemon manually (if not mentionend in /etc/rc.conf). Then
 
- | ap135> tftpboot 0x80060000 MeshBSD.tl-wr1043ndv2.201601241325.factory.bin
+ | ap135> tftpboot 0x80060000 MeshBSD.tl-wr1043ndv2.201601241407.factory.bin
 
 loads 
 
  | dup 1 speed 1000
  | Using eth1 device
  | TFTP from server 192.168.1.100; our IP address is 192.168.1.111
- | Filename 'MeshBSD.tl-wr1043ndv2.201601241325.factory.bin'.
+ | Filename 'MeshBSD.tl-wr1043ndv2.201601241407.factory.bin'.
  | Load address: 0x80060000
  | Loading: #################################################################
  |          #################################################################
@@ -255,7 +255,8 @@ Some additional information:
  * Performing manually manipulation of SAD / SPD for ipsec(4) by setkey(8) is
    possible.  
 
- * Utilizing gif(4) and wlan(4) in conjuntion with if_bridge(4) is possible.
+ * Utilizing gif(4), if_vether(4) and wlan(4) in conjunction with if_bridge(4) 
+   is possible.
 
 Additional information about contacting
 =======================================
