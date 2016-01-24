@@ -40,7 +40,7 @@ MAN=	acct.5 \
 	motd.5 \
 	mqueuefs.5 \
 	msdosfs.5 \
-	myname.5
+	myname.5 \
 	networks.5 \
 	nsmb.conf.5 \
 	nsswitch.conf.5 \

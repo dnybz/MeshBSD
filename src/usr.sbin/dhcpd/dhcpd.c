@@ -83,7 +83,7 @@ main(int argc, char *argv[])
 
 	progname = argv[0]; /* XXX: yeah, ugly. */
 	opterr = 0;
-	while ((ch = getopt(argc, argv, "A:C:L:c:dfl:nu::Y:y:")) != -1)
+	while ((ch = getopt(argc, argv, "A:C:L:c:dfl:nu::Y:y:")) != -1) {
 		switch (ch) {
 		case 'Y':
 			syncsend = 1;
@@ -92,6 +92,8 @@ main(int argc, char *argv[])
 			syncrecv = 1;
 			break;
 		}
+	}
+	
 	if (syncsend || syncrecv) {
 		if ((ent = getservbyname("dhcpd-sync", "udp")) == NULL)
 			errx(1, "Can't find service \"dhcpd-sync\" in "

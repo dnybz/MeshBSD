@@ -111,7 +111,7 @@ fi
 #  /etc/honstname.if
 # 
 # configuration file, where its contents provides 
-# argument-vector for processing by ifconfig(8).
+# argument vector for processing by ifconfig(8).
 #
 ifmstart "arge tun"
 
@@ -124,12 +124,6 @@ ifmstart "arge tun"
 #
 echo "*** Enable smp-pf"
 /sbin/pfctl -ef /etc/pf.conf
-
-#
-# dhcpd(8)
-#
-echo "*** Enable dhcpd"
-/usr/sbin/dhcpd -c /etc/dhcpd.conf
 
 echo "*** Done!"
 

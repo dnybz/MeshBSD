@@ -1,4 +1,3 @@
-etc/cfg/dhcpd.conf
 etc/cfg/group
 etc/cfg/hostname.arge0
 etc/cfg/hostname.arge1
@@ -10,5 +9,4 @@ etc/cfg/myname
 etc/cfg/passwd
 etc/cfg/pf.conf
 etc/cfg/ppp.conf
-etc/cfg/rc.conf
 etc/cfg/wpa_supplicant.conf
