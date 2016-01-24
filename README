@@ -17,7 +17,7 @@ TL-WR1043ndv2 (experimental)
 
 Now, there exists an experimental factory image 
 
-   MeshBSD.tl-wr1043ndv2.201601241454.factory.bin
+   MeshBSD.tl-wr1043ndv2.201601241733.factory.bin
 
 in releases directory (only) for demonstration purposes. Intentionally, 
 this software is not released for use as production system or in context 
@@ -39,14 +39,14 @@ Basic requirements for installing the (experimental) firmware image are:
    +-----+-----+-----+-----+
    | VCC   GND   RX  | TX  |
    +-----+-----+-----+-----+
-    3.3V
+     3.3V
 
  * Configured tftp(8) daemon.
  
  * At least cu(1) -- Call Unix.
    
-On host running FreeBSD, access to serial console may performed on e. g. 
-priveleged terminal:   
+On host running FreeBSD, access to serial console might be performed e. g. 
+on priveleged terminal:   
  
  | # cu -l /dev/ttyU0 -s 115200
 
@@ -125,7 +125,7 @@ Shows environment for bootstrapping an operating system.
  |
  | Environment size: 686/65532 bytes
 
-It is obvious that host may configured by
+It is obvious that host might be configured by
 
  | # ifconfig re0 inet 192.168.1.100/24 up 
  | # route add -4 192.168.1.111 192.168.1.100
@@ -143,14 +143,14 @@ where
 
 initializes tftp(8) daemon manually (if not mentionend in /etc/rc.conf). Then
 
- | ap135> tftpboot 0x80060000 MeshBSD.tl-wr1043ndv2.201601241454.factory.bin
+ | ap135> tftpboot 0x80060000 MeshBSD.tl-wr1043ndv2.201601241733.factory.bin
 
 loads 
 
  | dup 1 speed 1000
  | Using eth1 device
  | TFTP from server 192.168.1.100; our IP address is 192.168.1.111
- | Filename 'MeshBSD.tl-wr1043ndv2.201601241454.factory.bin'.
+ | Filename 'MeshBSD.tl-wr1043ndv2.201601241733.factory.bin'.
  | Load address: 0x80060000
  | Loading: #################################################################
  |          #################################################################
@@ -174,15 +174,15 @@ loads
  |          #################################################################
  |          ####
  | done
- | Bytes transferred = 6672384 (65d000 hex)
+ | Bytes transferred = 6672896 (65d200 hex)
 
 the (experimental) firmware image into random access memory starting at 
-address 0x80060000 on this ap135 board.
+address 0x80060000 on (this) ap135 (router) board.
 
  | ap135> erase 0x9f020000 +0x7c0000
  | Erasing flash... 
 
-erases contents of flash memory at 0x9f020000 through 0x7c0000 bytes offset
+erases contents of flash memory at 0x9f020000 through 0x7c0000 bytes offset:
 
  | First 0x2 last 0x7d sector size 0x10000
  | 125
@@ -194,7 +194,7 @@ The flash memory is now ready for copying in the firmware after entering
  | Copy to Flash... write addr: 9f020000
  | done 
 
-where 
+then 
 
  | ap135> bootm 0x9f020000
  
@@ -215,14 +215,14 @@ shall occour as login prompt on serial console. After logging in
 
  | login: root
 
-by using an empty password it will be changed by
+by using an empty password. It will be changed by
  
  | # passwd root
  | Changing local password for user
  | New Password:
  | Retype New Password:
  
-Persistency of given changes will be achieved throught
+Persistency will be achieved throught
 
  | # cfg_save
  
@@ -234,7 +234,7 @@ residing and by
   
    /etc/cfg/manifest 
 
-enlisted (and promoted) configuration file 
+enlisted (and promoted) configuration files
 
  | *** Storing configuration files from /etc/cfg/manifest -> /dev/map/cfg..
  | etc/cfg/group
@@ -255,18 +255,18 @@ enlisted (and promoted) configuration file
  | 65536 bytes transferred in 0.409444 secs (160061 bytes/sec)
  | *** Completed.
 
-will be stored as compressed image into NVRAM. At least, any configuration 
-targeting interfaces on interface- / link-layer is described by
+are stored as compressed image into NVRAM. At least, any configuration 
+targeting interfaces on interface- / link-layer shall be described by
  
    /etc/honstname.if
  
-configuration file, where its contents provides argument-vector for processing 
-by ifconfig(8). the Hostname shall be set by 
+configuration file, where its contents provides argument-vector for 
+processing by ifconfig(8). Furthermore, the hostname is defined by 
   
    /etc/myname
 
-Both files where parsed during execution of /etc/rc2 which is still invoked
-by init(8) called /etc/rc. 
+file. Commonly, configuration files are parsed during execution of 
+/etc/rc2 which was invoked by init(8) called /etc/rc. 
 
 Some additional information:
 ----------------------------
