@@ -41,7 +41,7 @@ Basic requirements for installing the (experimental) firmware image are:
    +-----+-----+-----+-----+
      3.3V
 
- * Configured tftp(8) daemon.
+ * Configured tftpd(8) daemon.
  
  * At least cu(1) -- Call Unix.
    
@@ -141,7 +141,7 @@ where
 
  | # service inetd onestart
 
-initializes tftp(8) daemon manually (if not mentionend in /etc/rc.conf). Then
+initializes tftpd(8) daemon manually (if not mentionend in /etc/rc.conf). Then
 
  | ap135> tftpboot 0x80060000 MeshBSD.tl-wr1043ndv2.201601241733.factory.bin
 
