@@ -62,7 +62,10 @@
 !/MeshBSD/programs/ubnt-mkfwimage/fw.h
 !/MeshBSD/programs/ubnt-mkfwimage/mkfwimage.c
 
-!/releases
+!/releases/MeshBSD.tl-wr1043ndv2.*.factory.bin
+!/releases/MeshBSD.tl-wr1043ndv2.*.factory.bin.rmd160
+!/releases/MeshBSD.tl-wr1043ndv2.*.factory.bin.sha256
+
 !/src/COPYRIGHT
 
 #
