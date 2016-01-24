@@ -119,6 +119,8 @@ ifmstart "arge tun"
 # XXX: well, heres a good place to inherit values from rc.conf
 #
 
+/sbin/sysctl net.inet.ip.forwarding=1
+
 #
 # pf(4) -- smp-pf
 #
