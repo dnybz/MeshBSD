@@ -27,9 +27,9 @@
 # from a file and spew to stdout
 stripcom() {
 	local _l
-	[[ -f $1 ]] || return
+	[ -f $1 ] || return
 	while read _l; do
-		[[ -n ${_l%%#*} ]] && echo $_l
+		[ -n ${_l%%#*} ] && echo $_l
 	done<$1
 }
 
