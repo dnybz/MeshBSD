@@ -17,7 +17,7 @@ TL-WR1043ndv2 (experimental)
 
 Now, there exists an experimental factory image 
 
-   MeshBSD.tl-wr1043ndv2.201601241407.factory.bin
+   MeshBSD.tl-wr1043ndv2.201601241454.factory.bin
 
 in releases directory (only) for demonstration purposes. Intentionally, 
 this software is not released for use as production system or in context 
@@ -33,9 +33,14 @@ of production systems, because this software is not error-free.
 
 Basic requirements for installing the (experimental) firmware image are:
 
- * Soldered header on-board, where is used for 
-   serial acces throught usb cable. 
- 
+ * Soldered header on-board, where is used 
+   for serial access throught usb cable. 
+   
+   +-----+-----+-----+-----+
+   | VCC   GND   RX  | TX  |
+   +-----+-----+-----+-----+
+    3.3V
+
  * Configured tftp(8) daemon.
  
  * At least cu(1) -- Call Unix.
@@ -138,14 +143,14 @@ where
 
 initializes tftp(8) daemon manually (if not mentionend in /etc/rc.conf). Then
 
- | ap135> tftpboot 0x80060000 MeshBSD.tl-wr1043ndv2.201601241407.factory.bin
+ | ap135> tftpboot 0x80060000 MeshBSD.tl-wr1043ndv2.201601241454.factory.bin
 
 loads 
 
  | dup 1 speed 1000
  | Using eth1 device
  | TFTP from server 192.168.1.100; our IP address is 192.168.1.111
- | Filename 'MeshBSD.tl-wr1043ndv2.201601241407.factory.bin'.
+ | Filename 'MeshBSD.tl-wr1043ndv2.201601241454.factory.bin'.
  | Load address: 0x80060000
  | Loading: #################################################################
  |          #################################################################
