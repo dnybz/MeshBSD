@@ -197,7 +197,7 @@ then
 
  | ap135> bootm 0x9f020000
  
-starts bootstraping. 
+starts bootstrapping. 
  
  | ## Booting image at 9f020000 ...
  |  Uncompressing Kernel Image ... OK
@@ -257,7 +257,7 @@ enlisted (and promoted) configuration files
 are stored as compressed image into NVRAM. At least, any configuration 
 targeting interfaces on interface- / link-layer shall be described by
  
-   /etc/honstname.if
+   /etc/hostname.if
  
 configuration file, where its contents provides argument-vector for 
 processing by ifconfig(8). Furthermore, the hostname is defined by 

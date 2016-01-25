@@ -13,21 +13,22 @@ mkdir -p /var/cron/tabs
 echo "*** Loading configuration files .."
 cfg_load
 
-ln -s /etc/cfg/dhcpd.conf /etc
+
 ln -s /etc/cfg/group /etc
+ln -s /etc/cfg/manifest /etc
+ln -s /etc/cfg/master.passwd /etc
+ln -s /etc/cfg/myname /etc
+ln -s /etc/cfg/passwd /etc
 
 ln -s /etc/cfg/hostname.* /etc
 
 ln -s /etc/cfg/inetd.conf /etc
 ln -s /etc/cfg/ipsec.conf /etc
-ln -s /etc/cfg/manifest /etc
-ln -s /etc/cfg/master.passwd /etc
-ln -s /etc/cfg/myname /etc
-ln -s /etc/cfg/passwd /etc
+ln -s /etc/cfg/ntp.conf /etc
 ln -s /etc/cfg/pf.conf /etc
+ln -s /etc/cfg/ppp.conf /etc/ppp
 ln -s /etc/cfg/wpa_supplicant.conf /etc
 
-ln -s /etc/cfg/ppp.conf /etc/ppp
 
 echo "*** Default password/login databases .."
 /usr/sbin/pwd_mkdb /etc/master.passwd
