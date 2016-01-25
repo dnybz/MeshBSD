@@ -117,7 +117,8 @@ fi
 ifmstart "arge tun"
 
 #
-# XXX: well, heres a good place to inherit values from rc.conf
+# XXX: Well, heres a good place to inherit values 
+# XXX: from rc.conf, rc.conf.local and rc.local.
 #
 
 /sbin/sysctl net.inet.ip.forwarding=1
