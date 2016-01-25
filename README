@@ -17,7 +17,7 @@ TL-WR1043NDv2 (experimental)
 
 Now, there exists an experimental factory image 
 
-   MeshBSD.tl-wr1043ndv2.201601250440.factory.bin
+   MeshBSD.tl-wr1043ndv2.201601251131.factory.bin
 
 in releases directory (only) for demonstration purposes. Intentionally, 
 this software is not released for use as production system or in context 
@@ -143,14 +143,14 @@ where
 
 initializes tftpd(8) daemon manually (if not mentionend in /etc/rc.conf). Then
 
- | ap135> tftpboot 0x80060000 MeshBSD.tl-wr1043ndv2.201601250440.factory.bin
+ | ap135> tftpboot 0x80060000 MeshBSD.tl-wr1043ndv2.201601251131.factory.bin
 
 loads 
 
  | dup 1 speed 1000
  | Using eth1 device
  | TFTP from server 192.168.1.100; our IP address is 192.168.1.111
- | Filename 'MeshBSD.tl-wr1043ndv2.201601250440.factory.bin'.
+ | Filename 'MeshBSD.tl-wr1043ndv2.201601251131.factory.bin'.
  | Load address: 0x80060000
  | Loading: #################################################################
  |          #################################################################
@@ -171,9 +171,9 @@ loads
  |          #################################################################
  |          #################################################################
  |          #################################################################
- |          #
+ |          ####
  | done
- | Bytes transferred = 6323712 (607e00 hex)
+ | Bytes transferred = 6340096 (60be00 hex)
 
 the (experimental) firmware image into random access memory starting at 
 address 0x80060000 on (this) ap135 (router) board.
@@ -266,7 +266,7 @@ processing by ifconfig(8). Furthermore, the hostname is defined by
    /etc/myname
 
 file. Commonly, configuration files are parsed during execution of 
-/etc/rc2 which was invoked by init(8) called /etc/rc.
+/etc/rc2 which was invoked by init(8) called /etc/rc. 
 
 Some additional information:
 ----------------------------

@@ -1,4 +1,3 @@
-#!/bin/sh
 #
 #	$OpenBSD: rc.subr,v 1.92 2015/01/02 14:44:05 ajacoutot Exp $
 #
