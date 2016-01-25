@@ -1,4 +1,4 @@
-/*	$OpenBSD: options.c,v 1.29 2015/06/27 14:29:39 krw Exp $	*/
+/*	$OpenBSD: options.c,v 1.28 2014/07/28 16:45:35 tobias Exp $	*/
 
 /* DHCP options parsing and reassembly. */
 
@@ -47,6 +47,15 @@
 int bad_options = 0;
 int bad_options_max = 5;
 
+void	parse_options(struct packet *);
+void	parse_option_buffer(struct packet *, unsigned char *, int);
+void	create_priority_list(unsigned char *, unsigned char *, int);
+int	store_option_fragment(unsigned char *, int, unsigned char,
+	    int, unsigned char *);
+int	store_options(unsigned char *, int, struct tree_cache **,
+	    unsigned char *, int, int);
+
+
 /*
  * Parse all available options out of the specified packet.
  */
@@ -54,7 +63,7 @@ void
 parse_options(struct packet *packet)
 {
 	/* Initially, zero all option pointers. */
-	(void)memset(packet->options, 0, sizeof(packet->options));
+	memset(packet->options, 0, sizeof(packet->options));
 
 	/* If we don't see the magic cookie, there's nothing to parse. */
 	if (memcmp(packet->raw->options, DHCP_OPTIONS_COOKIE, 4)) {
@@ -128,21 +137,19 @@ parse_option_buffer(struct packet *packet,
 		 * anything good.
 		 */
 		if (s + len + 2 > end) {
-bogus:
+		    bogus:
 			bad_options++;
-			
-			(void)warning("option %s (%d) %s.",
+			warning("option %s (%d) %s.",
 			    dhcp_options[code].name, len,
 			    "larger than buffer");
 			if (bad_options == bad_options_max) {
 				packet->options_valid = 1;
 				bad_options = 0;
-				
-				(void)warning("Many bogus options seen in offers.");
-				(void)warning("Taking this offer in spite of bogus");
-				(void)warning("options - hope for the best!");
+				warning("Many bogus options seen in offers.");
+				warning("Taking this offer in spite of bogus");
+				warning("options - hope for the best!");
 			} else {
-				(void)warning("rejecting bogus offer.");
+				warning("rejecting bogus offer.");
 				packet->options_valid = 0;
 			}
 			return;
@@ -160,10 +167,8 @@ bogus:
 			 * Copy and NUL-terminate the option (in case
 			 * it's an ASCII string).
 			 */
-			(void)memcpy(t, &s[2], len);
-			
+			memcpy(t, &s[2], len);
 			t[len] = 0;
-			
 			packet->options[code].len = len;
 			packet->options[code].data = t;
 		} else {
@@ -176,12 +181,10 @@ bogus:
 			if (!t)
 				error("Can't expand storage for option %s.",
 				    dhcp_options[code].name);
-			
-			(void)memcpy(t, packet->options[code].data,
+			memcpy(t, packet->options[code].data,
 				packet->options[code].len);
-			(void)memcpy(t + packet->options[code].len,
+			memcpy(t + packet->options[code].len,
 				&s[2], len);
-			
 			packet->options[code].len += len;
 			t[packet->options[code].len] = 0;
 			free(packet->options[code].data);
@@ -224,14 +227,6 @@ create_priority_list(unsigned char *priority_list, unsigned char *prl,
 	if (!prl)
 		prl_len = 0;
 	for(i = 0; i < prl_len; i++) {
-		/* CLASSLESS routes always have priority, sayeth RFC 3442. */
-		if (prl[i] == DHO_CLASSLESS_STATIC_ROUTES ||
-		    prl[i] == DHO_CLASSLESS_MS_STATIC_ROUTES) {
-			priority_list[priority_len++] = prl[i];
-			stored_list[prl[i]] = 1;
-		}
-	}
-	for(i = 0; i < prl_len; i++) {
 		if (stored_list[prl[i]])
 			continue;
 		priority_list[priority_len++] = prl[i];	
@@ -260,9 +255,7 @@ cons_options(struct packet *inpacket, struct dhcp_packet *outpacket,
 {
 	unsigned char priority_list[256];
 	unsigned char buffer[4096];	/* Really big buffer... */
-	size_t main_buffer_size;
-	size_t option_size;
-	int bufix;
+	int bufix, main_buffer_size, option_size;
 
 	/*
 	 * If the client has provided a maximum DHCP message size, use
@@ -277,7 +270,7 @@ cons_options(struct packet *inpacket, struct dhcp_packet *outpacket,
 	    inpacket->options[DHO_DHCP_MAX_MESSAGE_SIZE].data &&
 	    (inpacket->options[DHO_DHCP_MAX_MESSAGE_SIZE].len >=
 	    sizeof(u_int16_t))) {
-		mms = get_u_short(
+		mms = getUShort(
 		    inpacket->options[DHO_DHCP_MAX_MESSAGE_SIZE].data);
 	}
 
@@ -299,9 +292,9 @@ cons_options(struct packet *inpacket, struct dhcp_packet *outpacket,
 	 */
 	memset(outpacket->options, DHO_PAD, sizeof(outpacket->options));
 	if (overload & 1)
-		(void)memset(outpacket->file, DHO_PAD, DHCP_FILE_LEN);
+		memset(outpacket->file, DHO_PAD, DHCP_FILE_LEN);
 	if (overload & 2)
-		(void)memset(outpacket->sname, DHO_PAD, DHCP_SNAME_LEN);
+		memset(outpacket->sname, DHO_PAD, DHCP_SNAME_LEN);
 	if (bootpp)
 		overload = 0; /* Don't use overload buffers for bootp! */
 
@@ -331,18 +324,18 @@ cons_options(struct packet *inpacket, struct dhcp_packet *outpacket,
 		return (DHCP_FIXED_NON_UDP);
 
 	/* Copy the main buffer. */
-	(void)memcpy(&outpacket->options[0], buffer, main_buffer_size);
+	memcpy(&outpacket->options[0], buffer, main_buffer_size);
 	if (option_size <= main_buffer_size)
 		return (DHCP_FIXED_NON_UDP + option_size);
 
 	/* Copy the overflow buffers. */
 	bufix = main_buffer_size;
 	if (overload & 1) {
-		(void)memcpy(outpacket->file, &buffer[bufix], DHCP_FILE_LEN);
+		memcpy(outpacket->file, &buffer[bufix], DHCP_FILE_LEN);
 		bufix += DHCP_FILE_LEN;
 	}
 	if (overload & 2)
-		(void)memcpy(outpacket->sname, &buffer[bufix], DHCP_SNAME_LEN);
+		memcpy(outpacket->sname, &buffer[bufix], DHCP_SNAME_LEN);
 
 	return (DHCP_FIXED_NON_UDP + main_buffer_size);
 }
@@ -368,7 +361,7 @@ store_option_fragment(unsigned char *buffer, int buffer_size,
 	buffer[0] = code;
 	buffer[1] = length;
 
-	(void)memcpy(&buffer[2], data, length);
+	memcpy(&buffer[2], data, length);
 
 	return (length + 2);
 }
@@ -380,13 +373,12 @@ store_option_fragment(unsigned char *buffer, int buffer_size,
  */
 int
 store_options(unsigned char *buffer, int main_buffer_size,
-    struct tree_cache **options, unsigned char *priority_list, 
-    int overload, int terminate)
+    struct tree_cache **options, unsigned char *priority_list, int overload,
+    int terminate)
 {
 	int buflen, code, cutoff, i, incr, ix, length, optstart, overflow;
 	int second_cutoff;
 	int bufix = 0;
-	int stored_classless = 0;
 
 	overload &= 3; /* Only consider valid bits. */
 
@@ -394,8 +386,8 @@ store_options(unsigned char *buffer, int main_buffer_size,
 	second_cutoff = cutoff + ((overload & 1) ? DHCP_FILE_LEN : 0);
 	buflen = second_cutoff + ((overload & 2) ? DHCP_SNAME_LEN : 0);
 
-	(void)memset(buffer, DHO_PAD, buflen);
-	(void)memcpy(buffer, DHCP_OPTIONS_COOKIE, 4);
+	memset(buffer, DHO_PAD, buflen);
+	memcpy(buffer, DHCP_OPTIONS_COOKIE, 4);
 
 	if (overload)
 		bufix = 7; /* Reserve space for DHO_DHCP_OPTION_OVERLOAD. */
@@ -412,20 +404,6 @@ store_options(unsigned char *buffer, int main_buffer_size,
 			continue;
 
 		if (!options[code] || !tree_evaluate(options[code]))
-			continue;
-
-		/*
-		 * RFC 3442 says:
-		 *
-		 * When a DHCP client requests the Classless Static
-		 * Routes option and also requests either or both of the
-		 * Router option and the Static Routes option, and the
-		 * DHCP server is sending Classless Static Routes options
-		 * to that client, the server SHOULD NOT include the
-		 * Router or Static Routes options.
-		 */
-		if ((code == DHO_ROUTERS || code == DHO_STATIC_ROUTES) &&
-		    stored_classless)
 			continue;
 
 		/* We should now have a constant length for the option. */
@@ -451,7 +429,7 @@ store_options(unsigned char *buffer, int main_buffer_size,
 			 * cutoff. Fill the unusable space with DHO_PAD and
 			 * move cutoff for another attempt.
 			 */
-			(void)memset(&buffer[bufix], DHO_PAD, cutoff - bufix);
+			memset(&buffer[bufix], DHO_PAD, cutoff - bufix);
 			bufix = cutoff;
 			if (cutoff < second_cutoff)
 				cutoff = second_cutoff;
@@ -463,8 +441,7 @@ store_options(unsigned char *buffer, int main_buffer_size,
 
 		if (length > 0) {
 zapfrags:
-			(void)memset(&buffer[optstart], 
-				DHO_PAD, buflen - optstart);
+			memset(&buffer[optstart], DHO_PAD, buflen - optstart);
 			bufix = optstart;
 		} else if (terminate && dhcp_options[code].format[0] == 't') {
 			if (bufix < cutoff)
@@ -472,9 +449,6 @@ zapfrags:
 			else
 				goto zapfrags;
 		}
-		if (code == DHO_CLASSLESS_STATIC_ROUTES ||
-		    code == DHO_CLASSLESS_MS_STATIC_ROUTES)
-			stored_classless = 1;
 	}
 
 	if (bufix == (4 + (overload ? 3 : 0)))
@@ -502,11 +476,9 @@ zapfrags:
 			 * DHO_DHCP_OPTION_OVERLOAD option. Some clients
 			 * choke on DHO_PAD options there.
 			 */
-			(void)memmove(&buffer[4], &buffer[7], buflen - 7);
-			
+			memmove(&buffer[4], &buffer[7], buflen - 7);
 			bufix -= 3;
-			
-			(void)memset(&buffer[bufix], DHO_PAD, 3);
+			memset(&buffer[bufix], DHO_PAD, 3);
 		}
 	}
 
@@ -525,8 +497,7 @@ do_packet(struct interface_info *interface, struct dhcp_packet *packet,
 		return;
 	}
 
-	(void)memset(&tp, 0, sizeof(tp));
-	
+	memset(&tp, 0, sizeof(tp));
 	tp.raw = packet;
 	tp.packet_length = len;
 	tp.client_port = from_port;

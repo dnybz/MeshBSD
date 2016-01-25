@@ -46,13 +46,13 @@ struct lease_state *free_lease_states;
 struct tree_cache *free_tree_caches;
 
 struct tree_cache *
-new_tree_cache(const char *name)
+new_tree_cache(char *name)
 {
 	struct tree_cache *rval;
 
 	if (free_tree_caches) {
 		rval = free_tree_caches;
-		free_tree_caches = (void *)(rval->value);
+		free_tree_caches = (struct tree_cache *)(rval->value);
 	} else {
 		rval = calloc(1, sizeof(struct tree_cache));
 		if (!rval)
@@ -69,7 +69,7 @@ free_tree_cache(struct tree_cache *ptr)
 }
 
 struct lease_state *
-new_lease_state(const char *name)
+new_lease_state(char *name)
 {
 	struct lease_state *rval;
 
@@ -86,7 +86,7 @@ new_lease_state(const char *name)
 }
 
 void
-free_lease_state(struct lease_state *ptr, const char *name __unused)
+free_lease_state(struct lease_state *ptr, char *name)
 {
 	if (ptr->prl)
 		free(ptr->prl);

@@ -64,11 +64,11 @@ struct tree {
 		} host_lookup;
 		struct const_val {
 			unsigned char	*data;
-			size_t		 len;
+			int		 len;
 		} const_val;
 		struct limit {
 			struct tree	*tree;
-			size_t		 limit;
+			int		 limit;
 		} limit;
 	} data;
 };
@@ -77,14 +77,14 @@ struct tree {
 struct dns_host_entry {
 	char		*hostname;
 	unsigned char	*data;
-	size_t		 data_len;
-	size_t		 buf_len;
+	int		 data_len;
+	int		 buf_len;
 	time_t		 timeout;
 };
 
 struct tree_cache {
 	unsigned char	*value;
-	size_t		 len;
+	int		 len;
 	unsigned int	 buf_size;
 	time_t		 timeout;
 	struct tree	*tree;
@@ -94,14 +94,14 @@ struct tree_cache {
 };
 
 struct universe {
-	const char		*name;
+	char		*name;
 	struct hash_table *hash;
 	struct option	*options[256];
 };
 
 struct option {
-	const char		*name;
-	const char		*format;
+	char		*name;
+	char		*format;
 	struct universe	*universe;
 	unsigned char	code;
 };

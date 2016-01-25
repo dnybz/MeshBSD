@@ -1,4 +1,4 @@
-/*	$OpenBSD: conflex.c,v 1.15 2015/05/18 17:51:21 krw Exp $	*/
+/*	$OpenBSD: conflex.c,v 1.12 2013/12/05 22:31:35 krw Exp $	*/
 
 /* Lexical scanner for dhcpd config file... */
 
@@ -55,7 +55,7 @@ int eol_token;
 
 static char line1[81];
 static char line2[81];
-static unsigned int lpos;
+static int lpos;
 static int line;
 static int tlpos;
 static int tline;
@@ -68,6 +68,7 @@ static int get_char(FILE *);
 static int get_token(FILE *);
 static void skip_to_eol(FILE *);
 static int read_string(FILE *);
+static int read_number(int, FILE *);
 static int read_num_or_name(int, FILE *);
 static int intern(char *, int);
 
@@ -93,8 +94,8 @@ get_char(FILE *cfile)
 				cur_line = line2;
 				prev_line = line1;
 			} else {
-				cur_line = line1;
-				prev_line = line2;
+				cur_line = line2;
+				prev_line = line1;
 			}
 			line++;
 			lpos = 1;
@@ -130,15 +131,25 @@ get_token(FILE *cfile)
 			skip_to_eol(cfile);
 			continue;
 		}
-		lexline = l;
-		lexchar = p;
 		if (c == '"') {
+			lexline = l;
+			lexchar = p;
 			ttok = read_string(cfile);
 			break;
-		} else if (c == '-' || (isascii(c) && isalnum(c))) {
+		}
+		if ((isascii(c) && isdigit(c)) || c == '-') {
+			lexline = l;
+			lexchar = p;
+			ttok = read_number(c, cfile);
+			break;
+		} else if (isascii(c) && isalpha(c)) {
+			lexline = l;
+			lexchar = p;
 			ttok = read_num_or_name(c, cfile);
 			break;
 		} else {
+			lexline = l;
+			lexchar = p;
 			tb[0] = c;
 			tb[1] = 0;
 			tval = tb;
@@ -212,8 +223,7 @@ skip_to_eol(FILE *cfile)
 static int
 read_string(FILE *cfile)
 {
-	unsigned int i, bs;
-	int c;
+	int i, c, bs;
 
 	bs = i = 0;
 	do {
@@ -229,9 +239,9 @@ read_string(FILE *cfile)
 	} while (i < (sizeof(tokbuf) - 1) && c != EOF && c != '"');
 
 	if (c == EOF)
-		(void)parse_warn("eof in string constant");
+		parse_warn("eof in string constant");
 	else if (c != '"')
-		(void)parse_warn("string constant larger than internal buffer");
+		parse_warn("string constant larger than internal buffer");
 
 	tokbuf[i] = 0;
 	tval = tokbuf;
@@ -240,46 +250,58 @@ read_string(FILE *cfile)
 }
 
 static int
-read_num_or_name(int c, FILE *cfile)
+read_number(int c, FILE *cfile)
 {
-	unsigned int i, xdigits;
-	int rv;
+	int	seenx = 0, i = 0, token = TOK_NUMBER;
 
-	xdigits = isxdigit(c) ? 1 : 0;
-
-	tokbuf[0] = c;
-	for (i = 1; i < sizeof(tokbuf); i++) {
+	tokbuf[i++] = c;
+	for (; i < sizeof(tokbuf); i++) {
 		c = get_char(cfile);
-		if (!isascii(c) || (c != '-' && c != '_' && !isalnum(c))) {
-			(void)ungetc(c, cfile);
+		if (!seenx && c == 'x')
+			seenx = 1;
+		else if (!isascii(c) || !isxdigit(c)) {
+			ungetc(c, cfile);
 			ugflag = 1;
 			break;
 		}
-		if (isxdigit(c))
-			xdigits++;
 		tokbuf[i] = c;
 	}
 	if (i == sizeof(tokbuf)) {
-		(void)parse_warn("token larger than internal buffer");
+		parse_warn("numeric token larger than internal buffer");
 		i--;
-		c = tokbuf[i];
-		if (isxdigit(c))
-			xdigits--;
 	}
 	tokbuf[i] = 0;
 	tval = tokbuf;
 
-	c = (unsigned int)tokbuf[0];
+	return (token);
+}
 
-	if (c == '-')
-		rv = TOK_NUMBER;
-	else
-		rv = intern(tval, TOK_NUMBER_OR_NAME);
+static int
+read_num_or_name(int c, FILE *cfile)
+{
+	int	i = 0;
+	int	rv = TOK_NUMBER_OR_NAME;
 
-	if (rv == TOK_NUMBER_OR_NAME && xdigits != i)
-		rv = TOK_NAME;
+	tokbuf[i++] = c;
+	for (; i < sizeof(tokbuf); i++) {
+		c = get_char(cfile);
+		if (!isascii(c) || (c != '-' && c != '_' && !isalnum(c))) {
+			ungetc(c, cfile);
+			ugflag = 1;
+			break;
+		}
+		if (!isxdigit(c))
+			rv = TOK_NAME;
+		tokbuf[i] = c;
+	}
+	if (i == sizeof(tokbuf)) {
+		parse_warn("token larger than internal buffer");
+		i--;
+	}
+	tokbuf[i] = 0;
+	tval = tokbuf;
 
-	return (rv);
+	return (intern(tval, rv));
 }
 
 static const struct keywords {

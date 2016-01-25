@@ -1,4 +1,4 @@
-/*	$OpenBSD: tables.c,v 1.11 2015/06/27 14:29:39 krw Exp $	*/
+/*	$OpenBSD: tables.c,v 1.10 2014/01/21 03:07:51 krw Exp $	*/
 
 /* Tables of information... */
 
@@ -340,8 +340,6 @@ unsigned char dhcp_option_default_priority_list[256] = {
 	DHO_DHCP_CLIENT_IDENTIFIER,
 	DHO_SUBNET_MASK,
 	DHO_TIME_OFFSET,
-	DHO_CLASSLESS_STATIC_ROUTES,	/* MUST be before DHO_ROUTERS!	*/
-	DHO_CLASSLESS_MS_STATIC_ROUTES,	/* DITTO!			*/
 	DHO_ROUTERS,
 	DHO_TIME_SERVERS,
 	DHO_NAME_SERVERS,
@@ -401,7 +399,7 @@ unsigned char dhcp_option_default_priority_list[256] = {
 	 90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
 	100, 101, 102, 103, 104, 105, 106, 107, 108, 109,
 	110, 111, 112, 113, 114, 115, 116, 117, 118, 119,
-	120,      122, 123, 124, 125, 126, 127, 128, 129,
+	120, 121, 122, 123, 124, 125, 126, 127, 128, 129,
 	130, 131, 132, 133, 134, 135, 136, 137, 138, 139,
 	140, 141, 142, 143, 144, 145, 146, 147, 148, 149,
 	150, 151, 152, 153, 154, 155, 156, 157, 158, 159,
@@ -413,11 +411,11 @@ unsigned char dhcp_option_default_priority_list[256] = {
 	210, 211, 212, 213, 214, 215, 216, 217, 218, 219,
 	220, 221, 222, 223, 224, 225, 226, 227, 228, 229,
 	230, 231, 232, 233, 234, 235, 236, 237, 238, 239,
-	240, 241, 242, 243, 244, 245, 246, 247, 248,
+	240, 241, 242, 243, 244, 245, 246, 247, 248, 249,
 	250, 251, 252, 253, 254
 };
 
-const char *hardware_types[] = {
+char *hardware_types[] = {
 	"unknown-0",
 	"ethernet",
 	"unknown-2",
@@ -691,11 +689,11 @@ initialize_universes(void)
 	for (i = 0; i < 256; i++) {
 		dhcp_universe.options[i] = &dhcp_options[i];
 		add_hash(dhcp_universe.hash,
-		    dhcp_options[i].name, 0,
-		    &dhcp_options[i]);
+		    (unsigned char *)dhcp_options[i].name, 0,
+		    (unsigned char *)&dhcp_options[i]);
 	}
 	universe_hash.hash_count = DEFAULT_HASH_SIZE;
 	add_hash(&universe_hash,
-	    dhcp_universe.name, 0,
-	    &dhcp_universe);
+	    (unsigned char *)dhcp_universe.name, 0,
+	    (unsigned char *)&dhcp_universe);
 }

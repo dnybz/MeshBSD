@@ -39,10 +39,10 @@
  * see ``http://www.vix.com/isc''.  To learn more about Vixie
  * Enterprises, see ``http://www.vix.com''.
  */
- 
+
 #include "dhcpd.h"
 
-static int do_hash(const char *, size_t, size_t);
+static int do_hash(unsigned char *, int, int);
 
 struct hash_table *
 new_hash(void)
@@ -51,7 +51,7 @@ new_hash(void)
 
 	rv = calloc(1, sizeof(struct hash_table));
 	if (!rv)
-		(void)warning("No memory for new hash.");
+		warning("No memory for new hash.");
 	else
 		rv->hash_count = DEFAULT_HASH_SIZE;
 
@@ -59,10 +59,10 @@ new_hash(void)
 }
 
 static int
-do_hash(const char *name, size_t len, size_t size)
+do_hash(unsigned char *name, int len, int size)
 {
 	int accum = 0;
-	const unsigned char *s = (const unsigned char *)name;
+	unsigned char *s = name;
 	int i = len;
 
 	while (i--) {
@@ -75,9 +75,8 @@ do_hash(const char *name, size_t len, size_t size)
 	return (accum % size);
 }
 
-void 
-add_hash(struct hash_table *table, const char *name, 
-		size_t len, void *pointer)
+void add_hash(struct hash_table *table, unsigned char *name, int len,
+    unsigned char *pointer)
 {
 	int hashno;
 	struct hash_bucket *bp;
@@ -85,12 +84,12 @@ add_hash(struct hash_table *table, const char *name,
 	if (!table)
 		return;
 	if (!len)
-		len = strlen(name);
+		len = strlen((char *)name);
 
 	hashno = do_hash(name, len, table->hash_count);
 	bp = calloc(1, sizeof(struct hash_bucket));
 	if (!bp) {
-		(void)warning("Can't add %s to hash table.", name);
+		warning("Can't add %s to hash table.", name);
 		return;
 	}
 	bp->name = name;
@@ -101,8 +100,7 @@ add_hash(struct hash_table *table, const char *name,
 }
 
 void
-delete_hash_entry(struct hash_table *table, const char *name, 
-		size_t len)
+delete_hash_entry(struct hash_table *table, unsigned char *name, int len)
 {
 	int hashno;
 	struct hash_bucket *bp, *pbp = NULL;
@@ -110,7 +108,7 @@ delete_hash_entry(struct hash_table *table, const char *name,
 	if (!table)
 		return;
 	if (!len)
-		len = strlen(name);
+		len = strlen((char *)name);
 
 	hashno = do_hash(name, len, table->hash_count);
 
@@ -119,7 +117,8 @@ delete_hash_entry(struct hash_table *table, const char *name,
 	 * find it, delete it.
 	 */
 	for (bp = table->buckets[hashno]; bp; bp = bp->next) {
-		if ((!bp->len && !strcmp(bp->name, name)) ||
+		if ((!bp->len &&
+		    !strcmp((char *)bp->name, (char *)name)) ||
 		    (bp->len == len && !memcmp(bp->name, name, len))) {
 			if (pbp)
 				pbp->next = bp->next;
@@ -132,8 +131,8 @@ delete_hash_entry(struct hash_table *table, const char *name,
 	}
 }
 
-void *
-hash_lookup(struct hash_table *table, const char *name, size_t len)
+unsigned char *
+hash_lookup(struct hash_table *table, unsigned char *name, int len)
 {
 	int hashno;
 	struct hash_bucket *bp;
@@ -142,7 +141,7 @@ hash_lookup(struct hash_table *table, const char *name, size_t len)
 		return (NULL);
 
 	if (!len)
-		len = strlen(name);
+		len = strlen((char *)name);
 
 	hashno = do_hash(name, len, table->hash_count);
 

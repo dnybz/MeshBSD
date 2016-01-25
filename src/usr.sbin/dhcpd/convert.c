@@ -46,51 +46,51 @@
 #include "dhcpd.h"
 
 u_int32_t
-get_u_long(unsigned char *buf)
+getULong(unsigned char *buf)
 {
 	u_int32_t ibuf;
 
-	(void)memcpy(&ibuf, buf, sizeof(ibuf));
+	memcpy(&ibuf, buf, sizeof(ibuf));
 	return (ntohl(ibuf));
 }
 
 u_int16_t
-get_u_short(unsigned char *buf)
+getUShort(unsigned char *buf)
 {
 	u_int16_t ibuf;
 
-	(void)memcpy(&ibuf, buf, sizeof(ibuf));
+	memcpy(&ibuf, buf, sizeof(ibuf));
 	return (ntohs(ibuf));
 }
 
 void
-put_u_long(unsigned char *obuf, u_int32_t val)
+putULong(unsigned char *obuf, u_int32_t val)
 {
 	u_int32_t tmp = htonl(val);
 
-	(void)memcpy(obuf, &tmp, sizeof(tmp));
+	memcpy(obuf, &tmp, sizeof(tmp));
 }
 
 void
-put_long(unsigned char *obuf, int32_t val)
+putLong(unsigned char *obuf, int32_t val)
 {
 	int32_t tmp = htonl(val);
 
-	(void)memcpy(obuf, &tmp, sizeof(tmp));
+	memcpy(obuf, &tmp, sizeof(tmp));
 }
 
 void
-put_u_short(unsigned char *obuf, unsigned int val)
+putUShort(unsigned char *obuf, unsigned int val)
 {
 	u_int16_t tmp = htons(val);
 
-	(void)memcpy(obuf, &tmp, sizeof(tmp));
+	memcpy(obuf, &tmp, sizeof(tmp));
 }
 
 void
-put_short(unsigned char *obuf, int val)
+putShort(unsigned char *obuf, int val)
 {
 	int16_t tmp = htons(val);
 
-	(void)memcpy(obuf, &tmp, sizeof(tmp));
+	memcpy(obuf, &tmp, sizeof(tmp));
 }

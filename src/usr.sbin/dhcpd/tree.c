@@ -54,11 +54,9 @@ cons(caddr_t car, pair cdr)
 	foo = calloc(1, sizeof *foo);
 	if (!foo)
 		error("no memory for cons.");
-	
 	foo->car = car;
 	foo->cdr = cdr;
-	
-	return (foo);
+	return foo;
 }
 
 struct tree_cache *
@@ -68,18 +66,16 @@ tree_cache(struct tree *tree)
 
 	tc = new_tree_cache("tree_cache");
 	if (!tc)
-		return (0);
-	
+		return 0;
 	tc->value = NULL;
 	tc->len = tc->buf_size = 0;
 	tc->timeout = 0;
 	tc->tree = tree;
-	
-	return (tc);
+	return tc;
 }
 
 struct tree *
-tree_const(unsigned char *data, size_t len)
+tree_const(unsigned char *data, int len)
 {
 	unsigned char *d;
 	struct tree *nt;
@@ -89,13 +85,13 @@ tree_const(unsigned char *data, size_t len)
 	if (!nt || !d)
 		error("No memory for constant data tree node.");
 
-	(void)memcpy(d, data, len);
+	memcpy(d, data, len);
 
 	nt->op = TREE_CONST;
 	nt->data.const_val.data = d;
 	nt->data.const_val.len = len;
 
-	return (nt);
+	return nt;
 }
 
 struct tree *
@@ -122,37 +118,30 @@ tree_concat(struct tree *left, struct tree *right)
 
 		if (!buf)
 			error("No memory to concatenate constants.");
-		
-		(void)memcpy(buf, left->data.const_val.data,
+		memcpy(buf, left->data.const_val.data,
 		    left->data.const_val.len);
-		(void)memcpy(buf + left->data.const_val.len,
+		memcpy(buf + left->data.const_val.len,
 		    right->data.const_val.data, right->data.const_val.len);
-		
 		free(left->data.const_val.data);
 		free(right->data.const_val.data);
-		
 		left->data.const_val.data = buf;
 		left->data.const_val.len += right->data.const_val.len;
-		
 		free(right);
-		
-		return (left);
+		return left;
 	}
 
 	/* Otherwise, allocate a new node to concatenate the two. */
 	nt = calloc(1, sizeof(struct tree));
 	if (!nt)
 		error("No memory for data tree concatenation node.");
-	
 	nt->op = TREE_CONCAT;
 	nt->data.concat.left = left;
 	nt->data.concat.right = right;
-	
-	return (nt);
+	return nt;
 }
 
 struct tree *
-tree_limit(struct tree *tree, size_t limit)
+tree_limit(struct tree *tree, int limit)
 {
 	struct tree	*rv;
 
@@ -160,45 +149,43 @@ tree_limit(struct tree *tree, size_t limit)
 	if (tree->op == TREE_CONST) {
 		if (tree->data.const_val.len > limit)
 			tree->data.const_val.len = limit;
-		return (tree);
+		return tree;
 	}
 
 	/* Otherwise, put in a node which enforces the limit on evaluation. */
 	rv = calloc(1, sizeof(struct tree));
 	if (!rv) {
-		(void)warning("No memory for data "
-			"tree limit node.");
-		return (NULL);
+		warning("No memory for data tree limit node.");
+		return NULL;
 	}
 	rv->op = TREE_LIMIT;
 	rv->data.limit.tree = tree;
 	rv->data.limit.limit = limit;
-
-	return (rv);
+	return rv;
 }
 
 int
-tree_evaluate(struct tree_cache *tc)
+tree_evaluate(struct tree_cache *tree_cache)
 {
-	unsigned char	*bp = tc->value;
-	int		 bc = tc->buf_size;
+	unsigned char	*bp = tree_cache->value;
+	int		 bc = tree_cache->buf_size;
 	int		 bufix = 0;
 
 	/*
 	 * If there's no tree associated with this cache, it evaluates to a
 	 * constant and that was detected at startup.
 	 */
-	if (!tc->tree)
-		return (1);
+	if (!tree_cache->tree)
+		return 1;
 
 	/* Try to evaluate the tree without allocating more memory... */
-	tc->timeout = tree_evaluate_recurse(&bufix, &bp, &bc,
-	    tc->tree);
+	tree_cache->timeout = tree_evaluate_recurse(&bufix, &bp, &bc,
+	    tree_cache->tree);
 
 	/* No additional allocation needed? */
 	if (bufix <= bc) {
-		tc->len = bufix;
-		return (1);
+		tree_cache->len = bufix;
+		return 1;
 	}
 
 	/*
@@ -208,7 +195,7 @@ tree_evaluate(struct tree_cache *tc)
 	bp = calloc(1, bufix);
 	if (!bp) {
 		warning("no more memory for option data");
-		return (0);
+		return 0;
 	}
 
 	/* Record the change in conditions... */
@@ -220,20 +207,18 @@ tree_evaluate(struct tree_cache *tc)
 	 * second call to tree_evaluate_recurse, since we haven't
 	 * changed the ``current'' time.
 	 */
-	tree_evaluate_recurse(&bufix, &bp, &bc, tc->tree);
+	tree_evaluate_recurse(&bufix, &bp, &bc, tree_cache->tree);
 
 	/*
 	 * Free the old buffer if needed, then store the new buffer
 	 * location and size and return.
 	 */
-	if (tc->value)
-		free(tc->value);
-	
-	tc->value = bp;
-	tc->len = bufix;
-	tc->buf_size = bc;
-	
-	return (1);
+	if (tree_cache->value)
+		free(tree_cache->value);
+	tree_cache->value = bp;
+	tree_cache->len = bufix;
+	tree_cache->buf_size = bc;
+	return 1;
 }
 
 static time_t
@@ -249,30 +234,28 @@ tree_evaluate_recurse(int *bufix, unsigned char **bufp,
 		    tree->data.concat.left);
 		t2 = tree_evaluate_recurse(bufix, bufp, bufcount,
 		    tree->data.concat.right);
-		
 		if (t1 > t2)
-			t1 = t2;
-		
-		break;
+			return t2;
+		return t1;
+
 	case TREE_CONST:
 		do_data_copy(bufix, bufp, bufcount, tree->data.const_val.data,
 		    tree->data.const_val.len);
 		t1 = MAX_TIME;
-		
-		break;
+		return t1;
+
 	case TREE_LIMIT:
 		limit = *bufix + tree->data.limit.limit;
 		t1 = tree_evaluate_recurse(bufix, bufp, bufcount,
 		    tree->data.limit.tree);
 		*bufix = limit;
-		
-		break;
+		return t1;
+
 	default:
 		warning("Bad node id in tree: %d.", tree->op);
 		t1 = MAX_TIME;
-		break;
+		return t1;
 	}
-	return (t1);
 }
 
 static void
@@ -290,7 +273,6 @@ do_data_copy(int *bufix, unsigned char **bufp, int *bufcount,
 	 * by the amount we actually had to copy, which could be more.
 	 */
 	if (space > 0)
-		(void)memcpy(*bufp + *bufix, data, space);
-		
+		memcpy(*bufp + *bufix, data, space);
 	*bufix += len;
 }

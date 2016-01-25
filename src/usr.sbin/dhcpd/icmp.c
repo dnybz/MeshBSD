@@ -48,8 +48,7 @@ static int icmp_protocol_fd;
 /* Initialize the ICMP protocol. */
 
 void
-icmp_startup(int routep __unused, 
-	void (*handler)(struct iaddr, u_int8_t *, int))
+icmp_startup(int routep, void (*handler)(struct iaddr, u_int8_t *, int))
 {
 	struct protoent *proto;
 	int protocol = 1, state;
@@ -89,7 +88,7 @@ icmp_echorequest(struct iaddr *addr)
 	bzero(&to, sizeof(to));
 	to.sin_len = sizeof to;
 	to.sin_family = AF_INET;
-	(void)memcpy(&to.sin_addr, addr->iabuf, sizeof to.sin_addr);	/* XXX */
+	memcpy(&to.sin_addr, addr->iabuf, sizeof to.sin_addr);	/* XXX */
 
 	icmp.icmp_type = ICMP_ECHO;
 	icmp.icmp_code = 0;
@@ -106,7 +105,7 @@ icmp_echorequest(struct iaddr *addr)
 	if (status == -1)
 		warning("icmp_echorequest %s: %m", inet_ntoa(to.sin_addr));
 
-	if (status != sizeof(icmp))
+	if (status != sizeof icmp)
 		return 0;
 	return 1;
 }
@@ -118,25 +117,24 @@ icmp_echoreply(struct protocol *protocol)
 	struct sockaddr_in from;
 	u_int8_t icbuf[1500];
 	struct icmp *icfrom;
-	socklen_t salen, len;
-	ssize_t status;
+	int status, len;
+	socklen_t salen;
 	struct iaddr ia;
 
-	salen = sizeof(from);
+	salen = sizeof from;
 	status = recvfrom(protocol->fd, icbuf, sizeof(icbuf), 0,
 	    (struct sockaddr *)&from, &salen);
 	if (status == -1) {
 		warning("icmp_echoreply: %m");
 		return;
 	}
-	len = status;
 
 	/* Probably not for us. */
-	if (len < (sizeof(struct ip)) + (sizeof *icfrom))
+	if (status < (sizeof(struct ip)) + (sizeof *icfrom))
 		return;
 
-	len -= sizeof(struct ip);
-	icfrom = (void *)(icbuf + sizeof(struct ip));
+	len = status - sizeof(struct ip);
+	icfrom = (struct icmp *)(icbuf + sizeof(struct ip));
 
 	/* Silently discard ICMP packets that aren't echoreplies. */
 	if (icfrom->icmp_type != ICMP_ECHOREPLY)
@@ -146,8 +144,8 @@ icmp_echoreply(struct protocol *protocol)
 	if (protocol->local) {
 		handler = ((void (*)(struct iaddr, u_int8_t *, int))
 		    protocol->local);
-		(void)memcpy(ia.iabuf, &from.sin_addr, sizeof(from.sin_addr));
-		ia.len = sizeof(from.sin_addr);
+		memcpy(ia.iabuf, &from.sin_addr, sizeof from.sin_addr);
+		ia.len = sizeof from.sin_addr;
 		(*handler)(ia, icbuf, len);
 	}
 }

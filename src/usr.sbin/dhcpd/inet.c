@@ -79,7 +79,7 @@ ip_addr(struct iaddr subnet, struct iaddr mask, u_int32_t host_address)
 	struct iaddr rv;
 
 	swaddr = htonl(host_address);
-	(void)memcpy(habuf, &swaddr, sizeof(swaddr));
+	memcpy(habuf, &swaddr, sizeof(swaddr));
 
 	/*
 	 * Combine the subnet address and the host address.   If the
@@ -123,8 +123,7 @@ host_addr(struct iaddr addr, struct iaddr mask)
 		rv.iabuf[i] = addr.iabuf[i] & ~mask.iabuf[i];
 
 	/* Copy out up to 32 bits... */
-	(void)memcpy(&swaddr, &rv.iabuf[rv.len - sizeof(swaddr)], 
-		sizeof(swaddr));
+	memcpy(&swaddr, &rv.iabuf[rv.len - sizeof(swaddr)], sizeof(swaddr));
 
 	/* Swap it and return it. */
 	return (ntohl(swaddr));
@@ -145,11 +144,11 @@ piaddr(struct iaddr addr)
 	const char *s;
 
 	if (addr.len == 0)
-		(void)strlcpy(pbuf, "<null address>", sizeof(pbuf));
+		strlcpy(pbuf, "<null address>", sizeof(pbuf));
 	else {
-		s = inet_ntop(AF_INET, &addr.iabuf, pbuf, sizeof(pbuf));
+		s = inet_ntop(AF_INET, &addr.iabuf, pbuf, sizeof pbuf);
 		if (s == NULL)
-			(void)strlcpy(pbuf, "<invalid address>", sizeof(pbuf));
+			strlcpy(pbuf, "<invalid address>", sizeof(pbuf));
 	}
 	return (pbuf);
 }

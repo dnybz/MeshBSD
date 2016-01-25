@@ -53,6 +53,8 @@ static struct lease *dangling_leases;
 static struct hash_table *vendor_class_hash;
 static struct hash_table *user_class_hash;
 
+extern int syncsend;
+
 void
 enter_host(struct host_decl *hd)
 {
@@ -122,16 +124,16 @@ enter_host(struct host_decl *hd)
 }
 
 struct host_decl *
-find_hosts_by_haddr(int htype __unused, unsigned char *haddr, int hlen)
+find_hosts_by_haddr(int htype, unsigned char *haddr, int hlen)
 {
-	return ((struct host_decl *)hash_lookup(host_hw_addr_hash,
-	    haddr, hlen));
+	return (struct host_decl *)hash_lookup(host_hw_addr_hash,
+	    haddr, hlen);
 }
 
 struct host_decl *
 find_hosts_by_uid(unsigned char *data, int len)
 {
-	return ((struct host_decl *)hash_lookup(host_uid_hash, data, len));
+	return (struct host_decl *)hash_lookup(host_uid_hash, data, len);
 }
 
 /*
@@ -150,24 +152,23 @@ find_host_for_network(struct host_decl **host, struct iaddr *addr,
 	struct subnet *subnet;
 	struct iaddr ip_address;
 	struct host_decl *hp;
-	size_t i;
+	int i;
 
 	for (hp = *host; hp; hp = hp->n_ipaddr) {
 		if (!hp->fixed_addr || !tree_evaluate(hp->fixed_addr))
 			continue;
 		for (i = 0; i < hp->fixed_addr->len; i += 4) {
 			ip_address.len = 4;
-			(void)memcpy(ip_address.iabuf, 
-				hp->fixed_addr->value + i, 4);
+			memcpy(ip_address.iabuf, hp->fixed_addr->value + i, 4);
 			subnet = find_grouped_subnet(share, ip_address);
 			if (subnet) {
 				*addr = ip_address;
 				*host = hp;
-				return (subnet);
+				return subnet;
 			}
 		}
 	}
-	return (NULL);
+	return NULL;
 }
 
 void
@@ -184,8 +185,7 @@ new_address_range(struct iaddr low, struct iaddr high, struct subnet *subnet,
 
 	/* All subnets should have attached shared network structures. */
 	if (!share) {
-		(void)strlcpy(netbuf, piaddr(subnet->net), 
-			sizeof(netbuf));
+		strlcpy(netbuf, piaddr(subnet->net), sizeof(netbuf));
 		error("No shared network for network %s (%s)",
 		    netbuf, piaddr(subnet->netmask));
 	}
@@ -201,20 +201,18 @@ new_address_range(struct iaddr low, struct iaddr high, struct subnet *subnet,
 	/* Make sure that high and low addresses are in same subnet. */
 	net = subnet_number(low, subnet->netmask);
 	if (!addr_eq(net, subnet_number(high, subnet->netmask))) {
-		(void)strlcpy(lowbuf, piaddr(low), sizeof(lowbuf));
-		(void)strlcpy(highbuf, piaddr(high), sizeof(highbuf));
-		(void)strlcpy(netbuf, piaddr(subnet->netmask), 
-			sizeof(netbuf));
+		strlcpy(lowbuf, piaddr(low), sizeof(lowbuf));
+		strlcpy(highbuf, piaddr(high), sizeof(highbuf));
+		strlcpy(netbuf, piaddr(subnet->netmask), sizeof(netbuf));
 		error("Address range %s to %s, netmask %s spans %s!",
 		    lowbuf, highbuf, netbuf, "multiple subnets");
 	}
 
 	/* Make sure that the addresses are on the correct subnet. */
 	if (!addr_eq(net, subnet->net)) {
-		(void)strlcpy(lowbuf, piaddr(low), sizeof(lowbuf));
-		(void)strlcpy(highbuf, piaddr(high), sizeof(highbuf));
-		(void)strlcpy(netbuf, piaddr(subnet->netmask), 
-			sizeof(netbuf));
+		strlcpy(lowbuf, piaddr(low), sizeof(lowbuf));
+		strlcpy(highbuf, piaddr(high), sizeof(highbuf));
+		strlcpy(netbuf, piaddr(subnet->netmask), sizeof(netbuf));
 		error("Address range %s to %s not on net %s/%s!",
 		    lowbuf, highbuf, piaddr(subnet->net), netbuf);
 	}
@@ -232,12 +230,11 @@ new_address_range(struct iaddr low, struct iaddr high, struct subnet *subnet,
 	/* Get a lease structure for each address in the range. */
 	address_range = calloc(max - min + 1, sizeof(struct lease));
 	if (!address_range) {
-		(void)strlcpy(lowbuf, piaddr(low), sizeof(lowbuf));
-		(void)strlcpy(highbuf, piaddr(high), sizeof(highbuf));
+		strlcpy(lowbuf, piaddr(low), sizeof(lowbuf));
+		strlcpy(highbuf, piaddr(high), sizeof(highbuf));
 		error("No memory for address range %s-%s.", lowbuf, highbuf);
 	}
-	(void)memset(address_range, 0, 
-		(sizeof *address_range) * (max - min + 1));
+	memset(address_range, 0, (sizeof *address_range) * (max - min + 1));
 
 	/* Fill in the last lease if it hasn't been already... */
 	if (!share->last_lease)
@@ -247,21 +244,19 @@ new_address_range(struct iaddr low, struct iaddr high, struct subnet *subnet,
 	for (i = 0; i < max - min + 1; i++) {
 		address_range[i].ip_addr = ip_addr(subnet->net,
 		    subnet->netmask, i + min);
-		address_range[i].starts = 
-			address_range[i].timestamp = MIN_TIME;
+		address_range[i].starts = address_range[i].timestamp = MIN_TIME;
 		address_range[i].ends = MIN_TIME;
 		address_range[i].subnet = subnet;
 		address_range[i].shared_network = share;
 		address_range[i].flags = dynamic ? DYNAMIC_BOOTP_OK : 0;
 
-		(void)memcpy(&ia, address_range[i].ip_addr.iabuf, 4);
+		memcpy(&ia, address_range[i].ip_addr.iabuf, 4);
 
 		if (subnet->group->get_lease_hostnames) {
 			h = gethostbyaddr((char *)&ia, sizeof ia, AF_INET);
-			if (!h) {
-				(void)warning("No hostname for %s", 
-					inet_ntoa(ia));
-			} else {
+			if (!h)
+				warning("No hostname for %s", inet_ntoa(ia));
+			else {
 				address_range[i].hostname = strdup(h->h_name);
 				if (address_range[i].hostname == NULL)
 					error("no memory for hostname %s.",
@@ -302,7 +297,7 @@ new_address_range(struct iaddr low, struct iaddr high, struct subnet *subnet,
 			address_range[lhost - i].hostname = lp->hostname;
 			address_range[lhost - i].client_hostname =
 			    lp->client_hostname;
-			(void)supersede_lease(&address_range[lhost - i], lp, 0);
+			supersede_lease(&address_range[lhost - i], lp, 0);
 			free(lp);
 		} else
 			plp = lp;
@@ -316,9 +311,9 @@ find_subnet(struct iaddr addr)
 
 	for (rv = subnets; rv; rv = rv->next_subnet) {
 		if (addr_eq(subnet_number(addr, rv->netmask), rv->net))
-			return (rv);
+			return rv;
 	}
-	return (NULL);
+	return NULL;
 }
 
 struct subnet *
@@ -328,9 +323,9 @@ find_grouped_subnet(struct shared_network *share, struct iaddr addr)
 
 	for (rv = share->subnets; rv; rv = rv->next_sibling) {
 		if (addr_eq(subnet_number(addr, rv->netmask), rv->net))
-			return (rv);
+			return rv;
 	}
-	return (NULL);
+	return NULL;
 }
 
 int
@@ -351,14 +346,13 @@ subnet_inner_than(struct subnet *subnet, struct subnet *scan, int warnp)
 				break;
 		strlcpy(n1buf, piaddr(subnet->net), sizeof(n1buf));
 		if (warnp)
-			(void)warning("%ssubnet %s/%d "
-				"conflicts with subnet %s/%d",
+			warning("%ssubnet %s/%d conflicts with subnet %s/%d",
 			    "Warning: ", n1buf, 32 - i,
 			    piaddr(scan->net), 32 - j);
 		if (i < j)
-			return (1);
+			return 1;
 	}
-	return (0);
+	return 0;
 }
 
 /* Enter a new subnet into the subnet list. */
@@ -425,7 +419,7 @@ enter_lease(struct lease *lease)
 		/* Record the hostname information in the lease. */
 		comp->hostname = lease->hostname;
 		comp->client_hostname = lease->client_hostname;
-		(void)supersede_lease(comp, lease, 0);
+		supersede_lease(comp, lease, 0);
 	}
 }
 
@@ -446,8 +440,8 @@ static inline int
 uid_or_hwaddr_cmp(struct lease *a, struct lease *b)
 {
 	if (a->uid && b->uid)
-		return (uidcmp(a, b));
-	return (hwaddrcmp(&a->hardware_addr, &b->hardware_addr));
+		return uidcmp(a, b);
+	return hwaddrcmp(&a->hardware_addr, &b->hardware_addr);
 }
 
 /*
@@ -466,7 +460,7 @@ supersede_lease(struct lease *comp, struct lease *lease, int commit)
 
 	/* Static leases are not currently kept in the database... */
 	if (lease->flags & STATIC_LEASE)
-		return (1);
+		return 1;
 
 	/*
 	 * If the existing lease hasn't expired and has a different
@@ -480,8 +474,8 @@ supersede_lease(struct lease *comp, struct lease *lease, int commit)
 	 */
 	if (!(lease->flags & ABANDONED_LEASE) &&
 	    comp->ends > cur_time && uid_or_hwaddr_cmp(comp, lease)) {
-		(void)warning("Lease conflict at %s", piaddr(comp->ip_addr));
-		return (0);
+		warning("Lease conflict at %s", piaddr(comp->ip_addr));
+		return 0;
 	} else {
 		/* If there's a Unique ID, dissociate it from the hash
 		   table and free it if necessary. */
@@ -511,8 +505,7 @@ supersede_lease(struct lease *comp, struct lease *lease, int commit)
 		comp->starts = lease->starts;
 		if (lease->uid) {
 			if (lease->uid_len <= sizeof (lease->uid_buf)) {
-				(void)memcpy(comp->uid_buf, lease->uid, 
-					lease->uid_len);
+				memcpy(comp->uid_buf, lease->uid, lease->uid_len);
 				comp->uid = &comp->uid_buf[0];
 				comp->uid_max = sizeof comp->uid_buf;
 			} else if (lease->uid != &lease->uid_buf[0]) {
@@ -617,7 +610,7 @@ supersede_lease(struct lease *comp, struct lease *lease, int commit)
 
 	/* Return zero if we didn't commit the lease to permanent storage;
 	   nonzero if we did. */
-	return (commit && write_lease(comp) && commit_leases());
+	return commit && write_lease(comp) && commit_leases();
 }
 
 /* Release the specified lease and re-hash it as appropriate. */
@@ -630,8 +623,8 @@ release_lease(struct lease *lease)
 	lt = *lease;
 	if (lt.ends > cur_time) {
 		lt.ends = cur_time;
-		(void)supersede_lease(lease, &lt, 1);
-		(void)note("Released lease for IP address %s",
+		supersede_lease(lease, &lt, 1);
+		note("Released lease for IP address %s",
 		    piaddr(lease->ip_addr));
 		pfmsg('R', lease);
 	}
@@ -644,7 +637,7 @@ release_lease(struct lease *lease)
  * appropriate. abandons permanently if abtime is 0
  */
 void
-abandon_lease(struct lease *lease, const char *message)
+abandon_lease(struct lease *lease, char *message)
 {
 	struct lease lt;
 	time_t abtime;
@@ -653,41 +646,35 @@ abandon_lease(struct lease *lease, const char *message)
 	lease->flags |= ABANDONED_LEASE;
 	lt = *lease;
 	lt.ends = cur_time + abtime;
-	
-	(void)warning("Abandoning IP address %s "
-		"for %lld seconds: %s",
-	    piaddr(lease->ip_addr), 
-	    (long long)abtime, message);
-	
+	warning("Abandoning IP address %s for %lld seconds: %s",
+	    piaddr(lease->ip_addr), (long long)abtime, message);
 	lt.hardware_addr.htype = 0;
 	lt.hardware_addr.hlen = 0;
 	lt.uid = NULL;
 	lt.uid_len = 0;
-	
-	(void)supersede_lease(lease, &lt, 1);
+	supersede_lease(lease, &lt, 1);
 
 	pfmsg('A', lease); /* address is abandoned. send to purgatory */
-
+	return;
 }
 
 /* Locate the lease associated with a given IP address... */
 struct lease *
 find_lease_by_ip_addr(struct iaddr addr)
 {
-	return ((struct lease *)hash_lookup(lease_ip_addr_hash,
-	    addr.iabuf, addr.len));
+	return (struct lease *)hash_lookup(lease_ip_addr_hash,
+	    addr.iabuf, addr.len);
 }
 
 struct lease *find_lease_by_uid(unsigned char *uid, int len)
 {
-	return ((struct lease *)hash_lookup(lease_uid_hash, uid, len));
+	return (struct lease *)hash_lookup(lease_uid_hash, uid, len);
 }
 
 struct lease *
 find_lease_by_hw_addr(unsigned char *hwaddr, int hwlen)
 {
-	return ((struct lease *)hash_lookup(lease_hw_addr_hash, 
-		hwaddr, hwlen));
+	return (struct lease *)hash_lookup(lease_hw_addr_hash, hwaddr, hwlen);
 }
 
 /* Add the specified lease to the uid hash. */
@@ -717,8 +704,10 @@ uid_hash_delete(struct lease *lease)
 	struct lease *scan;
 
 	/* If it's not in the hash, we have no work to do. */
-	if (!head) 
-		goto out;
+	if (!head) {
+		lease->n_uid = NULL;
+		return;
+	}
 
 	/* If the lease we're freeing is at the head of the list,
 	   remove the hash table entry and add a new one with the
@@ -740,7 +729,6 @@ uid_hash_delete(struct lease *lease)
 			}
 		}
 	}
-out:	
 	lease->n_uid = NULL;
 }
 
@@ -773,8 +761,10 @@ hw_hash_delete(struct lease *lease)
 	struct lease *scan;
 
 	/* If it's not in the hash, we have no work to do. */
-	if (!head) 
-		goto out;
+	if (!head) {
+		lease->n_hw = NULL;
+		return;
+	}
 
 	/* If the lease we're freeing is at the head of the list,
 	   remove the hash table entry and add a new one with the
@@ -800,7 +790,6 @@ hw_hash_delete(struct lease *lease)
 			}
 		}
 	}
-out:	
 	lease->n_hw = NULL;
 }
 
@@ -808,10 +797,10 @@ out:
 struct class *
 add_class(int type, char *name)
 {
-	struct class *cls;
+	struct class *class;
 	char *tname;
 
-	cls = calloc(1, sizeof(*cls));
+	class = calloc(1, sizeof(*class));
 	tname = strdup(name);
 
 	if (!vendor_class_hash)
@@ -819,46 +808,40 @@ add_class(int type, char *name)
 	if (!user_class_hash)
 		user_class_hash = new_hash();
 
-	if (!tname || !cls || !vendor_class_hash || !user_class_hash) 
-		goto bad;
+	if (!tname || !class || !vendor_class_hash || !user_class_hash) {
+		warning("No memory for %s.", name);
+		free(class);
+		free(tname);
+		return NULL;
+	}
 
-	cls->name = tname;
+	class->name = tname;
 
 	if (type)
 		add_hash(user_class_hash, (unsigned char *)tname,
-		    strlen(tname), (unsigned char *)cls);
+		    strlen(tname), (unsigned char *)class);
 	else
 		add_hash(vendor_class_hash, (unsigned char *)tname,
-		    strlen(tname), (unsigned char *)cls);
+		    strlen(tname), (unsigned char *)class);
 
-out:
-	return (cls);
-bad:
-	(void)warning("No memory for %s.", name);
-	
-	free(cls);
-	free(tname);
-	tname = NULL;
-	cls = NULL;
-	goto out;
+	return class;
 }
 
 struct class *
 find_class(int type, unsigned char *name, int len)
 {
-	return ((struct class *)hash_lookup(type ? user_class_hash :
-	    vendor_class_hash, name, len));
+	return (struct class *)hash_lookup(type ? user_class_hash :
+	    vendor_class_hash, name, len);
 }
 
 struct group *
-clone_group(struct group *group, const char *caller)
+clone_group(struct group *group, char *caller)
 {
 	struct group *g;
 
 	g = calloc(1, sizeof(struct group));
 	if (!g)
-		(void)error("%s: can't allocate new group", caller);
-	
+		error("%s: can't allocate new group", caller);
 	*g = *group;
 	return g;
 }
@@ -876,12 +859,12 @@ write_leases(void)
 			if (l->hardware_addr.hlen || l->uid_len ||
 			    (l->flags & ABANDONED_LEASE)) {
 				if (!write_lease(l))
-					(void)error("Can't rewrite lease database");
+					error("Can't rewrite lease database");
 				if (syncsend)
 					sync_lease(l);
 			}
 		}
 	}
 	if (!commit_leases())
-		(void)error("Can't commit leases to new database: %m");
+		error("Can't commit leases to new database: %m");
 }

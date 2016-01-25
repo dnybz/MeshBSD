@@ -46,15 +46,17 @@
 #include <netinet/udp.h>
 #include <netinet/if_ether.h>
 
+u_int32_t	checksum(unsigned char *, unsigned, u_int32_t);
+u_int32_t	wrapsum(u_int32_t);
+
 u_int32_t
 checksum(unsigned char *buf, unsigned nbytes, u_int32_t sum)
 {
-	unsigned i;
-	
+	int i;
+
 	/* Checksum all the pairs of bytes first... */
 	for (i = 0; i < (nbytes & ~1U); i += 2) {
-		u_int16_t tmp = (u_int16_t)(*(buf + i));
-		sum += (u_int16_t)ntohs(tmp);
+		sum += (u_int16_t)ntohs(*((u_int16_t *)(buf + i)));
 		if (sum > 0xFFFF)
 			sum -= 0xFFFF;
 	}
@@ -81,30 +83,29 @@ wrapsum(u_int32_t sum)
 }
 
 void
-assemble_hw_header(struct interface_info *interface __unused, 
-	unsigned char *buf, int *bufix, struct hardware *to)
+assemble_hw_header(struct interface_info *interface, unsigned char *buf,
+    int *bufix, struct hardware *to)
 {
 	struct ether_header eh;
 
 	if (to != NULL && to->hlen == 6) /* XXX */
-		(void)memcpy(eh.ether_dhost, to->haddr, sizeof(eh.ether_dhost));
+		memcpy(eh.ether_dhost, to->haddr, sizeof(eh.ether_dhost));
 	else
-		(void)memset(eh.ether_dhost, 0xff, sizeof(eh.ether_dhost));
+		memset(eh.ether_dhost, 0xff, sizeof(eh.ether_dhost));
 
 	/* source address is filled in by the kernel */
-	(void)memset(eh.ether_shost, 0x00, sizeof(eh.ether_shost));
-	
+	memset(eh.ether_shost, 0x00, sizeof(eh.ether_shost));
+
 	eh.ether_type = htons(ETHERTYPE_IP);
-	
-	(void)memcpy(&buf[*bufix], &eh, ETHER_HDR_LEN);
-	
+
+	memcpy(&buf[*bufix], &eh, ETHER_HDR_LEN);
 	*bufix += ETHER_HDR_LEN;
 }
 
 void
-assemble_udp_ip_header(struct interface_info *interface __unused, 
-	unsigned char *buf, int *bufix, u_int32_t from, u_int32_t to, 
-	unsigned int port, unsigned char *data, int len)
+assemble_udp_ip_header(struct interface_info *interface, unsigned char *buf,
+    int *bufix, u_int32_t from, u_int32_t to, unsigned int port,
+    unsigned char *data, int len)
 {
 	struct ip ip;
 	struct udphdr udp;
@@ -122,37 +123,32 @@ assemble_udp_ip_header(struct interface_info *interface __unused,
 	ip.ip_dst.s_addr = to;
 
 	ip.ip_sum = wrapsum(checksum((unsigned char *)&ip, sizeof(ip), 0));
-	
-	(void)memcpy(&buf[*bufix], &ip, sizeof(ip));
-	
+	memcpy(&buf[*bufix], &ip, sizeof(ip));
 	*bufix += sizeof(ip);
 
 	udp.uh_sport = server_port;	/* XXX */
 	udp.uh_dport = port;			/* XXX */
 	udp.uh_ulen = htons(sizeof(udp) + len);
-	
-	(void)memset(&udp.uh_sum, 0, sizeof(udp.uh_sum));
+	memset(&udp.uh_sum, 0, sizeof(udp.uh_sum));
 
 	udp.uh_sum = wrapsum(checksum((unsigned char *)&udp, sizeof(udp),
 	    checksum(data, len, checksum((unsigned char *)&ip.ip_src,
 	    2 * sizeof(ip.ip_src),
 	    IPPROTO_UDP + (u_int32_t)ntohs(udp.uh_ulen)))));
 
-	(void)memcpy(&buf[*bufix], &udp, sizeof(udp));
-	
+	memcpy(&buf[*bufix], &udp, sizeof(udp));
 	*bufix += sizeof(udp);
 }
 
 ssize_t
-decode_hw_header(struct interface_info *interface __unused, 
-	unsigned char *buf, int bufix, struct hardware *from)
+decode_hw_header(struct interface_info *interface, unsigned char *buf,
+    int bufix, struct hardware *from)
 {
 	struct ether_header eh;
 
-	(void)memcpy(&eh, buf + bufix, ETHER_HDR_LEN);
-	(void)memcpy(from->haddr, eh.ether_shost, 
-		sizeof(eh.ether_shost));
+	memcpy(&eh, buf + bufix, ETHER_HDR_LEN);
 
+	memcpy(from->haddr, eh.ether_shost, sizeof(eh.ether_shost));
 	from->htype = ARPHRD_ETHER;
 	from->hlen = sizeof(eh.ether_shost);
 
@@ -160,8 +156,8 @@ decode_hw_header(struct interface_info *interface __unused,
 }
 
 ssize_t
-decode_udp_ip_header(struct interface_info *interface __unused, 
-	unsigned char *buf, int bufix, struct sockaddr_in *from, int buflen)
+decode_udp_ip_header(struct interface_info *interface, unsigned char *buf,
+    int bufix, struct sockaddr_in *from, int buflen)
 {
 	struct ip *ip;
 	struct udphdr *udp;
@@ -176,8 +172,8 @@ decode_udp_ip_header(struct interface_info *interface __unused,
 	static unsigned int udp_packets_length_overflow;
 	int len;
 
-	ip = (void *)(buf + bufix);
-	udp = (void *)(buf + bufix + ip_len);
+	ip = (struct ip *)(buf + bufix);
+	udp = (struct udphdr *)(buf + bufix + ip_len);
 
 	/* Check the IP header checksum - it should be zero. */
 	ip_packets_seen++;
@@ -185,7 +181,7 @@ decode_udp_ip_header(struct interface_info *interface __unused,
 		ip_packets_bad_checksum++;
 		if (ip_packets_seen > 4 && ip_packets_bad_checksum != 0 &&
 		    (ip_packets_seen / ip_packets_bad_checksum) < 2) {
-			(void)note("%u bad IP checksums seen in %u packets",
+			note("%u bad IP checksums seen in %u packets",
 			    ip_packets_bad_checksum, ip_packets_seen);
 			ip_packets_seen = ip_packets_bad_checksum = 0;
 		}
@@ -193,11 +189,10 @@ decode_udp_ip_header(struct interface_info *interface __unused,
 	}
 
 	if (ntohs(ip->ip_len) != buflen)
-		(void)debug("ip length %d disagrees "
-			"with bytes received %d.",
+		debug("ip length %d disagrees with bytes received %d.",
 		    ntohs(ip->ip_len), buflen);
 
-	(void)memcpy(&from->sin_addr, &ip->ip_src, 4);
+	memcpy(&from->sin_addr, &ip->ip_src, 4);
 
 	/*
 	 * Compute UDP checksums, including the ``pseudo-header'', the
@@ -237,15 +232,14 @@ decode_udp_ip_header(struct interface_info *interface __unused,
 		udp_packets_bad_checksum++;
 		if (udp_packets_seen > 4 && udp_packets_bad_checksum != 0 &&
 		    (udp_packets_seen / udp_packets_bad_checksum) < 2) {
-			(void)note("%u bad udp checksums in %u packets",
+			note("%u bad udp checksums in %u packets",
 			    udp_packets_bad_checksum, udp_packets_seen);
 			udp_packets_seen = udp_packets_bad_checksum = 0;
 		}
 		return (-1);
 	}
 
-	(void)memcpy(&from->sin_port, &udp->uh_sport, 
-		sizeof(udp->uh_sport));
+	memcpy(&from->sin_port, &udp->uh_sport, sizeof(udp->uh_sport));
 
 	return (ip_len + sizeof(*udp));
 }

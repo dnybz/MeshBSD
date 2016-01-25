@@ -61,18 +61,18 @@ int gotpipe = 0;
 int syncrecv;
 int syncsend;
 pid_t pfproc_pid = -1;
-char *path_dhcpd_conf = NULL;
-char *path_dhcpd_db = NULL;
+char *path_dhcpd_conf = _PATH_DHCPD_CONF;
+char *path_dhcpd_db = _PATH_DHCPD_DB;
 char *abandoned_tab = NULL;
 char *changedmac_tab = NULL;
 char *leased_tab = NULL;
-
-static char *progname;
+struct syslog_data sdata = SYSLOG_DATA_INIT;
 
 int
 main(int argc, char *argv[])
 {
 	int ch, cftest = 0, daemonize = 1, rdomain = -1, udpsockmode = 0;
+	extern char *__progname;
 	char *sync_iface = NULL;
 	char *sync_baddr = NULL;
 	u_short sync_port = 0;
@@ -80,10 +80,10 @@ main(int argc, char *argv[])
 	struct in_addr udpaddr;
 
 	/* Initially, log errors to stderr as well as to syslogd. */
+	openlog_r(__progname, LOG_PID | LOG_NDELAY, DHCPD_LOG_FACILITY, &sdata);
 
-	progname = argv[0]; /* XXX: yeah, ugly. */
 	opterr = 0;
-	while ((ch = getopt(argc, argv, "A:C:L:c:dfl:nu::Y:y:")) != -1) {
+	while ((ch = getopt(argc, argv, "A:C:L:c:dfl:nu::Y:y:")) != -1)
 		switch (ch) {
 		case 'Y':
 			syncsend = 1;
@@ -92,14 +92,13 @@ main(int argc, char *argv[])
 			syncrecv = 1;
 			break;
 		}
-	}
-	
 	if (syncsend || syncrecv) {
 		if ((ent = getservbyname("dhcpd-sync", "udp")) == NULL)
 			errx(1, "Can't find service \"dhcpd-sync\" in "
 			    "/etc/services");
 		sync_port = ntohs(ent->s_port);
 	}
+
 	udpaddr.s_addr = htonl(INADDR_BROADCAST);
 
 	optreset = optind = opterr = 1;
@@ -160,7 +159,7 @@ main(int argc, char *argv[])
 		struct interface_info *tmp = calloc(1, sizeof(*tmp));
 		if (!tmp)
 			error("calloc");
-		(void)strlcpy(tmp->name, argv[0], sizeof(tmp->name));
+		strlcpy(tmp->name, argv[0], sizeof(tmp->name));
 		tmp->next = interfaces;
 		interfaces = tmp;
 		argc--;
@@ -173,7 +172,7 @@ main(int argc, char *argv[])
 
 	tzset();
 
-	(void)time(&cur_time);
+	time(&cur_time);
 	if (!readconf())
 		error("Configuration file errors encountered");
 
@@ -183,10 +182,11 @@ main(int argc, char *argv[])
 	db_startup();
 	if (!udpsockmode || argc > 0)
 		discover_interfaces(&rdomain);
-	if (rdomain != -1) {
-		if (setfib(rdomain) == -1)
-			error("setfib (%m)");
-	}
+
+	if (rdomain != -1)
+		if (setrtable(rdomain) == -1)
+			error("setrtable (%m)");
+
 	if (udpsockmode)
 		udpsock_startup(udpaddr);
 	icmp_startup(1, lease_pinged);
@@ -201,35 +201,34 @@ main(int argc, char *argv[])
 		error("user \"_dhcp\" not found");
 
 	if (daemonize)
-		(void)daemon(0, 0);
+		daemon(0, 0);
 
 	/* don't go near /dev/pf unless we actually intend to use it */
 	if ((abandoned_tab != NULL) ||
 	    (changedmac_tab != NULL) ||
-	    (leased_tab != NULL)) {
+	    (leased_tab != NULL)){
 		if (pipe(pfpipe) == -1)
 			error("pipe (%m)");
-		switch (pfproc_pid = fork()) {
+		switch (pfproc_pid = fork()){
 		case -1:
 			error("fork (%m)");
 			/* NOTREACHED */
 			exit(1);
 		case 0:
 			/* child process. start up table engine */
-			(void)close(pfpipe[1]);
+			close(pfpipe[1]);
 			pftable_handler();
 			/* NOTREACHED */
 			exit(1);
 		default:
-			(void)close(pfpipe[0]);
+			close(pfpipe[0]);
 			gotpipe = 1;
 			break;
 		}
 	}
 
-	if (chroot("/var/empty") == -1)
-		error("chroot %s: %m", "/var/empty");
-
+	if (chroot(_PATH_VAREMPTY) == -1)
+		error("chroot %s: %m", _PATH_VAREMPTY);
 	if (chdir("/") == -1)
 		error("chdir(\"/\"): %m");
 	if (setgroups(1, &pw->pw_gid) ||
@@ -247,17 +246,18 @@ main(int argc, char *argv[])
 void
 usage(void)
 {
-	(void)fprintf(stderr, "usage: %s [-dfn] [-A abandoned_ip_table]", progname);
-	(void)fprintf(stderr, " [-C changed_ip_table]\n");
-	(void)fprintf(stderr, "\t[-c config-file] [-L leased_ip_table]");
-	(void)fprintf(stderr, " [-l lease-file] [-u[bind_address]]\n");
-	(void)fprintf(stderr, "\t[-Y synctarget] [-y synclisten] [if0 [... ifN]]\n");
-	
+	extern char *__progname;
+
+	fprintf(stderr, "usage: %s [-dfn] [-A abandoned_ip_table]", __progname);
+	fprintf(stderr, " [-C changed_ip_table]\n");
+	fprintf(stderr, "\t[-c config-file] [-L leased_ip_table]");
+	fprintf(stderr, " [-l lease-file] [-u[bind_address]]\n");
+	fprintf(stderr, "\t[-Y synctarget] [-y synclisten] [if0 [... ifN]]\n");
 	exit(1);
 }
 
 void
-lease_pinged(struct iaddr from, u_int8_t *packet __unused, int length __unused)
+lease_pinged(struct iaddr from, u_int8_t *packet, int length)
 {
 	struct lease *lp;
 
@@ -273,12 +273,12 @@ lease_pinged(struct iaddr from, u_int8_t *packet __unused, int length __unused)
 	lp = find_lease_by_ip_addr(from);
 
 	if (!lp) {
-		(void)note("unexpected ICMP Echo Reply from %s", piaddr(from));
+		note("unexpected ICMP Echo Reply from %s", piaddr(from));
 		return;
 	}
 
 	if (!lp->state && !lp->releasing) {
-		(void)warning("ICMP Echo Reply for %s arrived late or is spurious.",
+		warning("ICMP Echo Reply for %s arrived late or is spurious.",
 		    piaddr(from));
 		return;
 	}
@@ -292,9 +292,9 @@ lease_pinged(struct iaddr from, u_int8_t *packet __unused, int length __unused)
 	 *     and something answered, so we don't release it.
 	 */
 	if (lp->releasing) {
-		(void)warning("IP address %s answers a ping after sending a release",
+		warning("IP address %s answers a ping after sending a release",
 		    piaddr(lp->ip_addr));
-		(void)warning("Possible release spoof - Not releasing address %s",
+		warning("Possible release spoof - Not releasing address %s",
 		    piaddr(lp->ip_addr));
 		lp->releasing = 0;
 	} else {
@@ -320,11 +320,12 @@ lease_ping_timeout(void *vlp)
 }
 
 /* from memory.c - needed to be able to walk the lease table */
+extern struct subnet *subnets;
 
 #define MINIMUM(a,b) (((a)<(b))?(a):(b))
 
 void
-periodic_scan(void *p __unused)
+periodic_scan(void *p)
 {
 	time_t x, y;
 	struct subnet		*n;

@@ -59,7 +59,7 @@ write_lease(struct lease *lease)
 	char tbuf[26];	/* "w yyyy/mm/dd hh:mm:ss UTC" */
 	size_t rsltsz;
 	int errors = 0;
-	size_t i;
+	int i;
 
 	if (counting)
 		++count;
@@ -86,7 +86,7 @@ write_lease(struct lease *lease)
 	}
 
 	if (lease->uid_len) {
-		size_t j;
+		int j;
 
 		if (fprintf(db_file, "\n\tuid %2.2x", lease->uid[0]) == -1)
 			++errors;
@@ -135,7 +135,7 @@ bad_hostname:
 		++errors;
 
 	if (errors)
-		(void)note("write_lease: unable to write lease %s",
+		note("write_lease: unable to write lease %s",
 		    piaddr(lease->ip_addr));
 
 	return (!errors);
@@ -153,12 +153,12 @@ commit_leases(void)
 	 * rewrite fails.
 	 */
 	if (fflush(db_file) == EOF) {
-		(void)note("commit_leases: unable to commit: %m");
+		note("commit_leases: unable to commit: %m");
 		return (0);
 	}
 
 	if (fsync(fileno(db_file)) == -1) {
-		(void)note("commit_leases: unable to commit: %m");
+		note("commit_leases: unable to commit: %m");
 		return (0);
 	}
 
@@ -180,9 +180,6 @@ db_startup(void)
 {
 	int db_fd;
 
-	if (path_dhcpd_db == NULL)	
-		path_dhcpd_db = strdup(_PATH_DHCPD_DB);
-
 	/* open lease file. once we dropped privs it has to stay open */
 	db_fd = open(path_dhcpd_db, O_WRONLY|O_CREAT, 0640);
 	if (db_fd == -1)
@@ -190,12 +187,9 @@ db_startup(void)
 	if ((db_file = fdopen(db_fd, "w")) == NULL)
 		error("Can't fdopen new lease file!");
 
-	free(path_dhcpd_db);
-	path_dhcpd_db = NULL;
-
 	/* Read in the existing lease file... */
 	read_leases();
-	(void)time(&write_time);
+	time(&write_time);
 
 	new_lease_file();
 }
@@ -203,16 +197,16 @@ db_startup(void)
 void
 new_lease_file(void)
 {
-	(void)fflush(db_file);
+	fflush(db_file);
 	rewind(db_file);
 
 	/* Write out all the leases that we know of... */
 	counting = 0;
 	write_leases();
 
-	(void)fflush(db_file);
-	(void)ftruncate(fileno(db_file), ftello(db_file));
-	(void)fsync(fileno(db_file));
+	fflush(db_file);
+	ftruncate(fileno(db_file), ftello(db_file));
+	fsync(fileno(db_file));
 
 	counting = 1;
 }

@@ -44,6 +44,7 @@
 #include <sys/ioctl.h>
 #include <sys/uio.h>
 
+#include <net/bpf.h>
 #include <netinet/ip.h>
 #include <netinet/udp.h>
 #include <netinet/if_ether.h>
@@ -192,6 +193,9 @@ if_register_receive(struct interface_info *info)
 	 */
 	if (ioctl(info->rfdesc, BIOCIMMEDIATE, &flag) == -1)
 		error("Can't set immediate mode on bpf device: %m");
+
+	if (ioctl(info->rfdesc, BIOCSFILDROP, &flag) == -1)
+		error("Can't set filter-drop mode on bpf device: %m");
 
 	/* make sure kernel fills in the source ethernet address */
 	if (ioctl(info->rfdesc, BIOCSHDRCMPLT, &cmplt) == -1)

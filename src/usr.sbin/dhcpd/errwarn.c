@@ -47,7 +47,7 @@
 
 #include "dhcpd.h"
 
-static void 	do_percentm(char *obuf, size_t size, const char *ibuf);
+static void do_percentm(char *obuf, size_t size, char *ibuf);
 
 static char mbuf[1024];
 static char fbuf[1024];
@@ -58,28 +58,28 @@ int warnings_occurred;
  * Log an error message, then exit.
  */
 void
-error(const char *fmt, ...)
+error(char *fmt, ...)
 {
 	va_list list;
 
 	do_percentm(fbuf, sizeof(fbuf), fmt);
 
 	va_start(list, fmt);
-	(void)vsnprintf(mbuf, sizeof(mbuf), fbuf, list);
+	vsnprintf(mbuf, sizeof(mbuf), fbuf, list);
 	va_end(list);
 
 	/* Also log it to stderr? */
 	if (log_perror) {
-		(void)write(STDERR_FILENO, mbuf, strlen(mbuf));
-		(void)write(STDERR_FILENO, "\n", 1);
+		write(STDERR_FILENO, mbuf, strlen(mbuf));
+		write(STDERR_FILENO, "\n", 1);
 	} else
-		syslog(log_priority | LOG_ERR, "%s", mbuf);
+		syslog_r(log_priority | LOG_ERR, &sdata, "%s", mbuf);
 
 	if (log_perror) {
-		(void)fprintf(stderr, "exiting.\n");
-		(void)fflush(stderr);
+		fprintf(stderr, "exiting.\n");
+		fflush(stderr);
 	} else
-		syslog(LOG_CRIT, "exiting.");
+		syslog_r(LOG_CRIT, &sdata, "exiting.");
 
 	exit(1);
 }
@@ -88,21 +88,21 @@ error(const char *fmt, ...)
  * Log a warning message...
  */
 int
-warning(const char *fmt, ...)
+warning(char *fmt, ...)
 {
 	va_list list;
 
 	do_percentm(fbuf, sizeof(fbuf), fmt);
 
 	va_start(list, fmt);
-	(void)vsnprintf(mbuf, sizeof(mbuf), fbuf, list);
+	vsnprintf(mbuf, sizeof(mbuf), fbuf, list);
 	va_end(list);
 
 	if (log_perror) {
-		(void)write(STDERR_FILENO, mbuf, strlen(mbuf));
-		(void)write(STDERR_FILENO, "\n", 1);
+		write(STDERR_FILENO, mbuf, strlen(mbuf));
+		write(STDERR_FILENO, "\n", 1);
 	} else
-		syslog(log_priority | LOG_ERR, "%s", mbuf);
+		syslog_r(log_priority | LOG_ERR, &sdata, "%s", mbuf);
 
 	return (0);
 }
@@ -111,21 +111,21 @@ warning(const char *fmt, ...)
  * Log a note...
  */
 int
-note(const char *fmt, ...)
+note(char *fmt, ...)
 {
 	va_list list;
 
 	do_percentm(fbuf, sizeof(fbuf), fmt);
 
 	va_start(list, fmt);
-	(void)vsnprintf(mbuf, sizeof(mbuf), fbuf, list);
+	vsnprintf(mbuf, sizeof(mbuf), fbuf, list);
 	va_end(list);
 
 	if (log_perror) {
-		(void)write(STDERR_FILENO, mbuf, strlen(mbuf));
-		(void)write(STDERR_FILENO, "\n", 1);
+		write(STDERR_FILENO, mbuf, strlen(mbuf));
+		write(STDERR_FILENO, "\n", 1);
 	} else
-		syslog(log_priority | LOG_INFO, "%s", mbuf);
+		syslog_r(log_priority | LOG_INFO, &sdata, "%s", mbuf);
 
 	return (0);
 }
@@ -134,21 +134,21 @@ note(const char *fmt, ...)
  * Log a debug message...
  */
 int
-debug(const char *fmt, ...)
+debug(char *fmt, ...)
 {
 	va_list list;
 
 	do_percentm(fbuf, sizeof(fbuf), fmt);
 
 	va_start(list, fmt);
-	(void)vsnprintf(mbuf, sizeof(mbuf), fbuf, list);
+	vsnprintf(mbuf, sizeof(mbuf), fbuf, list);
 	va_end(list);
 
 	if (log_perror) {
-		(void)write(STDERR_FILENO, mbuf, strlen(mbuf));
-		(void)write(STDERR_FILENO, "\n", 1);
+		write(STDERR_FILENO, mbuf, strlen(mbuf));
+		write(STDERR_FILENO, "\n", 1);
 	} else
-		syslog(log_priority | LOG_DEBUG, "%s", mbuf);
+		syslog_r(log_priority | LOG_DEBUG, &sdata, "%s", mbuf);
 
 	return (0);
 }
@@ -157,14 +157,13 @@ debug(const char *fmt, ...)
  * Find %m in the input string and substitute an error message string.
  */
 static void
-do_percentm(char *obuf, size_t size, const char *ibuf)
+do_percentm(char *obuf, size_t size, char *ibuf)
 {
 	char ch;
-	char *v = strdup(ibuf);
-	char *s = v;
+	char *s = ibuf;
 	char *t = obuf;
-	int prlen;
-	int fmt_left;
+	size_t prlen;
+	size_t fmt_left;
 	int saved_errno = errno;
 
 	/*
@@ -190,51 +189,48 @@ do_percentm(char *obuf, size_t size, const char *ibuf)
 		}
 	}
 	*t = '\0';
-	free(v);
 }
 
 int
-parse_warn(const char *fmt, ...)
+parse_warn(char *fmt, ...)
 {
 	va_list list;
 	static char spaces[] =
 	    "                                        "
 	    "                                        "; /* 80 spaces */
-	static char new_line[] = "\n";
-	static char terminator[] = "^\n";
 	struct iovec iov[6];
 	size_t iovcnt;
 
 	do_percentm(mbuf, sizeof(mbuf), fmt);
-	(void)snprintf(fbuf, sizeof(fbuf), "%s line %d: %s", tlname, lexline, mbuf);
+	snprintf(fbuf, sizeof(fbuf), "%s line %d: %s", tlname, lexline, mbuf);
 	va_start(list, fmt);
-	(void)vsnprintf(mbuf, sizeof(mbuf), fbuf, list);
+	vsnprintf(mbuf, sizeof(mbuf), fbuf, list);
 	va_end(list);
 
 	if (log_perror) {
 		iov[0].iov_base = mbuf;
 		iov[0].iov_len = strlen(mbuf);
-		iov[1].iov_base = new_line;
+		iov[1].iov_base = "\n";
 		iov[1].iov_len = 1;
 		iov[2].iov_base = token_line;
 		iov[2].iov_len = strlen(token_line);
-		iov[3].iov_base = new_line;
+		iov[3].iov_base = "\n";
 		iov[3].iov_len = 1;
 		iovcnt = 4;
 		if (lexchar < 81) {
 			iov[4].iov_base = spaces;
 			iov[4].iov_len = lexchar - 1;
-			iov[5].iov_base = terminator;
+			iov[5].iov_base = "^\n";
 			iov[5].iov_len = 2;
 			iovcnt += 2;
 		}
-		(void)writev(STDERR_FILENO, iov, iovcnt);
+		writev(STDERR_FILENO, iov, iovcnt);
 	} else {
-		syslog(log_priority | LOG_ERR, "%s", mbuf);
-		syslog(log_priority | LOG_ERR, "%s", token_line);
-
+		syslog_r(log_priority | LOG_ERR, &sdata, "%s", mbuf);
+		syslog_r(log_priority | LOG_ERR, &sdata, "%s", token_line);
 		if (lexchar < 81)
-			syslog(log_priority | LOG_ERR, "%*c", lexchar, '^');
+			syslog_r(log_priority | LOG_ERR, &sdata, "%*c", lexchar,
+			    '^');
 	}
 
 	warnings_occurred = 1;

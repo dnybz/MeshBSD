@@ -1,4 +1,4 @@
-/*	$OpenBSD: dispatch.c,v 1.35 2015/08/20 22:39:29 deraadt Exp $ */
+/*	$OpenBSD: dispatch.c,v 1.34 2014/10/08 04:26:07 deraadt Exp $ */
 
 /*
  * Copyright (c) 1995, 1996, 1997, 1998, 1999
@@ -45,14 +45,16 @@
 #include <poll.h>
 #include <net/if_media.h>
 
+extern int syncfd;
+
 struct interface_info *interfaces;
 struct protocol *protocols;
 struct dhcpd_timeout *timeouts;
 static struct dhcpd_timeout *free_timeouts;
 static int interfaces_invalidated;
 
-static int 	interface_status(struct interface_info *ifinfo);
-int 	get_rdomain(char *);
+static int interface_status(struct interface_info *ifinfo);
+int get_rdomain(char *);
 
 /* Use getifaddrs() to get a list of all the attached interfaces.
    For each interface that's of type INET and not the loopback interface,
@@ -66,7 +68,7 @@ discover_interfaces(int *rdomain)
 	struct interface_info *last, *next;
 	struct subnet *subnet;
 	struct shared_network *share;
-	struct sockaddr_in sin;
+	struct sockaddr_in foo;
 	int ir = 0, ird;
 	struct ifreq *tif;
 	struct ifaddrs *ifap, *ifa;
@@ -80,11 +82,10 @@ discover_interfaces(int *rdomain)
 	 */
 	if (interfaces != NULL)
 		ir = 1;
-	else {
+	else
 		/* must specify an interface when rdomains are used */
 		*rdomain = 0;
-	}
-	
+
 	/* Cycle through the list of interfaces looking for IP addresses. */
 	for (ifa = ifap; ifa != NULL; ifa = ifa->ifa_next) {
 		/*
@@ -124,8 +125,7 @@ discover_interfaces(int *rdomain)
 			if (!tmp)
 				error("Insufficient memory to %s %s",
 				    "record interface", ifa->ifa_name);
-			(void)strlcpy(tmp->name, ifa->ifa_name, 
-				sizeof(tmp->name));
+			strlcpy(tmp->name, ifa->ifa_name, sizeof(tmp->name));
 			tmp->next = interfaces;
 			tmp->noifmedia = tmp->dead = tmp->errors = 0;
 			interfaces = tmp;
@@ -134,20 +134,21 @@ discover_interfaces(int *rdomain)
 		/* If we have the capability, extract link information
 		   and record it in a linked list. */
 		if (ifa->ifa_addr->sa_family == AF_LINK) {
-			struct sockaddr_dl *sdl = (void *)ifa->ifa_addr;
-			tmp->index = sdl->sdl_index;
-			tmp->hw_address.hlen = sdl->sdl_alen;
+			struct sockaddr_dl *foo =
+			    ((struct sockaddr_dl *)(ifa->ifa_addr));
+			tmp->index = foo->sdl_index;
+			tmp->hw_address.hlen = foo->sdl_alen;
 			tmp->hw_address.htype = HTYPE_ETHER; /* XXX */
-			(void)memcpy(tmp->hw_address.haddr,
-			    LLADDR(sdl), sdl->sdl_alen);
+			memcpy(tmp->hw_address.haddr,
+			    LLADDR(foo), foo->sdl_alen);
 		} else if (ifa->ifa_addr->sa_family == AF_INET) {
 			struct iaddr addr;
 
 			/* Get a pointer to the address... */
-			(void)memcpy(&sin, ifa->ifa_addr, sizeof(sin));
+			memcpy(&foo, ifa->ifa_addr, sizeof(foo));
 
 			/* We don't want the loopback interface. */
-			if (sin.sin_addr.s_addr == htonl (INADDR_LOOPBACK))
+			if (foo.sin_addr.s_addr == htonl (INADDR_LOOPBACK))
 				continue;
 
 			/* If this is the first real IP address we've
@@ -155,19 +156,19 @@ discover_interfaces(int *rdomain)
 			   which we found it. */
 			if (!tmp->ifp) {
 				int len = (IFNAMSIZ + ifa->ifa_addr->sa_len);
-				tif = malloc(len);
+				tif = (struct ifreq *)malloc(len);
 				if (!tif)
 					error("no space to remember ifp.");
-				(void)strlcpy(tif->ifr_name, ifa->ifa_name, IFNAMSIZ);
-				(void)memcpy(&tif->ifr_addr, ifa->ifa_addr,
+				strlcpy(tif->ifr_name, ifa->ifa_name, IFNAMSIZ);
+				memcpy(&tif->ifr_addr, ifa->ifa_addr,
 				    ifa->ifa_addr->sa_len);
 				tmp->ifp = tif;
-				tmp->primary_address = sin.sin_addr;
+				tmp->primary_address = foo.sin_addr;
 			}
 
 			/* Grab the address... */
 			addr.len = 4;
-			(void)memcpy(addr.iabuf, &sin.sin_addr.s_addr, addr.len);
+			memcpy(addr.iabuf, &foo.sin_addr.s_addr, addr.len);
 
 			/* If there's a registered subnet for this address,
 			   connect it together... */
@@ -179,7 +180,7 @@ discover_interfaces(int *rdomain)
 					subnet->interface = tmp;
 					subnet->interface_address = addr;
 				} else if (subnet->interface != tmp) {
-					(void)warning("Multiple %s %s: %s %s",
+					warning("Multiple %s %s: %s %s",
 					    "interfaces match the",
 					    "same subnet",
 					    subnet->interface->name,
@@ -188,7 +189,7 @@ discover_interfaces(int *rdomain)
 				share = subnet->shared_network;
 				if (tmp->shared_network &&
 				    tmp->shared_network != share) {
-					(void)warning("Interface %s matches %s",
+					warning("Interface %s matches %s",
 					    tmp->name,
 					    "multiple shared networks");
 				} else {
@@ -198,7 +199,7 @@ discover_interfaces(int *rdomain)
 				if (!share->interface) {
 					share->interface = tmp;
 				} else if (share->interface != tmp) {
-					(void)warning("Multiple %s %s: %s %s",
+					warning("Multiple %s %s: %s %s",
 					    "interfaces match the",
 					    "same shared network",
 					    share->interface->name,
@@ -214,7 +215,7 @@ discover_interfaces(int *rdomain)
 		next = tmp->next;
 
 		if (!tmp->ifp) {
-			(void)warning("Can't listen on %s - it has no IP address.",
+			warning("Can't listen on %s - it has no IP address.",
 			    tmp->name);
 			/* Remove tmp from the list of interfaces. */
 			if (!last)
@@ -224,13 +225,12 @@ discover_interfaces(int *rdomain)
 			continue;
 		}
 
-		(void)memcpy(&sin, &tmp->ifp->ifr_addr, 
-			sizeof(tmp->ifp->ifr_addr));
+		memcpy(&foo, &tmp->ifp->ifr_addr, sizeof tmp->ifp->ifr_addr);
 
 		if (!tmp->shared_network) {
-			(void)warning("Can't listen on %s - dhcpd.conf has no subnet "
+			warning("Can't listen on %s - dhcpd.conf has no subnet "
 			    "declaration for %s.", tmp->name,
-			    inet_ntoa(sin.sin_addr));
+			    inet_ntoa(foo.sin_addr));
 			/* Remove tmp from the list of interfaces. */
 			if (!last)
 				interfaces = interfaces->next;
@@ -250,17 +250,16 @@ discover_interfaces(int *rdomain)
 				 * to the first address we found.
 				 */
 				subnet->interface_address.len = 4;
-				(void)memcpy(subnet->interface_address.iabuf,
-				    &sin.sin_addr.s_addr, 4);
+				memcpy(subnet->interface_address.iabuf,
+				    &foo.sin_addr.s_addr, 4);
 			}
 		}
 
 		/* Register the interface... */
 		if_register_receive(tmp);
 		if_register_send(tmp);
-		
-		(void)note("Listening on %s (%s).", tmp->name,
-		    inet_ntoa(sin.sin_addr));
+		note("Listening on %s (%s).", tmp->name,
+		    inet_ntoa(foo.sin_addr));
 	}
 
 	if (interfaces == NULL)
@@ -304,7 +303,7 @@ dispatch(void)
 		 * still a timeout registered, time out the poll
 		 * call then.
 		 */
-		(void)time(&cur_time);
+		time(&cur_time);
 another:
 		if (timeouts) {
 			if (timeouts->when <= cur_time) {
@@ -358,7 +357,7 @@ another:
 		case 0:
 			continue;	/* no packets */
 		}
-		(void)time(&cur_time);
+		time(&cur_time);
 
 		for (i = 0, l = protocols; l; l = l->next) {
 			struct interface_info *ip = l->local;
@@ -396,17 +395,17 @@ got_one(struct protocol *l)
 
 	if ((result = receive_packet(ip, u.packbuf, sizeof u,
 	    &from, &hfrom)) == -1) {
-		(void)warning("receive_packet failed on %s: %s", ip->name,
+		warning("receive_packet failed on %s: %s", ip->name,
 		    strerror(errno));
 		ip->errors++;
 		if ((!interface_status(ip)) ||
 		    (ip->noifmedia && ip->errors > 20)) {
 			/* our interface has gone away. */
-			(void)warning("Interface %s no longer appears valid.",
+			warning("Interface %s no longer appears valid.",
 			    ip->name);
 			ip->dead = 1;
 			interfaces_invalidated = 1;
-			(void)close(l->fd);
+			close(l->fd);
 			remove_protocol(l);
 			free(ip);
 		}
@@ -416,7 +415,7 @@ got_one(struct protocol *l)
 		return;
 
 	ifrom.len = 4;
-	(void)memcpy(ifrom.iabuf, &from.sin_addr, ifrom.len);
+	memcpy(ifrom.iabuf, &from.sin_addr, ifrom.len);
 
 	do_packet(ip, &u.packet, result, from.sin_port, ifrom, &hfrom);
 }
@@ -430,8 +429,8 @@ interface_status(struct interface_info *ifinfo)
 	struct ifmediareq ifmr;
 
 	/* get interface flags */
-	(void)memset(&ifr, 0, sizeof(ifr));
-	(void)strlcpy(ifr.ifr_name, ifname, sizeof(ifr.ifr_name));
+	memset(&ifr, 0, sizeof(ifr));
+	strlcpy(ifr.ifr_name, ifname, sizeof(ifr.ifr_name));
 	if (ioctl(ifsock, SIOCGIFFLAGS, &ifr) == -1) {
 		syslog(LOG_ERR, "ioctl(SIOCGIFFLAGS) on %s: %m", ifname);
 		goto inactive;
@@ -446,8 +445,8 @@ interface_status(struct interface_info *ifinfo)
 	/* Next, check carrier on the interface, if possible */
 	if (ifinfo->noifmedia)
 		goto active;
-	(void)memset(&ifmr, 0, sizeof(ifmr));
-	(void)strlcpy(ifmr.ifm_name, ifname, sizeof(ifmr.ifm_name));
+	memset(&ifmr, 0, sizeof(ifmr));
+	strlcpy(ifmr.ifm_name, ifname, sizeof(ifmr.ifm_name));
 	if (ioctl(ifsock, SIOCGIFMEDIA, (caddr_t)&ifmr) == -1) {
 		if (errno != EINVAL) {
 			syslog(LOG_DEBUG, "ioctl(SIOCGIFMEDIA) on %s: %m",
@@ -490,7 +489,7 @@ locate_network(struct packet *packet)
 		struct subnet *subnet;
 
 		ia.len = 4;
-		(void)memcpy(ia.iabuf, &packet->raw->giaddr, 4);
+		memcpy(ia.iabuf, &packet->raw->giaddr, 4);
 		subnet = find_subnet(ia);
 		if (subnet)
 			packet->shared_network = subnet->shared_network;
@@ -531,7 +530,7 @@ add_timeout(time_t when, void (*where)(void *), void *what)
 			q->func = where;
 			q->what = what;
 		} else {
-			q = malloc(sizeof (struct dhcpd_timeout));
+			q = (struct dhcpd_timeout *)malloc(sizeof (struct dhcpd_timeout));
 			if (!q)
 				error("Can't allocate timeout structure!");
 			q->func = where;
@@ -591,12 +590,12 @@ cancel_timeout(void (*where)(void *), void *what)
 
 /* Add a protocol to the list of protocols... */
 void
-add_protocol(const char *name, int fd, void (*handler)(struct protocol *),
+add_protocol(char *name, int fd, void (*handler)(struct protocol *),
     void *local)
 {
 	struct protocol *p;
 
-	p = malloc(sizeof *p);
+	p = (struct protocol *)malloc(sizeof *p);
 	if (!p)
 		error("can't allocate protocol struct for %s", name);
 	p->fd = fd;
@@ -632,12 +631,11 @@ get_rdomain(char *name)
 	if ((s = socket(AF_INET, SOCK_DGRAM, 0)) == -1)
 		error("get_rdomain socket: %m");
 
-	(void)bzero(&ifr, sizeof(ifr));
+	bzero(&ifr, sizeof(ifr));
 	strlcpy(ifr.ifr_name, name, sizeof(ifr.ifr_name));
+	if (ioctl(s, SIOCGIFRDOMAIN, (caddr_t)&ifr) != -1)
+		rv = ifr.ifr_rdomainid;
 
-	if (ioctl(s, SIOCGIFFIB, (caddr_t)&ifr) != -1)
-		rv = ifr.ifr_fib;
-
-	(void)close(s);
+	close(s);
 	return rv;
 }

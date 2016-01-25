@@ -20,8 +20,6 @@
 #ifndef _DHCPD_SYNC
 #define _DHCPD_SYNC
 
-#include <sys/queue.h>
-
 /*
  * dhcpd(8) synchronisation protocol.
  *
@@ -69,26 +67,9 @@ struct dhcp_synctlv_lease {
 #define DHCP_SYNC_END		0x0000
 #define DHCP_SYNC_LEASE		0x0001
 
-struct sync_host {
-	LIST_ENTRY(sync_host)	h_entry;
-	char			*h_name;
-	struct sockaddr_in	sh_addr;
-};
-
-extern int sync_debug;
-extern u_int32_t sync_counter;
-extern int sendmcast;
-
-extern struct sockaddr_in sync_in;
-extern struct sockaddr_in sync_out;
-
-extern struct synchosts sync_hosts;
-
 extern int	 syncfd;
-
-void 	sync_send(struct iovec *, int);
-int	 sync_init(const char *, const char *, u_short);
-int	 sync_addhost(const char *, u_short);
-void	 sync_recv(void);
-void	 sync_lease(struct lease *);
+extern int	 sync_init(const char *, const char *, u_short);
+extern int	 sync_addhost(const char *, u_short);
+extern void	 sync_recv(void);
+extern void	 sync_lease(struct lease *);
 #endif /* _DHCPD_SYNC */
