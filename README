@@ -17,7 +17,7 @@ TL-WR1043NDv2 (experimental)
 
 Now, there exists an experimental factory image 
 
-   MeshBSD.tl-wr1043ndv2.201601250356.factory.bin
+   MeshBSD.tl-wr1043ndv2.201601250440.factory.bin
 
 in releases directory (only) for demonstration purposes. Intentionally, 
 this software is not released for use as production system or in context 
@@ -143,14 +143,14 @@ where
 
 initializes tftpd(8) daemon manually (if not mentionend in /etc/rc.conf). Then
 
- | ap135> tftpboot 0x80060000 MeshBSD.tl-wr1043ndv2.201601250356.factory.bin
+ | ap135> tftpboot 0x80060000 MeshBSD.tl-wr1043ndv2.201601250440.factory.bin
 
 loads 
 
  | dup 1 speed 1000
  | Using eth1 device
  | TFTP from server 192.168.1.100; our IP address is 192.168.1.111
- | Filename 'MeshBSD.tl-wr1043ndv2.201601250356.factory.bin'.
+ | Filename 'MeshBSD.tl-wr1043ndv2.201601250440.factory.bin'.
  | Load address: 0x80060000
  | Loading: #################################################################
  |          #################################################################
@@ -173,7 +173,7 @@ loads
  |          #################################################################
  |          #
  | done
- | Bytes transferred = 6324736 (608200 hex)
+ | Bytes transferred = 6323712 (607e00 hex)
 
 the (experimental) firmware image into random access memory starting at 
 address 0x80060000 on (this) ap135 (router) board.
@@ -239,19 +239,20 @@ enlisted (and promoted) configuration files
  | etc/cfg/group
  | etc/cfg/hostname.arge0
  | etc/cfg/hostname.arge1
- | etc/cfg/inetd.conf
  | etc/cfg/ipsec.conf
  | etc/cfg/manifest
  | etc/cfg/master.passwd
  | etc/cfg/myname
+ | etc/cfg/ntp.conf
  | etc/cfg/passwd
  | etc/cfg/pf.conf
  | etc/cfg/ppp.conf
+ | etc/cfg/rc.local
  | etc/cfg/wpa_supplicant.conf
- | 13 blocks
+ | 18 blocks
  | 0+1 records in
  | 1+0 records out
- | 65536 bytes transferred in 0.409444 secs (160061 bytes/sec)
+ | 65536 bytes transferred in 0.422565 secs (155091 bytes/sec)
  | *** Completed.
 
 are stored as compressed image into NVRAM. At least, any configuration 

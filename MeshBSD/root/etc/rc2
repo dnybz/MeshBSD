@@ -21,6 +21,7 @@ ln -s /etc/cfg/myname /etc
 ln -s /etc/cfg/passwd /etc
 
 ln -s /etc/cfg/hostname.* /etc
+ln -s /etc/cfg/rc.* /etc
 
 ln -s /etc/cfg/inetd.conf /etc
 ln -s /etc/cfg/ipsec.conf /etc
@@ -103,6 +104,8 @@ else
 	ip6kernel=NO
 fi
 
+. /etc/rc.local
+
 # 
 # Configure interfaces.
 #
@@ -114,7 +117,7 @@ fi
 # configuration file, where its contents provides 
 # argument vector for processing by ifconfig(8).
 #
-ifmstart "arge tun"
+ifmstart $local_ifm
 
 #
 # XXX: Well, heres a good place to inherit values 
