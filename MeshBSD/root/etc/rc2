@@ -13,7 +13,6 @@ mkdir -p /var/cron/tabs
 echo "*** Loading configuration files .."
 cfg_load
 
-
 ln -s /etc/cfg/group /etc
 ln -s /etc/cfg/manifest /etc
 ln -s /etc/cfg/master.passwd /etc
@@ -23,7 +22,6 @@ ln -s /etc/cfg/passwd /etc
 ln -s /etc/cfg/hostname.* /etc
 ln -s /etc/cfg/rc.* /etc
 
-ln -s /etc/cfg/inetd.conf /etc
 ln -s /etc/cfg/ipsec.conf /etc
 ln -s /etc/cfg/ntp.conf /etc
 ln -s /etc/cfg/pf.conf /etc
@@ -104,7 +102,7 @@ else
 	ip6kernel=NO
 fi
 
-. /etc/rc.local
+. /etc/rc.conf
 
 # 
 # Configure interfaces.
@@ -112,12 +110,12 @@ fi
 # Any configuration targeting interfaces on 
 # interface- / link-layer is described by
 # 
-#  /etc/honstname.if
+#  /etc/hostname.if
 # 
 # configuration file, where its contents provides 
 # argument vector for processing by ifconfig(8).
 #
-ifmstart $local_ifm
+ifmstart $network_interface_types
 
 #
 # XXX: Well, heres a good place to inherit values 

@@ -17,7 +17,7 @@ TL-WR1043NDv2 (experimental)
 
 Now, there exists an experimental factory image 
 
-   MeshBSD.tl-wr1043ndv2.201601251131.factory.bin
+   MeshBSD.tl-wr1043ndv2.201601260432.factory.bin
 
 in releases directory (only) for demonstration purposes. Intentionally, 
 this software is not released for use as production system or in context 
@@ -45,8 +45,8 @@ Basic requirements for installing the (experimental) firmware image are:
  
  * At least cu(1) -- Call Unix.
    
-On host running FreeBSD, access to serial console might be performed e. g. 
-on priveleged terminal:   
+On host running FreeBSD, access to serial console might be 
+performed e. g. throught priveleged terminal:   
  
  | # cu -l /dev/ttyU0 -s 115200
 
@@ -143,14 +143,14 @@ where
 
 initializes tftpd(8) daemon manually (if not mentionend in /etc/rc.conf). Then
 
- | ap135> tftpboot 0x80060000 MeshBSD.tl-wr1043ndv2.201601251131.factory.bin
+ | ap135> tftpboot 0x80060000 MeshBSD.tl-wr1043ndv2.201601260432.factory.bin
 
 loads 
 
  | dup 1 speed 1000
  | Using eth1 device
  | TFTP from server 192.168.1.100; our IP address is 192.168.1.111
- | Filename 'MeshBSD.tl-wr1043ndv2.201601251131.factory.bin'.
+ | Filename 'MeshBSD.tl-wr1043ndv2.201601260432.factory.bin'.
  | Load address: 0x80060000
  | Loading: #################################################################
  |          #################################################################
@@ -204,7 +204,7 @@ starts bootstrapping.
  |
  | Starting kernel ...
 
-When operating system kernel and init(8) are loaded successfully, then
+When operating system kernel and init(8) are running, then
 
  | FreeBSD/mips (styx.testenv.local) (ttyu0)
  |
@@ -235,7 +235,7 @@ residing and by
 
 enlisted (and promoted) configuration files
 
- | *** Storing configuration files from /etc/cfg/manifest -> /dev/map/cfg..
+ | *** Storing configuration files from / | etc/cfg/manifest -> /dev/map/cfg..
  | etc/cfg/group
  | etc/cfg/hostname.arge0
  | etc/cfg/hostname.arge1
@@ -247,12 +247,12 @@ enlisted (and promoted) configuration files
  | etc/cfg/passwd
  | etc/cfg/pf.conf
  | etc/cfg/ppp.conf
- | etc/cfg/rc.local
+ | etc/cfg/rc.conf
  | etc/cfg/wpa_supplicant.conf
  | 18 blocks
  | 0+1 records in
  | 1+0 records out
- | 65536 bytes transferred in 0.422565 secs (155091 bytes/sec)
+ | 65536 bytes transferred in 0.403990 secs (162222 bytes/sec)
  | *** Completed.
 
 are stored as compressed image into NVRAM. At least, any configuration 
@@ -282,7 +282,7 @@ Some additional information:
  * Utilizing gif(4), if_vether(4) and wlan(4) in conjunction with 
    if_bridge(4) is possible, e. g. in context with rfc-3378.
 
- * If_gre(4) and if_vlan(4) as loadable kernel modules.
+ * Optional if_gre(4) and if_vlan(4) support.
 
 Additional information about contacting
 =======================================

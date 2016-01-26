@@ -9,5 +9,5 @@ etc/cfg/ntp.conf
 etc/cfg/passwd
 etc/cfg/pf.conf
 etc/cfg/ppp.conf
-etc/cfg/rc.local
+etc/cfg/rc.conf
 etc/cfg/wpa_supplicant.conf

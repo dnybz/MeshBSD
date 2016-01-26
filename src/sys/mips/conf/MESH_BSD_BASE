@@ -74,10 +74,6 @@ options 	USB_EHCI_BIG_ENDIAN_DESC        # handle big-endian byte order
 options 	USB_HOST_ALIGN=32		# AR71XX (MIPS in general?) requires this
 device		ehci
 
-device		scbus
-device		umass
-device		da
-
 device		spibus
 device		ar71xx_spi
 device		mx25l
