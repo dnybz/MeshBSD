@@ -84,6 +84,11 @@
 !/src/share/man/man5/myname.5
 
 #
+# Targets
+#
+!/src/targets/pseudo/userland/Makefile.depend
+
+#
 # Configuration
 #
 !/src/sys/conf/files

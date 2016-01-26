@@ -2,6 +2,8 @@
 
 .include <bsd.own.mk>
 
+WARNS?=	2
+
 SRCS=	bootp.c confpars.c db.c dhcp.c dhcpd.c bpf.c packet.c errwarn.c \
 	dispatch.c print.c memory.c options.c inet.c conflex.c parse.c \
 	alloc.c tables.c tree.c hash.c convert.c icmp.c pfutils.c sync.c \
@@ -9,7 +11,7 @@ SRCS=	bootp.c confpars.c db.c dhcp.c dhcpd.c bpf.c packet.c errwarn.c \
 PROG=	dhcpd
 MAN=	dhcpd.8 dhcpd.conf.5 dhcpd.leases.5 dhcp-options.5
 
-LDADD+=-lcrypto
-CFLAGS+=-Wall
+LIBADD= crypto
+
 
 .include <bsd.prog.mk>
