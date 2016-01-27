@@ -73,13 +73,13 @@ error(char *fmt, ...)
 		write(STDERR_FILENO, mbuf, strlen(mbuf));
 		write(STDERR_FILENO, "\n", 1);
 	} else
-		syslog_r(log_priority | LOG_ERR, &sdata, "%s", mbuf);
+		syslog(log_priority | LOG_ERR, "%s", mbuf);
 
 	if (log_perror) {
 		fprintf(stderr, "exiting.\n");
 		fflush(stderr);
 	} else
-		syslog_r(LOG_CRIT, &sdata, "exiting.");
+		syslog(LOG_CRIT, "exiting.");
 
 	exit(1);
 }
@@ -102,7 +102,7 @@ warning(char *fmt, ...)
 		write(STDERR_FILENO, mbuf, strlen(mbuf));
 		write(STDERR_FILENO, "\n", 1);
 	} else
-		syslog_r(log_priority | LOG_ERR, &sdata, "%s", mbuf);
+		syslog(log_priority | LOG_ERR, "%s", mbuf);
 
 	return (0);
 }
@@ -125,7 +125,7 @@ note(char *fmt, ...)
 		write(STDERR_FILENO, mbuf, strlen(mbuf));
 		write(STDERR_FILENO, "\n", 1);
 	} else
-		syslog_r(log_priority | LOG_INFO, &sdata, "%s", mbuf);
+		syslog(log_priority | LOG_INFO, "%s", mbuf);
 
 	return (0);
 }
@@ -148,7 +148,7 @@ debug(char *fmt, ...)
 		write(STDERR_FILENO, mbuf, strlen(mbuf));
 		write(STDERR_FILENO, "\n", 1);
 	} else
-		syslog_r(log_priority | LOG_DEBUG, &sdata, "%s", mbuf);
+		syslog(log_priority | LOG_DEBUG, "%s", mbuf);
 
 	return (0);
 }
@@ -168,7 +168,7 @@ do_percentm(char *obuf, size_t size, char *ibuf)
 
 	/*
 	 * We wouldn't need this mess if printf handled %m, or if
-	 * strerror() had been invented before syslog_r().
+	 * strerror() had been invented before syslog().
 	 */
 	for (fmt_left = size; (ch = *s); ++s) {
 		if (ch == '%' && s[1] == 'm') {
@@ -226,10 +226,10 @@ parse_warn(char *fmt, ...)
 		}
 		writev(STDERR_FILENO, iov, iovcnt);
 	} else {
-		syslog_r(log_priority | LOG_ERR, &sdata, "%s", mbuf);
-		syslog_r(log_priority | LOG_ERR, &sdata, "%s", token_line);
+		syslog(log_priority | LOG_ERR, "%s", mbuf);
+		syslog(log_priority | LOG_ERR, "%s", token_line);
 		if (lexchar < 81)
-			syslog_r(log_priority | LOG_ERR, &sdata, "%*c", lexchar,
+			syslog(log_priority | LOG_ERR, "%*c", lexchar,
 			    '^');
 	}
 

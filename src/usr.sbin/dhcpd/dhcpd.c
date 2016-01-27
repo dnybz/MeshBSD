@@ -45,6 +45,10 @@
 #include <err.h>
 #include <pwd.h>
 
+#ifndef _PATH_VAREMPTY
+#define	_PATH_VAREMPTY	"/var/empty"
+#endif
+
 void usage(void);
 
 time_t cur_time, last_scan;
@@ -66,7 +70,6 @@ char *path_dhcpd_db = _PATH_DHCPD_DB;
 char *abandoned_tab = NULL;
 char *changedmac_tab = NULL;
 char *leased_tab = NULL;
-struct syslog_data sdata = SYSLOG_DATA_INIT;
 
 int
 main(int argc, char *argv[])
@@ -80,7 +83,7 @@ main(int argc, char *argv[])
 	struct in_addr udpaddr;
 
 	/* Initially, log errors to stderr as well as to syslogd. */
-	openlog_r(__progname, LOG_PID | LOG_NDELAY, DHCPD_LOG_FACILITY, &sdata);
+	openlog(__progname, LOG_PID | LOG_NDELAY, DHCPD_LOG_FACILITY);
 
 	opterr = 0;
 	while ((ch = getopt(argc, argv, "A:C:L:c:dfl:nu::Y:y:")) != -1)
@@ -182,10 +185,6 @@ main(int argc, char *argv[])
 	db_startup();
 	if (!udpsockmode || argc > 0)
 		discover_interfaces(&rdomain);
-
-	if (rdomain != -1)
-		if (setrtable(rdomain) == -1)
-			error("setrtable (%m)");
 
 	if (udpsockmode)
 		udpsock_startup(udpaddr);
