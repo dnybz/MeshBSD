@@ -54,7 +54,6 @@ static struct dhcpd_timeout *free_timeouts;
 static int interfaces_invalidated;
 
 static int interface_status(struct interface_info *ifinfo);
-int get_rdomain(char *);
 
 /* Use getifaddrs() to get a list of all the attached interfaces.
    For each interface that's of type INET and not the loopback interface,
@@ -69,7 +68,7 @@ discover_interfaces(int *rdomain)
 	struct subnet *subnet;
 	struct shared_network *share;
 	struct sockaddr_in foo;
-	int ir = 0, ird;
+	int ir = 0;
 	struct ifreq *tif;
 	struct ifaddrs *ifap, *ifa;
 
@@ -82,10 +81,11 @@ discover_interfaces(int *rdomain)
 	 */
 	if (interfaces != NULL)
 		ir = 1;
-	else
+	else {
 		/* must specify an interface when rdomains are used */
 		*rdomain = 0;
-
+	}
+	
 	/* Cycle through the list of interfaces looking for IP addresses. */
 	for (ifa = ifap; ifa != NULL; ifa = ifa->ifa_next) {
 		/*
@@ -107,15 +107,6 @@ discover_interfaces(int *rdomain)
 
 		/* If we are looking for specific interfaces, ignore others. */
 		if (tmp == NULL && ir)
-			continue;
-
-		ird = get_rdomain(ifa->ifa_name);
-		if (*rdomain == -1)
-			*rdomain = ird;
-		else if (*rdomain != ird && ir)
-			error("Interface %s is not in rdomain %d",
-			    tmp->name, *rdomain);
-		else if (*rdomain != ird && !ir)
 			continue;
 
 		/* If there isn't already an interface by this name,
@@ -622,20 +613,3 @@ remove_protocol(struct protocol *proto)
 	}
 }
 
-int
-get_rdomain(char *name)
-{
-	int rv = 0, s;
-	struct  ifreq ifr;
-
-	if ((s = socket(AF_INET, SOCK_DGRAM, 0)) == -1)
-		error("get_rdomain socket: %m");
-
-	bzero(&ifr, sizeof(ifr));
-	strlcpy(ifr.ifr_name, name, sizeof(ifr.ifr_name));
-	if (ioctl(s, SIOCGIFRDOMAIN, (caddr_t)&ifr) != -1)
-		rv = ifr.ifr_rdomainid;
-
-	close(s);
-	return rv;
-}

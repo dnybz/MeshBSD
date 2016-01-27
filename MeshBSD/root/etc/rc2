@@ -22,6 +22,7 @@ ln -s /etc/cfg/passwd /etc
 ln -s /etc/cfg/hostname.* /etc
 ln -s /etc/cfg/rc.* /etc
 
+ln -s /etc/cfg/dhcpd.conf /etc
 ln -s /etc/cfg/ipsec.conf /etc
 ln -s /etc/cfg/ntp.conf /etc
 ln -s /etc/cfg/pf.conf /etc
@@ -43,7 +44,7 @@ echo "*** Starting network .."
 # 
 if [ -f /etc/myname ]; then
 	hostname=`stripcom /etc/myname`
-	hostname $hostname
+	hostname ${hostname}
 else
 	hostname=`hostname`
 fi
@@ -115,7 +116,7 @@ fi
 # configuration file, where its contents provides 
 # argument vector for processing by ifconfig(8).
 #
-ifmstart $network_interface_types
+ifmstart ${network_interface_types}
 
 #
 # XXX: Well, heres a good place to inherit values 
@@ -125,10 +126,20 @@ ifmstart $network_interface_types
 /sbin/sysctl net.inet.ip.forwarding=1
 
 #
-# pf(4) -- smp-pf
+# XXX: I'll refactor this.
 #
-echo "*** Enable smp-pf"
-/sbin/pfctl -ef /etc/pf.conf
+
+if [ X"${pf_enable}" == X"YES" ]; then
+	if [ -f ${pf_conf} ]; then
+		/sbin/pfctl -ef ${pf_conf}
+	fi
+fi
+
+if [ X"${ntpd_enable}" == X"YES" ]; then
+	if [ -f ${ntpd_conf} ]; then
+		/usr/sbin/ntpd -c ${ntpd_conf}
+	fi
+fi
 
 echo "*** Done!"
 

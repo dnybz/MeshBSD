@@ -38,6 +38,10 @@
 
 #include "dhcpd.h"
 
+#ifndef _PATH_VAREMPTY
+#define	_PATH_VAREMPTY	"/var/empty"
+#endif
+
 extern struct passwd *pw;
 extern int pfpipe[2];
 extern int gotpipe;
@@ -45,7 +49,7 @@ extern char *abandoned_tab;
 extern char *changedmac_tab;
 extern char *leased_tab;
 
-__dead void
+void
 pftable_handler()
 {
 	struct pf_cmd cmd;
