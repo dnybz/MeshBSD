@@ -30,9 +30,12 @@ ln -s /etc/cfg/ppp.conf /etc/ppp
 ln -s /etc/cfg/wpa_supplicant.conf /etc
 
 
-echo "*** Default password/login databases .."
+echo "*** Generate password/login databases .."
 /usr/sbin/pwd_mkdb /etc/master.passwd
 /usr/bin/cap_mkdb /etc/login.conf
+
+echo "*** Generate services database .."
+/usr/sbin/services_mkdb /etc/services
 
 echo "*** Starting network .."
 
@@ -132,6 +135,12 @@ ifmstart ${network_interface_types}
 if [ X"${pf_enable}" == X"YES" ]; then
 	if [ -f ${pf_conf} ]; then
 		/sbin/pfctl -ef ${pf_conf}
+	fi
+fi
+
+if [ X"${dhcpd_enable}" == X"YES" ]; then
+	if [ -f ${dhcpd_conf} ]; then
+		/usr/sbin/ntpd -c ${dhcpd_conf}
 	fi
 fi
 

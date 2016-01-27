@@ -1,3 +1,4 @@
+etc/cfg/dhcpd.conf
 etc/cfg/group
 etc/cfg/hostname.arge0
 etc/cfg/hostname.arge1
