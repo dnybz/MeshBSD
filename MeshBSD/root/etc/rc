@@ -4,7 +4,7 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin ; export PATH
 
 # Create in-memory partitions 
 mount_mfs -s 1m md /tmp
-mount_mfs -s 1m md /var
+mount_mfs -s 5m md /var
 mount_mfs -s 1m md /etc
 
 # Populate /etc

@@ -29,13 +29,12 @@ ln -s /etc/cfg/pf.conf /etc
 ln -s /etc/cfg/ppp.conf /etc/ppp
 ln -s /etc/cfg/wpa_supplicant.conf /etc
 
-
-echo "*** Generate password/login databases .."
+echo "*** Generating password/login databases .."
 /usr/sbin/pwd_mkdb /etc/master.passwd
 /usr/bin/cap_mkdb /etc/login.conf
 
-echo "*** Generate services database .."
-/usr/sbin/services_mkdb /etc/services
+echo "*** Generating services database .."
+/usr/sbin/services_mkdb /etc/services > /dev/null 2>&1
 
 echo "*** Starting network .."
 
