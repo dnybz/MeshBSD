@@ -13,12 +13,13 @@ mkdir -p /var/cron/tabs
 echo "*** Loading configuration files .."
 cfg_load
 
-ln -s /etc/cfg/group /etc
 ln -s /etc/cfg/manifest /etc
+
+ln -s /etc/cfg/group /etc
 ln -s /etc/cfg/master.passwd /etc
-ln -s /etc/cfg/myname /etc
 ln -s /etc/cfg/passwd /etc
 
+ln -s /etc/cfg/myname /etc
 ln -s /etc/cfg/hostname.* /etc
 ln -s /etc/cfg/rc.* /etc
 
@@ -28,7 +29,6 @@ ln -s /etc/cfg/ttys /etc
 ln -s /etc/cfg/dhcpd.conf /etc
 ln -s /etc/cfg/hostapd.conf /etc
 ln -s /etc/cfg/ipsec.conf /etc
-ln -s /etc/cfg/login.conf /etc
 ln -s /etc/cfg/nsswitch.conf /etc
 ln -s /etc/cfg/ntp.conf /etc
 ln -s /etc/cfg/pf.conf /etc

@@ -4,7 +4,6 @@ etc/cfg/hostapd.conf
 etc/cfg/hostname.arge0
 etc/cfg/hostname.arge1
 etc/cfg/ipsec.conf
-etc/cfg/login.conf
 etc/cfg/manifest
 etc/cfg/master.passwd
 etc/cfg/myname
