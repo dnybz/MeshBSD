@@ -22,8 +22,14 @@ ln -s /etc/cfg/passwd /etc
 ln -s /etc/cfg/hostname.* /etc
 ln -s /etc/cfg/rc.* /etc
 
+ln -s /etc/cfg/services /etc
+ln -s /etc/cfg/ttys /etc
+
 ln -s /etc/cfg/dhcpd.conf /etc
+ln -s /etc/cfg/hostapd.conf /etc
 ln -s /etc/cfg/ipsec.conf /etc
+ln -s /etc/cfg/login.conf /etc
+ln -s /etc/cfg/nsswitch.conf /etc
 ln -s /etc/cfg/ntp.conf /etc
 ln -s /etc/cfg/pf.conf /etc
 ln -s /etc/cfg/ppp.conf /etc/ppp
@@ -139,7 +145,13 @@ fi
 
 if [ X"${dhcpd_enable}" == X"YES" ]; then
 	if [ -f ${dhcpd_conf} ]; then
-		/usr/sbin/ntpd -c ${dhcpd_conf}
+		/usr/sbin/dhcpd -c ${dhcpd_conf}
+	fi
+fi
+
+if [ X"${hostapd_enable}" == X"YES" ]; then
+	if [ -f ${hostapd_conf} ]; then
+		/usr/sbin/hostapd ${hostapd_conf}
 	fi
 fi
 
