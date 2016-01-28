@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/conf/options 291416 2015-11-28 01:09:30Z adrian $
+# $FreeBSD: head/sys/conf/options 292706 2015-12-24 19:09:48Z pkelsey $
 #
 #        On the handling of kernel options
 #
@@ -112,6 +112,7 @@ GEOM_LINUX_LVM	opt_geom.h
 GEOM_MAP	opt_geom.h
 GEOM_MBR	opt_geom.h
 GEOM_MIRROR	opt_geom.h
+GEOM_MOUNTVER	opt_geom.h
 GEOM_MULTIPATH	opt_geom.h
 GEOM_NOP	opt_geom.h
 GEOM_PART_APM	opt_geom.h
@@ -439,6 +440,8 @@ TCPDEBUG
 TCPPCAP		opt_global.h
 SIFTR
 TCP_OFFLOAD		opt_inet.h # Enable code to dispatch TCP offloading
+TCP_RFC7413		opt_inet.h
+TCP_RFC7413_MAX_KEYS	opt_inet.h
 TCP_SIGNATURE		opt_inet.h
 VLAN_ARRAY		opt_vlan.h
 XBONEHACK
@@ -962,7 +965,6 @@ RANDOM_ENABLE_UMA	opt_global.h
 EM_MULTIQUEUE	opt_em.h
 
 #
-# MeshBSD
+# MeshBSD -- Inspecting rfc-2516 frames by if_bridge(4) and ipfw(4).
 #
 PPPOE_PFIL 	opt_pppoe_pfil.h
-

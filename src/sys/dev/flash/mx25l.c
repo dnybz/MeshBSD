@@ -47,6 +47,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD: head/sys/dev/flash/mx25l.c 290380 2015-11-05 03:13:10Z adrian $");
 
@@ -133,7 +134,7 @@ struct mx25l_flash_ident flash_devices[] = {
 	{ "s25fl128",	0x01, 0x2018, 64 * 1024, 256, FL_NONE },
 	{ "s25fl256s",	0x01, 0x0219, 64 * 1024, 512, FL_NONE },
 	{ "SST25VF032B", 0xbf, 0x254a, 64 * 1024, 64, FL_ERASE_4K | FL_ERASE_32K },
-	
+
 	/* Winbond -- w25x "blocks" are 64K, "sectors" are 4KiB */
 	{ "w25x32",	0xef, 0x3016, 64 * 1024, 64, FL_ERASE_4K },
 	{ "w25q32",	0xef, 0x4016, 64 * 1024, 64, FL_ERASE_4K },

@@ -29,7 +29,6 @@
  *	@(#)if.h	8.1 (Berkeley) 6/10/93
  * $FreeBSD: head/sys/net/if.h 270822 2014-08-29 18:02:58Z melifaro $
  */
-
 /*
  * Copyright (c) 2015 Henning Matyschok
  * All rights reserved.
@@ -55,7 +54,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
+ 
 #ifndef _NET_IF_H_
 #define	_NET_IF_H_
 
@@ -205,7 +204,7 @@ struct if_data {
 #define	IFF_CANTCHANGE \
 	(IFF_BROADCAST|IFF_POINTOPOINT|IFF_DRV_RUNNING|IFF_DRV_OACTIVE|\
 	    IFF_SIMPLEX|IFF_MULTICAST|IFF_ALLMULTI|IFF_PROMISC|\
-	    IFF_DYING|IFF_CANTCONFIG|IFF_VETHER)
+	    IFF_DYING|IFF_CANTCONFIG)
 
 /*
  * Values for if_link_state.

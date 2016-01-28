@@ -1,5 +1,5 @@
 #	From: @(#)Makefile	5.20 (Berkeley) 6/12/93
-# $FreeBSD: head/usr.sbin/Makefile 291230 2015-11-24 02:27:59Z araujo $
+# $FreeBSD: head/usr.sbin/Makefile 292553 2015-12-21 17:41:08Z ian $
 
 .include <src.opts.mk>
 
@@ -7,6 +7,7 @@ SUBDIR=	adduser \
 	arp \
 	binmiscctl \
 	bsdconfig \
+	camdd \
 	cdcontrol \
 	chkgrp \
 	chown \
@@ -46,6 +47,7 @@ SUBDIR=	adduser \
 	mixer \
 	mlxcontrol \
 	mountd \
+	mount_smbfs \
 	mpsutil \
 	mptutil \
 	mtest \
