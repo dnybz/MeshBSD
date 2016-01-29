@@ -10,22 +10,8 @@
 !/MeshBSD/cfg/tl-wr1043ndv2
 !/MeshBSD/lib/cfg.sh
 
-!/MeshBSD/root/bin/cfg_load
-!/MeshBSD/root/bin/cfg_save
-
-!/MeshBSD/root/etc/cfg/*.conf
-!/MeshBSD/root/etc/cfg/hostname.*
-
-!/MeshBSD/root/etc/cfg/*
-
-!/MeshBSD/root/etc/pam.d/*
-
-!/MeshBSD/root/etc/rc
-!/MeshBSD/root/etc/rc.d/*
-
-!/MeshBSD/root/etc/rc2
-!/MeshBSD/root/etc/termcap
-!/MeshBSD/root/etc/ttys
+!/MeshBSD/root/bin/*
+!/MeshBSD/root/etc/*
 
 !/MeshBSD/programs/Makefile
 
