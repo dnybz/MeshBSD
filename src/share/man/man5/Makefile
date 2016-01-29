@@ -25,7 +25,6 @@ MAN=	acct.5 \
 	fs.5 \
 	fstab.5 \
 	group.5 \
-	hostname.if.5 \
 	hosts.5 \
 	hosts.equiv.5 \
 	hosts.lpd.5 \

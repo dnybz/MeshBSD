@@ -102,7 +102,9 @@ fi
 # configuration file, where its contents provides 
 # argument vector for processing by ifconfig(8).
 #
-ifmstart ${network_interface_types}
+for ift in ${network_interface_types}; do
+	ifmstart ${ift}
+done
 
 #
 # XXX: Well, heres a good place to inherit values 
