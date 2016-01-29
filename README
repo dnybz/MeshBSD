@@ -17,7 +17,7 @@ TL-WR1043NDv2 (experimental)
 
 Now, there exists an experimental factory image 
 
-   MeshBSD.tl-wr1043ndv2.201601281953.factory.bin
+   MeshBSD.tl-wr1043ndv2.201601290649.factory.bin
 
 in releases directory (only) for demonstration purposes. Intentionally, 
 this software is not released for use as production system or in context 
@@ -143,14 +143,14 @@ where
 
 initializes tftpd(8) daemon manually.
 
- | ap135> tftpboot 0x80060000 MeshBSD.tl-wr1043ndv2.201601281953.factory.bin
+ | ap135> tftpboot 0x80060000 MeshBSD.tl-wr1043ndv2.201601290649.factory.bin
 
 loads 
 
  | dup 1 speed 1000
  | Using eth1 device
  | TFTP from server 192.168.1.100; our IP address is 192.168.1.111
- | Filename 'MeshBSD.tl-wr1043ndv2.201601281953.factory.bin'.
+ | Filename 'MeshBSD.tl-wr1043ndv2.201601290649.factory.bin'.
  | Load address: 0x80060000
  | Loading: #################################################################
  |          #################################################################
@@ -173,7 +173,7 @@ loads
  |          #################################################################
  |          ############
  | done
- | Bytes transferred = 6382080 (616200 hex)
+ | Bytes transferred = 6379520 (615800 hex)
 
 the (experimental) firmware image into random access memory starting at 
 address 0x80060000 on (this) ap135 (router) board.
@@ -236,28 +236,29 @@ residing and by
 enlisted (and promoted) configuration files
 
  | *** Storing configuration files from / | etc/cfg/manifest -> /dev/map/cfg..
- | etc/cfg/dhcpd.conf
- | etc/cfg/group
- | etc/cfg/hostapd.conf
- | etc/cfg/hostname.arge0
- | etc/cfg/hostname.arge1
- | etc/cfg/ipsec.conf
  | etc/cfg/manifest
- | etc/cfg/master.passwd
- | etc/cfg/myname
- | etc/cfg/nsswitch.conf
- | etc/cfg/ntp.conf
- | etc/cfg/passwd
- | etc/cfg/pf.conf
- | etc/cfg/ppp.conf
- | etc/cfg/rc.conf
- | etc/cfg/services
- | etc/cfg/ttys
- | etc/cfg/wpa_supplicant.conf
- | 22 blocks
+ | etc/ppp/ppp.conf
+ | etc/dhcpd.conf
+ | etc/group
+ | etc/hostapd.conf
+ | etc/hostname.arge0
+ | etc/hostname.arge1
+ | etc/ipsec.conf
+ | etc/login.conf
+ | etc/master.passwd
+ | etc/myname
+ | etc/nsswitch.conf
+ | etc/ntp.conf
+ | etc/passwd
+ | etc/pf.conf
+ | etc/rc.conf
+ | etc/services
+ | etc/ttys
+ | etc/wpa_supplicant.conf
+ | 35 blocks
  | 0+1 records in
  | 1+0 records out
- | 65536 bytes transferred in 0.490564 secs (133593 bytes/sec)
+ | 65536 bytes transferred in 0.544856 secs (120281 bytes/sec)
  | *** Completed.
 
 are stored as compressed image into NVRAM. At least, any configuration 
