@@ -7,9 +7,9 @@ Extensions on FreeBSD 11-RELEASE operating system for embedded systems.
  | This project is at an early stage! 
  | 
  | Please, be patient, there is recent work 
- | in progress to reach the goal providing
- | an operating system targeting embedded
- | systems based on FreeBSD 11-RELEASE. 
+ | in progress to reach the goal tp provide
+ | an operating system for embedded systems 
+ | based on FreeBSD 11-RELEASE. 
  |
 
 TL-WR1043NDv2 (experimental)
