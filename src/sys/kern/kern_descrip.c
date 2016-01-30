@@ -396,12 +396,10 @@ int
 sys_getdtablecount(struct thread *td, struct getdtablecount_args *uap)
 {
 
-/*
- * XXX: I'll take a tiny break... :)
- */
-
-	td->td_retval[0] = ...
-
+	PROC_LOCK(td->td_proc);
+	td->td_retval[0] = td->td_proc->p_fd->fd_nfiles;
+	PROC_UNLOCK(td->td_proc);
+	
 	return (0);
 }
 
