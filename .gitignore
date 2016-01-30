@@ -91,7 +91,9 @@
 #
 # SYS_getdtablecount
 #
+!/src/sys/kern/kern_descrip.c
 !/src/sys/kern/syscalls.master
+
 !/src/sys/sys/syscall.h
 !/src/sys/sys/sysproto.h
 
@@ -110,6 +112,9 @@
 #
 
 !/src/include/unistd.h
+
+!src/lib/libc/sys/Makefile.inc
+!src/lib/libc/sys/getdtablecount.2
 
 !/src/lib/libutil/Makefile
 !/src/lib/libutil/imsg.c
