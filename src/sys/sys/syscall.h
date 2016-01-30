@@ -471,4 +471,5 @@
  * XXX: Inherited from OpenBSD, has #18.
  */
 #define SYS_getdtablecount 		550
+
 #define	SYS_MAXSYSCALL	551

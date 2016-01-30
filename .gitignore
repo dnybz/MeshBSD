@@ -91,7 +91,9 @@
 #
 # SYS_getdtablecount
 #
+!/src/sys/kern/syscalls.master
 !/src/sys/sys/syscall.h
+!/src/sys/sys/sysproto.h
 
 #
 # Bsdbox. 
