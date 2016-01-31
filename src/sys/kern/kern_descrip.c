@@ -380,25 +380,20 @@ sys_getdtablesize(struct thread *td, struct getdtablesize_args *uap)
 }
 
 /*
- * Extension for MeshBSD. 
+ * Extension for MeshBSD, imported from OpenBSD.
  *
- * Implementation maps to OpenBSD imported 
- * getdtablecount(2) system-call, but it is
- * still different.
+ * Returns number of allocated file descriptors.
  */
 #ifndef _SYS_SYSPROTO_H_
 struct getdtablecount_args {
-	int	dummy;
+	int	ga_dummy;
 };
 #endif
 
 int
 sys_getdtablecount(struct thread *td, struct getdtablecount_args *uap)
 {
-
-	PROC_LOCK(td->td_proc);
 	td->td_retval[0] = td->td_proc->p_fd->fd_nfiles;
-	PROC_UNLOCK(td->td_proc);
 	
 	return (0);
 }

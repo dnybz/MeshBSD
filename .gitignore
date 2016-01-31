@@ -92,6 +92,7 @@
 # SYS_getdtablecount
 #
 !/src/sys/kern/kern_descrip.c
+!/src/sys/kern/syscalls.c
 !/src/sys/kern/syscalls.master
 
 !/src/sys/sys/syscall.h
