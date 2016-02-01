@@ -244,7 +244,7 @@ provides a listing
  |        groups: lo 
 
 about configured network interfaces on link-layer. Any persistent configuration 
-on network interfaces on shall described by
+on network interfaces shall described by
  
     /etc/hostname.if
  

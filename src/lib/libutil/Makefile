@@ -5,6 +5,8 @@ SHLIBDIR?= /lib
 
 .include <src.opts.mk>
 
+WARNS?=	2
+
 LIB=	util
 SHLIB_MAJOR= 9
 
