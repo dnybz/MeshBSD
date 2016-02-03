@@ -111,11 +111,27 @@
 #
 # Userspace
 #
-
+!/src/include/Makefile
+!/src/include/event.h
 !/src/include/unistd.h
 
 !src/lib/libc/sys/Makefile.inc
 !src/lib/libc/sys/getdtablecount.2
+
+!/src/lib/libevent/Makefile
+!/src/lib/libevent/Makefile.depend
+!/src/lib/libevent/buffer.c
+!/src/lib/libevent/evbuffer.c
+!/src/lib/libevent/event-internal.h
+!/src/lib/libevent/event.c
+!/src/lib/libevent/event.h
+!/src/lib/libevent/evsignal.h
+!/src/lib/libevent/kqueue.c
+!/src/lib/libevent/log.c
+!/src/lib/libevent/log.h
+!/src/lib/libevent/poll.c
+!/src/lib/libevent/select.c
+!/src/lib/libevent/signal.c
 
 !/src/lib/libutil/Makefile
 !/src/lib/libutil/imsg.c
