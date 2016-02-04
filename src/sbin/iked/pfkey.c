@@ -24,7 +24,9 @@
 #include <sys/socket.h>
 
 #include <netinet/in.h>
-#include <netinet/ip_ipsp.h>
+#include <netipsec/keydb.h>
+#include <netipsec/key_debug.h>
+#include <netipsec/ipsec.h>
 #include <net/pfkeyv2.h>
 
 #include <err.h>

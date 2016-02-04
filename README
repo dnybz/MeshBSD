@@ -31,7 +31,7 @@ of production systems, because this software is not error-free.
    ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
    OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-Basic requirements for installing the (experimental) firmware image are:
+Basic requirements for installation of (experimental) firmware image are:
 
  * Soldered header on-board, which is used for serial 
    access through interconnected usb cable. 
@@ -263,6 +263,7 @@ configuration file. Implecitely,
  | # cat >> /etc/hostname.wlan0 << EOF
  | > create wlandev ath0 wlanmode adhoc
  | > inet 192.168.2.1 netmask 255.255.255.0 ssid tiamat
+ | > mtu 1492
  | > up
  | > EOF 
 
@@ -272,7 +273,7 @@ in conjunction with
   
 creates an instance of wlan(4) device automatically. Therefore
 
- | #cfg_save 
+ | # cfg_save 
     
 stores any in 
 
@@ -338,7 +339,7 @@ shows
  |         options=600003<RXCSUM,TXCSUM,RXCSUM_IPV6,TXCSUM_IPV6>
  |         inet 127.0.0.1 netmask 0xff000000 
  |         groups: lo 
- | wlan0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1500
+ | wlan0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1492
  |         ether c4:6e:1f:b9:19:e0
  |         inet 192.168.2.1 netmask 0xffffff00 broadcast 192.168.2.255 
  |         media: IEEE 802.11 Wireless Ethernet autoselect mode 11ng <adhoc>
@@ -358,7 +359,7 @@ may configured by DHCP, then
  | > dhcp
  | > EOF 
 
-enables DHCP.
+overwrites contents of interface-specific configuration file and enables DHCP.
 
 Some additional information:
 ----------------------------
