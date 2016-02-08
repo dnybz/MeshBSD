@@ -23,7 +23,7 @@ SRCS=	main.c session.c isakmp.c handler.c 			\
 	nattraversal.c vmbuf.c sockmisc.c misc.c
 MAN=	racoon.8 racoon.conf.5
 
-DIST=	${.CURDIR}/../../crypto/racoon
+DIST=	${.CURDIR}
 CPPFLAGS+= -I${DIST} -I${DIST}/missing
 CPPFLAGS+= -I${.CURDIR}/../../lib/libipsec -I.
 CPPFLAGS+= -DIPSEC_DEBUG -DHAVE_CONFIG_H
