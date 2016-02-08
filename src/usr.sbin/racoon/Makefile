@@ -24,51 +24,56 @@ SRCS=	main.c session.c isakmp.c handler.c 			\
 MAN=	racoon.8 racoon.conf.5
 
 DIST=	${.CURDIR}/../../crypto/racoon
-CPPFLAGS+= -I${DIST}/src/racoon -I${DIST}/src/racoon/missing
-CPPFLAGS+= -I${DIST}/src/libipsec
+CPPFLAGS+= -I${DIST} -I${DIST}/missing
 CPPFLAGS+= -I${.CURDIR}/../../lib/libipsec -I.
 CPPFLAGS+= -DIPSEC_DEBUG -DHAVE_CONFIG_H
 CPPFLAGS+= -DADMINPORTDIR=\"/var/run\"
 CPPFLAGS+= -DSYSCONFDIR=\"/etc/racoon\"
 
-LDADD+= -ll -ly -lipsec -lutil
+LIBADD+=l 
+LIBADD+=y 
+LIBADD+=ipsec 
+LIBADD+=util
+
 DPADD+= ${LIBL} ${LIBY} ${LIBCRYPTO} ${LIBUTIL}
 
 YHEADER=cfparse.h
 
 CPPFLAGS+=-DHAVE_LIBRADIUS
-LDADD+=-lradius
+LIBADD+=radius
 DPADD+= ${LIBRADIUS}
 .if (${USE_PAM} != "no")
 CPPFLAGS+=-DHAVE_LIBPAM
-LDADD+=	-lpam -lutil ${PAM_STATIC_LDADD}
+LIBADD+=pam 
+LIBADD+=util ${PAM_STATIC_LDADD}
 DPADD+=	${LIBPAM} ${PAM_STATIC_DPADD}
 .endif
 .if (${USE_KERBEROS} != "no")
 CPPFLAGS+=-DHAVE_GSSAPI
-LDADD+= -lgssapi -lkrb5 -lhx509 -lheimntlm -lcom_err \
+LIBADD+=gssapi 
+LIBADD+=krb5 
+LIBADD+=hx509 
+LIBADD+=heimntlm 
+LIBADD+=com_err \
 	-lroken -lasn1
 DPADD+= ${LIBGSSAPI} ${LIBKRB5} ${LIBHX509} ${LIBHEIMNTLM} ${LIBCOM_ERR} \
 	${LIBROKEN} ${LIBASN1}
 .endif
-.if (${MKCRYPTO_RC5} != "no")
-CPPFLAGS+=-DHAVE_OPENSSL_RC5_H
-LDADD+= -lcrypto_rc5
-LDADD+= ${LIBCRYPTO_RC5}
-.endif
+
 .if (${USE_INET6} != "no")
 CPPFLAGS+=-DINET6
 .endif
 
-LDADD+= -lcrypto -lcrypt
+LIBADD+=crypto 
+LIBADD+=crypt
 DPADD+= ${LIBIPSEC} ${LIBCRYPT}
 
-.PATH:  ${.CURDIR}/../../lib/libipsec ${DIST}/src/racoon
+.PATH:  ${.CURDIR}/../../lib/libipsec ${DIST}
 
-prsa_tok.c: ${DIST}/src/racoon/prsa_tok.l
+prsa_tok.c: ${DIST}/prsa_tok.l
 	${LEX} -Pprsa -o${.TARGET} ${.ALLSRC}
 
-prsa_par.c: ${DIST}/src/racoon/prsa_par.y
+prsa_par.c: ${DIST}/prsa_par.y
 	${YACC} -pprsa -d -o ${.TARGET} ${.ALLSRC}
 
 .include <bsd.prog.mk>
