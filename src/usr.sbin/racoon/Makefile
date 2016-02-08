@@ -42,13 +42,13 @@ YHEADER=cfparse.h
 CPPFLAGS+=-DHAVE_LIBRADIUS
 LIBADD+=radius
 DPADD+= ${LIBRADIUS}
-.if (${USE_PAM} != "no")
+.if (${MK_PAM_SUPPORT} != "no")
 CPPFLAGS+=-DHAVE_LIBPAM
 LIBADD+=pam 
 LIBADD+=util ${PAM_STATIC_LDADD}
 DPADD+=	${LIBPAM} ${PAM_STATIC_DPADD}
 .endif
-.if (${USE_KERBEROS} != "no")
+.if (${MK_KERBEROS_SUPPORT} != "no")
 CPPFLAGS+=-DHAVE_GSSAPI
 LIBADD+=gssapi 
 LIBADD+=krb5 
@@ -60,7 +60,7 @@ DPADD+= ${LIBGSSAPI} ${LIBKRB5} ${LIBHX509} ${LIBHEIMNTLM} ${LIBCOM_ERR} \
 	${LIBROKEN} ${LIBASN1}
 .endif
 
-.if (${USE_INET6} != "no")
+.if (${MK_INET6_SUPPORT} != "no")
 CPPFLAGS+=-DINET6
 .endif
 
