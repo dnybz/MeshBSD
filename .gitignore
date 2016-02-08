@@ -215,3 +215,19 @@
 !/src/usr.sbin/dhcpd/tree.h
 !/src/usr.sbin/dhcpd/udpsock.c
 
+!src/usr.sbin/httpd/Makefile
+!src/usr.sbin/httpd/config.c
+!src/usr.sbin/httpd/control.c
+!src/usr.sbin/httpd/http.h
+!src/usr.sbin/httpd/httpd.8
+!src/usr.sbin/httpd/httpd.c
+!src/usr.sbin/httpd/httpd.conf.5
+!src/usr.sbin/httpd/httpd.h
+!src/usr.sbin/httpd/log.c
+!src/usr.sbin/httpd/logger.c
+!src/usr.sbin/httpd/parse.y
+!src/usr.sbin/httpd/proc.c
+!src/usr.sbin/httpd/server.c
+!src/usr.sbin/httpd/server_fcgi.c
+!src/usr.sbin/httpd/server_file.c
+!src/usr.sbin/httpd/server_http.c

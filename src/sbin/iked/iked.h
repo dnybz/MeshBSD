@@ -19,8 +19,9 @@
 #include <sys/types.h>
 #include <sys/tree.h>
 #include <sys/queue.h>
-#include <limits.h>
+#include <sys/param.h>
 #include <imsg.h>
+#include <pwd.h>
 
 #include "types.h"
 #include "dh.h"
@@ -500,7 +501,7 @@ struct iked_message {
 };
 
 struct iked_user {
-	char			 usr_name[LOGIN_NAME_MAX];
+	char			 usr_name[MAXLOGNAME];
 	char			 usr_pass[IKED_PASSWORD_SIZE];
 	RB_ENTRY(iked_user)	 usr_entry;
 };
@@ -948,8 +949,9 @@ void	 log_info(const char *, ...) __attribute__((format(printf, 1, 2)));
 void	 log_debug(const char *, ...) __attribute__((format(printf, 1, 2)));
 void	 print_debug(const char *, ...) __attribute__((format(printf, 1, 2)));
 void	 print_verbose(const char *, ...) __attribute__((format(printf, 1, 2)));
-__dead void fatal(const char *);
-__dead void fatalx(const char *);
+
+void fatal(const char *);
+void fatalx(const char *);
 
 /* ocsp.c */
 int	 ocsp_connect(struct iked *env);

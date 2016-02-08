@@ -4,6 +4,7 @@
 # Copyright (c) 2010, 2011, 2014 Antoine Jacoutot <ajacoutot@openbsd.org>
 # Copyright (c) 2010, 2011 Ingo Schwarze <schwarze@openbsd.org>
 # Copyright (c) 2010, 2011, 2014 Robert Nagy <robert@openbsd.org>
+# Copyright (C) 2016, Henning Matyschok
 #
 # Permission to use, copy, modify, and distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -59,9 +60,15 @@ ifstart() {
 # accepted argument-vector.
 #
 	while read -r af line; do
-		case "$af" in
+		case "${af}" in
 		"#"*|"") # skip comments and empty lines
 			continue
+			;;
+		"pppoe")
+#
+# 			ppp $ppp_flags $ppp_conf
+#			
+			return
 			;;
 		"dhcp")
 			dhclient $if
