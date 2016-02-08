@@ -197,5 +197,4 @@
 !src/usr.sbin/httpd/server_file.c
 !src/usr.sbin/httpd/server_http.c
 
-!/src/crypto/racoon/*
 !/src/usr.sbin/racoon/*
