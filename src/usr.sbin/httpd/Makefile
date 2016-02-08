@@ -1,7 +1,5 @@
 #	$OpenBSD: Makefile,v 1.27 2015/02/23 10:39:10 reyk Exp $
 
-WARNS?=	2
-
 PROG=		httpd
 SRCS=		parse.y
 SRCS+=		config.c control.c httpd.c log.c logger.c proc.c
@@ -12,7 +10,7 @@ LIBADD+=event
 LIBADD+=tls
 LIBADD+=ssl 
 LIBADD+=crypto 
-LIBADD+=util
+util
 
 DPADD=		${LIBEVENT} ${LIBTLS} ${LIBSSL} ${LIBCRYPTO} ${LIBUTIL}
 #DEBUG=		-g -DDEBUG=3 -O0
@@ -22,5 +20,7 @@ CFLAGS+=	-Wmissing-declarations
 CFLAGS+=	-Wshadow -Wpointer-arith
 CFLAGS+=	-Wsign-compare
 CLEANFILES+=	y.tab.h
+
+WARNS?=	2
 
 .include <bsd.prog.mk>

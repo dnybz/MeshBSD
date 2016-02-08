@@ -1,7 +1,5 @@
 # $OpenBSD: Makefile,v 1.12 2014/08/27 10:28:57 reyk Exp $
 
-WARNS?=	2
-
 PROG=		iked
 SRCS=		ca.c chap_ms.c config.c control.c crypto.c dh.c \
 		eap.c iked.c ikev1.c ikev2.c ikev2_msg.c ikev2_pld.c \
@@ -34,5 +32,7 @@ eap_map.c: genmap.sh eap.h
 	@touch $@
 
 ${PROG} beforedepend: ${GENERATED}
+
+WARNS?=	0
 
 .include <bsd.prog.mk>

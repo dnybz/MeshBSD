@@ -21,6 +21,9 @@
 #include <sys/wait.h>
 #include <sys/uio.h>
 
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -35,7 +38,7 @@
 #include "iked.h"
 #include "ikev2.h"
 
-__dead void usage(void);
+void usage(void);
 
 void	 parent_shutdown(struct iked *);
 void	 parent_sig_handler(int, short, void *);
@@ -50,7 +53,7 @@ static struct privsep_proc procs[] = {
 	{ "ca",		PROC_CERT, parent_dispatch_ca, caproc, IKED_CA }
 };
 
-__dead void
+void
 usage(void)
 {
 	extern char	*__progname;
