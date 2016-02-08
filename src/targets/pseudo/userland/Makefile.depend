@@ -100,7 +100,6 @@ DIRDEPS+= \
 	sbin/hastctl \
 	sbin/hastd \
 	sbin/ifconfig \
-	sbin/iked \
 	sbin/init \
 	sbin/ipf/ipf \
 	sbin/ipf/ipfs \
@@ -715,6 +714,7 @@ DIRDEPS+= \
 	usr.sbin/pwd_mkdb \
 	usr.sbin/quot \
 	usr.sbin/quotaon \
+	usr.sbin/racoon \
 	usr.sbin/rarpd \
 	usr.sbin/repquota \
 	usr.sbin/rip6query \

@@ -67,6 +67,7 @@ SUBDIR=	adduser \
 	pw \
 	pwd_mkdb \
 	quot \
+	racoon \
 	rarpd \
 	rmt \
 	rpcbind \
