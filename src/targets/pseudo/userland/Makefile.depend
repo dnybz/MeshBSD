@@ -596,6 +596,7 @@ DIRDEPS+= \
 	usr.sbin/gpioctl \
 	usr.sbin/gssd \
 	usr.sbin/gstat \
+	usr.sbin/httpd \
 	usr.sbin/i2c \
 	usr.sbin/ifmcstat \
 	usr.sbin/inetd \
@@ -714,7 +715,6 @@ DIRDEPS+= \
 	usr.sbin/pwd_mkdb \
 	usr.sbin/quot \
 	usr.sbin/quotaon \
-	usr.sbin/racoon \
 	usr.sbin/rarpd \
 	usr.sbin/repquota \
 	usr.sbin/rip6query \

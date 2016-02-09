@@ -34,6 +34,7 @@ SUBDIR=	adduser \
 	getfmac \
 	getpmac \
 	gstat \
+	httpd \
 	i2c \
 	ifmcstat \
 	iostat \
@@ -67,7 +68,6 @@ SUBDIR=	adduser \
 	pw \
 	pwd_mkdb \
 	quot \
-	racoon \
 	rarpd \
 	rmt \
 	rpcbind \
