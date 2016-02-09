@@ -398,9 +398,6 @@ LIBIPF?=	${LIBIPFDIR}/libipf.a
 LIBTELNETDIR=	${OBJTOP}/lib/libtelnet
 LIBTELNET?=	${LIBTELNETDIR}/libtelnet.a
 
-LIBTLSDIR= ${OBJTOP}/lib/libtls
-LIBTLS?= ${LIBTLSDIR}/libtls.a
-
 LIBCRONDIR=	${OBJTOP}/usr.sbin/cron/lib
 LIBCRON?=	${LIBCRONDIR}/libcron.a
 
@@ -501,6 +498,9 @@ LIBLNDIR=	${OBJTOP}/usr.bin/lex/lib
 
 LIBTERMCAPDIR=	${LIBNCURSESDIR}
 LIBTERMCAPWDIR=	${LIBNCURSESWDIR}
+
+LIBTLSDIR= ${OBJTOP}/lib/libtls
+LIBTLS?= ${LIBTLSDIR}/libtls.a
 
 # Default other library directories to lib/libNAME.
 .for lib in ${_LIBRARIES}
