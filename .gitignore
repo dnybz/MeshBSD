@@ -114,6 +114,10 @@
 #
 # Userspace
 #
+!/src/crypto/openssl/ssl/ssl_lib.c
+!/src/crypto/openssl/ssl/ssl_rsa.c
+!/src/crypto/openssl/ssl/ssl.h
+
 !/src/include/Makefile
 !/src/include/event.h
 !/src/include/unistd.h

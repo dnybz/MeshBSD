@@ -65,4 +65,6 @@ includes:
 	    eval "$$j"; \
 	done;
 
+WARNS?=	2
+
 .include <bsd.lib.mk>
