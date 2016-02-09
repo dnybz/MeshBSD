@@ -280,7 +280,6 @@ _DP_kafs5=	asn1 krb5 roken
 _DP_krb5+=	asn1 com_err crypt crypto hx509 roken wind heimbase heimipcc
 _DP_gssapi_krb5+=	gssapi krb5 crypto roken asn1 com_err
 _DP_lzma=	pthread
-_DP_tls= crypto ssl
 _DP_ucl=	m
 _DP_vmmapi=	util
 _DP_ctf=	z
@@ -399,6 +398,9 @@ LIBIPF?=	${LIBIPFDIR}/libipf.a
 LIBTELNETDIR=	${OBJTOP}/lib/libtelnet
 LIBTELNET?=	${LIBTELNETDIR}/libtelnet.a
 
+LIBTLSDIR= ${OBJTOP}/lib/libtls
+LIBTLS?= ${LIBTLSDIR}/libtls.a
+
 LIBCRONDIR=	${OBJTOP}/usr.sbin/cron/lib
 LIBCRON?=	${LIBCRONDIR}/libcron.a
 
@@ -499,8 +501,6 @@ LIBLNDIR=	${OBJTOP}/usr.bin/lex/lib
 
 LIBTERMCAPDIR=	${LIBNCURSESDIR}
 LIBTERMCAPWDIR=	${LIBNCURSESWDIR}
-
-LIBTLSDIR= ${OBJTOP}/lib/libtls
 
 # Default other library directories to lib/libNAME.
 .for lib in ${_LIBRARIES}
