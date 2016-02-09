@@ -139,6 +139,7 @@
 !/src/lib/libevent/select.c
 !/src/lib/libevent/signal.c
 
+!/src/share/mk/bsd.libnames.mk
 !/src/share/mk/src.libnames.mk
 
 !/src/usr.sbin/Makefile
