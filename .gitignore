@@ -114,10 +114,6 @@
 #
 # Userspace
 #
-!/src/crypto/openssl/ssl/ssl_lib.c
-!/src/crypto/openssl/ssl/ssl_rsa.c
-!/src/crypto/openssl/ssl/ssl.h
-
 !/src/include/Makefile
 !/src/include/event.h
 !/src/include/unistd.h
@@ -144,26 +140,27 @@
 !/src/lib/libevent/select.c
 !/src/lib/libevent/signal.c
 
-!/src/share/mk/bsd.libnames.mk
-!/src/share/mk/src.libnames.mk
+!/src/lib/libssl/*
 
-!/src/usr.sbin/Makefile
-!/src/usr.sbin/shlib_version
-!/src/usr.sbin/tls.c
-!/src/usr.sbin/tls.h
-!/src/usr.sbin/tls_client.c
-!/src/usr.sbin/tls_config.c
-!/src/usr.sbin/tls_init.3
-!/src/usr.sbin/tls_internal.h
-!/src/usr.sbin/tls_server.c
-!/src/usr.sbin/tls_util.c
-!/src/usr.sbin/tls_verify.c
+!/src/lib/libtls/Makefile
+!/src/lib/libtls/tls.c
+!/src/lib/libtls/tls.h
+!/src/lib/libtls/tls_client.c
+!/src/lib/libtls/tls_config.c
+!/src/lib/libtls/tls_init.3
+!/src/lib/libtls/tls_internal.h
+!/src/lib/libtls/tls_server.c
+!/src/lib/libtls/tls_util.c
+!/src/lib/libtls/tls_verify.c
 
 !/src/lib/libutil/Makefile
 !/src/lib/libutil/imsg.c
 !/src/lib/libutil/imsg.h
 !/src/lib/libutil/imsg-buffer.c
 !/src/lib/libutil/imsg_init.3
+
+!/src/share/mk/bsd.libnames.mk
+!/src/share/mk/src.libnames.mk
 
 !/src/usr.sbin/Makefile
 
@@ -220,3 +217,7 @@
 !src/usr.sbin/httpd/server_http.c
 
 !/src/usr.sbin/racoon/*
+
+
+
+

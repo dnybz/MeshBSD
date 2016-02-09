@@ -10,7 +10,8 @@ SUBDIR= arpa protocols rpcsvc rpc xlocale
 SUBDIR_PARALLEL=
 INCS=	a.out.h ar.h assert.h bitstring.h complex.h cpio.h _ctype.h ctype.h \
 	db.h \
-	dirent.h dlfcn.h elf.h elf-hints.h err.h event.h \
+	dirent.h dlfcn.h elf.h elf-hints.h err.h \
+	event.h \
 	fmtmsg.h fnmatch.h fstab.h \
 	fts.h ftw.h getopt.h glob.h grp.h \
 	ieeefp.h ifaddrs.h \

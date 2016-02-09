@@ -94,6 +94,7 @@ SUBDIR=	${SUBDIR_ORDERED} \
 	libsmb \
 	${_libsmdb} \
 	${_libsmutil} \
+	libssl \
 	libsqlite3 \
 	libstand \
 	libstdbuf \
