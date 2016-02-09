@@ -10,10 +10,12 @@ LIBADD+=event
 LIBADD+=tls
 LIBADD+=ssl 
 LIBADD+=crypto 
-util
+LIBADD+=util
 
 DPADD=		${LIBEVENT} ${LIBTLS} ${LIBSSL} ${LIBCRYPTO} ${LIBUTIL}
+
 #DEBUG=		-g -DDEBUG=3 -O0
+
 CFLAGS+=	-Wall -I${.CURDIR}
 CFLAGS+=	-Wstrict-prototypes -Wmissing-prototypes
 CFLAGS+=	-Wmissing-declarations

@@ -118,6 +118,8 @@
 !/src/include/event.h
 !/src/include/unistd.h
 
+!/src/lib/Makefile
+
 !src/lib/libc/sys/Makefile.inc
 !src/lib/libc/sys/getdtablecount.2
 !src/lib/libc/sys/Symbol.map
@@ -136,6 +138,18 @@
 !/src/lib/libevent/poll.c
 !/src/lib/libevent/select.c
 !/src/lib/libevent/signal.c
+
+!/src/usr.sbin/Makefile
+!/src/usr.sbin/shlib_version
+!/src/usr.sbin/tls.c
+!/src/usr.sbin/tls.h
+!/src/usr.sbin/tls_client.c
+!/src/usr.sbin/tls_config.c
+!/src/usr.sbin/tls_init.3
+!/src/usr.sbin/tls_internal.h
+!/src/usr.sbin/tls_server.c
+!/src/usr.sbin/tls_util.c
+!/src/usr.sbin/tls_verify.c
 
 !/src/lib/libutil/Makefile
 !/src/lib/libutil/imsg.c
