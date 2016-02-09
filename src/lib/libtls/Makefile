@@ -1,13 +1,11 @@
 #	$OpenBSD: Makefile,v 1.7 2015/02/22 15:09:54 jsing Exp $
 
-CFLAGS+= -Wall -Werror -Wimplicit
-CFLAGS+= -DLIBRESSL_INTERNAL
+.include <bsd.own.mk>
 
 LIB=	tls
+SHLIB_MAJOR= 3
 
 DPADD=	${LIBCRYPTO} ${LIBSSL}
-
-HDRS=	tls.h
 
 SRCS=	tls.c \
 	tls_client.c \
@@ -15,6 +13,11 @@ SRCS=	tls.c \
 	tls_server.c \
 	tls_util.c \
 	tls_verify.c
+
+CFLAGS+= -Wall -Werror -Wimplicit
+CFLAGS+= -DLIBRESSL_INTERNAL
+
+INCS=	tls.h
 
 MAN=	tls_init.3
 
