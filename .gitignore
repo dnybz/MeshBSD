@@ -139,6 +139,8 @@
 !/src/lib/libevent/select.c
 !/src/lib/libevent/signal.c
 
+!/src/share/mk/src.libnames.mk
+
 !/src/usr.sbin/Makefile
 !/src/usr.sbin/shlib_version
 !/src/usr.sbin/tls.c
