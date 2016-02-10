@@ -125,6 +125,9 @@
 !src/lib/libc/sys/getdtablecount.2
 !src/lib/libc/sys/Symbol.map
 
+!src/lib/libcrypt/*
+!src/lib/libcrypto/*
+
 !/src/lib/libevent/Makefile
 !/src/lib/libevent/Makefile.depend
 !/src/lib/libevent/buffer.c
