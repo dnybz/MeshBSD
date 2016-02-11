@@ -131,7 +131,7 @@
 !/src/secure/lib/libcrypto/Makefile.inc
 
 #
-# Inclusdes.
+# Includes.
 #
 !/src/include/Makefile
 !/src/include/event.h

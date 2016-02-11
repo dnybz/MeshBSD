@@ -371,9 +371,6 @@ LIBELFTC?=	${LIBELFTCDIR}/libelftc.a
 LIBREADLINEDIR=	${OBJTOP}/gnu/lib/libreadline/readline
 LIBREADLINE?=	${LIBREADLINEDIR}/libreadline.a
 
-LIBOPENBSDDIR=	${OBJTOP}/lib/libopenbsd
-LIBOPENBSD?=	${LIBOPENBSDDIR}/libopenbsd.a
-
 LIBSMDIR=	${OBJTOP}/lib/libsm
 LIBSM?=		${LIBSMDIR}/libsm.a
 
