@@ -64,9 +64,9 @@ tls_configure_server(struct tls *ctx)
 		goto err;
 
 	if (ctx->config->dheparams == -1)
-		SSL_CTX_set_dh_auto(ctx->ssl_ctx, 1);
+		SSL_CTX_set_ecdh_auto(ctx->ssl_ctx, 1);
 	else if (ctx->config->dheparams == 1024)
-		SSL_CTX_set_dh_auto(ctx->ssl_ctx, 2);
+		SSL_CTX_set_ecdh_auto(ctx->ssl_ctx, 2);
 
 	if (ctx->config->ecdhecurve == -1) {
 		SSL_CTX_set_ecdh_auto(ctx->ssl_ctx, 1);

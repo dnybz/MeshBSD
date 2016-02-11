@@ -655,6 +655,8 @@ extern "C" {
 
 # define X509_L_MEM          3
 
+X509_LOOKUP_METHOD * 	X509_LOOKUP_mem(void);
+
 #define X509_LOOKUP_add_mem(x,iov,type) \
 		X509_LOOKUP_ctrl((x),X509_L_MEM,(const char *)(iov),\
 		(long)(type),NULL)
