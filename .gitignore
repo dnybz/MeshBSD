@@ -123,9 +123,12 @@
 #
 
 #
-# OpenSSL.
+# libssl(3)
 #
 !/src/crypto/openssl/*
+
+!/src/secure/lib/libcrypto/Makefile
+!/src/secure/lib/libcrypto/Makefile.inc
 
 #
 # Inclusdes.
