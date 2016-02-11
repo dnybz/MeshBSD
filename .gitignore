@@ -137,9 +137,7 @@
 # Includes.
 #
 !/src/include/Makefile
-!/src/include/event.h
 !/src/include/unistd.h
-!/src/include/tls.h
 
 #
 # libc(3)
