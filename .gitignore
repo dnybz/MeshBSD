@@ -28,7 +28,11 @@
 !/releases/MeshBSD.tl-wr1043ndv2.*.factory.bin.rmd160
 !/releases/MeshBSD.tl-wr1043ndv2.*.factory.bin.sha256
 
+###
+## Sources.
+#
 !/src/COPYRIGHT
+!/src/Makefile.inc1
 
 ##
 # Etc.
