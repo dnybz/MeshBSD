@@ -122,13 +122,12 @@
 # Userspace
 #
 
+## 
+# Library set.
 #
-# libssl(3)
-#
-!/src/crypto/openssl/*
-
-!/src/secure/lib/libcrypto/Makefile
-!/src/secure/lib/libcrypto/Makefile.inc
+!/src/share/mk/bsd.libnames.mk
+!/src/share/mk/src.libnames.mk
+!/src/lib/Makefile
 
 #
 # Includes.
@@ -138,12 +137,16 @@
 !/src/include/unistd.h
 !/src/include/tls.h
 
-!/src/lib/Makefile
-
+#
+# libc(3)
+#
 !src/lib/libc/sys/Makefile.inc
 !src/lib/libc/sys/getdtablecount.2
 !src/lib/libc/sys/Symbol.map
 
+#
+# libevent(3)
+#
 !/src/lib/libevent/Makefile
 !/src/lib/libevent/Makefile.depend
 !/src/lib/libevent/buffer.c
@@ -159,6 +162,16 @@
 !/src/lib/libevent/select.c
 !/src/lib/libevent/signal.c
 
+#
+# libssl(3)
+#
+!/src/crypto/openssl/*
+!/src/secure/lib/libcrypto/Makefile
+!/src/secure/lib/libcrypto/Makefile.inc
+
+#
+# libtls(3)
+#
 !/src/lib/libtls/Makefile
 !/src/lib/libtls/tls.c
 !/src/lib/libtls/tls.h
@@ -170,17 +183,29 @@
 !/src/lib/libtls/tls_util.c
 !/src/lib/libtls/tls_verify.c
 
+#
+# Extensions on libutil(3).
+#
 !/src/lib/libutil/Makefile
+
 !/src/lib/libutil/imsg.c
 !/src/lib/libutil/imsg.h
 !/src/lib/libutil/imsg-buffer.c
 !/src/lib/libutil/imsg_init.3
 
-!/src/share/mk/bsd.libnames.mk
-!/src/share/mk/src.libnames.mk
+!/src/lib/libutil/ohash.c
+!/src/lib/libutil/ohash.h
+!/src/lib/libutil/ohash_init.3
+!/src/lib/libutil/ohash_interval.3
 
+##
+# Toolbox and daemons.
+#
 !/src/usr.sbin/Makefile
 
+#
+# OpenBSD 5.8 dhcpd(8).
+#
 !/src/usr.sbin/dhcpd/Makefile
 !/src/usr.sbin/dhcpd/alloc.c
 !/src/usr.sbin/dhcpd/bootp.c
@@ -216,6 +241,9 @@
 !/src/usr.sbin/dhcpd/tree.h
 !/src/usr.sbin/dhcpd/udpsock.c
 
+#
+# OpenBSD 5.8 httpd(8).
+#
 !src/usr.sbin/httpd/Makefile
 !src/usr.sbin/httpd/config.c
 !src/usr.sbin/httpd/control.c

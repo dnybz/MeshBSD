@@ -85,9 +85,9 @@ MLINKS+=pw_util.3 pw_copy.3 \
 	pw_util.3 pw_tempname.3 \
 	pw_util.3 pw_tmp.3
 
-/*
- * For MeshBSD from OpenBSD 5.6 inherited subset.
- */
+#
+# For MeshBSD from OpenBSD 5.6 inherited subset.
+#
  
 SRCS+=	imsg.c imsg-buffer.c 
 HDRS+= imesg.h
