@@ -1060,10 +1060,7 @@ int SSL_shutdown(SSL *s)
         return -1;
     }
 
-    if ((s != NULL) && !SSL_in_init(s))
-        return (s->method->ssl_shutdown(s));
-    else
-        return (1);
+    return s->method->ssl_shutdown(s);
 }
 
 int SSL_renegotiate(SSL *s)
@@ -3547,11 +3544,12 @@ IMPLEMENT_STACK_OF(SSL_COMP)
 IMPLEMENT_OBJ_BSEARCH_GLOBAL_CMP_FN(SSL_CIPHER, SSL_CIPHER, ssl_cipher_id);
 
 /*
- * MeshBSD
+ * MeshBSD glue for libtls(3).
  */
+
 int
 SSL_CTX_load_verify_mem(SSL_CTX *ctx, void *buf, int len)
 {
 	return (X509_STORE_load_mem(ctx->cert_store, buf, len));
 }
- 
+

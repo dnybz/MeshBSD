@@ -4,7 +4,7 @@
 !/README
 !/doc/mesh_bsd_logo.png
 
-#
+##
 # MeshBSD
 #
 !/MeshBSD/cfg/tl-wr1043ndv2
@@ -30,25 +30,29 @@
 
 !/src/COPYRIGHT
 
-#
+##
 # Etc.
 #
 !/src/etc/dhcpd.conf
 
-#
+##
 # Shared data.
 #
 !/src/share/man/man4/Makefile
 !/src/share/man/man4/vether.4
 
 !/src/share/man/man5/Makefile
-!/src/share/man/man5/hostname.if.5
 !/src/share/man/man5/myname.5
 
-#
+##
 # Targets
 #
 !/src/targets/pseudo/userland/Makefile.depend
+!/src/targets/pseudo/userland/lib/Makefile.depend
+
+##
+# Sys 
+#
 
 #
 # Configuration
@@ -74,18 +78,21 @@
 #
 # Standalone kernel modules.
 #
-!/src/sys/module/Makefie
+!/src/sys/modules/Makefile
 !/src/sys/modules/if_bridge/Makefile
 !/src/sys/modules/if_vether/Makefile
 
 #
-# Modifications on networking sub-system.
+# Generic components
 #
 !/src/sys/net/if.h
 !/src/sys/net/if_bridge.c
 !/src/sys/net/if_bridgevar.h
 !/src/sys/net/if_vether.c
 
+#
+# Netgraph domain
+#
 !/src/sys/netgraph/ng_ether.c
 
 #
@@ -101,7 +108,7 @@
 !/src/sys/sys/syscall.mk
 !/src/sys/sys/sysproto.h
 
-#
+##
 # Bsdbox. 
 #
 !/src/tools/bsdbox/Makefile
@@ -111,14 +118,18 @@
 !/src/tools/bsdbox/Makefile.kld
 !/src/tools/bsdbox/Makefile.fs
 
-#
+##
 # Userspace
 #
 
-!/src/crypto/openssl/ssl/ssl_lib.c
-!/src/crypto/openssl/ssl/ssl_rsa.c
-!/src/crypto/openssl/ssl/ssl.h
+#
+# OpenSSL.
+#
+!/src/crypto/openssl/*
 
+#
+# Inclusdes.
+#
 !/src/include/Makefile
 !/src/include/event.h
 !/src/include/unistd.h

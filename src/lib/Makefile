@@ -76,7 +76,6 @@ SUBDIR=	${SUBDIR_ORDERED} \
 	${_libnetgraph} \
 	${_libngatm} \
 	libnv \
-	libopenbsd \
 	libopie \
 	libpam \
 	libpcap \

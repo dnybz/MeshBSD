@@ -1,4 +1,4 @@
-/*	$OpenBSD: httpd.h,v 1.81 2015/02/23 18:43:18 reyk Exp $	*/
+/*	$OpenBSD: httpd.h,v 1.96 2015/08/03 11:45:17 florian Exp $	*/
 
 /*
  * Copyright (c) 2006 - 2015 Reyk Floeter <reyk@openbsd.org>
@@ -34,6 +34,9 @@
 #include <event.h>
 #include <imsg.h>
 #include <tls.h>
+#include <vis.h>
+
+#include "patterns.h"
 
 #define CONF_FILE		"/etc/httpd.conf"
 #define HTTPD_SOCKET		"/var/run/httpd.sock"
@@ -45,6 +48,8 @@
 #define HTTPD_LOGROOT		"/logs"
 #define HTTPD_ACCESS_LOG	"access.log"
 #define HTTPD_ERROR_LOG		"error.log"
+#define HTTPD_DEFAULT_TYPE	{ "bin", "application", "octet-stream", NULL }
+#define HTTPD_LOGVIS		VIS_NL|VIS_TAB|VIS_CSTYLE
 #define HTTPD_TLS_CERT		"/etc/ssl/server.crt"
 #define HTTPD_TLS_KEY		"/etc/ssl/private/server.key"
 #define HTTPD_TLS_CIPHERS	"HIGH:!aNULL"
@@ -62,6 +67,9 @@
 #define SERVER_MAXREQUESTBODY	1048576	/* 1M */
 #define SERVER_BACKLOG		10
 #define SERVER_OUTOF_FD_RETRIES	5
+#define SERVER_MAX_PREFETCH	256
+#define SERVER_MIN_PREFETCHED	32
+#define SERVER_HSTS_DEFAULT_AGE	31536000
 
 #define MEDIATYPE_NAMEMAX	128	/* file name extension */
 #define MEDIATYPE_TYPEMAX	64	/* length of type/subtype */
@@ -199,6 +207,7 @@ enum imsg_type {
 	IMSG_CTL_START,
 	IMSG_CTL_REOPEN,
 	IMSG_CFG_SERVER,
+	IMSG_CFG_TLS,
 	IMSG_CFG_MEDIA,
 	IMSG_CFG_AUTH,
 	IMSG_CFG_DONE,
@@ -278,13 +287,12 @@ struct client {
 	void			*clt_srv_conf;
 	u_int32_t		 clt_srv_id;
 	struct sockaddr_storage	 clt_srv_ss;
+	struct str_match	 clt_srv_match;
 
 	int			 clt_s;
 	in_port_t		 clt_port;
 	struct sockaddr_storage	 clt_ss;
 	struct bufferevent	*clt_bev;
-	char			*clt_buf;
-	size_t			 clt_buflen;
 	struct evbuffer		*clt_output;
 	struct event		 clt_ev;
 	void			*clt_descreq;
@@ -294,6 +302,7 @@ struct client {
 	int			 clt_fd;
 	struct tls		*clt_tls_ctx;
 	struct bufferevent	*clt_srvbev;
+	int			 clt_srvbev_throttled;
 
 	off_t			 clt_toread;
 	size_t			 clt_headerlen;
@@ -341,12 +350,17 @@ SPLAY_HEAD(client_tree, client);
 #define SRVFLAG_NO_AUTH		0x00020000
 #define SRVFLAG_BLOCK		0x00040000
 #define SRVFLAG_NO_BLOCK	0x00080000
+#define SRVFLAG_LOCATION_MATCH	0x00100000
+#define SRVFLAG_SERVER_MATCH	0x00200000
+#define SRVFLAG_SERVER_HSTS	0x00400000
+#define SRVFLAG_DEFAULT_TYPE	0x00800000
 
 #define SRVFLAG_BITS							\
 	"\10\01INDEX\02NO_INDEX\03AUTO_INDEX\04NO_AUTO_INDEX"		\
 	"\05ROOT\06LOCATION\07FCGI\10NO_FCGI\11LOG\12NO_LOG\13SOCKET"	\
 	"\14SYSLOG\15NO_SYSLOG\16TLS\17ACCESS_LOG\20ERROR_LOG"		\
-	"\21AUTH\22NO_AUTH\23BLOCK\24NO_BLOCK"
+	"\21AUTH\22NO_AUTH\23BLOCK\24NO_BLOCK\25LOCATION_MATCH"		\
+	"\26SERVER_MATCH\27SERVER_HSTS\30DEFAULT_TYPE"
 
 #define TCPFLAG_NODELAY		0x01
 #define TCPFLAG_NNODELAY	0x02
@@ -362,6 +376,10 @@ SPLAY_HEAD(client_tree, client);
 	"\10\01NODELAY\02NO_NODELAY\03SACK\04NO_SACK"		\
 	"\05SOCKET_BUFFER_SIZE\06IP_TTL\07IP_MINTTL\10NO_SPLICE"
 
+#define HSTSFLAG_SUBDOMAINS	0x01
+#define HSTSFLAG_PRELOAD	0x02
+#define HSTSFLAG_BITS		"\10\01SUBDOMAINS\02PRELOAD"
+
 enum log_format {
 	LOG_FORMAT_COMMON,
 	LOG_FORMAT_COMBINED,
@@ -375,6 +393,15 @@ struct log_file {
 	TAILQ_ENTRY(log_file)	log_entry;
 };
 TAILQ_HEAD(log_files, log_file) log_files;
+
+struct media_type {
+	char			 media_name[MEDIATYPE_NAMEMAX];
+	char			 media_type[MEDIATYPE_TYPEMAX];
+	char			 media_subtype[MEDIATYPE_TYPEMAX];
+	char			*media_encoding;
+	RB_ENTRY(media_type)	 media_entry;
+};
+RB_HEAD(mediatypes, media_type);
 
 struct auth {
 	char			 auth_htpasswd[PATH_MAX];
@@ -393,6 +420,7 @@ struct server_config {
 	char			 socket[PATH_MAX];
 	char			 accesslog[NAME_MAX];
 	char			 errorlog[NAME_MAX];
+	struct media_type	 default_type;
 
 	in_port_t		 port;
 	struct sockaddr_storage	 ss;
@@ -432,9 +460,22 @@ struct server_config {
 	char			*return_uri;
 	off_t			 return_uri_len;
 
+	int			 hsts_max_age;
+	u_int8_t		 hsts_flags;
+
 	TAILQ_ENTRY(server_config) entry;
 };
 TAILQ_HEAD(serverhosts, server_config);
+
+struct tls_config {
+	u_int32_t		 id;
+
+	in_port_t		 port;
+	struct sockaddr_storage	 ss;
+
+	size_t			 tls_cert_len;
+	size_t			 tls_key_len;
+};
 
 struct server {
 	TAILQ_ENTRY(server)	 srv_entry;
@@ -452,15 +493,6 @@ struct server {
 };
 TAILQ_HEAD(serverlist, server);
 
-struct media_type {
-	char			 media_name[MEDIATYPE_NAMEMAX];
-	char			 media_type[MEDIATYPE_TYPEMAX];
-	char			 media_subtype[MEDIATYPE_TYPEMAX];
-	char			*media_encoding;
-	RB_ENTRY(media_type)	 media_entry;
-};
-RB_HEAD(mediatypes, media_type);
-
 struct httpd {
 	u_int8_t		 sc_opts;
 	u_int32_t		 sc_flags;
@@ -474,6 +506,7 @@ struct httpd {
 
 	struct serverlist	*sc_servers;
 	struct mediatypes	*sc_mediatypes;
+	struct media_type	 sc_default_type;
 	struct serverauth	*sc_auth;
 
 	struct privsep		*sc_ps;
@@ -530,7 +563,6 @@ int	 server_bufferevent_write_chunk(struct client *,
 	    struct evbuffer *, size_t);
 int	 server_bufferevent_add(struct event *, int);
 int	 server_bufferevent_write(struct client *, void *, size_t);
-void	 server_inflight_dec(struct client *, const char *);
 struct server *
 	 server_byaddr(struct sockaddr *, in_port_t);
 struct server_config *
@@ -558,7 +590,7 @@ int	 server_headers(struct client *, void *,
 	    int (*)(struct client *, struct kv *, void *), void *);
 int	 server_writeresponse_http(struct client *);
 int	 server_response_http(struct client *, u_int, struct media_type *,
-	    size_t, time_t);
+	    off_t, time_t);
 void	 server_reset_http(struct client *);
 void	 server_close_http(struct client *);
 int	 server_response(struct httpd *, struct client *);
@@ -604,8 +636,8 @@ u_int32_t	 prefixlen2mask(u_int8_t);
 int		 accept_reserve(int, struct sockaddr *, socklen_t *, int,
 		    volatile int *);
 struct kv	*kv_add(struct kvtree *, char *, char *);
-int		 kv_set(struct kv *, char *, ...);
-int		 kv_setkey(struct kv *, char *, ...);
+int		 kv_set(struct kv *, char *, ...) __attribute__((__format__ (printf, 2, 3)));
+int		 kv_setkey(struct kv *, char *, ...) __attribute__((__format__ (printf, 2, 3)));
 void		 kv_delete(struct kvtree *, struct kv *);
 struct kv	*kv_extend(struct kvtree *, struct kv *, char *);
 void		 kv_purge(struct kvtree *);
@@ -619,7 +651,10 @@ struct media_type
 void		 media_delete(struct mediatypes *, struct media_type *);
 void		 media_purge(struct mediatypes *);
 struct media_type *
-		 media_find(struct mediatypes *, char *);
+		 media_find(struct mediatypes *, const char *);
+struct media_type *
+		 media_find_config(struct httpd *, struct server_config *,
+		    const char *);
 int		 media_cmp(struct media_type *, struct media_type *);
 RB_PROTOTYPE(kvtree, kv, kv_node, kv_cmp);
 RB_PROTOTYPE(mediatypes, media_type, media_entry, media_cmp);
@@ -675,7 +710,9 @@ int	 config_setreset(struct httpd *, u_int);
 int	 config_getreset(struct httpd *, struct imsg *);
 int	 config_getcfg(struct httpd *, struct imsg *);
 int	 config_setserver(struct httpd *, struct server *);
+int	 config_settls(struct httpd *, struct server *);
 int	 config_getserver(struct httpd *, struct imsg *);
+int	 config_gettls(struct httpd *, struct imsg *);
 int	 config_setmedia(struct httpd *, struct media_type *);
 int	 config_getmedia(struct httpd *, struct imsg *);
 int	 config_setauth(struct httpd *, struct auth *);

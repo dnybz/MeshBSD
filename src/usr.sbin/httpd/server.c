@@ -1,4 +1,4 @@
-/*	$OpenBSD: server.c,v 1.60 2015/02/23 09:52:28 reyk Exp $	*/
+/*	$OpenBSD: server.c,v 1.74 2015/08/03 11:45:17 florian Exp $	*/
 
 /*
  * Copyright (c) 2006 - 2015 Reyk Floeter <reyk@openbsd.org>
@@ -41,6 +41,7 @@
 #include <event.h>
 #include <imsg.h>
 #include <tls.h>
+#include <vis.h>
 
 #include "httpd.h"
 
@@ -66,6 +67,7 @@ void		 server_tls_writecb(int, short, void *);
 void		 server_accept(int, short, void *);
 void		 server_accept_tls(int, short, void *);
 void		 server_input(struct client *);
+void		 server_inflight_dec(struct client *, const char *);
 
 extern void	 bufferevent_read_pressure_cb(struct evbuffer *, size_t,
 		    size_t, void *);
@@ -311,20 +313,31 @@ server_purge(struct server *srv)
 void
 serverconfig_free(struct server_config *srv_conf)
 {
+	free(srv_conf->auth);
 	free(srv_conf->return_uri);
 	free(srv_conf->tls_cert_file);
-	free(srv_conf->tls_cert);
 	free(srv_conf->tls_key_file);
-	free(srv_conf->tls_key);
+
+	if (srv_conf->tls_cert != NULL) {
+		explicit_bzero(srv_conf->tls_cert, srv_conf->tls_cert_len);
+		free(srv_conf->tls_cert);
+	}
+
+	if (srv_conf->tls_key != NULL) {
+		explicit_bzero(srv_conf->tls_key, srv_conf->tls_key_len);
+		free(srv_conf->tls_key);
+	}
 }
 
 void
 serverconfig_reset(struct server_config *srv_conf)
 {
-	srv_conf->tls_cert_file = srv_conf->tls_key_file = NULL;
-	srv_conf->tls_cert = srv_conf->tls_key = NULL;
-	srv_conf->return_uri = NULL;
 	srv_conf->auth = NULL;
+	srv_conf->return_uri = NULL;
+	srv_conf->tls_cert = NULL;
+	srv_conf->tls_cert_file = NULL;
+	srv_conf->tls_key = NULL;
+	srv_conf->tls_key_file = NULL;
 }
 
 struct server *
@@ -570,6 +583,11 @@ server_tls_readcb(int fd, short event, void *arg)
 		goto err;
 	}
 
+	if (len == 0) {
+		what |= EVBUFFER_EOF;
+		goto err;
+	}
+
 	if (evbuffer_add(bufev->input, rbuf, len) == -1) {
 		what |= EVBUFFER_ERROR;
 		goto err;
@@ -614,17 +632,9 @@ server_tls_writecb(int fd, short event, void *arg)
 	}
 
 	if (EVBUFFER_LENGTH(bufev->output)) {
-		if (clt->clt_buf == NULL) {
-			clt->clt_buflen = EVBUFFER_LENGTH(bufev->output);
-			if ((clt->clt_buf = malloc(clt->clt_buflen)) == NULL) {
-				what |= EVBUFFER_ERROR;
-				goto err;
-			}
-			bcopy(EVBUFFER_DATA(bufev->output),
-			    clt->clt_buf, clt->clt_buflen);
-		}
-		ret = tls_write(clt->clt_tls_ctx, clt->clt_buf,
-		    clt->clt_buflen, &len);
+		ret = tls_write(clt->clt_tls_ctx,
+		    EVBUFFER_DATA(bufev->output),
+		    EVBUFFER_LENGTH(bufev->output), &len);
 		if (ret == TLS_READ_AGAIN || ret == TLS_WRITE_AGAIN) {
 			goto retry;
 		} else if (ret != 0) {
@@ -632,11 +642,6 @@ server_tls_writecb(int fd, short event, void *arg)
 			goto err;
 		}
 		evbuffer_drain(bufev->output, len);
-	}
-	if (clt->clt_buf != NULL) {
-		free(clt->clt_buf);
-		clt->clt_buf = NULL;
-		clt->clt_buflen = 0;
 	}
 
 	if (EVBUFFER_LENGTH(bufev->output) != 0)
@@ -648,16 +653,10 @@ server_tls_writecb(int fd, short event, void *arg)
 	return;
 
  retry:
-	if (clt->clt_buflen != 0)
-		server_bufferevent_add(&bufev->ev_write, bufev->timeout_write);
+	server_bufferevent_add(&bufev->ev_write, bufev->timeout_write);
 	return;
 
  err:
-	if (clt->clt_buf != NULL) {
-		free(clt->clt_buf);
-		clt->clt_buf = NULL;
-		clt->clt_buflen = 0;
-	}
 	(*bufev->errorcb)(bufev, what, bufev->cbarg);
 }
 
@@ -703,7 +702,7 @@ server_input(struct client *clt)
 
 	/* Adjust write watermark to the socket buffer output size */
 	bufferevent_setwatermark(clt->clt_bev, EV_WRITE,
-	    clt->clt_sndbufsiz, 0);
+	    SERVER_MIN_PREFETCHED * clt->clt_sndbufsiz, 0);
 	/* Read at most amount of data that fits in one fcgi record. */
 	bufferevent_setwatermark(clt->clt_bev, EV_READ, 0, FCGI_CONTENT_SIZE);
 
@@ -728,6 +727,12 @@ server_write(struct bufferevent *bev, void *arg)
 		goto done;
 
 	bufferevent_enable(bev, EV_READ);
+
+	if (clt->clt_srvbev && clt->clt_srvbev_throttled) {
+		bufferevent_enable(clt->clt_srvbev, EV_READ);
+		clt->clt_srvbev_throttled = 0;
+	}
+
 	return;
  done:
 	(*bev->errorcb)(bev, EVBUFFER_WRITE|EVBUFFER_EOF, bev->cbarg);
@@ -768,6 +773,13 @@ server_read(struct bufferevent *bev, void *arg)
 		goto fail;
 	if (clt->clt_done)
 		goto done;
+
+	if (EVBUFFER_LENGTH(EVBUFFER_OUTPUT(clt->clt_bev)) > (size_t)
+	    SERVER_MAX_PREFETCH * clt->clt_sndbufsiz) {
+		bufferevent_disable(clt->clt_srvbev, EV_READ);
+		clt->clt_srvbev_throttled = 1;
+	}
+
 	return;
  done:
 	(*bev->errorcb)(bev, EVBUFFER_READ|EVBUFFER_EOF, bev->cbarg);
@@ -851,6 +863,11 @@ server_accept(int fd, short event, void *arg)
 	if ((clt = calloc(1, sizeof(*clt))) == NULL)
 		goto err;
 
+	/* Pre-allocate log buffer */
+	clt->clt_log = evbuffer_new();
+	if (clt->clt_log == NULL)
+		goto err;
+
 	clt->clt_s = s;
 	clt->clt_fd = -1;
 	clt->clt_toread = TOREAD_UNLIMITED;
@@ -898,13 +915,6 @@ server_accept(int fd, short event, void *arg)
 		return;
 	}
 
-	/* Pre-allocate log buffer */
-	clt->clt_log = evbuffer_new();
-	if (clt->clt_log == NULL) {
-		server_close(clt, "failed to allocate log buffer");
-		return;
-	}
-
 	if (srv->srv_conf.flags & SRVFLAG_TLS) {
 		event_again(&clt->clt_ev, clt->clt_s, EV_TIMEOUT|EV_READ,
 		    server_accept_tls, &clt->clt_tv_start,
@@ -918,13 +928,12 @@ server_accept(int fd, short event, void *arg)
  err:
 	if (s != -1) {
 		close(s);
-		if (clt != NULL)
-			free(clt);
+		free(clt);
 		/*
-		 * the client struct was not completly set up, but still
+		 * the client struct was not completely set up, but still
 		 * counted as an inflight client. account for this.
 		 */
-		server_inflight_dec(clt, __func__);
+		server_inflight_dec(NULL, __func__);
 	}
 }
 
@@ -956,6 +965,7 @@ server_accept_tls(int fd, short event, void *arg)
 	} else if (ret != 0) {
 		log_warnx("%s: TLS accept failed - %s", __func__,
 		    tls_error(srv->srv_tls_ctx));
+		server_close(clt, "TLS accept failed");
 		return;
 	}
 
@@ -1010,7 +1020,11 @@ server_sendlog(struct server_config *srv_conf, int cmd, const char *emsg, ...)
 	iov[1].iov_base = msg;
 	iov[1].iov_len = strlen(msg) + 1;
 
-	proc_composev_imsg(env->sc_ps, PROC_LOGGER, -1, cmd, -1, iov, 2);
+	if (proc_composev_imsg(env->sc_ps, PROC_LOGGER, -1, cmd, -1, iov,
+	    2) != 0) {
+		log_warn("%s: failed to compose imsg", __func__);
+		return;
+	}
 }
 
 void
@@ -1018,7 +1032,7 @@ server_log(struct client *clt, const char *msg)
 {
 	char			 ibuf[HOST_NAME_MAX+1], obuf[HOST_NAME_MAX+1];
 	struct server_config	*srv_conf = clt->clt_srv_conf;
-	char			*ptr = NULL;
+	char			*ptr = NULL, *vmsg = NULL;
 	int			 debug_cmd = -1;
 	extern int		 verbose;
 
@@ -1048,13 +1062,14 @@ server_log(struct client *clt, const char *msg)
 		if (EVBUFFER_LENGTH(clt->clt_log) &&
 		    evbuffer_add_printf(clt->clt_log, "\n") != -1)
 			ptr = evbuffer_readline(clt->clt_log);
+		(void)stravis(&vmsg, msg, HTTPD_LOGVIS);
 		server_sendlog(srv_conf, debug_cmd, "server %s, "
 		    "client %d (%d active), %s:%u -> %s, "
 		    "%s%s%s", srv_conf->name, clt->clt_id, server_clients,
-		    ibuf, ntohs(clt->clt_port), obuf, msg,
+		    ibuf, ntohs(clt->clt_port), obuf, vmsg == NULL ? "" : vmsg,
 		    ptr == NULL ? "" : ",", ptr == NULL ? "" : ptr);
-		if (ptr != NULL)
-			free(ptr);
+		free(vmsg);
+		free(ptr);
 	}
 }
 
@@ -1115,6 +1130,9 @@ server_dispatch_parent(int fd, struct privsep_proc *p, struct imsg *imsg)
 		break;
 	case IMSG_CFG_SERVER:
 		config_getserver(env, imsg);
+		break;
+	case IMSG_CFG_TLS:
+		config_gettls(env, imsg);
 		break;
 	case IMSG_CFG_DONE:
 		config_getcfg(env, imsg);
