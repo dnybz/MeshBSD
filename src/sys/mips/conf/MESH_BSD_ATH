@@ -66,13 +66,6 @@ device          geom_map
 # Boot off of the rootfs, as defined in the geom_map setup.
 options 	ROOTDEVNAME=\"ufs:map/rootfs.uncompress\"
 
-device		md
-
-device		usb
-options 	USB_EHCI_BIG_ENDIAN_DESC        # handle big-endian byte order
-options 	USB_HOST_ALIGN=32		# AR71XX (MIPS in general?) requires this
-device		ehci
-
 # net
 options 	IPSEC
 device  	crypto
@@ -120,3 +113,12 @@ device 		if_bridge
 
 device 		if_vether
 device 		gif
+
+# misc
+device		md
+
+device		usb
+options 	USB_EHCI_BIG_ENDIAN_DESC        # handle big-endian byte order
+options 	USB_HOST_ALIGN=32		# AR71XX (MIPS in general?) requires this
+device		ehci
+
