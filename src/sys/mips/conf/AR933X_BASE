@@ -19,4 +19,4 @@ options 	HZ=1000
 files		"../atheros/files.ar71xx"
 hints		"AR933X_BASE.hints"
 
-include 	"MESH_BSD_BASE"
+include 	"MESH_BSD_ATH"

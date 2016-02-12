@@ -1,8 +1,9 @@
 
-# yes, this board has a PCI connected atheros device
+options 	AR71XX_ATH_EEPROM
+options 	ATH_EEPROM_FIRMWARE
+
 device		ath_pci
 device		firmware		# Used by the above
-options 	ATH_EEPROM_FIRMWARE
 
 #
 # Support for rfc-2516.

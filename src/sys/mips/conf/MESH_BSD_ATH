@@ -35,8 +35,6 @@ device		ether
 device		loop
 device 		pf
 
-options 	AR71XX_ATH_EEPROM
-
 # ath(4)
 
 device		ath             # Atheros network device

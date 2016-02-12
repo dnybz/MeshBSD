@@ -73,7 +73,7 @@
 ##
 # MIPS platform specific.
 #
-!/src/sys/mips/conf/MESH_BSD_BASE 
+!/src/sys/mips/conf/MESH_BSD_ATH 
 
 #
 # SoC
@@ -87,12 +87,11 @@
 !/src/sys/mips/conf/QCA955X_BASE
 !/src/sys/mips/conf/QCA955X_BASE.hints
 
-#
-# TL-WR-based-RTR
-#
+!/src/sys/mips/conf/MESH_BSD_ATH_GENERIC 
 
-!/src/sys/mips/conf/MESH_BSD_GENERIC_AP 
-
+#
+# Router.
+#
 !/src/sys/mips/conf/TL-WR740Nv4
 !/src/sys/mips/conf/TL-WR740Nv4.hints
 

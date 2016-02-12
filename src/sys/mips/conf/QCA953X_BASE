@@ -24,4 +24,4 @@ options 	HWPMC_HOOKS
 device		hwpmc
 device		hwpmc_mips24k
 
-include 	"MESH_BSD_BASE"
+include 	"MESH_BSD_ATH"

@@ -20,4 +20,4 @@ options 	HZ=1000
 files		"../atheros/files.ar71xx"
 hints		"QCA955X_BASE.hints"
 
-include 	"MESH_BSD_BASE"
+include 	"MESH_BSD_ATH"

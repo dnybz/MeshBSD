@@ -29,4 +29,4 @@ options         AR71XX_REALMEM=(128*1024*1024)
 device		pci
 device		qca955x_pci
 
-include 		"MESH_BSD_GENERIC_AP"
+include 		"MESH_BSD_ATH_GENERIC"

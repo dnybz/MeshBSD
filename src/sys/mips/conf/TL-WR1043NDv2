@@ -17,4 +17,4 @@ hints           "TL-WR1043NDv2.hints"
 
 options         AR71XX_REALMEM=(64*1024*1024)
 
-include 		"MESH_BSD_GENERIC_AP"
+include 		"MESH_BSD_ATH_GENERIC"
