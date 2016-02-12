@@ -35,28 +35,10 @@ device		ether
 device		loop
 device 		pf
 
-options 	IPSEC
-device  	crypto
-device 		random
-
-device 		if_bridge
-#options 	PPPOE_PFIL
-
-device 		if_vether
-device 		gif
-
-device		md
-
-# Wireless NIC cards
-options 	IEEE80211_SUPPORT_MESH
-options 	IEEE80211_SUPPORT_TDMA
-options 	IEEE80211_SUPPORT_SUPERG
-device		wlan            # 802.11 support
-device		wlan_ccmp       # 802.11 CCMP support
-device		wlan_tkip       # 802.11 TKIP support
-device		wlan_xauth	# 802.11 hostap support
+options 	AR71XX_ATH_EEPROM
 
 # ath(4)
+
 device		ath             # Atheros network device
 device		ath_rate_sample
 device		ath_ahb		# Atheros host bus glue
@@ -116,4 +98,26 @@ device          geom_map
 
 # Boot off of the rootfs, as defined in the geom_map setup.
 options 	ROOTDEVNAME=\"ufs:map/rootfs.uncompress\"
+
+
+options 	IPSEC
+device  	crypto
+device 		random
+
+device 		if_bridge
+#options 	PPPOE_PFIL
+
+device 		if_vether
+device 		gif
+
+device		md
+
+# Wireless NIC cards
+options 	IEEE80211_SUPPORT_MESH
+options 	IEEE80211_SUPPORT_TDMA
+options 	IEEE80211_SUPPORT_SUPERG
+device		wlan            # 802.11 support
+device		wlan_ccmp       # 802.11 CCMP support
+device		wlan_tkip       # 802.11 TKIP support
+device		wlan_xauth	# 802.11 hostap support
 
