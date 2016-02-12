@@ -17,7 +17,7 @@ SRCS=	tls.c \
 CFLAGS+= -Wall -Werror -Wimplicit
 CFLAGS+= -DLIBRESSL_INTERNAL
 
-INCS=	tls.h
+HDRS=	tls.h
 
 MAN=	tls_init.3
 

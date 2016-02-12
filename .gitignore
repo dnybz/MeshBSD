@@ -126,7 +126,7 @@
 # Userspace
 #
 
-## 
+#
 # Library set.
 #
 !/src/share/mk/bsd.libnames.mk
@@ -202,6 +202,38 @@
 
 ##
 # Toolbox and daemons.
+#
+
+#
+## usr.bin
+#
+!/src/usr.bin/m4/Makefile
+!/src/usr.bin/m4/Makefile.depend
+!/src/usr.bin/m4/NOTES
+!/src/usr.bin/m4/TEST
+!/src/usr.bin/m4/eval.c
+!/src/usr.bin/m4/expr.c
+!/src/usr.bin/m4/extern.h
+!/src/usr.bin/m4/gnum4.c
+!/src/usr.bin/m4/look.c
+!/src/usr.bin/m4/m4.1
+!/src/usr.bin/m4/main.c
+!/src/usr.bin/m4/mdef.h
+!/src/usr.bin/m4/misc.c
+!/src/usr.bin/m4/parser.y
+!/src/usr.bin/m4/pathnames.h
+!/src/usr.bin/m4/stdd.h
+!/src/usr.bin/m4/tests
+!/src/usr.bin/m4/tokenizer.l
+!/src/usr.bin/m4/trace.c
+
+#
+# m4(1)
+#
+!/src/usr.bin/m4/Makefile
+
+#
+## usr.sbin
 #
 !/src/usr.sbin/Makefile
 

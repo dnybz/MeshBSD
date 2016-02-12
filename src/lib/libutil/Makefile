@@ -5,8 +5,6 @@ SHLIBDIR?= /lib
 
 .include <src.opts.mk>
 
-WARNS?=	2
-
 LIB=	util
 SHLIB_MAJOR= 9
 
@@ -138,5 +136,7 @@ MLINKS += ohash_init.3 ohash_delete.3 \
 .if ${MK_TESTS} != "no"
 SUBDIR+=	tests
 .endif
+
+WARNS?=	0
 
 .include <bsd.lib.mk>

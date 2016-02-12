@@ -291,11 +291,6 @@ CROSSENV+=	MAKEOBJDIRPREFIX=${OBJTREE} \
 		MACHINE_ARCH=${TARGET_ARCH} \
 		MACHINE=${TARGET} \
 		CPUTYPE=${TARGET_CPUTYPE}
-.if ${MK_GROFF} != "no"
-CROSSENV+=	GROFF_BIN_PATH=${WORLDTMP}/legacy/usr/bin \
-		GROFF_FONT_PATH=${WORLDTMP}/legacy/usr/share/groff_font \
-		GROFF_TMAC_PATH=${WORLDTMP}/legacy/usr/share/tmac
-.endif
 .if defined(TARGET_CFLAGS)
 CROSSENV+=	${TARGET_CFLAGS}
 .endif
@@ -579,10 +574,6 @@ _worldtmp: .PHONY
 .endfor
 	mtree -deU -f ${.CURDIR}/etc/mtree/BSD.usr.dist \
 	    -p ${WORLDTMP}/legacy/usr >/dev/null
-.if ${MK_GROFF} != "no"
-	mtree -deU -f ${.CURDIR}/etc/mtree/BSD.groff.dist \
-	    -p ${WORLDTMP}/legacy/usr >/dev/null
-.endif
 	mtree -deU -f ${.CURDIR}/etc/mtree/BSD.usr.dist \
 	    -p ${WORLDTMP}/usr >/dev/null
 	mtree -deU -f ${.CURDIR}/etc/mtree/BSD.include.dist \
@@ -1411,11 +1402,6 @@ _strfile=	usr.bin/fortune/strfile
 _gperf=		gnu/usr.bin/gperf
 .endif
 
-.if ${MK_GROFF} != "no"
-_groff=		gnu/usr.bin/groff \
-		usr.bin/soelim
-.endif
-
 .if ${MK_VT} != "no"
 _vtfontcvt=	usr.bin/vtfontcvt
 .endif
@@ -1494,13 +1480,7 @@ _kerberos5_bootstrap_tools= \
 .ORDER: ${_kerberos5_bootstrap_tools:C/^/${_bt}-/g}
 .endif
 
-.if ${MK_MANDOCDB} != "no"
-_makewhatis=	lib/libsqlite3 \
-		usr.bin/mandoc
-${_bt}-usr.bin/mandoc: ${_bt}-lib/libsqlite3
-.else
 _makewhatis=usr.bin/makewhatis
-.endif
 
 bootstrap-tools: .PHONY
 
@@ -1512,7 +1492,6 @@ bootstrap-tools: .PHONY
     ${_kerberos5_bootstrap_tools} \
     ${_strfile} \
     ${_gperf} \
-    ${_groff} \
     ${_dtc} \
     ${_awk} \
     ${_cat} \

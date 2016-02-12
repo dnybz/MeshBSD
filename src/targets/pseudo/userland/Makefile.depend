@@ -285,7 +285,6 @@ DIRDEPS+= \
 	usr.bin/m4 \
 	usr.bin/mail \
 	usr.bin/man \
-	usr.bin/mandoc \
 	usr.bin/mesg \
 	usr.bin/minigzip \
 	usr.bin/ministat \
