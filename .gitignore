@@ -70,14 +70,31 @@
 #
 !/src/sys/dev/flash/mx25l.c
 
-#
+##
 # MIPS platform specific.
+#
+!/src/sys/mips/conf/MESH_BSD_BASE 
+
+
+#
+# SoC
 #
 !/src/sys/mips/conf/AR933X_BASE
 !/src/sys/mips/conf/AR933X_BASE.hints
 
+!/src/sys/mips/conf/QCA955X_BASE
+!/src/sys/mips/conf/QCA955X_BASE.hints
+
+#
+# Boards
+#
 !/src/sys/mips/conf/TL-WR740Nv4
 !/src/sys/mips/conf/TL-WR740Nv4.hints
+
+!/src/sys/mips/conf/TL-WR1043NDv2
+!/src/sys/mips/conf/TL-WR1043NDv2.hints
+
+
 
 #
 # Standalone kernel modules.
