@@ -7,7 +7,9 @@
 .include <src.opts.mk>
 
 PROG=	m4
-CFLAGS+=-DEXTENDED -I${.CURDIR} -I${.CURDIR}/../../lib/libutil
+CFLAGS+= 	-DEXTENDED
+CFLAGS+= 	-I${.CURDIR}
+CFLAGS+=	-I${.CURDIR}/../../lib/libutil
 LIBADD=	y l m util
 
 NO_WMISSING_VARIABLE_DECLARATIONS=

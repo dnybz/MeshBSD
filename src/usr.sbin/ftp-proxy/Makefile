@@ -1,0 +1,14 @@
+# $FreeBSD: head/usr.sbin/ftp-proxy/Makefile 275054 2014-11-25 16:57:27Z bapt $
+
+PROG=	ftp-proxy
+MAN=	ftp-proxy.8
+
+SRCS=	ftp-proxy.c filter.c
+
+CFLAGS+=-I${.CURDIR}/../../lib/libevent
+
+LIBADD=	event
+
+WARNS?=	3
+
+.include <bsd.prog.mk>

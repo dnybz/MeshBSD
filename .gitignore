@@ -150,7 +150,6 @@
 # libevent(3)
 #
 !/src/lib/libevent/Makefile
-!/src/lib/libevent/Makefile.depend
 !/src/lib/libevent/buffer.c
 !/src/lib/libevent/evbuffer.c
 !/src/lib/libevent/event-internal.h
@@ -208,7 +207,6 @@
 ## usr.bin
 #
 !/src/usr.bin/m4/Makefile
-!/src/usr.bin/m4/Makefile.depend
 !/src/usr.bin/m4/NOTES
 !/src/usr.bin/m4/TEST
 !/src/usr.bin/m4/eval.c
@@ -238,7 +236,17 @@
 !/src/usr.sbin/Makefile
 
 #
-# OpenBSD 5.8 dhcpd(8).
+# ftp-proxy(8)
+#
+!/src/usr.sbin/ftp-proxyMakefile
+!/src/usr.sbin/ftp-proxyfilter.c
+!/src/usr.sbin/ftp-proxyfilter.h
+!/src/usr.sbin/ftp-proxyftp-proxy.8
+!/src/usr.sbin/ftp-proxyftp-proxy.c
+
+
+#
+# OpenBSD 5.8 dhcpd(8)
 #
 !/src/usr.sbin/dhcpd/Makefile
 !/src/usr.sbin/dhcpd/alloc.c
@@ -276,7 +284,7 @@
 !/src/usr.sbin/dhcpd/udpsock.c
 
 #
-# OpenBSD 5.8 httpd(8).
+# OpenBSD 5.8 httpd(8)
 #
 !src/usr.sbin/httpd/Makefile
 !src/usr.sbin/httpd/config.c

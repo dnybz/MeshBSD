@@ -17,6 +17,10 @@ DPADD=		${LIBEVENT} ${LIBTLS} ${LIBSSL} ${LIBCRYPTO} ${LIBUTIL}
 #DEBUG=		-g -DDEBUG=3 -O0
 
 CFLAGS+=	-Wall -I${.CURDIR}
+
+CFLAGS+= 	-I${.CURDIR}/../../lib/libevent
+CFLAGS+= 	-I${.CURDIR}/../../lib/libutil
+
 CFLAGS+=	-Wstrict-prototypes -Wmissing-prototypes
 CFLAGS+=	-Wmissing-declarations
 CFLAGS+=	-Wshadow -Wpointer-arith
