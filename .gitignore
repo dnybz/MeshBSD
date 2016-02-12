@@ -204,7 +204,46 @@
 #
 
 #
+## sbin
+#
+
+#
+# pfctl(8)
+#
+!/src/sbin/pfctl/Makefile
+!/src/sbin/pfctl/parse.y
+!/src/sbin/pfctl/pf_print_state.c
+!/src/sbin/pfctl/pfctl.8
+!/src/sbin/pfctl/pfctl.c
+!/src/sbin/pfctl/pfctl.h
+!/src/sbin/pfctl/pfctl_altq.c
+!/src/sbin/pfctl/pfctl_optimize.c
+!/src/sbin/pfctl/pfctl_osfp.c
+!/src/sbin/pfctl/pfctl_parser.c
+!/src/sbin/pfctl/pfctl_parser.h
+!/src/sbin/pfctl/pfctl_qstats.c
+!/src/sbin/pfctl/pfctl_radix.c
+!/src/sbin/pfctl/pfctl_table.c
+
+#
+# pflogd(8)
+#
+!/src/sbin/pflogd/Makefile
+!/src/sbin/pflogd/pflogd.8
+!/src/sbin/pflogd/pflogd.c
+!/src/sbin/pflogd/pflogd.h
+!/src/sbin/pflogd/pidfile.c
+!/src/sbin/pflogd/pidfile.h
+!/src/sbin/pflogd/privsep.c
+!/src/sbin/pflogd/privsep_fdpass.c
+
+
+#
 ## usr.bin
+#
+
+#
+# m4(1)
 #
 !/src/usr.bin/m4/Makefile
 !/src/usr.bin/m4/NOTES
@@ -226,23 +265,26 @@
 !/src/usr.bin/m4/trace.c
 
 #
-# m4(1)
-#
-!/src/usr.bin/m4/Makefile
-
-#
 ## usr.sbin
 #
 !/src/usr.sbin/Makefile
 
 #
+# authpf(8)
+#
+!/src/usr.sbin/authpf/Makefile
+!/src/usr.sbin/authpf/authpf.8
+!/src/usr.sbin/authpf/authpf.c
+!/src/usr.sbin/authpf/pathnames.h
+
+#
 # ftp-proxy(8)
 #
-!/src/usr.sbin/ftp-proxyMakefile
-!/src/usr.sbin/ftp-proxyfilter.c
-!/src/usr.sbin/ftp-proxyfilter.h
-!/src/usr.sbin/ftp-proxyftp-proxy.8
-!/src/usr.sbin/ftp-proxyftp-proxy.c
+!/src/usr.sbin/ftp-proxy/Makefile
+!/src/usr.sbin/ftp-proxy/filter.c
+!/src/usr.sbin/ftp-proxy/filter.h
+!/src/usr.sbin/ftp-proxy/ftp-proxy.8
+!/src/usr.sbin/ftp-proxy/ftp-proxy.c
 
 
 #
