@@ -30,36 +30,6 @@ options 	NBUF=128
 options 	FFS                     #Berkeley Fast Filesystem
 options 	NO_FFS_SNAPSHOT		# We don't require snapshot support
 
-# Misc 
-device		ether
-device		loop
-device 		pf
-
-# ath(4)
-
-device		ath             # Atheros network device
-device		ath_rate_sample
-device		ath_ahb		# Atheros host bus glue
-option		ATH_ENABLE_11N
-
-device		ath_ar9300		# AR9330 HAL; no need for the others
-option		AH_SUPPORT_AR5416	# 11n HAL support
-option		AH_SUPPORT_QCA9530	# Chipset support
-option		AH_AR5416_INTERRUPT_MITIGATION
-
-device		mii
-device		arge
-
-device		usb
-options 	USB_EHCI_BIG_ENDIAN_DESC        # handle big-endian byte order
-options 	USB_HOST_ALIGN=32		# AR71XX (MIPS in general?) requires this
-device		ehci
-
-device		spibus
-device		ar71xx_spi
-device		mx25l
-device		ar71xx_wdog
-
 # Handle 25MHz refclock by allowing a higher baudrate error tolerance.
 device		uart
 device		uart_ar71xx
@@ -76,12 +46,11 @@ device		iicbb
 device		iicbus
 device		iic
 
-# Options required for miiproxy and mdiobus
-options 	ARGE_MDIO	# Export an MDIO bus separate from arge
-device		miiproxy	# MDIO bus <-> MII PHY rendezvous
-
-device		etherswitch
-device		arswitch
+# spi-flash
+device		spibus
+device		ar71xx_spi
+device		mx25l
+device		ar71xx_wdog
 
 # Enable the uboot environment stuff rather then the
 # redboot stuff.
@@ -97,18 +66,45 @@ device          geom_map
 # Boot off of the rootfs, as defined in the geom_map setup.
 options 	ROOTDEVNAME=\"ufs:map/rootfs.uncompress\"
 
+device		md
 
+device		usb
+options 	USB_EHCI_BIG_ENDIAN_DESC        # handle big-endian byte order
+options 	USB_HOST_ALIGN=32		# AR71XX (MIPS in general?) requires this
+device		ehci
+
+# net
 options 	IPSEC
 device  	crypto
 device 		random
 
-device 		if_bridge
-#options 	PPPOE_PFIL
+device		loop
+device 		pf
 
-device 		if_vether
-device 		gif
+# IEEE802.xxx
+device		ether
 
-device		md
+# arge(4)
+device		mii
+device		arge
+
+# Options required for miiproxy and mdiobus
+options 	ARGE_MDIO	# Export an MDIO bus separate from arge
+device		miiproxy	# MDIO bus <-> MII PHY rendezvous
+
+device		etherswitch
+device		arswitch
+
+# ath(4)
+device		ath             # Atheros network device
+device		ath_rate_sample
+device		ath_ahb		# Atheros host bus glue
+option		ATH_ENABLE_11N
+
+device		ath_ar9300		# AR9330 HAL; no need for the others
+option		AH_SUPPORT_AR5416	# 11n HAL support
+option		AH_SUPPORT_QCA9530	# Chipset support
+option		AH_AR5416_INTERRUPT_MITIGATION
 
 # Wireless NIC cards
 options 	IEEE80211_SUPPORT_MESH
@@ -119,3 +115,8 @@ device		wlan_ccmp       # 802.11 CCMP support
 device		wlan_tkip       # 802.11 TKIP support
 device		wlan_xauth	# 802.11 hostap support
 
+device 		if_bridge
+#options 	PPPOE_PFIL
+
+device 		if_vether
+device 		gif
