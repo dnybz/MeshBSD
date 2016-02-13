@@ -16,7 +16,7 @@ NO_WMISSING_VARIABLE_DECLARATIONS=
 
 SRCS=	eval.c expr.c look.c main.c misc.c gnum4.c trace.c parser.y tokenizer.l
 
-WARNS=	3
+WARNS?=	0
 
 tokenizer.o: parser.h
 

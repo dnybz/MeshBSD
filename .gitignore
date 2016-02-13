@@ -159,14 +159,21 @@
 # Includes.
 #
 !/src/include/Makefile
+!/src/include/stdlib.h
 !/src/include/unistd.h
 
 #
 # libc(3)
 #
-!src/lib/libc/sys/Makefile.inc
-!src/lib/libc/sys/getdtablecount.2
-!src/lib/libc/sys/Symbol.map
+!/src/lib/libc/stdlib/Makefile.inc
+!/src/lib/libc/stdlib/strsuftoll.c
+!/src/lib/libc/stdlib/strsuftoll.3
+!/src/lib/libc/stdlib/Symbol.map
+
+!/src/lib/libc/sys/Makefile.inc
+
+!/src/lib/libc/sys/getdtablecount.2
+!/src/lib/libc/sys/Symbol.map
 
 #
 # libevent(3)
@@ -222,7 +229,7 @@
 !/src/lib/libutil/ohash_interval.3
 
 ##
-# Toolbox and daemons.
+# Daemons and (subset of) Unix Toolbox.
 #
 
 #
