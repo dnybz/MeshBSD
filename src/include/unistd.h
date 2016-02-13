@@ -500,7 +500,6 @@ int	 execvP(const char *, const char *, char * const *);
 int	 feature_present(const char *);
 char	*fflagstostr(u_long);
 int	 getdomainname(char *, int);
-int	 getdtablecount(void);
 int	 getgrouplist(const char *, gid_t, gid_t *, int *);
 int	 getloginclass(char *, size_t);
 mode_t	 getmode(const void *, mode_t);
@@ -588,6 +587,12 @@ void	*valloc(size_t);			/* obsoleted by malloc() */
 extern int optreset;			/* getopt(3) external variable */
 #endif
 #endif /* __BSD_VISIBLE */
+
+/*
+ * For compatibility on imsg_init(3).
+ */
+int	 getdtablecount(void);
+
 __END_DECLS
 
 #endif /* !_UNISTD_H_ */

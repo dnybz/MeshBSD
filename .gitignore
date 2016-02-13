@@ -156,18 +156,14 @@
 !/src/lib/Makefile
 
 #
-## Includes.
+## libc(3)
 #
 !/src/include/Makefile
 !/src/include/stdlib.h
 !/src/include/unistd.h
 
 #
-## libc(3)
-#
-
-#
-# stdlib(3)
+# stdlib(3), NetBSD 6.1-RELEASE
 #
 !/src/lib/libc/stdlib/Makefile.inc
 !/src/lib/libc/stdlib/strsuftoll.c
@@ -182,7 +178,7 @@
 !/src/lib/libc/sys/Symbol.map
 
 #
-# libevent(3)
+## libevent(3)
 #
 !/src/lib/libevent/Makefile
 !/src/lib/libevent/buffer.c
@@ -199,14 +195,14 @@
 !/src/lib/libevent/signal.c
 
 #
-# libssl(3)
+# libssl(3), OpenSSL 1.0.2f
 #
 !/src/crypto/openssl/*
 !/src/secure/lib/libcrypto/Makefile
 !/src/secure/lib/libcrypto/Makefile.inc
 
 #
-# libtls(3)
+# libtls(3), OpenBSD 5.8-RELEASE
 #
 !/src/lib/libtls/Makefile
 !/src/lib/libtls/tls.c
@@ -220,15 +216,21 @@
 !/src/lib/libtls/tls_verify.c
 
 #
-# Extensions on libutil(3).
+## libutil(3).
 #
 !/src/lib/libutil/Makefile
 
+#
+# imesg_init(3), OpenBSD 5.8-RELEASE
+#
 !/src/lib/libutil/imsg.c
 !/src/lib/libutil/imsg.h
 !/src/lib/libutil/imsg-buffer.c
 !/src/lib/libutil/imsg_init.3
 
+#
+# ohash_init(3), OpenBSD 5.8-RELEASE
+#
 !/src/lib/libutil/ohash.c
 !/src/lib/libutil/ohash.h
 !/src/lib/libutil/ohash_init.3
