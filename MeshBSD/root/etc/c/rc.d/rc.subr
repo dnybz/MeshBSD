@@ -81,7 +81,7 @@ ifstart() {
 			continue
 			;;
 		"pppoe")
-			pppoe_conf_create $if $ppp_authname $ppp_authkey $ppp_conf
+			pppoe_conf_create $if $line
 			ppp -auto tsp
 			return
 			;;

@@ -15,6 +15,8 @@
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
 
+ppp_conf="/etc/ppp/ppp.conf"
+
 #
 # Generate ppp.conf for pppoe.
 #
@@ -23,7 +25,6 @@ pppoe_conf_create() {
 	if=$1
 	ppp_authname=$2	
 	ppp_authkey=$2
-	ppp_conf=$4
 	
 	cat > ${ppp_conf} << EOF
 default:                                               
