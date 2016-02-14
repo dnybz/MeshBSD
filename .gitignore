@@ -145,17 +145,13 @@
 !/src/tools/bsdbox/Makefile.fs
 
 ##
-# Userspace
-#
-
-#
 ## Library set.
-#
+##
 !/src/share/mk/bsd.libnames.mk
 !/src/share/mk/src.libnames.mk
+
 !/src/lib/Makefile
 
-#
 ## libc(3)
 #
 !/src/include/Makefile
@@ -163,19 +159,23 @@
 !/src/include/unistd.h
 
 #
-# stdlib(3), NetBSD 6.1-RELEASE
-#
-!/src/lib/libc/stdlib/Makefile.inc
-!/src/lib/libc/stdlib/strsuftoll.c
-!/src/lib/libc/stdlib/strsuftoll.3
-!/src/lib/libc/stdlib/Symbol.map
-
-#
 # getdtablecount(2)
 #
 !/src/lib/libc/sys/Makefile.inc
 !/src/lib/libc/sys/getdtablecount.2
 !/src/lib/libc/sys/Symbol.map
+
+#
+## stdlib(3)
+#
+
+#
+# strsuftoll(3), NetBSD 6.1-RELEASE
+#
+!/src/lib/libc/stdlib/Makefile.inc
+!/src/lib/libc/stdlib/strsuftoll.c
+!/src/lib/libc/stdlib/strsuftoll.3
+!/src/lib/libc/stdlib/Symbol.map
 
 #
 ## libevent(3)
@@ -195,14 +195,15 @@
 !/src/lib/libevent/signal.c
 
 #
-# libssl(3), OpenSSL 1.0.2f
+## libssl(3), OpenSSL 1.0.2f
 #
 !/src/crypto/openssl/*
+
 !/src/secure/lib/libcrypto/Makefile
 !/src/secure/lib/libcrypto/Makefile.inc
 
 #
-# libtls(3), OpenBSD 5.8-RELEASE
+## libtls(3), OpenBSD 5.8-RELEASE
 #
 !/src/lib/libtls/Makefile
 !/src/lib/libtls/tls.c
@@ -235,6 +236,13 @@
 !/src/lib/libutil/ohash.h
 !/src/lib/libutil/ohash_init.3
 !/src/lib/libutil/ohash_interval.3
+
+#
+# stat_flags(3), NetBSD 6.1-RELEASE
+#
+!/src/lib/libutil/stat_flags.c
+!/src/lib/libutil/stat_flags.3
+!/src/lib/libutil/util.h
 
 ##
 # Daemons and (subset of) Unix Toolbox.

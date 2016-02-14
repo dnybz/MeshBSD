@@ -137,6 +137,16 @@ MLINKS += ohash_init.3 ohash_delete.3 \
 SUBDIR+=	tests
 .endif
 
+#
+# From NetBSD 6.1-RELEASE inherited subset.
+#
+
+SRC+= 	stat_flags.c
+
+MAN++ 	stat_flags.3
+MLINKS+=stat_flags.3 string_to_flags.3
+MLINKS+=stat_flags.3 flags_to_string.3
+
 WARNS?=	0
 
 .include <bsd.lib.mk>
