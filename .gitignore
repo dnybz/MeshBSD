@@ -245,8 +245,8 @@
 !/src/lib/libutil/util.h
 
 ##
-# Daemons and (subset of) Unix Toolbox.
-#
+## Daemons and (subset of) Unix Toolbox.
+##
 
 #
 ## bin
@@ -995,6 +995,204 @@
 #
 
 #
+# dhclient(8)
+#
+!/src/sbin/dhclient
+!/src/sbin/dhclientMakefile
+!/src/sbin/dhclientalloc.c
+!/src/sbin/dhclientbpf.c
+!/src/sbin/dhclientclparse.c
+!/src/sbin/dhclientconflex.c
+!/src/sbin/dhclientconvert.c
+!/src/sbin/dhclientdhclient-script
+!/src/sbin/dhclientdhclient-script.8
+!/src/sbin/dhclientdhclient.8
+!/src/sbin/dhclientdhclient.c
+!/src/sbin/dhclientdhclient.conf
+!/src/sbin/dhclientdhclient.conf.5
+!/src/sbin/dhclientdhclient.leases.5
+!/src/sbin/dhclientdhcp-options.5
+!/src/sbin/dhclientdhcp.h
+!/src/sbin/dhclientdhcpd.h
+!/src/sbin/dhclientdhctoken.h
+!/src/sbin/dhclientdispatch.c
+!/src/sbin/dhclienterrwarn.c
+!/src/sbin/dhclienthash.c
+!/src/sbin/dhclientinet.c
+!/src/sbin/dhclientoptions.c
+!/src/sbin/dhclientpacket.c
+!/src/sbin/dhclientparse.c
+!/src/sbin/dhclientprivsep.c
+!/src/sbin/dhclientprivsep.h
+!/src/sbin/dhclienttables.c
+!/src/sbin/dhclienttests
+!/src/sbin/dhclienttree.c
+!/src/sbin/dhclienttree.h
+!/src/sbin/dhclient/tests
+!/src/sbin/dhclient/testsMakefile
+!/src/sbin/dhclient/testsfake.c
+!/src/sbin/dhclient/testsoption-domain-search.c
+
+#
+# dmesg(8)
+#
+!/src/sbin/dmesg/Makefile
+!/src/sbin/dmesg/dmesg.8
+!/src/sbin/dmesg/dmesg.c
+
+#
+# etherswitchcfg(8)
+#
+!/src/sbin/etherswitchcfg/Makefile
+!/src/sbin/etherswitchcfg/etherswitchcfg.8
+!/src/sbin/etherswitchcfg/etherswitchcfg.c
+!/src/sbin/etherswitchcfg/ifmedia.c
+
+#
+# fsck_ffs(8)
+# 
+!/src/sbin/fsck_ffs/Makefile
+!/src/sbin/fsck_ffs/dir.c
+!/src/sbin/fsck_ffs/ea.c
+!/src/sbin/fsck_ffs/fsck.h
+!/src/sbin/fsck_ffs/fsck_ffs.8
+!/src/sbin/fsck_ffs/fsutil.c
+!/src/sbin/fsck_ffs/gjournal.c
+!/src/sbin/fsck_ffs/globs.c
+!/src/sbin/fsck_ffs/inode.c
+!/src/sbin/fsck_ffs/main.c
+!/src/sbin/fsck_ffs/pass1.c
+!/src/sbin/fsck_ffs/pass1b.c
+!/src/sbin/fsck_ffs/pass2.c
+!/src/sbin/fsck_ffs/pass3.c
+!/src/sbin/fsck_ffs/pass4.c
+!/src/sbin/fsck_ffs/pass5.c
+!/src/sbin/fsck_ffs/setup.c
+!/src/sbin/fsck_ffs/suj.c
+!/src/sbin/fsck_ffs/utilities.c
+
+#
+# fsck_msdosfs(8)
+#
+!/src/sbin/fsck_msdosfs/Makefile
+!/src/sbin/fsck_msdosfs/boot.c
+!/src/sbin/fsck_msdosfs/check.c
+!/src/sbin/fsck_msdosfs/dir.c
+!/src/sbin/fsck_msdosfs/dosfs.h
+!/src/sbin/fsck_msdosfs/ext.h
+!/src/sbin/fsck_msdosfs/fat.c
+!/src/sbin/fsck_msdosfs/fsck_msdosfs.8
+!/src/sbin/fsck_msdosfs/main.c
+
+#
+# ifconfig(8)
+#
+!/src/sbin/ifconfig/Makefile
+!/src/sbin/ifconfig/af_inet.c
+!/src/sbin/ifconfig/af_inet6.c
+!/src/sbin/ifconfig/af_link.c
+!/src/sbin/ifconfig/af_nd6.c
+!/src/sbin/ifconfig/carp.c
+!/src/sbin/ifconfig/ifbridge.c
+!/src/sbin/ifconfig/ifclone.c
+!/src/sbin/ifconfig/ifconfig.8
+!/src/sbin/ifconfig/ifconfig.c
+!/src/sbin/ifconfig/ifconfig.h
+!/src/sbin/ifconfig/iffib.c
+!/src/sbin/ifconfig/ifgif.c
+!/src/sbin/ifconfig/ifgre.c
+!/src/sbin/ifconfig/ifgroup.c
+!/src/sbin/ifconfig/ifieee80211.c
+!/src/sbin/ifconfig/iflagg.c
+!/src/sbin/ifconfig/ifmac.c
+!/src/sbin/ifconfig/ifmedia.c
+!/src/sbin/ifconfig/ifpfsync.c
+!/src/sbin/ifconfig/ifvlan.c
+!/src/sbin/ifconfig/ifvxlan.c
+!/src/sbin/ifconfig/sfp.c
+!/src/sbin/ifconfig/tests/Makefile
+
+#
+# init(8)
+#
+!/src/sbin/init/Makefile
+!/src/sbin/init/NOTES
+!/src/sbin/init/init.8
+!/src/sbin/init/init.c
+!/src/sbin/init/pathnames.h
+
+#
+# kldload(8)
+#
+!/src/sbin/kldload/Makefile
+!/src/sbin/kldload/kldload.8
+!/src/sbin/kldload/kldload.c
+
+#
+# kldstat(8)
+#
+!/src/sbin/kldstat/Makefile
+!/src/sbin/kldstat/kldstat.8
+!/src/sbin/kldstat/kldstat.c
+
+#
+# kldunload(8)
+#
+!/src/sbin/kldunload/Makefile
+!/src/sbin/kldunload/kldunload.8
+!/src/sbin/kldunload/kldunload.c
+
+#
+# mdconfig(8)
+#
+!/src/sbin/mdconfig/Makefile
+!/src/sbin/mdconfig/mdconfig.8
+!/src/sbin/mdconfig/mdconfig.c
+!/src/sbin/mdconfig/tests/Makefile
+!/src/sbin/mdconfig/tests/mdconfig_test.sh
+
+#
+# mdmfs(8)
+#
+!/src/sbin/mdmfs/Makefile
+!/src/sbin/mdmfs/mdmfs.8
+!/src/sbin/mdmfs/mdmfs.c
+
+#
+# mount(8)
+#
+!/src/sbin/mount/Makefile
+!/src/sbin/mount/extern.h
+!/src/sbin/mount/getmntopts.3
+!/src/sbin/mount/getmntopts.c
+!/src/sbin/mount/mntopts.h
+!/src/sbin/mount/mount.8
+!/src/sbin/mount/mount.c
+!/src/sbin/mount/mount.conf.8
+!/src/sbin/mount/mount_fs.c
+!/src/sbin/mount/pathnames.h
+!/src/sbin/mount/vfslist.c
+
+#
+# mount_msdosfs(8)
+#
+!/src/sbin/mount_msdosfs/Makefile
+!/src/sbin/mount_msdosfs/mount_msdosfs.8
+!/src/sbin/mount_msdosfs/mount_msdosfs.c
+
+#
+# newsfs(8)
+#
+!/src/sbin/newfs/Makefile
+!/src/sbin/newfs/mkfs.c
+!/src/sbin/newfs/newfs.8
+!/src/sbin/newfs/newfs.c
+!/src/sbin/newfs/newfs.h
+!/src/sbin/newfs/ref.test
+!/src/sbin/newfs/runtest00.sh
+!/src/sbin/newfs/runtest01.sh
+
+#
 # pfctl(8)
 #
 !/src/sbin/pfctl/Makefile
@@ -1024,6 +1222,72 @@
 !/src/sbin/pflogd/privsep.c
 !/src/sbin/pflogd/privsep_fdpass.c
 
+#
+# ping(8)
+#
+!/src/sbin/ping/Makefile
+!/src/sbin/ping/ping.8
+!/src/sbin/ping/ping.c
+
+#
+# ping6(8)
+#
+!/src/sbin/ping6/Makefile
+!/src/sbin/ping6/ping6.8
+!/src/sbin/ping6/ping6.c
+
+#
+# reboot(8)
+#
+!/src/sbin/reboot/Makefile
+!/src/sbin/reboot/boot_i386.8
+!/src/sbin/reboot/nextboot.8
+!/src/sbin/reboot/nextboot.sh
+!/src/sbin/reboot/reboot.8
+!/src/sbin/reboot/reboot.c
+
+#
+# route(8)
+#
+!/src/sbin/route/Makefile
+!/src/sbin/route/keywords
+!/src/sbin/route/route.8
+!/src/sbin/route/route.c
+
+#
+# setkey(8)
+#
+!/src/sbin/setkey/Makefile
+!/src/sbin/setkey/parse.y
+!/src/sbin/setkey/sample.cf
+!/src/sbin/setkey/scriptdump.pl
+!/src/sbin/setkey/setkey.8
+!/src/sbin/setkey/setkey.c
+!/src/sbin/setkey/test-pfkey.c
+!/src/sbin/setkey/test-policy.c
+!/src/sbin/setkey/token.l
+!/src/sbin/setkey/vchar.h
+
+#
+# shutdown(8)
+#
+!/src/sbin/shutdown/Makefile
+!/src/sbin/shutdown/shutdown.8
+!/src/sbin/shutdown/shutdown.c
+
+#
+# sysctl(8)
+#
+!/src/sbin/sysctl/Makefile
+!/src/sbin/sysctl/sysctl.8
+!/src/sbin/sysctl/sysctl.c
+
+#
+# umount(8)
+#
+!/src/sbin/umount/Makefile
+!/src/sbin/umount/umount.8
+!/src/sbin/umount/umount.c
 
 #
 ## usr.bin
