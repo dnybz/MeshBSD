@@ -4,7 +4,6 @@
 # Copyright (c) 2010, 2011, 2014 Antoine Jacoutot <ajacoutot@openbsd.org>
 # Copyright (c) 2010, 2011 Ingo Schwarze <schwarze@openbsd.org>
 # Copyright (c) 2010, 2011, 2014 Robert Nagy <robert@openbsd.org>
-# Copyright (C) 2016, Henning Matyschok
 #
 # Permission to use, copy, modify, and distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -18,6 +17,23 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #
+# Copyright (C) 2016, Henning Matyschok
+# All rights reserved. 
+#
+# Permission to use, copy, modify, and distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+
+. /etc/rc.d/rc.ppp
 
 #
 #	$OpenBSD: netstart,v 1.144 2014/12/03 19:55:49 florian Exp $
@@ -65,32 +81,8 @@ ifstart() {
 			continue
 			;;
 		"pppoe")
-			cat > ${ppp_conf} << EOF
-default:                                               
-     set device PPPoE:${if}                      
-     set MTU 1492
-     set MRU 1492
-     set dial
-     set timeout 360
-     set crtscts off
-     set speed sync
-     disable lqr
-     disable deflate
-     disable pred1
-     disable vjcomp
-     disable acfcomp
-     disable protocomp
-     enable dns
-
-     set log Phase LCP IPCP CCP Warning Error Alert
-     set ifaddr 10.0.0.1/0 10.0.0.2/0 0.0.0.0 0.0.0.0
-     add default HISADDR
-     set login
-tsp:
-     set authname ${ppp_authname}
-     set authkey ${ppp_authkey}
-EOF
-			ppp -ddial tsp
+			pppoe_conf_create $if $ppp_authname $ppp_authkey $ppp_conf
+			ppp -auto tsp
 			return
 			;;
 		"dhcp")
