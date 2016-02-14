@@ -24,7 +24,7 @@ pppoe_conf_create() {
 
 	if=$1
 	ppp_authname=$2	
-	ppp_authkey=$2
+	ppp_authkey=$3
 	
 	cat > ${ppp_conf} << EOF
 default:                                               
