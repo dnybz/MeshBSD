@@ -1887,6 +1887,7 @@
 # comcontrol(8)
 # conscontrol(8)
 # casperd(8)
+# devd(8)
 # devfs(8) 
 # dhclient(8)
 # dmesg(8)
@@ -1907,6 +1908,7 @@
 # kldstat(8)
 # kldunload(8)
 # ldcondig(8)
+# md5(8)
 # mdconfig(8)
 # mdmfs(8)
 # mknod(8)
@@ -1919,6 +1921,7 @@
 # nandfs(8)
 # newsfs(8)
 # newsfs_nandfs(8)
+# nvmecontrol(8)
 # pfctl(8)
 # pflogd(8)
 # ping(8)
@@ -1929,8 +1932,11 @@
 # route(8)
 # routed(8)
 # rtsol(8)
+# sconfig(8)
 # setkey(8)
 # shutdown(8)
+# sunlabel(8)
+# swapon(8)
 # sysctl(8)
 # umount(8)
 #
@@ -1938,7 +1944,10 @@
 !/src/sbin/Makefile.inc
 
 !/src/sbin/Makfile.arm
+!/src/sbin/Makfile.amd64
+!/src/sbin/Makfile.i386
 !/src/sbin/Makfile.mips
+!/src/sbin/Makfile.sparc64
 
 !/src/sbin/tests/Makefile
 
@@ -1987,6 +1996,20 @@
 !/src/sbin/casperd/casperd.c
 !/src/sbin/casperd/zygote.c
 !/src/sbin/casperd/zygote.h
+
+#
+# devd(8)
+#
+!/src/sbin/devd/Makefile
+!/src/sbin/devd/devd.8
+!/src/sbin/devd/devd.cc
+!/src/sbin/devd/devd.conf.5
+!/src/sbin/devd/devd.h
+!/src/sbin/devd/devd.hh
+!/src/sbin/devd/parse.y
+!/src/sbin/devd/tests/Makefile
+!/src/sbin/devd/tests/client_test.c
+!/src/sbin/devd/token.l
 
 #
 # devfs(8)
@@ -2074,6 +2097,16 @@
 !/src/sbin/fdisk/fdisk.8
 !/src/sbin/fdisk/fdisk.c
 !/src/sbin/fdisk/runtest.sh
+
+#
+# fsck(8)
+#
+!/src/sbin/fsck/Makefile
+!/src/sbin/fsck/fsck.8
+!/src/sbin/fsck/fsck.c
+!/src/sbin/fsck/fsutil.c
+!/src/sbin/fsck/fsutil.h
+!/src/sbin/fsck/preen.c
 
 #
 # fsck_ffs(8)
@@ -2322,6 +2355,13 @@
 !/src/sbin/ldconfig/ldconfig.h
 
 #
+# md5(8)
+#
+!/src/sbin/md5/Makefile
+!/src/sbin/md5/md5.1
+!/src/sbin/md5/md5.c
+
+#
 # mdconfig(8)
 #
 !/src/sbin/mdconfig/Makefile
@@ -2440,6 +2480,20 @@
 !/src/sbin/newfs_nandfs/newfs_nandfs.c
 
 #
+# nvmecontrol(8)
+#
+!/src/sbin/nvmecontrol/Makefile
+!/src/sbin/nvmecontrol/devlist.c
+!/src/sbin/nvmecontrol/firmware.c
+!/src/sbin/nvmecontrol/identify.c
+!/src/sbin/nvmecontrol/logpage.c
+!/src/sbin/nvmecontrol/nvmecontrol.8
+!/src/sbin/nvmecontrol/nvmecontrol.c
+!/src/sbin/nvmecontrol/nvmecontrol.h
+!/src/sbin/nvmecontrol/perftest.c
+!/src/sbin/nvmecontrol/reset.c
+
+#
 # pfctl(8)
 #
 !/src/sbin/pfctl/Makefile
@@ -2554,6 +2608,13 @@
 !/src/sbin/rtsol/Makefile
 
 #
+# sconfig(8)
+#
+!/src/sbin/sconfig/Makefile
+!/src/sbin/sconfig/sconfig.8
+!/src/sbin/sconfig/sconfig.c
+
+#
 # setkey(8)
 #
 !/src/sbin/setkey/Makefile
@@ -2573,6 +2634,14 @@
 !/src/sbin/shutdown/Makefile
 !/src/sbin/shutdown/shutdown.8
 !/src/sbin/shutdown/shutdown.c
+
+#
+# sunlabel(8)
+#
+!/src/sbin/sunlabel/Makefile
+!/src/sbin/sunlabel/runtest.sh
+!/src/sbin/sunlabel/sunlabel.8
+!/src/sbin/sunlabel/sunlabel.c
 
 #
 # swapon(8)

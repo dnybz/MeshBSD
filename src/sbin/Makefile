@@ -13,6 +13,7 @@ SUBDIR=camcontrol \
 	dmesg \
 	dump \
 	etherswitchcfg \
+	fsck \
 	fsck_ffs \
 	fsck_msdosfs \
 	gbde \
@@ -25,6 +26,7 @@ SUBDIR=camcontrol \
 	kldstat \
 	kldunload \
 	ldconfig \
+	md5 \
 	mdconfig \
 	mdmfs \
 	mknod \
