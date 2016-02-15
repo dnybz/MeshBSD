@@ -1803,6 +1803,7 @@
 # etherswitchcfg(8)
 # fsck_ffs(8)
 # fsck_msdosfs(8)
+# geom(8)
 # ifconfig(8)
 # init(8)
 # kldload(8)
@@ -1914,6 +1915,87 @@
 !/src/sbin/fsck_msdosfs/fat.c
 !/src/sbin/fsck_msdosfs/fsck_msdosfs.8
 !/src/sbin/fsck_msdosfs/main.c
+
+#
+# geom(8)
+#
+!/src/sbin/geom/Makefile
+!/src/sbin/geom/Makefile.inc
+!/src/sbin/geom/class/Makefile
+!/src/sbin/geom/class/Makefile.inc
+!/src/sbin/geom/class/cache/Makefile
+!/src/sbin/geom/class/cache/Makefile.depend
+!/src/sbin/geom/class/cache/gcache.8
+!/src/sbin/geom/class/cache/geom_cache.c
+!/src/sbin/geom/class/concat/Makefile
+!/src/sbin/geom/class/concat/Makefile.depend
+!/src/sbin/geom/class/concat/gconcat.8
+!/src/sbin/geom/class/concat/geom_concat.c
+!/src/sbin/geom/class/eli/Makefile
+!/src/sbin/geom/class/eli/Makefile.depend
+!/src/sbin/geom/class/eli/geli.8
+!/src/sbin/geom/class/eli/geom_eli.c
+!/src/sbin/geom/class/journal/Makefile
+!/src/sbin/geom/class/journal/Makefile.depend
+!/src/sbin/geom/class/journal/geom_journal.c
+!/src/sbin/geom/class/journal/geom_journal.h
+!/src/sbin/geom/class/journal/geom_journal_ufs.c
+!/src/sbin/geom/class/journal/gjournal.8
+!/src/sbin/geom/class/label/Makefile
+!/src/sbin/geom/class/label/Makefile.depend
+!/src/sbin/geom/class/label/geom_label.c
+!/src/sbin/geom/class/label/glabel.8
+!/src/sbin/geom/class/mirror/Makefile
+!/src/sbin/geom/class/mirror/Makefile.depend
+!/src/sbin/geom/class/mirror/geom_mirror.c
+!/src/sbin/geom/class/mirror/gmirror.8
+!/src/sbin/geom/class/mountver/Makefile
+!/src/sbin/geom/class/mountver/Makefile.depend
+!/src/sbin/geom/class/mountver/geom_mountver.c
+!/src/sbin/geom/class/mountver/gmountver.8
+!/src/sbin/geom/class/multipath/Makefile
+!/src/sbin/geom/class/multipath/Makefile.depend
+!/src/sbin/geom/class/multipath/geom_multipath.c
+!/src/sbin/geom/class/multipath/gmultipath.8
+!/src/sbin/geom/class/nop/Makefile
+!/src/sbin/geom/class/nop/Makefile.depend
+!/src/sbin/geom/class/nop/geom_nop.c
+!/src/sbin/geom/class/nop/gnop.8
+!/src/sbin/geom/class/part/Makefile
+!/src/sbin/geom/class/part/Makefile.depend
+!/src/sbin/geom/class/part/geom_part.c
+!/src/sbin/geom/class/part/gpart.8
+!/src/sbin/geom/class/raid/Makefile
+!/src/sbin/geom/class/raid/Makefile.depend
+!/src/sbin/geom/class/raid/geom_raid.c
+!/src/sbin/geom/class/raid/graid.8
+!/src/sbin/geom/class/raid3/Makefile
+!/src/sbin/geom/class/raid3/Makefile.depend
+!/src/sbin/geom/class/raid3/geom_raid3.c
+!/src/sbin/geom/class/raid3/graid3.8
+!/src/sbin/geom/class/sched/Makefile
+!/src/sbin/geom/class/sched/Makefile.depend
+!/src/sbin/geom/class/sched/geom_sched.c
+!/src/sbin/geom/class/sched/gsched.8
+!/src/sbin/geom/class/shsec/Makefile
+!/src/sbin/geom/class/shsec/Makefile.depend
+!/src/sbin/geom/class/shsec/geom_shsec.c
+!/src/sbin/geom/class/shsec/gshsec.8
+!/src/sbin/geom/class/stripe/Makefile
+!/src/sbin/geom/class/stripe/Makefile.depend
+!/src/sbin/geom/class/stripe/geom_stripe.c
+!/src/sbin/geom/class/stripe/gstripe.8
+!/src/sbin/geom/class/virstor/Makefile
+!/src/sbin/geom/class/virstor/Makefile.depend
+!/src/sbin/geom/class/virstor/geom_virstor.c
+!/src/sbin/geom/class/virstor/gvirstor.8
+!/src/sbin/geom/core/Makefile
+!/src/sbin/geom/core/Makefile.depend
+!/src/sbin/geom/core/geom.8
+!/src/sbin/geom/core/geom.c
+!/src/sbin/geom/core/geom.h
+!/src/sbin/geom/misc/subr.c
+!/src/sbin/geom/misc/subr.h
 
 #
 # ifconfig(8)
