@@ -20,7 +20,6 @@ DIRDEPS+= \
 	bin/date \
 	bin/dd \
 	bin/df \
-	bin/domainname \
 	bin/echo \
 	bin/ed \
 	bin/expr \

@@ -1882,33 +1882,120 @@
 #
 ## sbin
 #
+# bsdlbel(8)
+# camcontrol(8)
+# comcontrol(8)
+# conscontrol(8)
+# casperd(8)
+# devfs(8) 
 # dhclient(8)
 # dmesg(8)
+# dump(8)
 # etherswitchcfg(8)
+# fdisk(8)
 # fsck_ffs(8)
 # fsck_msdosfs(8)
+# gbde(8)
 # geom(8)
+# ggate(8)
 # ifconfig(8)
 # init(8)
+# ipfw(8)
+# iscontrol(8)
+# kldconfig(8)
 # kldload(8)
 # kldstat(8)
 # kldunload(8)
+# ldcondig(8)
 # mdconfig(8)
 # mdmfs(8)
+# mknod(8)
+# mksnap_ffs(8)
 # mount(8)
 # mount_msdosfs(8)
+# mount_nfs(8)
+# mount_nullfs(8)
+# natd(8)
+# nandfs(8)
 # newsfs(8)
+# newsfs_nandfs(8)
 # pfctl(8)
 # pflogd(8)
 # ping(8)
 # ping6(8)
+# quotacheck(8)
 # reboot(8)
+# restore(8)
 # route(8)
+# routed(8)
+# rtsol(8)
 # setkey(8)
 # shutdown(8)
 # sysctl(8)
 # umount(8)
 #
+!/src/sbin/Makefile
+!/src/sbin/Makefile.inc
+
+!/src/sbin/Makfile.arm
+!/src/sbin/Makfile.mips
+
+!/src/sbin/tests/Makefile
+
+#
+# bsdlabel(8)
+#
+!/src/sbin/bsdlabel/Makefile
+!/src/sbin/bsdlabel/bsdlabel.8
+!/src/sbin/bsdlabel/bsdlabel.c
+!/src/sbin/bsdlabel/pathnames.h
+
+#
+# camcontrol(8)
+#
+!/src/sbin/camcontrol/Makefile
+!/src/sbin/camcontrol/attrib.c
+!/src/sbin/camcontrol/camcontrol.8
+!/src/sbin/camcontrol/camcontrol.c
+!/src/sbin/camcontrol/camcontrol.h
+!/src/sbin/camcontrol/fwdownload.c
+!/src/sbin/camcontrol/modeedit.c
+!/src/sbin/camcontrol/persist.c
+!/src/sbin/camcontrol/progress.c
+!/src/sbin/camcontrol/progress.h
+!/src/sbin/camcontrol/util.c
+
+#
+# comcontrol(8)
+#
+!/src/sbin/comcontrol/Makefile
+!/src/sbin/comcontrol/comcontrol.8
+!/src/sbin/comcontrol/comcontrol.c
+
+#
+# conscontrol(8)
+#
+!/src/sbin/conscontrol/Makefile
+!/src/sbin/conscontrol/conscontrol.8
+!/src/sbin/conscontrol/conscontrol.c
+
+#
+# casperd(8)
+#
+!/src/sbin/casperd/Makefile
+!/src/sbin/casperd/casperd.8
+!/src/sbin/casperd/casperd.c
+!/src/sbin/casperd/zygote.c
+!/src/sbin/casperd/zygote.h
+
+#
+# devfs(8)
+#
+!/src/sbin/devfs/Makefile
+!/src/sbin/devfs/devfs.8
+!/src/sbin/devfs/devfs.c
+!/src/sbin/devfs/extern.h
+!/src/sbin/devfs/rule.c
 
 #
 # dhclient(8)
@@ -1957,12 +2044,36 @@
 !/src/sbin/dmesg/dmesg.c
 
 #
+# dump(8)
+#
+!/src/sbin/dump/Makefile
+!/src/sbin/dump/cache.c
+!/src/sbin/dump/dump.8
+!/src/sbin/dump/dump.h
+!/src/sbin/dump/dumprmt.c
+!/src/sbin/dump/itime.c
+!/src/sbin/dump/main.c
+!/src/sbin/dump/optr.c
+!/src/sbin/dump/pathnames.h
+!/src/sbin/dump/tape.c
+!/src/sbin/dump/traverse.c
+!/src/sbin/dump/unctime.c
+
+#
 # etherswitchcfg(8)
 #
 !/src/sbin/etherswitchcfg/Makefile
 !/src/sbin/etherswitchcfg/etherswitchcfg.8
 !/src/sbin/etherswitchcfg/etherswitchcfg.c
 !/src/sbin/etherswitchcfg/ifmedia.c
+
+#
+# fdisk(8)
+#
+!/src/sbin/fdisk/Makefile
+!/src/sbin/fdisk/fdisk.8
+!/src/sbin/fdisk/fdisk.c
+!/src/sbin/fdisk/runtest.sh
 
 #
 # fsck_ffs(8)
@@ -1999,6 +2110,16 @@
 !/src/sbin/fsck_msdosfs/fat.c
 !/src/sbin/fsck_msdosfs/fsck_msdosfs.8
 !/src/sbin/fsck_msdosfs/main.c
+
+#
+# gbde(8)
+#
+!/src/sbin/gbde/Makefile
+!/src/sbin/gbde/gbde.8
+!/src/sbin/gbde/gbde.c
+!/src/sbin/gbde/image.uu
+!/src/sbin/gbde/template.txt
+!/src/sbin/gbde/test.sh
 
 #
 # geom(8)
@@ -2082,6 +2203,23 @@
 !/src/sbin/geom/misc/subr.h
 
 #
+# ggate(8)
+#
+!/src/sbin/ggate/Makefile
+!/src/sbin/ggate/Makefile.inc
+!/src/sbin/ggate/ggatec/Makefile
+!/src/sbin/ggate/ggatec/ggatec.8
+!/src/sbin/ggate/ggatec/ggatec.c
+!/src/sbin/ggate/ggated/Makefile
+!/src/sbin/ggate/ggated/ggated.8
+!/src/sbin/ggate/ggated/ggated.c
+!/src/sbin/ggate/ggatel/Makefile
+!/src/sbin/ggate/ggatel/ggatel.8
+!/src/sbin/ggate/ggatel/ggatel.c
+!/src/sbin/ggate/shared/ggate.c
+!/src/sbin/ggate/shared/ggate.h
+
+#
 # ifconfig(8)
 #
 !/src/sbin/ifconfig/Makefile
@@ -2119,6 +2257,41 @@
 !/src/sbin/init/pathnames.h
 
 #
+# ipfw(8)
+#
+!/src/sbin/ipfw/Makefile
+!/src/sbin/ipfw/altq.c
+!/src/sbin/ipfw/dummynet.c
+!/src/sbin/ipfw/ipfw.8
+!/src/sbin/ipfw/ipfw2.c
+!/src/sbin/ipfw/ipfw2.h
+!/src/sbin/ipfw/ipv6.c
+!/src/sbin/ipfw/main.c
+!/src/sbin/ipfw/nat.c
+!/src/sbin/ipfw/tables.c
+
+#
+# iscontrol(8)
+#
+!/src/sbin/iscontrol/Makefile
+!/src/sbin/iscontrol/auth_subr.c
+!/src/sbin/iscontrol/config.c
+!/src/sbin/iscontrol/fsm.c
+!/src/sbin/iscontrol/iscontrol.8
+!/src/sbin/iscontrol/iscontrol.c
+!/src/sbin/iscontrol/iscontrol.h
+!/src/sbin/iscontrol/login.c
+!/src/sbin/iscontrol/misc.c
+!/src/sbin/iscontrol/pdu.c
+
+#
+# kldconfig(8)
+#
+!/src/sbin/kldconfig/Makefile
+!/src/sbin/kldconfig/kldconfig.8
+!/src/sbin/kldconfig/kldconfig.c
+
+#
 # kldload(8)
 #
 !/src/sbin/kldload/Makefile
@@ -2140,6 +2313,15 @@
 !/src/sbin/kldunload/kldunload.c
 
 #
+# ldconfig(8)
+#
+!/src/sbin/ldconfig/Makefile
+!/src/sbin/ldconfig/elfhints.c
+!/src/sbin/ldconfig/ldconfig.8
+!/src/sbin/ldconfig/ldconfig.c
+!/src/sbin/ldconfig/ldconfig.h
+
+#
 # mdconfig(8)
 #
 !/src/sbin/mdconfig/Makefile
@@ -2154,6 +2336,20 @@
 !/src/sbin/mdmfs/Makefile
 !/src/sbin/mdmfs/mdmfs.8
 !/src/sbin/mdmfs/mdmfs.c
+
+#
+# mknod(8)
+#
+!/src/sbin/mknod/Makefile
+!/src/sbin/mknod/mknod.8
+!/src/sbin/mknod/mknod.c
+
+#
+# mksnap_ffs(8)
+#
+!/src/sbin/mksnap_ffs/Makefile
+!/src/sbin/mksnap_ffs/mksnap_ffs.8
+!/src/sbin/mksnap_ffs/mksnap_ffs.c
 
 #
 # mount(8)
@@ -2178,6 +2374,44 @@
 !/src/sbin/mount_msdosfs/mount_msdosfs.c
 
 #
+# mount_nfs(8)
+# 
+!/src/sbin/mount_nfs/Makefile
+!/src/sbin/mount_nfs/mount_nfs.8
+!/src/sbin/mount_nfs/mount_nfs.c
+
+#
+# mount_nullfs(8)
+#
+!/src/sbin/mount_nullfs/Makefile
+!/src/sbin/mount_nullfs/mount_nullfs.8
+!/src/sbin/mount_nullfs/mount_nullfs.c
+
+#
+# nandfs(8)
+#
+!/src/sbin/nandfs/Makefile
+!/src/sbin/nandfs/lssnap.c
+!/src/sbin/nandfs/mksnap.c
+!/src/sbin/nandfs/nandfs.8
+!/src/sbin/nandfs/nandfs.c
+!/src/sbin/nandfs/nandfs.h
+!/src/sbin/nandfs/rmsnap.c
+
+#
+# natd(8)
+#
+!/src/sbin/natd/HISTORY
+!/src/sbin/natd/Makefile
+!/src/sbin/natd/README
+!/src/sbin/natd/icmp.c
+!/src/sbin/natd/natd.8
+!/src/sbin/natd/natd.c
+!/src/sbin/natd/natd.h
+!/src/sbin/natd/samples/natd.cf.sample
+!/src/sbin/natd/samples/natd.test
+
+#
 # newsfs(8)
 #
 !/src/sbin/newfs/Makefile
@@ -2188,6 +2422,22 @@
 !/src/sbin/newfs/ref.test
 !/src/sbin/newfs/runtest00.sh
 !/src/sbin/newfs/runtest01.sh
+
+#
+# newsfs_msdos(8)
+#
+!/src/sbin/newfs_msdos/Makefile
+!/src/sbin/newfs_msdos/mkfs_msdos.c
+!/src/sbin/newfs_msdos/mkfs_msdos.h
+!/src/sbin/newfs_msdos/newfs_msdos.8
+!/src/sbin/newfs_msdos/newfs_msdos.c
+
+#
+# newsfs_nandfs(8)
+#
+!/src/sbin/newfs_nandfs/Makefile
+!/src/sbin/newfs_nandfs/newfs_nandfs.8
+!/src/sbin/newfs_nandfs/newfs_nandfs.c
 
 #
 # pfctl(8)
@@ -2234,6 +2484,15 @@
 !/src/sbin/ping6/ping6.c
 
 #
+# quotacheck(8)
+#
+!/src/sbin/quotacheck/Makefile
+!/src/sbin/quotacheck/preen.c
+!/src/sbin/quotacheck/quotacheck.8
+!/src/sbin/quotacheck/quotacheck.c
+!/src/sbin/quotacheck/quotacheck.h
+
+#
 # reboot(8)
 #
 !/src/sbin/reboot/Makefile
@@ -2244,12 +2503,55 @@
 !/src/sbin/reboot/reboot.c
 
 #
+# restore(8)
+#
+!/src/sbin/restore/Makefile
+!/src/sbin/restore/dirs.c
+!/src/sbin/restore/extern.h
+!/src/sbin/restore/interactive.c
+!/src/sbin/restore/main.c
+!/src/sbin/restore/restore.8
+!/src/sbin/restore/restore.c
+!/src/sbin/restore/restore.h
+!/src/sbin/restore/symtab.c
+!/src/sbin/restore/tape.c
+!/src/sbin/restore/utilities.c
+
+#
 # route(8)
 #
 !/src/sbin/route/Makefile
 !/src/sbin/route/keywords
 !/src/sbin/route/route.8
 !/src/sbin/route/route.c
+
+#
+# routed(8)
+#
+!/src/sbin/routed/Makefile
+!/src/sbin/routed/Makefile.inc
+!/src/sbin/routed/defs.h
+!/src/sbin/routed/if.c
+!/src/sbin/routed/input.c
+!/src/sbin/routed/main.c
+!/src/sbin/routed/output.c
+!/src/sbin/routed/parms.c
+!/src/sbin/routed/pathnames.h
+!/src/sbin/routed/radix.c
+!/src/sbin/routed/radix.h
+!/src/sbin/routed/rdisc.c
+!/src/sbin/routed/routed.8
+!/src/sbin/routed/rtquery/Makefile
+!/src/sbin/routed/rtquery/Makefile.depend
+!/src/sbin/routed/rtquery/rtquery.8
+!/src/sbin/routed/rtquery/rtquery.c
+!/src/sbin/routed/table.c
+!/src/sbin/routed/trace.c
+
+#
+# rtsol(8)
+#
+!/src/sbin/rtsol/Makefile
 
 #
 # setkey(8)
@@ -2271,6 +2573,13 @@
 !/src/sbin/shutdown/Makefile
 !/src/sbin/shutdown/shutdown.8
 !/src/sbin/shutdown/shutdown.c
+
+#
+# swapon(8)
+# 
+!/src/sbin/swapon/Makefile
+!/src/sbin/swapon/swapon.8
+!/src/sbin/swapon/swapon.c
 
 #
 # sysctl(8)
