@@ -988,6 +988,7 @@
 # df(1)
 # echo(1)
 # expr(1)
+# getfacl(1)
 # hostname(1)
 # kenv(1)
 # kill(1)
@@ -995,17 +996,25 @@
 # ls(1)
 # mkdir(1)
 # mv(1)
+# pax(1)
 # pgrep(1)
 # pkill(1) 
 # ps(1)
+# pwait(1)
+# pwd(1)
 # rm(1)
+# setfacl(1)
 # sh(1)
 # sleep(1)
 # stty(1)
+# sync(1)
 # test(1)
 # uuidgen(1)
 #
 !/src/bin/Makefile
+!/src/bin/Makefile.inc
+
+!/src/bin/tests/Makefile
 
 #
 # cat(1)
@@ -1103,6 +1112,13 @@
 !/src/bin/expr/tests/Makefile
 
 #
+# getfacl(1)
+#
+!/src/bin/getfacl/Makefile
+!/src/bin/getfacl/getfacl.1
+!/src/bin/getfacl/getfacl.c
+
+#
 # hostname(1)
 #
 !/src/bin/hostname/Makefile
@@ -1162,6 +1178,40 @@
 !/src/bin/mv/tests/legacy_test.sh
 
 #
+# pax(1)
+#
+!/src/bin/pax/Makefile
+!/src/bin/pax/ar_io.c
+!/src/bin/pax/ar_subs.c
+!/src/bin/pax/buf_subs.c
+!/src/bin/pax/cache.c
+!/src/bin/pax/cache.h
+!/src/bin/pax/cpio.c
+!/src/bin/pax/cpio.h
+!/src/bin/pax/extern.h
+!/src/bin/pax/file_subs.c
+!/src/bin/pax/ftree.c
+!/src/bin/pax/ftree.h
+!/src/bin/pax/gen_subs.c
+!/src/bin/pax/getoldopt.c
+!/src/bin/pax/options.c
+!/src/bin/pax/options.h
+!/src/bin/pax/pat_rep.c
+!/src/bin/pax/pat_rep.h
+!/src/bin/pax/pax.1
+!/src/bin/pax/pax.c
+!/src/bin/pax/pax.h
+!/src/bin/pax/sel_subs.c
+!/src/bin/pax/sel_subs.h
+!/src/bin/pax/tables.c
+!/src/bin/pax/tables.h
+!/src/bin/pax/tar.c
+!/src/bin/pax/tar.h
+!/src/bin/pax/tests/Makefile
+!/src/bin/pax/tests/legacy_test.pl
+!/src/bin/pax/tty_subs.c
+
+#
 # p{grep|kill}(1) 
 #
 !/src/bin/pkill/Makefile
@@ -1211,11 +1261,38 @@
 !/src/bin/ps/ps.h
 
 #
+# pwait(1)
+#
+!/src/bin/pwait/Makefile
+!/src/bin/pwait/pwait.1
+!/src/bin/pwait/pwait.c
+
+#
+# pwd(1)
+#
+!/src/bin/pwd/Makefile
+!/src/bin/pwd/pwd.1
+!/src/bin/pwd/pwd.c
+
+#
 # rm(1)
 #
 !/src/bin/rm/Makefile
 !/src/bin/rm/rm.1
 !/src/bin/rm/rm.c
+
+#
+# setfacl(1)
+#
+!/src/bin/setfacl/Makefile
+!/src/bin/setfacl/file.c
+!/src/bin/setfacl/mask.c
+!/src/bin/setfacl/merge.c
+!/src/bin/setfacl/remove.c
+!/src/bin/setfacl/setfacl.1
+!/src/bin/setfacl/setfacl.c
+!/src/bin/setfacl/setfacl.h
+!/src/bin/setfacl/util.c
 
 #
 # sh(1)
@@ -1778,6 +1855,13 @@
 !/src/bin/stty/stty.c
 !/src/bin/stty/stty.h
 !/src/bin/stty/util.c
+
+#
+# sync(1)
+#
+!/src/bin/sync/Makefile
+!/src/bin/sync/sync.8
+!/src/bin/sync/sync.c
 
 #
 # test(1)

@@ -10,7 +10,9 @@ SUBDIR= cat \
 	date \
 	dd \
 	df \
+	echo \
 	expr \
+	getfacl \
 	hostname \
 	kenv \
 	kill \
@@ -18,14 +20,25 @@ SUBDIR= cat \
 	ls \
 	mkdir \
 	mv \
+	pax \
 	pkill \
 	ps \
+	pwait \
+	pwd \
+	realpath \
 	rm \
+	setfacl \
 	sh \
 	sleep \
 	stty \
+	sync \
 	test \
 	uuidgen
+
+SUBDIR.${MK_RCMDS}+=	rcp
+SUBDIR.${MK_SENDMAIL}+=	rmail
+SUBDIR.${MK_TCSH}+=	csh
+SUBDIR.${MK_TESTS}+=	tests
 
 .include <bsd.arch.inc.mk>
 

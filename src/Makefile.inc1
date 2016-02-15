@@ -1678,9 +1678,7 @@ native-xtools: .PHONY
     bin/mkdir \
     bin/mv \
     bin/ps \
-    bin/realpath \
     bin/rm \
-    bin/rmdir \
     bin/sh \
     bin/sleep \
     ${_clang_tblgen} \
