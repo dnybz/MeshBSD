@@ -3257,6 +3257,7 @@
 ## usr.sbin
 #
 !/src/usr.sbin/Makefile
+!/src/usr.sbin/Makefile.inc
 
 #
 # authpf(8)

@@ -23,6 +23,7 @@ SUBDIR=	ar \
 	less \
 	login \
 	m4 \
+	man \
 	ncal \
 	netstat \
 	passwd \
@@ -43,12 +44,6 @@ SUBDIR.${MK_AT}+=	at
 SUBDIR.${MK_BLUETOOTH}+=	bluetooth
 SUBDIR.${MK_BSD_CPIO}+=	cpio
 SUBDIR.${MK_EE}+=	ee
-
-.if ${MK_GPL_DTC} != "yes"
-.if ${COMPILER_FEATURES:Mc++11}
-SUBDIR+=	dtc
-.endif
-.endif
 
 SUBDIR.${MK_MAN_UTILS}+=	man
 
