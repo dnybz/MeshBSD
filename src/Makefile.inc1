@@ -77,15 +77,9 @@ SUBDIR=	lib libexec
 SUBDIR+=.WAIT
 .endif
 SUBDIR+=bin
-.if ${MK_CDDL} != "no"
-SUBDIR+=cddl
-.endif
 SUBDIR+=gnu include
 .if ${MK_KERBEROS} != "no"
 SUBDIR+=kerberos5
-.endif
-.if ${MK_RESCUE} != "no"
-SUBDIR+=rescue
 .endif
 SUBDIR+=sbin
 .if ${MK_CRYPT} != "no"
@@ -707,9 +701,6 @@ build32: .PHONY
 .for _t in obj includes
 	${_+_}cd ${.CURDIR}/include; ${LIB32WMAKE} DIRPRFX=include/ ${_t}
 	${_+_}cd ${.CURDIR}/lib; ${LIB32WMAKE} DIRPRFX=lib/ ${_t}
-.if ${MK_CDDL} != "no"
-	${_+_}cd ${.CURDIR}/cddl/lib; ${LIB32WMAKE} DIRPRFX=cddl/lib/ ${_t}
-.endif
 	${_+_}cd ${.CURDIR}/gnu/lib; ${LIB32WMAKE} DIRPRFX=gnu/lib/ ${_t}
 .if ${MK_CRYPT} != "no"
 	${_+_}cd ${.CURDIR}/secure/lib; ${LIB32WMAKE} DIRPRFX=secure/lib/ ${_t}
@@ -740,9 +731,6 @@ build32: .PHONY
 
 distribute32 install32: .MAKE .PHONY
 	${_+_}cd ${.CURDIR}/lib; ${LIB32IMAKE} ${.TARGET:S/32$//}
-.if ${MK_CDDL} != "no"
-	${_+_}cd ${.CURDIR}/cddl/lib; ${LIB32IMAKE} ${.TARGET:S/32$//}
-.endif
 	${_+_}cd ${.CURDIR}/gnu/lib; ${LIB32IMAKE} ${.TARGET:S/32$//}
 .if ${MK_CRYPT} != "no"
 	${_+_}cd ${.CURDIR}/secure/lib; ${LIB32IMAKE} ${.TARGET:S/32$//}
@@ -1531,11 +1519,6 @@ _share=	share/syscons/scrnmaps
 _gcc_tools= gnu/usr.bin/cc/cc_tools
 .endif
 
-.if ${MK_RESCUE} != "no"
-# rescue includes programs that have build-tools targets
-_rescue=rescue/rescue
-.endif
-
 .for _tool in \
     bin/csh \
     bin/sh \
@@ -1584,13 +1567,6 @@ kernel-tools:
 .if ${TARGET_ARCH} == "amd64" || ${TARGET_ARCH} == "i386"
 _btxld=		usr.sbin/btxld
 .endif
-.endif
-
-# Rebuild ctfconvert and ctfmerge to avoid difficult-to-diagnose failures
-# resulting from missing bug fixes or ELF Toolchain updates.
-.if ${MK_CDDL} != "no"
-_dtrace_tools= cddl/lib/libctf cddl/usr.bin/ctfconvert \
-    cddl/usr.bin/ctfmerge
 .endif
 
 # If we're given an XAS, don't build binutils.
@@ -1872,18 +1848,6 @@ _generic_libs+= ${_DIR}
 
 lib/libopie__L lib/libtacplus__L: lib/libmd__L
 
-.if ${MK_CDDL} != "no"
-_cddl_lib_libumem= cddl/lib/libumem
-_cddl_lib_libnvpair= cddl/lib/libnvpair
-_cddl_lib_libavl= cddl/lib/libavl
-_cddl_lib_libuutil= cddl/lib/libuutil
-_cddl_lib_libzfs_core= cddl/lib/libzfs_core
-_cddl_lib_libctf= cddl/lib/libctf
-_cddl_lib= cddl/lib
-cddl/lib/libzfs_core__L: cddl/lib/libnvpair__L
-cddl/lib/libzfs__L: lib/libgeom__L
-cddl/lib/libctf__L: lib/libz__L
-.endif
 # cddl/lib/libdtrace requires lib/libproc and lib/librtld_db; it's only built
 # on select architectures though (see cddl/lib/Makefile)
 .if ${MACHINE_CPUARCH} != "sparc64"
@@ -2259,7 +2223,7 @@ XDEV_CPUTYPE?=${TARGET_CPUTYPE}
 
 NOFUN=-DNO_FSCHG MK_HTML=no -DNO_LINT \
 	MK_MAN=no MK_NLS=no MK_PROFILE=no \
-	MK_KERBEROS=no MK_RESCUE=no MK_TESTS=no MK_WARNS=no \
+	MK_KERBEROS=no MK_TESTS=no MK_WARNS=no \
 	TARGET=${TARGET} TARGET_ARCH=${TARGET_ARCH} \
 	CPUTYPE=${XDEV_CPUTYPE}
 

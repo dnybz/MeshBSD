@@ -979,11 +979,38 @@
 #
 ## bin
 #
+# cat(1)
+# chflags(!)
+# chmod(1)
+# cp(1)
+# date(1)
+# dd(1)
+# df(1)
+# echo(1)
+# expr(1)
+# hostname(1)
+# kenv(1)
+# kill(1)
+# ln(1)
+# ls(1)
+# mkdir(1)
+# mv(1)
+# pgrep(1)
+# pkill(1) 
+# ps(1)
+# rm(1)
+# sh(1)
+# sleep(1)
+# stty(1)
+# test(1)
+# uuidgen(1)
+#
+!/src/bin/Makefile
 
 #
 # cat(1)
 #
-!/src/bin/Makefile
+!/src/bin/cat/Makefile
 !/src/bin/cat.1
 !/src/bin/cat.c
 !/src/bin/tests/Makefile
@@ -1010,6 +1037,19 @@
 !/src/bin/cp/cp.c
 !/src/bin/cp/extern.h
 !/src/bin/cp/utils.c
+
+#
+# date(1)
+#
+!/src/bin/date/Makefile
+!/src/bin/date/date.1
+!/src/bin/date/date.c
+!/src/bin/date/extern.h
+!/src/bin/date/netdate.c
+!/src/bin/date/tests/Makefile
+!/src/bin/date/tests/format_string_test.sh
+!/src/bin/date/vary.c
+!/src/bin/date/vary.h
 
 #
 # dd(1)
@@ -1048,6 +1088,13 @@
 !/src/bin/df/df.c
 
 #
+# echo(1)
+#
+!/src/bin/echo/Makefile
+!/src/bin/echo/echo.1
+!/src/bin/echo/echo.c
+
+#
 # expr(1)
 #
 !/src/bin/expr/Makefile
@@ -1075,6 +1122,44 @@
 !/src/bin/kill/Makefile
 !/src/bin/kill/kill.1
 !/src/bin/kill/kill.c
+
+#
+# ln(1)
+#
+!/src/bin/ln/Makefile
+!/src/bin/ln/ln.1
+!/src/bin/ln/ln.c
+!/src/bin/ln/symlink.7
+
+#
+# ls(1)
+#
+!/src/bin/ls/Makefile
+!/src/bin/ls/cmp.c
+!/src/bin/ls/extern.h
+!/src/bin/ls/ls.1
+!/src/bin/ls/ls.c
+!/src/bin/ls/ls.h
+!/src/bin/ls/print.c
+!/src/bin/ls/tests/Makefile
+!/src/bin/ls/tests/ls_tests.sh
+!/src/bin/ls/util.c
+
+#
+# mkdir(1)
+#
+!/src/bin/mkdir/Makefile
+!/src/bin/mkdir/mkdir.1
+!/src/bin/mkdir/mkdir.c
+
+#
+# mv(1)
+#
+!/src/bin/mv/Makefile
+!/src/bin/mv/mv.1
+!/src/bin/mv/mv.c
+!/src/bin/mv/tests/Makefile
+!/src/bin/mv/tests/legacy_test.sh
 
 #
 # p{grep|kill}(1) 
@@ -1111,6 +1196,26 @@
 !/src/bin/pkill/tests/pkill-s_test.sh
 !/src/bin/pkill/tests/pkill-t_test.sh
 !/src/bin/pkill/tests/pkill-x_test.sh
+
+#
+# ps(1)
+#
+!/src/bin/ps/Makefile
+!/src/bin/ps/extern.h
+!/src/bin/ps/fmt.c
+!/src/bin/ps/keyword.c
+!/src/bin/ps/nlist.c
+!/src/bin/ps/print.c
+!/src/bin/ps/ps.1
+!/src/bin/ps/ps.c
+!/src/bin/ps/ps.h
+
+#
+# rm(1)
+#
+!/src/bin/rm/Makefile
+!/src/bin/rm/rm.1
+!/src/bin/rm/rm.c
 
 #
 # sh(1)
@@ -1652,64 +1757,6 @@
 !/src/bin/sh/var.h
 
 #
-# ln(1)
-#
-!/src/bin/ln/Makefile
-!/src/bin/ln/ln.1
-!/src/bin/ln/ln.c
-!/src/bin/ln/symlink.7
-
-#
-# ls(1)
-#
-!/src/bin/ls/Makefile
-!/src/bin/ls/cmp.c
-!/src/bin/ls/extern.h
-!/src/bin/ls/ls.1
-!/src/bin/ls/ls.c
-!/src/bin/ls/ls.h
-!/src/bin/ls/print.c
-!/src/bin/ls/tests/Makefile
-!/src/bin/ls/tests/ls_tests.sh
-!/src/bin/ls/util.c
-
-#
-# mkdir(1)
-#
-!/src/bin/mkdir/Makefile
-!/src/bin/mkdir/mkdir.1
-!/src/bin/mkdir/mkdir.c
-
-#
-# mv(1)
-#
-!/src/bin/mv/Makefile
-!/src/bin/mv/mv.1
-!/src/bin/mv/mv.c
-!/src/bin/mv/tests/Makefile
-!/src/bin/mv/tests/legacy_test.sh
-
-#
-# ps(1)
-#
-!/src/bin/ps/Makefile
-!/src/bin/ps/extern.h
-!/src/bin/ps/fmt.c
-!/src/bin/ps/keyword.c
-!/src/bin/ps/nlist.c
-!/src/bin/ps/print.c
-!/src/bin/ps/ps.1
-!/src/bin/ps/ps.c
-!/src/bin/ps/ps.h
-
-#
-# rm(1)
-#
-!/src/bin/rm/Makefile
-!/src/bin/rm/rm.1
-!/src/bin/rm/rm.c
-
-#
 # sleep(1)
 #
 !/src/bin/sleep/Makefile
@@ -1717,9 +1764,65 @@
 !/src/bin/sleep/sleep.c
 !/src/bin/sleep/tests/Makefile
 
+#
+# stty(1)
+#
+!/src/bin/stty/Makefile
+!/src/bin/stty/cchar.c
+!/src/bin/stty/extern.h
+!/src/bin/stty/gfmt.c
+!/src/bin/stty/key.c
+!/src/bin/stty/modes.c
+!/src/bin/stty/print.c
+!/src/bin/stty/stty.1
+!/src/bin/stty/stty.c
+!/src/bin/stty/stty.h
+!/src/bin/stty/util.c
+
+#
+# test(1)
+#
+!/src/bin/test/Makefile
+!/src/bin/test/test.1
+!/src/bin/test/test.c
+!/src/bin/test/tests/Makefile
+!/src/bin/test/tests/legacy_test.sh
+
+#
+# uuidgen(1)
+#
+!/src/bin/uuidgen/Makefile
+!/src/bin/uuidgen/uuidgen.1
+!/src/bin/uuidgen/uuidgen.c
 
 #
 ## sbin
+#
+# dhclient(8)
+# dmesg(8)
+# etherswitchcfg(8)
+# fsck_ffs(8)
+# fsck_msdosfs(8)
+# ifconfig(8)
+# init(8)
+# kldload(8)
+# kldstat(8)
+# kldunload(8)
+# mdconfig(8)
+# mdmfs(8)
+# mount(8)
+# mount_msdosfs(8)
+# newsfs(8)
+# pfctl(8)
+# pflogd(8)
+# ping(8)
+# ping6(8)
+# reboot(8)
+# route(8)
+# setkey(8)
+# shutdown(8)
+# sysctl(8)
+# umount(8)
 #
 
 #
@@ -2020,6 +2123,33 @@
 #
 ## usr.bin
 #
+# cap_mkdb(1)
+# cpio(1) 
+# ee(1)
+# false(1)
+# grep(1)
+# gzip(1)
+# head(1)
+# hexdump(1)
+# less(1)
+# login(1)
+# man(1)
+# m4(1)
+# nc(1)
+# ncal(1)
+# netstat(1)
+# passwd(1)
+# su(1)
+# systat(1)
+# tail(1)
+# tar(1)
+# tput(1)
+# true(1)
+# tset(1)
+# uname(1)
+# w(1)
+# vmstat(1)
+#
 
 #
 # cap_mkdb(1)
@@ -2258,6 +2388,105 @@
 !/src/usr.bin/nc/nc.1
 !/src/usr.bin/nc/netcat.c
 !/src/usr.bin/nc/socks.c
+
+#
+# ncal(1)
+#
+!/src/usr.bin/ncal/Makefile
+!/src/usr.bin/ncal/ncal.1
+!/src/usr.bin/ncal/ncal.c
+!/src/usr.bin/ncal/tests/Makefile
+!/src/usr.bin/ncal/tests/legacy_test.sh
+!/src/usr.bin/ncal/tests/regress.b-3m200901-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200901-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200902-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200902-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200903-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200903-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200904-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200904-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200905-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200905-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200906-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200906-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200907-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200907-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200908-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200908-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200909-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200909-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200910-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200910-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200911-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200911-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200912-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-3m200912-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-y2008-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-y2008-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-y2009-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-y2009-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-y2010-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-y2010-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-y2011-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.b-y2011-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.f-3A-nhl.out
+!/src/usr.bin/ncal/tests/regress.f-3AB-nhl.out
+!/src/usr.bin/ncal/tests/regress.f-3B-nhl.out
+!/src/usr.bin/ncal/tests/regress.f-3gy-nhl.out
+!/src/usr.bin/ncal/tests/regress.f-3y-nhl.out
+!/src/usr.bin/ncal/tests/regress.f-mgm-nhl.out
+!/src/usr.bin/ncal/tests/regress.f-yA-nhl.out
+!/src/usr.bin/ncal/tests/regress.f-yAB-nhl.out
+!/src/usr.bin/ncal/tests/regress.f-yB-nhl.out
+!/src/usr.bin/ncal/tests/regress.f-ygm-nhl.out
+!/src/usr.bin/ncal/tests/regress.f-ym-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200901-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200901-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200902-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200902-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200903-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200903-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200904-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200904-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200905-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200905-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200906-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200906-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200907-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200907-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200908-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200908-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200909-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200909-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200910-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200910-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200911-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200911-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200912-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-3m200912-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-y2008-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-y2008-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-y2009-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-y2009-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-y2010-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-y2010-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-y2011-jd-nhl.out
+!/src/usr.bin/ncal/tests/regress.r-y2011-md-nhl.out
+!/src/usr.bin/ncal/tests/regress.s-b-3-nhl.out
+!/src/usr.bin/ncal/tests/regress.s-b-A-nhl.out
+!/src/usr.bin/ncal/tests/regress.s-b-AB-nhl.out
+!/src/usr.bin/ncal/tests/regress.s-b-B-nhl.out
+!/src/usr.bin/ncal/tests/regress.s-b-gmgy-nhl.out
+!/src/usr.bin/ncal/tests/regress.s-b-m-nhl.out
+!/src/usr.bin/ncal/tests/regress.s-b-mgy-nhl.out
+!/src/usr.bin/ncal/tests/regress.s-r-3-nhl.out
+!/src/usr.bin/ncal/tests/regress.s-r-A-nhl.out
+!/src/usr.bin/ncal/tests/regress.s-r-AB-nhl.out
+!/src/usr.bin/ncal/tests/regress.s-r-B-nhl.out
+!/src/usr.bin/ncal/tests/regress.s-r-gmgy-nhl.out
+!/src/usr.bin/ncal/tests/regress.s-r-m-nhl.out
+!/src/usr.bin/ncal/tests/regress.s-r-mgy-nhl.out
+!/src/usr.bin/ncal/tests/regress.sh
 
 #
 # netstat(1)
