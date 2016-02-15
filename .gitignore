@@ -1935,7 +1935,6 @@
 # sconfig(8)
 # setkey(8)
 # shutdown(8)
-# sunlabel(8)
 # swapon(8)
 # sysctl(8)
 # umount(8)
@@ -1947,7 +1946,6 @@
 !/src/sbin/Makfile.amd64
 !/src/sbin/Makfile.i386
 !/src/sbin/Makfile.mips
-!/src/sbin/Makfile.sparc64
 
 !/src/sbin/tests/Makefile
 
@@ -2636,14 +2634,6 @@
 !/src/sbin/shutdown/shutdown.c
 
 #
-# sunlabel(8)
-#
-!/src/sbin/sunlabel/Makefile
-!/src/sbin/sunlabel/runtest.sh
-!/src/sbin/sunlabel/sunlabel.8
-!/src/sbin/sunlabel/sunlabel.c
-
-#
 # swapon(8)
 # 
 !/src/sbin/swapon/Makefile
@@ -2667,10 +2657,16 @@
 #
 ## usr.bin
 #
+# ar(1)
+# at(1)
+# awk(1)
+# bluetooth(1)
+# bzip2(1)
 # cap_mkdb(1)
 # cpio(1) 
 # ee(1)
 # false(1)
+# fetch(1)
 # grep(1)
 # gzip(1)
 # head(1)
@@ -2691,9 +2687,83 @@
 # true(1)
 # tset(1)
 # uname(1)
-# w(1)
 # vmstat(1)
+# w(1)
 #
+!/src/usr.bin/Makefile
+!/src/usr.bin/Makefile.inc
+
+#
+# ar(1)
+#
+!/src/usr.bin/ar/Makefile
+!/src/usr.bin/ar/acplex.l
+!/src/usr.bin/ar/acpyacc.y
+!/src/usr.bin/ar/ar.1
+!/src/usr.bin/ar/ar.c
+!/src/usr.bin/ar/ar.h
+!/src/usr.bin/ar/read.c
+!/src/usr.bin/ar/util.c
+!/src/usr.bin/ar/write.c
+
+#
+# at(1)
+#
+!/src/usr.bin/at/LEGAL
+!/src/usr.bin/at/Makefile
+!/src/usr.bin/at/Makefile.inc
+!/src/usr.bin/at/at.c
+!/src/usr.bin/at/at.h
+!/src/usr.bin/at/at.man
+!/src/usr.bin/at/panic.c
+!/src/usr.bin/at/panic.h
+!/src/usr.bin/at/parsetime.c
+!/src/usr.bin/at/parsetime.h
+!/src/usr.bin/at/perm.c
+!/src/usr.bin/at/perm.h
+!/src/usr.bin/at/privs.h
+
+#
+# awk(1)
+#
+!/src/usr.bin/awk/Makefile
+!/src/usr.bin/awk/one-true-awk/FIXES
+!/src/usr.bin/awk/one-true-awk/FREEBSD-upgrade
+!/src/usr.bin/awk/one-true-awk/README
+!/src/usr.bin/awk/one-true-awk/awk.1
+!/src/usr.bin/awk/one-true-awk/awk.h
+!/src/usr.bin/awk/one-true-awk/awkgram.y
+!/src/usr.bin/awk/one-true-awk/b.c
+!/src/usr.bin/awk/one-true-awk/lex.c
+!/src/usr.bin/awk/one-true-awk/lib.c
+!/src/usr.bin/awk/one-true-awk/main.c
+!/src/usr.bin/awk/one-true-awk/makefile
+!/src/usr.bin/awk/one-true-awk/maketab.c
+!/src/usr.bin/awk/one-true-awk/parse.c
+!/src/usr.bin/awk/one-true-awk/proto.h
+!/src/usr.bin/awk/one-true-awk/run.c
+!/src/usr.bin/awk/one-true-awk/tran.c
+
+#
+# bluetooth(1)
+#
+!/src/usr.bin/bluetooth/Makefile
+!/src/usr.bin/bluetooth/Makefile.inc
+!/src/usr.bin/bluetooth/bthost/Makefile
+!/src/usr.bin/bluetooth/bthost/bthost.1
+!/src/usr.bin/bluetooth/bthost/bthost.c
+!/src/usr.bin/bluetooth/btsockstat/Makefile
+!/src/usr.bin/bluetooth/btsockstat/btsockstat.1
+!/src/usr.bin/bluetooth/btsockstat/btsockstat.c
+!/src/usr.bin/bluetooth/rfcomm_sppd/Makefile
+!/src/usr.bin/bluetooth/rfcomm_sppd/rfcomm_sdp.c
+!/src/usr.bin/bluetooth/rfcomm_sppd/rfcomm_sppd.1
+!/src/usr.bin/bluetooth/rfcomm_sppd/rfcomm_sppd.c
+
+#
+# bzip2(1)
+#
+!/src/usr.bin/bzip2/Makefile
 
 #
 # cap_mkdb(1)
@@ -2727,6 +2797,13 @@
 !/src/usr.bin/false/Makefile
 !/src/usr.bin/false/false.1
 !/src/usr.bin/false/false.c
+
+#
+# fetch(1)
+#
+!/src/usr.bin/fetch/Makefile
+!/src/usr.bin/fetch/fetch.1
+!/src/usr.bin/fetch/fetch.c
 
 #
 # grep(1)
