@@ -14,6 +14,7 @@ SUBDIR=	ar \
 	awk \
 	bzip2 \
 	cap_mkdb \
+	cut \
 	false \
 	fetch \
 	grep \
@@ -27,14 +28,18 @@ SUBDIR=	ar \
 	ncal \
 	netstat \
 	passwd \
+	sed \
+	sort \
 	su \
 	systat \
 	tail \
 	tar \
+	touch \
 	tput \
 	true \
 	tset \
 	uname \
+	uniq \
 	vmstat \
 	w 
 
