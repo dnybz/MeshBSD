@@ -2666,6 +2666,7 @@
 #
 ## usr.bin
 #
+# alias(1)
 # ar(1)
 # at(1)
 # awk(1)
@@ -2691,7 +2692,10 @@
 # ncal(1)
 # netstat(1)
 # passwd(1)
+# printenv(1)
+# printf(1)
 # sed(1)
+# sockstat(1)
 # sort(1)
 # su(1)
 # systat(1)
@@ -2705,9 +2709,16 @@
 # uniq(1)
 # vmstat(1)
 # w(1)
+# wall(1)
 #
 !/src/usr.bin/Makefile
 !/src/usr.bin/Makefile.inc
+
+#
+# alias(1)
+#
+!/src/usr.bin/alias/Makefile
+!/src/usr.bin/alias/generic.sh
 
 #
 # ar(1)
@@ -3180,6 +3191,36 @@
 !/src/usr.bin/passwd/passwd.c
 
 #
+# printenv(1)
+#
+!/src/usr.bin/printenv/Makefile
+!/src/usr.bin/printenv/printenv.1
+!/src/usr.bin/printenv/printenv.c
+
+#
+# printf(1)
+#
+!/src/usr.bin/printf/Makefile
+!/src/usr.bin/printf/printf.1
+!/src/usr.bin/printf/printf.c
+!/src/usr.bin/printf/tests/Makefile
+!/src/usr.bin/printf/tests/legacy_test.sh
+!/src/usr.bin/printf/tests/regress.b.out
+!/src/usr.bin/printf/tests/regress.d.out
+!/src/usr.bin/printf/tests/regress.f.out
+!/src/usr.bin/printf/tests/regress.l1.out
+!/src/usr.bin/printf/tests/regress.l2.out
+!/src/usr.bin/printf/tests/regress.m1.out
+!/src/usr.bin/printf/tests/regress.m2.out
+!/src/usr.bin/printf/tests/regress.m3.out
+!/src/usr.bin/printf/tests/regress.m4.out
+!/src/usr.bin/printf/tests/regress.m5.out
+!/src/usr.bin/printf/tests/regress.missingpos1.out
+!/src/usr.bin/printf/tests/regress.s.out
+!/src/usr.bin/printf/tests/regress.sh
+!/src/usr.bin/printf/tests/regress.zero.out
+
+#
 # sed(1)
 #
 !/src/usr.bin/sed/Makefile
@@ -3353,6 +3394,13 @@
 !/src/usr.bin/sed/tests/regress.y.out
 
 #
+# sockstat(1)
+#
+!/src/usr.bin/sockstat/Makefile
+!/src/usr.bin/sockstat/sockstat.1
+!/src/usr.bin/sockstat/sockstat.c
+
+#
 # sort(1)
 #
 !/src/usr.bin/sort/Makefile
@@ -3480,6 +3528,24 @@
 #
 # uniq(1)
 #
+!/src/usr.sbin/uniq/Makefile
+!/src/usr.sbin/uniq/uniq.1
+!/src/usr.sbin/uniq/uniq.c
+
+#
+# unzip(1)
+#
+!/src/usr.bin/unzip/Makefile
+!/src/usr.bin/unzip/unzip.1
+!/src/usr.bin/unzip/unzip.c
+
+#
+# vmstat(1)
+#
+!/src/usr.bin/vmstat/Makefile
+!/src/usr.bin/vmstat/vmstat.8
+!/src/usr.bin/vmstat/vmstat.c
+
 
 #
 # w(1)
@@ -3493,11 +3559,13 @@
 !/src/usr.bin/w/w.c
 
 #
-# vmstat(1)
+# wall(1)
 #
-!/src/usr.bin/vmstat/Makefile
-!/src/usr.bin/vmstat/vmstat.8
-!/src/usr.bin/vmstat/vmstat.c
+!/src/usr.bin/wall/Makefile
+!/src/usr.bin/wall/ttymsg.c
+!/src/usr.bin/wall/ttymsg.h
+!/src/usr.bin/wall/wall.1
+!/src/usr.bin/wall/wall.c
 
 #
 ## usr.sbin

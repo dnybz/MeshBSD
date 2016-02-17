@@ -9,7 +9,8 @@
 # Moved to secure: bdes
 #
 
-SUBDIR=	ar \
+SUBDIR=	alias \
+	ar \
 	at \
 	awk \
 	bzip2 \
@@ -28,7 +29,10 @@ SUBDIR=	ar \
 	ncal \
 	netstat \
 	passwd \
+	printenv \
+	printf \
 	sed \
+	sockstat \
 	sort \
 	su \
 	systat \
@@ -40,8 +44,10 @@ SUBDIR=	ar \
 	tset \
 	uname \
 	uniq \
+	unzip \
 	vmstat \
-	w 
+	w \
+	wall 
 
 # NB: keep these sorted by MK_* knobs
 
