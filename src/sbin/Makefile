@@ -5,7 +5,8 @@
 
 # XXX MISSING:		icheck ncheck
 
-SUBDIR=camcontrol \
+SUBDIR=adjkerntz \
+	camcontrol \
 	comcontrol \
 	conscontrol \
 	devfs \

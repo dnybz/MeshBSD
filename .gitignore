@@ -1882,6 +1882,7 @@
 #
 ## sbin
 #
+# adjkerntz(8)
 # bsdlbel(8)
 # camcontrol(8)
 # comcontrol(8)
@@ -1948,6 +1949,14 @@
 !/src/sbin/Makfile.mips
 
 !/src/sbin/tests/Makefile
+
+#
+# adjkerntz(8)
+#
+!/src/sbin/adjkerntz/Makefile
+!/src/sbin/adjkerntz/adjkerntz.8
+!/src/sbin/adjkerntz/adjkerntz.c
+!/src/sbin/adjkerntz/pathnames.h
 
 #
 # bsdlabel(8)
@@ -2660,10 +2669,13 @@
 # ar(1)
 # at(1)
 # awk(1)
+# basename(1)
 # bluetooth(1)
 # bzip2(1)
 # cap_mkdb(1)
-# cpio(1) 
+# cpio(1)
+# cut(1)
+# dirname(1)
 # ee(1)
 # false(1)
 # fetch(1)
@@ -2679,14 +2691,18 @@
 # ncal(1)
 # netstat(1)
 # passwd(1)
+# sed(1)
+# sort(1)
 # su(1)
 # systat(1)
 # tail(1)
 # tar(1)
+# touch(1)
 # tput(1)
 # true(1)
 # tset(1)
 # uname(1)
+# uniq(1)
 # vmstat(1)
 # w(1)
 #
@@ -2745,6 +2761,14 @@
 !/src/usr.bin/awk/one-true-awk/tran.c
 
 #
+# basename(1)
+#
+!/src/usr.bin/basename/Makefile
+!/src/usr.bin/basename/basename.1
+!/src/usr.bin/basename/basename.c
+!/src/usr.bin/basename/tests/Makefile
+
+#
 # bluetooth(1)
 #
 !/src/usr.bin/bluetooth/Makefile
@@ -2778,6 +2802,21 @@
 !/src/usr.bin/cpio/Makefile
 !/src/usr.bin/cpio/tests/Makefile
 !/src/usr.bin/cpio/tests/functional_test.sh
+
+#
+# cut(1)
+#
+!/src/usr.bin/cut/Makefile
+!/src/usr.bin/cut/cut.1
+!/src/usr.bin/cut/cut.c
+!/src/usr.bin/cut/tests/Makefile
+
+#
+# dirname(1)
+#
+!/src/usr.bin/dirname/Makefile
+!/src/usr.bin/dirname/dirname.c
+!/src/usr.bin/dirname/tests/Makefile
 
 #
 # ee(1)
@@ -3141,6 +3180,201 @@
 !/src/usr.bin/passwd/passwd.c
 
 #
+# sed(1)
+#
+!/src/usr.bin/sed/Makefile
+!/src/usr.bin/sed/POSIX
+!/src/usr.bin/sed/compile.c
+!/src/usr.bin/sed/defs.h
+!/src/usr.bin/sed/extern.h
+!/src/usr.bin/sed/main.c
+!/src/usr.bin/sed/misc.c
+!/src/usr.bin/sed/process.c
+!/src/usr.bin/sed/sed.1
+!/src/usr.bin/sed/tests/Makefile
+!/src/usr.bin/sed/tests/hanoi.sed
+!/src/usr.bin/sed/tests/inplace_race_test.sh
+!/src/usr.bin/sed/tests/legacy_test.sh
+!/src/usr.bin/sed/tests/math.sed
+!/src/usr.bin/sed/tests/multi_test.sh
+!/src/usr.bin/sed/tests/regress.G.out
+!/src/usr.bin/sed/tests/regress.P.out
+!/src/usr.bin/sed/tests/regress.b2a.out
+!/src/usr.bin/sed/tests/regress.bcb.out
+!/src/usr.bin/sed/tests/regress.c0.out
+!/src/usr.bin/sed/tests/regress.c1.out
+!/src/usr.bin/sed/tests/regress.c2.out
+!/src/usr.bin/sed/tests/regress.c3.out
+!/src/usr.bin/sed/tests/regress.hanoi.out
+!/src/usr.bin/sed/tests/regress.icase1.out
+!/src/usr.bin/sed/tests/regress.icase2.out
+!/src/usr.bin/sed/tests/regress.icase3.out
+!/src/usr.bin/sed/tests/regress.icase4.out
+!/src/usr.bin/sed/tests/regress.in
+!/src/usr.bin/sed/tests/regress.math.out
+!/src/usr.bin/sed/tests/regress.multitest.out/1.1
+!/src/usr.bin/sed/tests/regress.multitest.out/1.10
+!/src/usr.bin/sed/tests/regress.multitest.out/1.11
+!/src/usr.bin/sed/tests/regress.multitest.out/1.12
+!/src/usr.bin/sed/tests/regress.multitest.out/1.13
+!/src/usr.bin/sed/tests/regress.multitest.out/1.14
+!/src/usr.bin/sed/tests/regress.multitest.out/1.15
+!/src/usr.bin/sed/tests/regress.multitest.out/1.16
+!/src/usr.bin/sed/tests/regress.multitest.out/1.17
+!/src/usr.bin/sed/tests/regress.multitest.out/1.18
+!/src/usr.bin/sed/tests/regress.multitest.out/1.2
+!/src/usr.bin/sed/tests/regress.multitest.out/1.3
+!/src/usr.bin/sed/tests/regress.multitest.out/1.4
+!/src/usr.bin/sed/tests/regress.multitest.out/1.4.1
+!/src/usr.bin/sed/tests/regress.multitest.out/1.5
+!/src/usr.bin/sed/tests/regress.multitest.out/1.6
+!/src/usr.bin/sed/tests/regress.multitest.out/1.7
+!/src/usr.bin/sed/tests/regress.multitest.out/1.8
+!/src/usr.bin/sed/tests/regress.multitest.out/1.9
+!/src/usr.bin/sed/tests/regress.multitest.out/2.1
+!/src/usr.bin/sed/tests/regress.multitest.out/2.10
+!/src/usr.bin/sed/tests/regress.multitest.out/2.11
+!/src/usr.bin/sed/tests/regress.multitest.out/2.12
+!/src/usr.bin/sed/tests/regress.multitest.out/2.13
+!/src/usr.bin/sed/tests/regress.multitest.out/2.14
+!/src/usr.bin/sed/tests/regress.multitest.out/2.15
+!/src/usr.bin/sed/tests/regress.multitest.out/2.16
+!/src/usr.bin/sed/tests/regress.multitest.out/2.17
+!/src/usr.bin/sed/tests/regress.multitest.out/2.18
+!/src/usr.bin/sed/tests/regress.multitest.out/2.19
+!/src/usr.bin/sed/tests/regress.multitest.out/2.2
+!/src/usr.bin/sed/tests/regress.multitest.out/2.20
+!/src/usr.bin/sed/tests/regress.multitest.out/2.21
+!/src/usr.bin/sed/tests/regress.multitest.out/2.22
+!/src/usr.bin/sed/tests/regress.multitest.out/2.23
+!/src/usr.bin/sed/tests/regress.multitest.out/2.3
+!/src/usr.bin/sed/tests/regress.multitest.out/2.4
+!/src/usr.bin/sed/tests/regress.multitest.out/2.5
+!/src/usr.bin/sed/tests/regress.multitest.out/2.6
+!/src/usr.bin/sed/tests/regress.multitest.out/2.7
+!/src/usr.bin/sed/tests/regress.multitest.out/2.8
+!/src/usr.bin/sed/tests/regress.multitest.out/2.9
+!/src/usr.bin/sed/tests/regress.multitest.out/3.1
+!/src/usr.bin/sed/tests/regress.multitest.out/3.2
+!/src/usr.bin/sed/tests/regress.multitest.out/3.3
+!/src/usr.bin/sed/tests/regress.multitest.out/3.4
+!/src/usr.bin/sed/tests/regress.multitest.out/4.1
+!/src/usr.bin/sed/tests/regress.multitest.out/4.2
+!/src/usr.bin/sed/tests/regress.multitest.out/4.3
+!/src/usr.bin/sed/tests/regress.multitest.out/4.4
+!/src/usr.bin/sed/tests/regress.multitest.out/4.5
+!/src/usr.bin/sed/tests/regress.multitest.out/4.6
+!/src/usr.bin/sed/tests/regress.multitest.out/4.7
+!/src/usr.bin/sed/tests/regress.multitest.out/4.8
+!/src/usr.bin/sed/tests/regress.multitest.out/5.1
+!/src/usr.bin/sed/tests/regress.multitest.out/5.2
+!/src/usr.bin/sed/tests/regress.multitest.out/5.3
+!/src/usr.bin/sed/tests/regress.multitest.out/5.4
+!/src/usr.bin/sed/tests/regress.multitest.out/5.5
+!/src/usr.bin/sed/tests/regress.multitest.out/5.6
+!/src/usr.bin/sed/tests/regress.multitest.out/5.7
+!/src/usr.bin/sed/tests/regress.multitest.out/5.8
+!/src/usr.bin/sed/tests/regress.multitest.out/6.1
+!/src/usr.bin/sed/tests/regress.multitest.out/6.2
+!/src/usr.bin/sed/tests/regress.multitest.out/6.3
+!/src/usr.bin/sed/tests/regress.multitest.out/6.4
+!/src/usr.bin/sed/tests/regress.multitest.out/6.5
+!/src/usr.bin/sed/tests/regress.multitest.out/6.6
+!/src/usr.bin/sed/tests/regress.multitest.out/7.1
+!/src/usr.bin/sed/tests/regress.multitest.out/7.2
+!/src/usr.bin/sed/tests/regress.multitest.out/7.3
+!/src/usr.bin/sed/tests/regress.multitest.out/7.4
+!/src/usr.bin/sed/tests/regress.multitest.out/7.5
+!/src/usr.bin/sed/tests/regress.multitest.out/7.6
+!/src/usr.bin/sed/tests/regress.multitest.out/7.7
+!/src/usr.bin/sed/tests/regress.multitest.out/7.8
+!/src/usr.bin/sed/tests/regress.multitest.out/8.1
+!/src/usr.bin/sed/tests/regress.multitest.out/8.10
+!/src/usr.bin/sed/tests/regress.multitest.out/8.11
+!/src/usr.bin/sed/tests/regress.multitest.out/8.12
+!/src/usr.bin/sed/tests/regress.multitest.out/8.13
+!/src/usr.bin/sed/tests/regress.multitest.out/8.14
+!/src/usr.bin/sed/tests/regress.multitest.out/8.15
+!/src/usr.bin/sed/tests/regress.multitest.out/8.16
+!/src/usr.bin/sed/tests/regress.multitest.out/8.17
+!/src/usr.bin/sed/tests/regress.multitest.out/8.18
+!/src/usr.bin/sed/tests/regress.multitest.out/8.19
+!/src/usr.bin/sed/tests/regress.multitest.out/8.2
+!/src/usr.bin/sed/tests/regress.multitest.out/8.20
+!/src/usr.bin/sed/tests/regress.multitest.out/8.21
+!/src/usr.bin/sed/tests/regress.multitest.out/8.22
+!/src/usr.bin/sed/tests/regress.multitest.out/8.23
+!/src/usr.bin/sed/tests/regress.multitest.out/8.3
+!/src/usr.bin/sed/tests/regress.multitest.out/8.4
+!/src/usr.bin/sed/tests/regress.multitest.out/8.5
+!/src/usr.bin/sed/tests/regress.multitest.out/8.6
+!/src/usr.bin/sed/tests/regress.multitest.out/8.7
+!/src/usr.bin/sed/tests/regress.multitest.out/8.8
+!/src/usr.bin/sed/tests/regress.multitest.out/8.9
+!/src/usr.bin/sed/tests/regress.multitest.out/9.1
+!/src/usr.bin/sed/tests/regress.multitest.out/9.10
+!/src/usr.bin/sed/tests/regress.multitest.out/9.11
+!/src/usr.bin/sed/tests/regress.multitest.out/9.12
+!/src/usr.bin/sed/tests/regress.multitest.out/9.13
+!/src/usr.bin/sed/tests/regress.multitest.out/9.14
+!/src/usr.bin/sed/tests/regress.multitest.out/9.15
+!/src/usr.bin/sed/tests/regress.multitest.out/9.16
+!/src/usr.bin/sed/tests/regress.multitest.out/9.17
+!/src/usr.bin/sed/tests/regress.multitest.out/9.18
+!/src/usr.bin/sed/tests/regress.multitest.out/9.19
+!/src/usr.bin/sed/tests/regress.multitest.out/9.2
+!/src/usr.bin/sed/tests/regress.multitest.out/9.20
+!/src/usr.bin/sed/tests/regress.multitest.out/9.21
+!/src/usr.bin/sed/tests/regress.multitest.out/9.22
+!/src/usr.bin/sed/tests/regress.multitest.out/9.23
+!/src/usr.bin/sed/tests/regress.multitest.out/9.24
+!/src/usr.bin/sed/tests/regress.multitest.out/9.25
+!/src/usr.bin/sed/tests/regress.multitest.out/9.26
+!/src/usr.bin/sed/tests/regress.multitest.out/9.27
+!/src/usr.bin/sed/tests/regress.multitest.out/9.28
+!/src/usr.bin/sed/tests/regress.multitest.out/9.29
+!/src/usr.bin/sed/tests/regress.multitest.out/9.3
+!/src/usr.bin/sed/tests/regress.multitest.out/9.30
+!/src/usr.bin/sed/tests/regress.multitest.out/9.31
+!/src/usr.bin/sed/tests/regress.multitest.out/9.4
+!/src/usr.bin/sed/tests/regress.multitest.out/9.5
+!/src/usr.bin/sed/tests/regress.multitest.out/9.6
+!/src/usr.bin/sed/tests/regress.multitest.out/9.7
+!/src/usr.bin/sed/tests/regress.multitest.out/9.8
+!/src/usr.bin/sed/tests/regress.multitest.out/9.9
+!/src/usr.bin/sed/tests/regress.multitest.out/Makefile
+!/src/usr.bin/sed/tests/regress.not.out
+!/src/usr.bin/sed/tests/regress.psl.out
+!/src/usr.bin/sed/tests/regress.s3.out
+!/src/usr.bin/sed/tests/regress.s4.out
+!/src/usr.bin/sed/tests/regress.s5.out
+!/src/usr.bin/sed/tests/regress.sg.out
+!/src/usr.bin/sed/tests/regress.sh
+!/src/usr.bin/sed/tests/regress.y.out
+
+#
+# sort(1)
+#
+!/src/usr.bin/sort/Makefile
+!/src/usr.bin/sort/bwstring.c
+!/src/usr.bin/sort/bwstring.h
+!/src/usr.bin/sort/coll.c
+!/src/usr.bin/sort/coll.h
+!/src/usr.bin/sort/file.c
+!/src/usr.bin/sort/file.h
+!/src/usr.bin/sort/mem.c
+!/src/usr.bin/sort/mem.h
+!/src/usr.bin/sort/nls/C.msg
+!/src/usr.bin/sort/nls/hu_HU.ISO8859-2.msg
+!/src/usr.bin/sort/radixsort.c
+!/src/usr.bin/sort/radixsort.h
+!/src/usr.bin/sort/sort.1.in
+!/src/usr.bin/sort/sort.c
+!/src/usr.bin/sort/sort.h
+!/src/usr.bin/sort/vsort.c
+!/src/usr.bin/sort/vsort.h
+
+#
 # su(1)
 #
 !/src/usr.bin/su/Makefile
@@ -3194,6 +3428,14 @@
 !/src/usr.bin/tail/tail.c
 
 #
+# touch(1)
+#
+!/src/usr.bin/touch/Makefile
+!/src/usr.bin/touch/touch.1
+!/src/usr.bin/touch/touch.c
+
+
+#
 # tar(1)
 #
 !/src/usr.bin/tar/Makefile
@@ -3234,6 +3476,10 @@
 !/src/usr.bin/uname/Makefile
 !/src/usr.bin/uname/uname.1
 !/src/usr.bin/uname/uname.c
+
+#
+# uniq(1)
+#
 
 #
 # w(1)
