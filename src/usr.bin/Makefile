@@ -12,6 +12,7 @@
 SUBDIR=	alias \
 	ar \
 	at \
+	ath \
 	awk \
 	bzip2 \
 	cap_mkdb \
