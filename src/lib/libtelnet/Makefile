@@ -1,0 +1,26 @@
+#	From: @(#)Makefile	8.2 (Berkeley) 12/15/93
+# $FreeBSD: head/lib/libtelnet/Makefile 284345 2015-06-13 19:20:56Z sjg $
+
+.include <src.opts.mk>
+
+LIB=		telnet
+
+INTERNALLIB=
+
+SRCS=		genget.c getent.c misc.c
+CFLAGS+=	-I$${.CURDIR}
+
+WARNS?=		2
+
+.if ${MK_OPENSSL} != "no"
+SRCS+=		encrypt.c auth.c enc_des.c sra.c pk.c
+CFLAGS+=	-DENCRYPTION -DAUTHENTICATION -DSRA
+.endif
+
+.if ${MK_KERBEROS_SUPPORT} != "no"
+SRCS+=		kerberos5.c
+CFLAGS+=	-DKRB5 -I${KRB5DIR}/lib/krb5 -I${KRB5OBJDIR} -I${ASN1OBJDIR}
+CFLAGS+=	-DFORWARD -Dnet_write=telnet_net_write
+.endif
+
+.include <bsd.lib.mk>

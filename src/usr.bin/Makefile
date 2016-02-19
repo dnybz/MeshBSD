@@ -25,8 +25,10 @@ SUBDIR=	alias \
 	gzip \
 	head \
 	hexdump \
+	host \
 	less \
 	login \
+	logger \
 	m4 \
 	man \
 	ncal \
@@ -42,6 +44,7 @@ SUBDIR=	alias \
 	systat \
 	tail \
 	tar \
+	tee \
 	touch \
 	tput \
 	true \

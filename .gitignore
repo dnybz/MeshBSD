@@ -961,6 +961,33 @@
 !/src/lib/libutil/stat_flags.3
 !/src/lib/libutil/util.h
 
+#
+## libtelnet(3)
+#
+!/src/lib/libtelnet/Makefile
+!/src/lib/libtelnet/auth-proto.h
+!/src/lib/libtelnet/auth.c
+!/src/lib/libtelnet/auth.h
+!/src/lib/libtelnet/enc-proto.h
+!/src/lib/libtelnet/enc_des.c
+!/src/lib/libtelnet/encrypt.c
+!/src/lib/libtelnet/encrypt.h
+!/src/lib/libtelnet/genget.c
+!/src/lib/libtelnet/getent.c
+!/src/lib/libtelnet/kerberos.c
+!/src/lib/libtelnet/kerberos5.c
+!/src/lib/libtelnet/key-proto.h
+!/src/lib/libtelnet/krb4encpwd.c
+!/src/lib/libtelnet/misc-proto.h
+!/src/lib/libtelnet/misc.c
+!/src/lib/libtelnet/misc.h
+!/src/lib/libtelnet/pk.c
+!/src/lib/libtelnet/pk.h
+!/src/lib/libtelnet/read_password.c
+!/src/lib/libtelnet/rsaencpwd.c
+!/src/lib/libtelnet/sra.c
+
+
 ##
 ## Daemons and (subset of) Unix Toolbox.
 ##
@@ -2675,7 +2702,9 @@
 # gzip(1)
 # head(1)
 # hexdump(1)
+# host(1)
 # less(1)
+# logger(1)
 # login(1)
 # man(1)
 # m4(1)
@@ -2693,6 +2722,8 @@
 # systat(1)
 # tail(1)
 # tar(1)
+# tee(1)
+# telnet(1)
 # touch(1)
 # tput(1)
 # true(1)
@@ -3056,6 +3087,150 @@
 !/src/usr.bin/hexdump/parse.c
 
 #
+# host(1)
+#
+!/src/usr.bin/host/Makefile
+!/src/usr.bin/host/ldns-host/Makefile
+!/src/usr.bin/host/ldns-host/ldns-host.1
+!/src/usr.bin/host/ldns-host/ldns-host.c
+!/src/usr.bin/host/ldns/Changelog
+!/src/usr.bin/host/ldns/LICENSE
+!/src/usr.bin/host/ldns/Makefile.in
+!/src/usr.bin/host/ldns/README
+!/src/usr.bin/host/ldns/README.git
+!/src/usr.bin/host/ldns/README.snapshots
+!/src/usr.bin/host/ldns/aclocal.m4
+!/src/usr.bin/host/ldns/acx_nlnetlabs.m4
+!/src/usr.bin/host/ldns/ax_pkg_swig.m4
+!/src/usr.bin/host/ldns/ax_python_devel.m4
+!/src/usr.bin/host/ldns/buffer.c
+!/src/usr.bin/host/ldns/compat/b64_ntop.c
+!/src/usr.bin/host/ldns/compat/b64_pton.c
+!/src/usr.bin/host/ldns/compat/calloc.c
+!/src/usr.bin/host/ldns/compat/ctime_r.c
+!/src/usr.bin/host/ldns/compat/fake-rfc2553.c
+!/src/usr.bin/host/ldns/compat/fake-rfc2553.h
+!/src/usr.bin/host/ldns/compat/gmtime_r.c
+!/src/usr.bin/host/ldns/compat/inet_aton.c
+!/src/usr.bin/host/ldns/compat/inet_ntop.c
+!/src/usr.bin/host/ldns/compat/inet_pton.c
+!/src/usr.bin/host/ldns/compat/isascii.c
+!/src/usr.bin/host/ldns/compat/isblank.c
+!/src/usr.bin/host/ldns/compat/localtime_r.c
+!/src/usr.bin/host/ldns/compat/malloc.c
+!/src/usr.bin/host/ldns/compat/memmove.c
+!/src/usr.bin/host/ldns/compat/realloc.c
+!/src/usr.bin/host/ldns/compat/snprintf.c
+!/src/usr.bin/host/ldns/compat/strlcpy.c
+!/src/usr.bin/host/ldns/compat/timegm.c
+!/src/usr.bin/host/ldns/config.guess
+!/src/usr.bin/host/ldns/config.sub
+!/src/usr.bin/host/ldns/configure
+!/src/usr.bin/host/ldns/configure.ac
+!/src/usr.bin/host/ldns/dane.c
+!/src/usr.bin/host/ldns/dname.c
+!/src/usr.bin/host/ldns/dnssec.c
+!/src/usr.bin/host/ldns/dnssec_sign.c
+!/src/usr.bin/host/ldns/dnssec_verify.c
+!/src/usr.bin/host/ldns/dnssec_zone.c
+!/src/usr.bin/host/ldns/drill/ChangeLog.22-nov-2005
+!/src/usr.bin/host/ldns/drill/Makefile.in
+!/src/usr.bin/host/ldns/drill/README
+!/src/usr.bin/host/ldns/drill/REGRESSIONS
+!/src/usr.bin/host/ldns/drill/chasetrace.c
+!/src/usr.bin/host/ldns/drill/config.h
+!/src/usr.bin/host/ldns/drill/config.h.in
+!/src/usr.bin/host/ldns/drill/configure
+!/src/usr.bin/host/ldns/drill/configure.ac
+!/src/usr.bin/host/ldns/drill/dnssec.c
+!/src/usr.bin/host/ldns/drill/drill.1
+!/src/usr.bin/host/ldns/drill/drill.1.in
+!/src/usr.bin/host/ldns/drill/drill.c
+!/src/usr.bin/host/ldns/drill/drill.h
+!/src/usr.bin/host/ldns/drill/drill_util.c
+!/src/usr.bin/host/ldns/drill/drill_util.h
+!/src/usr.bin/host/ldns/drill/error.c
+!/src/usr.bin/host/ldns/drill/install-sh
+!/src/usr.bin/host/ldns/drill/root.c
+!/src/usr.bin/host/ldns/drill/securetrace.c
+!/src/usr.bin/host/ldns/drill/work.c
+!/src/usr.bin/host/ldns/duration.c
+!/src/usr.bin/host/ldns/error.c
+!/src/usr.bin/host/ldns/freebsd-configure.sh
+!/src/usr.bin/host/ldns/higher.c
+!/src/usr.bin/host/ldns/host2str.c
+!/src/usr.bin/host/ldns/host2wire.c
+!/src/usr.bin/host/ldns/install-sh
+!/src/usr.bin/host/ldns/keys.c
+!/src/usr.bin/host/ldns/ldns/buffer.h
+!/src/usr.bin/host/ldns/ldns/common.h
+!/src/usr.bin/host/ldns/ldns/common.h.in
+!/src/usr.bin/host/ldns/ldns/config.h
+!/src/usr.bin/host/ldns/ldns/config.h.in
+!/src/usr.bin/host/ldns/ldns/dane.h
+!/src/usr.bin/host/ldns/ldns/dname.h
+!/src/usr.bin/host/ldns/ldns/dnssec.h
+!/src/usr.bin/host/ldns/ldns/dnssec_sign.h
+!/src/usr.bin/host/ldns/ldns/dnssec_verify.h
+!/src/usr.bin/host/ldns/ldns/dnssec_zone.h
+!/src/usr.bin/host/ldns/ldns/duration.h
+!/src/usr.bin/host/ldns/ldns/error.h
+!/src/usr.bin/host/ldns/ldns/higher.h
+!/src/usr.bin/host/ldns/ldns/host2str.h
+!/src/usr.bin/host/ldns/ldns/host2wire.h
+!/src/usr.bin/host/ldns/ldns/keys.h
+!/src/usr.bin/host/ldns/ldns/ldns.h
+!/src/usr.bin/host/ldns/ldns/net.h
+!/src/usr.bin/host/ldns/ldns/net.h.in
+!/src/usr.bin/host/ldns/ldns/packet.h
+!/src/usr.bin/host/ldns/ldns/parse.h
+!/src/usr.bin/host/ldns/ldns/radix.h
+!/src/usr.bin/host/ldns/ldns/rbtree.h
+!/src/usr.bin/host/ldns/ldns/rdata.h
+!/src/usr.bin/host/ldns/ldns/resolver.h
+!/src/usr.bin/host/ldns/ldns/rr.h
+!/src/usr.bin/host/ldns/ldns/rr_functions.h
+!/src/usr.bin/host/ldns/ldns/sha1.h
+!/src/usr.bin/host/ldns/ldns/sha2.h
+!/src/usr.bin/host/ldns/ldns/str2host.h
+!/src/usr.bin/host/ldns/ldns/tsig.h
+!/src/usr.bin/host/ldns/ldns/update.h
+!/src/usr.bin/host/ldns/ldns/util.h
+!/src/usr.bin/host/ldns/ldns/util.h.in
+!/src/usr.bin/host/ldns/ldns/wire2host.h
+!/src/usr.bin/host/ldns/ldns/zone.h
+!/src/usr.bin/host/ldns/libdns.doxygen
+!/src/usr.bin/host/ldns/libdns.vim
+!/src/usr.bin/host/ldns/linktest.c
+!/src/usr.bin/host/ldns/ltmain.sh
+!/src/usr.bin/host/ldns/m4/libtool.m4
+!/src/usr.bin/host/ldns/m4/ltoptions.m4
+!/src/usr.bin/host/ldns/m4/ltsugar.m4
+!/src/usr.bin/host/ldns/m4/ltversion.m4
+!/src/usr.bin/host/ldns/m4/lt~obsolete.m4
+!/src/usr.bin/host/ldns/net.c
+!/src/usr.bin/host/ldns/packaging/fedora/ldns.spec
+!/src/usr.bin/host/ldns/packaging/ldns-config.1
+!/src/usr.bin/host/ldns/packaging/ldns-config.in
+!/src/usr.bin/host/ldns/packaging/libldns.pc.in
+!/src/usr.bin/host/ldns/packet.c
+!/src/usr.bin/host/ldns/parse.c
+!/src/usr.bin/host/ldns/radix.c
+!/src/usr.bin/host/ldns/rbtree.c
+!/src/usr.bin/host/ldns/rdata.c
+!/src/usr.bin/host/ldns/resolver.c
+!/src/usr.bin/host/ldns/rr.c
+!/src/usr.bin/host/ldns/rr_functions.c
+!/src/usr.bin/host/ldns/sha1.c
+!/src/usr.bin/host/ldns/sha2.c
+!/src/usr.bin/host/ldns/str2host.c
+!/src/usr.bin/host/ldns/tsig.c
+!/src/usr.bin/host/ldns/update.c
+!/src/usr.bin/host/ldns/util.c
+!/src/usr.bin/host/ldns/wire2host.c
+!/src/usr.bin/host/ldns/zone.c
+
+#
 # less(1)
 #
 !/src/usr.bin/less/Makefile
@@ -3137,6 +3312,13 @@
 !/src/usr.bin/login/login_audit.c
 !/src/usr.bin/login/login_fbtab.c
 !/src/usr.bin/login/pathnames.h
+
+#
+# logger(1)
+#
+!/src/usr.bin/logger/Makefile
+!/src/usr.bin/logger/logger.1
+!/src/usr.bin/logger/logger.c
 
 #
 # man(1)
@@ -3617,19 +3799,47 @@
 !/src/usr.bin/tail/tail.c
 
 #
-# touch(1)
-#
-!/src/usr.bin/touch/Makefile
-!/src/usr.bin/touch/touch.1
-!/src/usr.bin/touch/touch.c
-
-
-#
 # tar(1)
 #
 !/src/usr.bin/tar/Makefile
 !/src/usr.bin/tar/tests/Makefile
 !/src/usr.bin/tar/tests/functional_test.sh
+
+#
+# tee(1)
+#
+!/src/usr.bin/tee/Makefile
+!/src/usr.bin/tee/tee.1
+!/src/usr.bin/tee/tee.c
+
+#
+# telnet(1)
+#
+!/src/usr.bin/telnet/Makefile
+!/src/usr.bin/telnet/authenc.c
+!/src/usr.bin/telnet/baud.h
+!/src/usr.bin/telnet/commands.c
+!/src/usr.bin/telnet/defines.h
+!/src/usr.bin/telnet/externs.h
+!/src/usr.bin/telnet/fdset.h
+!/src/usr.bin/telnet/general.h
+!/src/usr.bin/telnet/main.c
+!/src/usr.bin/telnet/network.c
+!/src/usr.bin/telnet/ring.c
+!/src/usr.bin/telnet/ring.h
+!/src/usr.bin/telnet/sys_bsd.c
+!/src/usr.bin/telnet/telnet.1
+!/src/usr.bin/telnet/telnet.c
+!/src/usr.bin/telnet/terminal.c
+!/src/usr.bin/telnet/types.h
+!/src/usr.bin/telnet/utilities.c
+
+#
+# touch(1)
+#
+!/src/usr.bin/touch/Makefile
+!/src/usr.bin/touch/touch.1
+!/src/usr.bin/touch/touch.c
 
 #
 # tput(1)
