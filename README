@@ -36,9 +36,9 @@ Basic requirements for installation of (experimental) firmware image are:
  * Soldered header on-board, which is used for serial 
    access through interconnected usb cable. 
    
-   +-----+-----+-----+-----+
-   | VCC   GND   RX  | TX  |
-   +-----+-----+-----+-----+
+    +-----+-----+-----+-----+
+    | VCC   GND   RX  | TX  |
+    +-----+-----+-----+-----+
      3.3V
 
  * Configured tftpd(8) daemon.

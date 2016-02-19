@@ -17,8 +17,10 @@ SUBDIR=	alias \
 	bzip2 \
 	cap_mkdb \
 	cut \
+	env \
 	false \
 	fetch \
+	ftp \
 	grep \
 	gzip \
 	head \
@@ -29,6 +31,7 @@ SUBDIR=	alias \
 	man \
 	ncal \
 	netstat \
+	patch \
 	passwd \
 	printenv \
 	printf \

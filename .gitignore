@@ -32,7 +32,6 @@
 ## Sources.
 #
 !/src/COPYRIGHT
-!/src/Makefile.inc1
 
 ##
 # Etc.
@@ -133,16 +132,6 @@
 !/src/sys/sys/syscall.h
 !/src/sys/sys/syscall.mk
 !/src/sys/sys/sysproto.h
-
-##
-# Bsdbox. 
-#
-!/src/tools/bsdbox/Makefile
-!/src/tools/bsdbox/Makefile.base
-!/src/tools/bsdbox/Makefile.net
-!/src/tools/bsdbox/Makefile.login
-!/src/tools/bsdbox/Makefile.kld
-!/src/tools/bsdbox/Makefile.fs
 
 ##
 ## Library set.
@@ -2678,8 +2667,10 @@
 # cut(1)
 # dirname(1)
 # ee(1)
+# env(1)
 # false(1)
 # fetch(1)
+# ftp(1)
 # grep(1)
 # gzip(1)
 # head(1)
@@ -2692,6 +2683,7 @@
 # ncal(1)
 # netstat(1)
 # passwd(1)
+# patch(1)
 # printenv(1)
 # printf(1)
 # sed(1)
@@ -2751,7 +2743,7 @@
 !/src/usr.bin/at/privs.h
 
 #
-# ath toolbox
+# ath(4) toolbox
 #
 !/src/usr.bin/ath/Makefile
 !/src/usr.bin/ath/Makefile.inc
@@ -2930,6 +2922,15 @@
 !/src/usr.bin/ee/nls/uk_UA.KOI8-U/ee.msg
 
 #
+# env(1)
+#
+!/src/usr.bin/env/Makefile
+!/src/usr.bin/env/env.1
+!/src/usr.bin/env/env.c
+!/src/usr.bin/env/envopts.c
+!/src/usr.bin/env/envopts.h
+
+#
 # false(1)
 #
 !/src/usr.bin/false/Makefile
@@ -2942,6 +2943,40 @@
 !/src/usr.bin/fetch/Makefile
 !/src/usr.bin/fetch/fetch.1
 !/src/usr.bin/fetch/fetch.c
+
+#
+# ftp(1)
+#
+!/src/usr.bin/ftp/COPYING
+!/src/usr.bin/ftp/ChangeLog
+!/src/usr.bin/ftp/INSTALL
+!/src/usr.bin/ftp/Makefile
+!/src/usr.bin/ftp/Makefile.am
+!/src/usr.bin/ftp/Makefile.depend
+!/src/usr.bin/ftp/Makefile.in
+!/src/usr.bin/ftp/NEWS
+!/src/usr.bin/ftp/README
+!/src/usr.bin/ftp/THANKS
+!/src/usr.bin/ftp/src/Makefile.am
+!/src/usr.bin/ftp/src/Makefile.in
+!/src/usr.bin/ftp/src/cmds.c
+!/src/usr.bin/ftp/src/cmdtab.c
+!/src/usr.bin/ftp/src/complete.c
+!/src/usr.bin/ftp/src/domacro.c
+!/src/usr.bin/ftp/src/extern.h
+!/src/usr.bin/ftp/src/fetch.c
+!/src/usr.bin/ftp/src/ftp.1
+!/src/usr.bin/ftp/src/ftp.c
+!/src/usr.bin/ftp/src/ftp_var.h
+!/src/usr.bin/ftp/src/main.c
+!/src/usr.bin/ftp/src/progressbar.c
+!/src/usr.bin/ftp/src/progressbar.h
+!/src/usr.bin/ftp/src/ruserpass.c
+!/src/usr.bin/ftp/src/util.c
+!/src/usr.bin/ftp/src/version.h
+!/src/usr.bin/ftp/tnftp.h
+!/src/usr.bin/ftp/tnftp_config.h
+!/src/usr.bin/ftp/todo
 
 #
 # grep(1)
@@ -3270,6 +3305,24 @@
 !/src/usr.bin/netstat/route.c
 !/src/usr.bin/netstat/sctp.c
 !/src/usr.bin/netstat/unix.c
+
+#
+# patch(1)
+#
+!/src/usr.bin/patch/Makefile
+!/src/usr.bin/patch/backupfile.c
+!/src/usr.bin/patch/backupfile.h
+!/src/usr.bin/patch/common.h
+!/src/usr.bin/patch/inp.c
+!/src/usr.bin/patch/inp.h
+!/src/usr.bin/patch/mkpath.c
+!/src/usr.bin/patch/patch.1
+!/src/usr.bin/patch/patch.c
+!/src/usr.bin/patch/pathnames.h
+!/src/usr.bin/patch/pch.c
+!/src/usr.bin/patch/pch.h
+!/src/usr.bin/patch/util.c
+!/src/usr.bin/patch/util.h
 
 #
 # passwd(1)
