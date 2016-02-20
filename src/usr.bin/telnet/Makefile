@@ -2,13 +2,15 @@
 
 .include <src.opts.mk>
 
+_libtelnet={.CURDIR}/../../lib/libtelnet
+
 PROG=		telnet
 
 SRCS=		commands.c main.c network.c ring.c sys_bsd.c \
 		telnet.c terminal.c utilities.c
 
 CFLAGS+=	-DKLUDGELINEMODE -DUSE_TERMIO -DENV_HACK -DOPIE \
-		-I${.CURDIR} -I../../lib/libtelnet/
+		-I${.CURDIR} -I${_libtelnet}
 
 .if ${MK_INET6_SUPPORT} != "no"
 CFLAGS+=	-DINET6
@@ -22,7 +24,7 @@ LIBADD=		telnet ncursesw
 CFLAGS+=	-DIPSEC
 LIBADD+=	ipsec
 .else
-.PATH:         ../../lib/libtelnet
+.PATH:         ${_libtelnet}
 SRCS+=		genget.c getent.c misc.c
 CFLAGS+=	-DHAS_CGETENT
 .endif

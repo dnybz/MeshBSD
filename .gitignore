@@ -987,10 +987,71 @@
 !/src/lib/libtelnet/rsaencpwd.c
 !/src/lib/libtelnet/sra.c
 
-
 ##
 ## Daemons and (subset of) Unix Toolbox.
 ##
+
+#
+## libexec
+#
+#
+# atrund(8)
+# getty(8)
+# pppoed(8)
+# telnetd(8)
+#
+!/src/libexec/Makefile
+!/src/libexec/Makefile.inc
+
+#
+# atrund(8)
+#
+!/src/libexec/atrun/LEGAL
+!/src/libexec/atrun/Makefile
+!/src/libexec/atrun/atrun.c
+!/src/libexec/atrun/atrun.man
+!/src/libexec/atrun/gloadavg.c
+!/src/libexec/atrun/gloadavg.h
+
+#
+# getty(8)
+#
+!/src/libexec/getty/Makefile
+!/src/libexec/getty/chat.c
+!/src/libexec/getty/extern.h
+!/src/libexec/getty/getty.8
+!/src/libexec/getty/gettytab.5
+!/src/libexec/getty/gettytab.h
+!/src/libexec/getty/init.c
+!/src/libexec/getty/main.c
+!/src/libexec/getty/pathnames.h
+!/src/libexec/getty/subr.c
+!/src/libexec/getty/ttys.5
+
+#
+# pppoed(8)
+#
+!/src/libexec/pppoed/Makefile
+!/src/libexec/pppoed/pppoed.8
+!/src/libexec/pppoed/pppoed.c
+
+#
+# telnetd(8)
+#
+!/src/libexec/telnetd/Makefile
+!/src/libexec/telnetd/authenc.c
+!/src/libexec/telnetd/defs.h
+!/src/libexec/telnetd/ext.h
+!/src/libexec/telnetd/global.c
+!/src/libexec/telnetd/pathnames.h
+!/src/libexec/telnetd/slc.c
+!/src/libexec/telnetd/state.c
+!/src/libexec/telnetd/sys_term.c
+!/src/libexec/telnetd/telnetd.8
+!/src/libexec/telnetd/telnetd.c
+!/src/libexec/telnetd/telnetd.h
+!/src/libexec/telnetd/termstat.c
+!/src/libexec/telnetd/utility.c
 
 #
 ## bin
