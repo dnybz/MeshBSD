@@ -20,10 +20,6 @@ SUBDIR=	${_atrun} \
 _atrun=		atrun
 .endif
 
-.if ${MK_BOOTPD} != "no"
-SUBDIR+=	bootpd
-.endif
-
 .if ${MK_CASPER} != "no"
 _casper=	casper
 .endif
@@ -46,10 +42,6 @@ _tftp-proxy=	tftp-proxy
 
 .if !defined(NO_PIC) && !defined(NO_RTLD)
 _rtld-elf=	rtld-elf
-.endif
-
-.if ${MK_TCP_WRAPPERS} != "no"
-SUBDIR+=	tcpd
 .endif
 
 .if ${MK_TELNET} != "no"

@@ -994,17 +994,22 @@
 #
 ## libexec
 #
-#
-# atrund(8)
+# atrun(8)
+# casper(8)
+# ftpd(8)
 # getty(8)
 # pppoed(8)
+# rtld-aout(8)
+# rtld-elf(8)
 # telnetd(8)
+# tftpd(8)
+# tftp-proxy(8)
 #
 !/src/libexec/Makefile
 !/src/libexec/Makefile.inc
 
 #
-# atrund(8)
+# atrun(8)
 #
 !/src/libexec/atrun/LEGAL
 !/src/libexec/atrun/Makefile
@@ -1012,6 +1017,35 @@
 !/src/libexec/atrun/atrun.man
 !/src/libexec/atrun/gloadavg.c
 !/src/libexec/atrun/gloadavg.h
+
+#
+# casper(8)
+#
+!/src/libexec/casper/Makefile
+!/src/libexec/casper/dns/Makefile
+!/src/libexec/casper/dns/dns.c
+!/src/libexec/casper/grp/Makefile
+!/src/libexec/casper/grp/grp.c
+!/src/libexec/casper/pwd/Makefile
+!/src/libexec/casper/pwd/pwd.c
+!/src/libexec/casper/random/Makefile
+!/src/libexec/casper/random/random.c
+!/src/libexec/casper/sysctl/Makefile
+!/src/libexec/casper/sysctl/sysctl.c
+
+#
+# ftpd(8)
+#
+!/src/libexec/ftpd/Makefile
+!/src/libexec/ftpd/config.h
+!/src/libexec/ftpd/extern.h
+!/src/libexec/ftpd/ftpchroot.5
+!/src/libexec/ftpd/ftpcmd.y
+!/src/libexec/ftpd/ftpd.8
+!/src/libexec/ftpd/ftpd.c
+!/src/libexec/ftpd/logwtmp.c
+!/src/libexec/ftpd/pathnames.h
+!/src/libexec/ftpd/popen.c
 
 #
 # getty(8)
@@ -1036,6 +1070,79 @@
 !/src/libexec/pppoed/pppoed.c
 
 #
+# rtld-aout(8)
+#
+!/src/libexec/rtld-aout/shlib.c
+!/src/libexec/rtld-aout/shlib.h
+!/src/libexec/rtld-aout/support.c
+!/src/libexec/rtld-aout/support.h
+
+#
+# rtld-elf(8)
+#
+!/src/libexec/rtld-elf/Makefile
+!/src/libexec/rtld-elf/Symbol.map
+!/src/libexec/rtld-elf/aarch64/reloc.c
+!/src/libexec/rtld-elf/aarch64/rtld_machdep.h
+!/src/libexec/rtld-elf/aarch64/rtld_start.S
+!/src/libexec/rtld-elf/amd64/Makefile.inc
+!/src/libexec/rtld-elf/amd64/elf_rtld.x
+!/src/libexec/rtld-elf/amd64/reloc.c
+!/src/libexec/rtld-elf/amd64/rtld_machdep.h
+!/src/libexec/rtld-elf/amd64/rtld_start.S
+!/src/libexec/rtld-elf/arm/Makefile.inc
+!/src/libexec/rtld-elf/arm/reloc.c
+!/src/libexec/rtld-elf/arm/rtld_machdep.h
+!/src/libexec/rtld-elf/arm/rtld_start.S
+!/src/libexec/rtld-elf/debug.c
+!/src/libexec/rtld-elf/debug.h
+!/src/libexec/rtld-elf/i386/Makefile.inc
+!/src/libexec/rtld-elf/i386/Symbol.map
+!/src/libexec/rtld-elf/i386/elf_rtld.x
+!/src/libexec/rtld-elf/i386/reloc.c
+!/src/libexec/rtld-elf/i386/rtld_machdep.h
+!/src/libexec/rtld-elf/i386/rtld_start.S
+!/src/libexec/rtld-elf/libmap.c
+!/src/libexec/rtld-elf/libmap.h
+!/src/libexec/rtld-elf/malloc.c
+!/src/libexec/rtld-elf/map_object.c
+!/src/libexec/rtld-elf/mips/reloc.c
+!/src/libexec/rtld-elf/mips/rtld_machdep.h
+!/src/libexec/rtld-elf/mips/rtld_start.S
+!/src/libexec/rtld-elf/paths.h
+!/src/libexec/rtld-elf/powerpc/Makefile.inc
+!/src/libexec/rtld-elf/powerpc/reloc.c
+!/src/libexec/rtld-elf/powerpc/rtld_machdep.h
+!/src/libexec/rtld-elf/powerpc/rtld_start.S
+!/src/libexec/rtld-elf/powerpc64/Makefile.inc
+!/src/libexec/rtld-elf/powerpc64/reloc.c
+!/src/libexec/rtld-elf/powerpc64/rtld_machdep.h
+!/src/libexec/rtld-elf/powerpc64/rtld_start.S
+!/src/libexec/rtld-elf/riscv/reloc.c
+!/src/libexec/rtld-elf/riscv/rtld_machdep.h
+!/src/libexec/rtld-elf/riscv/rtld_start.S
+!/src/libexec/rtld-elf/rtld.1
+!/src/libexec/rtld-elf/rtld.c
+!/src/libexec/rtld-elf/rtld.h
+!/src/libexec/rtld-elf/rtld_lock.c
+!/src/libexec/rtld-elf/rtld_lock.h
+!/src/libexec/rtld-elf/rtld_printf.c
+!/src/libexec/rtld-elf/rtld_printf.h
+!/src/libexec/rtld-elf/rtld_tls.h
+!/src/libexec/rtld-elf/sparc64/Makefile.inc
+!/src/libexec/rtld-elf/sparc64/reloc.c
+!/src/libexec/rtld-elf/sparc64/rtld_machdep.h
+!/src/libexec/rtld-elf/sparc64/rtld_start.S
+!/src/libexec/rtld-elf/tests/Makefile
+!/src/libexec/rtld-elf/tests/ld_library_pathfds.c
+!/src/libexec/rtld-elf/tests/libpythagoras/Makefile
+!/src/libexec/rtld-elf/tests/libpythagoras/pythagoras.c
+!/src/libexec/rtld-elf/tests/libpythagoras/pythagoras.h
+!/src/libexec/rtld-elf/tests/target/Makefile
+!/src/libexec/rtld-elf/tests/target/target.c
+!/src/libexec/rtld-elf/xmalloc.c
+
+#
 # telnetd(8)
 #
 !/src/libexec/telnetd/Makefile
@@ -1052,6 +1159,32 @@
 !/src/libexec/telnetd/telnetd.h
 !/src/libexec/telnetd/termstat.c
 !/src/libexec/telnetd/utility.c
+
+#
+# tftpd(8)
+#
+!/src/libexec/tftpd/Makefile
+!/src/libexec/tftpd/tftp-file.c
+!/src/libexec/tftpd/tftp-file.h
+!/src/libexec/tftpd/tftp-io.c
+!/src/libexec/tftpd/tftp-io.h
+!/src/libexec/tftpd/tftp-options.c
+!/src/libexec/tftpd/tftp-options.h
+!/src/libexec/tftpd/tftp-transfer.c
+!/src/libexec/tftpd/tftp-transfer.h
+!/src/libexec/tftpd/tftp-utils.c
+!/src/libexec/tftpd/tftp-utils.h
+!/src/libexec/tftpd/tftpd.8
+!/src/libexec/tftpd/tftpd.c
+
+#
+# tftp-proxy(8)
+#
+!/src/libexec/tftp-proxy/Makefile
+!/src/libexec/tftp-proxy/filter.c
+!/src/libexec/tftp-proxy/filter.h
+!/src/libexec/tftp-proxy/tftp-proxy.8
+!/src/libexec/tftp-proxy/tftp-proxy.c
 
 #
 ## bin
