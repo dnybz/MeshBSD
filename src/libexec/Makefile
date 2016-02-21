@@ -3,14 +3,13 @@
 
 .include <src.opts.mk>
 
-SUBDIR=	${_atrun} \
+SUBDIR=	${_atf} \
+	${_atrun} \
 	${_casper} \
 	${_dma} \
 	getty \
-	${_mknetid} \
 	${_pppoed} \
 	${_rtld-elf} \
-	save-entropy \
 	${_telnetd} \
 	${_tests} \
 	${_tftp-proxy} \
