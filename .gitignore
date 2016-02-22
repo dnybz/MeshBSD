@@ -1368,6 +1368,7 @@
 # dd(1)
 # df(1)
 # echo(1)
+# ed(1)
 # expr(1)
 # getfacl(1)
 # hostname(1)
@@ -1383,7 +1384,9 @@
 # ps(1)
 # pwait(1)
 # pwd(1)
+# realpath(1)
 # rm(1)
+# rmdir(1)
 # setfacl(1)
 # sh(1)
 # sleep(1)
@@ -1483,6 +1486,187 @@
 !/src/bin/echo/Makefile
 !/src/bin/echo/echo.1
 !/src/bin/echo/echo.c
+
+#
+# ed(1)
+#
+!/src/bin/ed/Makefile
+!/src/bin/ed/POSIX
+!/src/bin/ed/README
+!/src/bin/ed/buf.c
+!/src/bin/ed/cbc.c
+!/src/bin/ed/ed.1
+!/src/bin/ed/ed.h
+!/src/bin/ed/glbl.c
+!/src/bin/ed/io.c
+!/src/bin/ed/main.c
+!/src/bin/ed/re.c
+!/src/bin/ed/sub.c
+!/src/bin/ed/test/=.err
+!/src/bin/ed/test/Makefile
+!/src/bin/ed/test/README
+!/src/bin/ed/test/TODO
+!/src/bin/ed/test/a.d
+!/src/bin/ed/test/a.r
+!/src/bin/ed/test/a.t
+!/src/bin/ed/test/a1.err
+!/src/bin/ed/test/a2.err
+!/src/bin/ed/test/addr.d
+!/src/bin/ed/test/addr.r
+!/src/bin/ed/test/addr.t
+!/src/bin/ed/test/addr1.err
+!/src/bin/ed/test/addr2.err
+!/src/bin/ed/test/ascii.d.uu
+!/src/bin/ed/test/ascii.r.uu
+!/src/bin/ed/test/ascii.t
+!/src/bin/ed/test/bang1.d
+!/src/bin/ed/test/bang1.err
+!/src/bin/ed/test/bang1.r
+!/src/bin/ed/test/bang1.t
+!/src/bin/ed/test/bang2.err
+!/src/bin/ed/test/c.d
+!/src/bin/ed/test/c.r
+!/src/bin/ed/test/c.t
+!/src/bin/ed/test/c1.err
+!/src/bin/ed/test/c2.err
+!/src/bin/ed/test/ckscripts.sh
+!/src/bin/ed/test/d.d
+!/src/bin/ed/test/d.err
+!/src/bin/ed/test/d.r
+!/src/bin/ed/test/d.t
+!/src/bin/ed/test/e1.d
+!/src/bin/ed/test/e1.err
+!/src/bin/ed/test/e1.r
+!/src/bin/ed/test/e1.t
+!/src/bin/ed/test/e2.d
+!/src/bin/ed/test/e2.err
+!/src/bin/ed/test/e2.r
+!/src/bin/ed/test/e2.t
+!/src/bin/ed/test/e3.d
+!/src/bin/ed/test/e3.err
+!/src/bin/ed/test/e3.r
+!/src/bin/ed/test/e3.t
+!/src/bin/ed/test/e4.d
+!/src/bin/ed/test/e4.r
+!/src/bin/ed/test/e4.t
+!/src/bin/ed/test/f1.err
+!/src/bin/ed/test/f2.err
+!/src/bin/ed/test/g1.d
+!/src/bin/ed/test/g1.err
+!/src/bin/ed/test/g1.r
+!/src/bin/ed/test/g1.t
+!/src/bin/ed/test/g2.d
+!/src/bin/ed/test/g2.err
+!/src/bin/ed/test/g2.r
+!/src/bin/ed/test/g2.t
+!/src/bin/ed/test/g3.d
+!/src/bin/ed/test/g3.err
+!/src/bin/ed/test/g3.r
+!/src/bin/ed/test/g3.t
+!/src/bin/ed/test/g4.d
+!/src/bin/ed/test/g4.r
+!/src/bin/ed/test/g4.t
+!/src/bin/ed/test/g5.d
+!/src/bin/ed/test/g5.r
+!/src/bin/ed/test/g5.t
+!/src/bin/ed/test/h.err
+!/src/bin/ed/test/i.d
+!/src/bin/ed/test/i.r
+!/src/bin/ed/test/i.t
+!/src/bin/ed/test/i1.err
+!/src/bin/ed/test/i2.err
+!/src/bin/ed/test/i3.err
+!/src/bin/ed/test/j.d
+!/src/bin/ed/test/j.r
+!/src/bin/ed/test/j.t
+!/src/bin/ed/test/k.d
+!/src/bin/ed/test/k.r
+!/src/bin/ed/test/k.t
+!/src/bin/ed/test/k1.err
+!/src/bin/ed/test/k2.err
+!/src/bin/ed/test/k3.err
+!/src/bin/ed/test/k4.err
+!/src/bin/ed/test/l.d
+!/src/bin/ed/test/l.r
+!/src/bin/ed/test/l.t
+!/src/bin/ed/test/m.d
+!/src/bin/ed/test/m.err
+!/src/bin/ed/test/m.r
+!/src/bin/ed/test/m.t
+!/src/bin/ed/test/mkscripts.sh
+!/src/bin/ed/test/n.d
+!/src/bin/ed/test/n.r
+!/src/bin/ed/test/n.t
+!/src/bin/ed/test/nl.err
+!/src/bin/ed/test/nl1.d
+!/src/bin/ed/test/nl1.r
+!/src/bin/ed/test/nl1.t
+!/src/bin/ed/test/nl2.d
+!/src/bin/ed/test/nl2.r
+!/src/bin/ed/test/nl2.t
+!/src/bin/ed/test/p.d
+!/src/bin/ed/test/p.r
+!/src/bin/ed/test/p.t
+!/src/bin/ed/test/q.d
+!/src/bin/ed/test/q.r
+!/src/bin/ed/test/q.t
+!/src/bin/ed/test/q1.err
+!/src/bin/ed/test/r1.d
+!/src/bin/ed/test/r1.err
+!/src/bin/ed/test/r1.r
+!/src/bin/ed/test/r1.t
+!/src/bin/ed/test/r2.d
+!/src/bin/ed/test/r2.err
+!/src/bin/ed/test/r2.r
+!/src/bin/ed/test/r2.t
+!/src/bin/ed/test/r3.d
+!/src/bin/ed/test/r3.r
+!/src/bin/ed/test/r3.t
+!/src/bin/ed/test/s1.d
+!/src/bin/ed/test/s1.err
+!/src/bin/ed/test/s1.r
+!/src/bin/ed/test/s1.t
+!/src/bin/ed/test/s10.err
+!/src/bin/ed/test/s2.d
+!/src/bin/ed/test/s2.err
+!/src/bin/ed/test/s2.r
+!/src/bin/ed/test/s2.t
+!/src/bin/ed/test/s3.d
+!/src/bin/ed/test/s3.err
+!/src/bin/ed/test/s3.r
+!/src/bin/ed/test/s3.t
+!/src/bin/ed/test/s4.err
+!/src/bin/ed/test/s5.err
+!/src/bin/ed/test/s6.err
+!/src/bin/ed/test/s7.err
+!/src/bin/ed/test/s8.err
+!/src/bin/ed/test/s9.err
+!/src/bin/ed/test/t.d
+!/src/bin/ed/test/t.r
+!/src/bin/ed/test/t1.d
+!/src/bin/ed/test/t1.err
+!/src/bin/ed/test/t1.r
+!/src/bin/ed/test/t1.t
+!/src/bin/ed/test/t2.d
+!/src/bin/ed/test/t2.err
+!/src/bin/ed/test/t2.r
+!/src/bin/ed/test/t2.t
+!/src/bin/ed/test/u.d
+!/src/bin/ed/test/u.err
+!/src/bin/ed/test/u.r
+!/src/bin/ed/test/u.t
+!/src/bin/ed/test/v.d
+!/src/bin/ed/test/v.r
+!/src/bin/ed/test/v.t
+!/src/bin/ed/test/w.d
+!/src/bin/ed/test/w.r
+!/src/bin/ed/test/w.t
+!/src/bin/ed/test/w1.err
+!/src/bin/ed/test/w2.err
+!/src/bin/ed/test/w3.err
+!/src/bin/ed/test/x.err
+!/src/bin/ed/test/z.err
+!/src/bin/ed/undo.c
 
 #
 # expr(1)
@@ -1656,11 +1840,23 @@
 !/src/bin/pwd/pwd.c
 
 #
+# realpath(1)
+#
+!/src/bin/realpath/Makefile
+!/src/bin/realpath/realpath.1
+!/src/bin/realpath/realpath.c
+
+#
 # rm(1)
 #
 !/src/bin/rm/Makefile
 !/src/bin/rm/rm.1
 !/src/bin/rm/rm.c
+
+#
+# rmdir(1)
+#
+
 
 #
 # setfacl(1)

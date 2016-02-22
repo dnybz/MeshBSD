@@ -11,6 +11,7 @@ SUBDIR= cat \
 	dd \
 	df \
 	echo \
+	ed \
 	expr \
 	getfacl \
 	hostname \
@@ -27,6 +28,7 @@ SUBDIR= cat \
 	pwd \
 	realpath \
 	rm \
+	rmdir \
 	setfacl \
 	sh \
 	sleep \
@@ -35,9 +37,6 @@ SUBDIR= cat \
 	test \
 	uuidgen
 
-SUBDIR.${MK_RCMDS}+=	rcp
-SUBDIR.${MK_SENDMAIL}+=	rmail
-SUBDIR.${MK_TCSH}+=	csh
 SUBDIR.${MK_TESTS}+=	tests
 
 .include <bsd.arch.inc.mk>
