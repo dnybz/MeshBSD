@@ -1856,7 +1856,9 @@
 #
 # rmdir(1)
 #
-
+!/src/bin/rmdir/Makefile
+!/src/bin/rmdir/rmdir.1
+!/src/bin/rmdir/rmdir.c
 
 #
 # setfacl(1)
