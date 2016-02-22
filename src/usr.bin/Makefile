@@ -16,45 +16,92 @@ SUBDIR=	alias \
 	awk \
 	bzip2 \
 	cap_mkdb \
+	chat \
+	cksum \
+	cmp \
+	comm \
+	compress \
 	cut \
+	dc \
+	du \
 	env \
+	expand \
 	false \
 	fetch \
+	find \
+	fold \
+	fsync \
 	ftp \
+	getopt \
 	grep \
 	gzip \
 	head \
 	hexdump \
 	host \
+	id \
+	ipcrm \
+	ipcs \
+	killall \
+	last \
 	less \
-	login \
 	logger \
+	login \
+	logname \
 	m4 \
 	man \
+	mesg \
+	mkfifo \
+	mktemp \
+	mt \
 	ncal \
 	netstat \
+	nice \
+	nohub \
 	patch \
 	passwd \
 	printenv \
 	printf \
+	renice \
+	script \
 	sed \
+	seq \
 	sockstat \
 	sort \
+	split \
+	stat \
 	su \
 	systat \
 	tail \
 	tar \
 	tee \
+	telnet \
+	tftp \
+	time \
 	touch \
+	top \
 	tput \
+	tr \
 	true \
 	tset \
+	tty \
 	uname \
+	unexpand \
 	uniq \
 	unzip \
+	uudecode \
+	uuencode \
+	vi \
 	vmstat \
 	w \
-	wall 
+	wall \
+	wc \
+	which \
+	who \
+	whois \
+	xargs \
+	xz \
+	xzdec \
+	yes 
 
 # NB: keep these sorted by MK_* knobs
 

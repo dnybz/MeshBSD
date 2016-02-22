@@ -2516,6 +2516,7 @@
 # setkey(8)
 # shutdown(8)
 # swapon(8)
+# swapoff(8)
 # sysctl(8)
 # umount(8)
 #
@@ -3222,7 +3223,7 @@
 !/src/sbin/shutdown/shutdown.c
 
 #
-# swapon(8)
+# swap{ctl|on|off}(8)
 # 
 !/src/sbin/swapon/Makefile
 !/src/sbin/swapon/swapon.8
@@ -3253,49 +3254,96 @@
 # bluetooth(1)
 # bzip2(1)
 # cap_mkdb(1)
+# chat(1)
+# cksum(1)
+# cmp(1)
+# comm(1)
+# compress(1)
 # cpio(1)
 # cut(1)
+# dc(1)
 # dirname(1)
+# du(1)
 # ee(1)
 # env(1)
+# expand(1)
 # false(1)
 # fetch(1)
+# find(1)
+# fold(1)
+# fsync(1)
 # ftp(1)
+# getopt(1)
 # grep(1)
 # gzip(1)
 # head(1)
 # hexdump(1)
 # host(1)
+# id(1)
+# ipcrm(1)
+# ipcs(1)
+# killall(1)
+# last(1)
 # less(1)
 # logger(1)
 # login(1)
-# man(1)
+# logname(1)
 # m4(1)
+# man(1)
+# mesg(1)
+# mkfifo(1)
+# mktemp(1)
+# mt(1)
 # nc(1)
 # ncal(1)
 # netstat(1)
+# nice(1)
+# nohup(1)
 # passwd(1)
 # patch(1)
 # printenv(1)
 # printf(1)
+# renice(1)
+# script(1)
 # sed(1)
+# seq(1)
 # sockstat(1)
+# split(1)
 # sort(1)
+# stat(1)
 # su(1)
 # systat(1)
 # tail(1)
 # tar(1)
 # tee(1)
 # telnet(1)
+# tftp(1)
+# time(1)
+# top(1)
 # touch(1)
 # tput(1)
+# tr(1)
 # true(1)
 # tset(1)
+# tty(1)
 # uname(1)
+# unexpand(1)
 # uniq(1)
+# unzip(1)
+# uudecode(1)
+# uuencode(1)
+# vi(1)
 # vmstat(1)
 # w(1)
 # wall(1)
+# wc(1)
+# which(1)
+# who(1)
+# whois(1)
+# xargs(1)
+# xz(1)
+# xzdec(1)
+# yes(1)
 #
 !/src/usr.bin/Makefile
 !/src/usr.bin/Makefile.inc
@@ -3482,6 +3530,71 @@
 !/src/usr.bin/cap_mkdb/cap_mkdb.c
 
 #
+# chat(1)
+#
+!/src/usr.bin/chat/Makefile
+!/src/usr.bin/chat/chat.8
+!/src/usr.bin/chat/chat.c
+
+#
+# cksum(1)
+#
+!/src/usr.bin/cksum/Makefile
+!/src/usr.bin/cksum/cksum.1
+!/src/usr.bin/cksum/cksum.c
+!/src/usr.bin/cksum/crc.c
+!/src/usr.bin/cksum/crc32.c
+!/src/usr.bin/cksum/extern.h
+!/src/usr.bin/cksum/print.c
+!/src/usr.bin/cksum/sum1.c
+!/src/usr.bin/cksum/sum2.c
+
+#
+# cmp(1)
+#
+!/src/usr.bin/cmp/Makefile
+!/src/usr.bin/cmp/cmp.1
+!/src/usr.bin/cmp/cmp.c
+!/src/usr.bin/cmp/extern.h
+!/src/usr.bin/cmp/link.c
+!/src/usr.bin/cmp/misc.c
+!/src/usr.bin/cmp/regular.c
+!/src/usr.bin/cmp/special.c
+!/src/usr.bin/cmp/tests/Makefile
+
+#
+# comm(1)
+#
+!/src/usr.bin/comm/Makefile
+!/src/usr.bin/comm/comm.1
+!/src/usr.bin/comm/comm.c
+!/src/usr.bin/comm/tests/Makefile
+!/src/usr.bin/comm/tests/legacy_test.sh
+!/src/usr.bin/comm/tests/regress.00.out
+!/src/usr.bin/comm/tests/regress.00a.in
+!/src/usr.bin/comm/tests/regress.00b.in
+!/src/usr.bin/comm/tests/regress.01.out
+!/src/usr.bin/comm/tests/regress.01a.in
+!/src/usr.bin/comm/tests/regress.01b.in
+!/src/usr.bin/comm/tests/regress.02.out
+!/src/usr.bin/comm/tests/regress.02a.in
+!/src/usr.bin/comm/tests/regress.02b.in
+!/src/usr.bin/comm/tests/regress.sh
+
+#
+# compress(1)
+#
+!/src/usr.bin/compress/Makefile
+!/src/usr.bin/compress/compress.1
+!/src/usr.bin/compress/compress.c
+!/src/usr.bin/compress/doc/NOTES
+!/src/usr.bin/compress/doc/README
+!/src/usr.bin/compress/doc/revision.log
+!/src/usr.bin/compress/zopen.3
+!/src/usr.bin/compress/zopen.c
+!/src/usr.bin/compress/zopen.h
+
+#
 # cpio(1) 
 #
 !/src/usr.bin/cpio/Makefile
@@ -3497,11 +3610,31 @@
 !/src/usr.bin/cut/tests/Makefile
 
 #
+# dc(1)
+#
+!/src/usr.bin/dc/Makefile
+!/src/usr.bin/dc/bcode.c
+!/src/usr.bin/dc/bcode.h
+!/src/usr.bin/dc/dc.1
+!/src/usr.bin/dc/dc.c
+!/src/usr.bin/dc/extern.h
+!/src/usr.bin/dc/inout.c
+!/src/usr.bin/dc/mem.c
+!/src/usr.bin/dc/stack.c
+
+#
 # dirname(1)
 #
 !/src/usr.bin/dirname/Makefile
 !/src/usr.bin/dirname/dirname.c
 !/src/usr.bin/dirname/tests/Makefile
+
+#
+# du(1)
+#
+!/src/usr.bin/du/Makefile
+!/src/usr.bin/du/du.1
+!/src/usr.bin/du/du.c
 
 #
 # ee(1)
@@ -3525,6 +3658,13 @@
 !/src/usr.bin/env/envopts.h
 
 #
+# expand(1)
+#
+!/src/usr.bin/expand/Makefile
+!/src/usr.bin/expand/expand.1
+!/src/usr.bin/expand/expand.c
+
+#
 # false(1)
 #
 !/src/usr.bin/false/Makefile
@@ -3537,6 +3677,36 @@
 !/src/usr.bin/fetch/Makefile
 !/src/usr.bin/fetch/fetch.1
 !/src/usr.bin/fetch/fetch.c
+
+#
+# find(1)
+#
+!/src/usr.bin/find/Makefile
+!/src/usr.bin/find/extern.h
+!/src/usr.bin/find/find.1
+!/src/usr.bin/find/find.c
+!/src/usr.bin/find/find.h
+!/src/usr.bin/find/function.c
+!/src/usr.bin/find/getdate.y
+!/src/usr.bin/find/ls.c
+!/src/usr.bin/find/main.c
+!/src/usr.bin/find/misc.c
+!/src/usr.bin/find/operator.c
+!/src/usr.bin/find/option.c
+
+#
+# fold(1)
+#
+!/src/usr.bin/fold/Makefile
+!/src/usr.bin/fold/fold.1
+!/src/usr.bin/fold/fold.c
+
+#
+# fsync(1)
+#
+!/src/usr.bin/fsync/Makefile
+!/src/usr.bin/fsync/fsync.1
+!/src/usr.bin/fsync/fsync.c
 
 #
 # ftp(1)
@@ -3571,6 +3741,13 @@
 !/src/usr.bin/ftp/tnftp.h
 !/src/usr.bin/ftp/tnftp_config.h
 !/src/usr.bin/ftp/todo
+
+#
+# getopt(1)
+#
+!/src/usr.bin/getopt/Makefile
+!/src/usr.bin/getopt/getopt.1
+!/src/usr.bin/getopt/getopt.c
 
 #
 # grep(1)
@@ -3794,6 +3971,45 @@
 !/src/usr.bin/host/ldns/zone.c
 
 #
+# id(1)
+#
+!/src/usr.bin/id/Makefile
+!/src/usr.bin/id/groups.1
+!/src/usr.bin/id/id.1
+!/src/usr.bin/id/id.c
+!/src/usr.bin/id/whoami.1
+
+#
+# ipcrm(1)
+#
+!/src/usr.bin/ipcrm/Makefile
+!/src/usr.bin/ipcrm/ipcrm.1
+!/src/usr.bin/ipcrm/ipcrm.c
+
+#
+# ipcs(1)
+#
+!/src/usr.bin/ipcs/Makefile
+!/src/usr.bin/ipcs/ipc.c
+!/src/usr.bin/ipcs/ipc.h
+!/src/usr.bin/ipcs/ipcs.1
+!/src/usr.bin/ipcs/ipcs.c
+
+#
+# killall(1)
+#
+!/src/usr.bin/killall/Makefile
+!/src/usr.bin/killall/killall.1
+!/src/usr.bin/killall/killall.c
+
+#
+# last(1)
+#
+!/src/usr.bin/last/Makefile
+!/src/usr.bin/last/last.1
+!/src/usr.bin/last/last.c
+
+#
 # less(1)
 #
 !/src/usr.bin/less/Makefile
@@ -3884,14 +4100,11 @@
 !/src/usr.bin/logger/logger.c
 
 #
-# man(1)
+# loganame(1)
 #
-!/src/usr.bin/man/Makefile
-!/src/usr.bin/man/apropos.1
-!/src/usr.bin/man/man.1
-!/src/usr.bin/man/man.conf.5
-!/src/usr.bin/man/man.sh
-!/src/usr.bin/man/manpath.1
+!/src/usr.bin/logname/Makefile
+!/src/usr.bin/logname/logname.1
+!/src/usr.bin/logname/logname.c
 
 #
 # m4(1)
@@ -3914,6 +4127,44 @@
 !/src/usr.bin/m4/tests
 !/src/usr.bin/m4/tokenizer.l
 !/src/usr.bin/m4/trace.c
+
+#
+# man(1)
+#
+!/src/usr.bin/man/Makefile
+!/src/usr.bin/man/apropos.1
+!/src/usr.bin/man/man.1
+!/src/usr.bin/man/man.conf.5
+!/src/usr.bin/man/man.sh
+!/src/usr.bin/man/manpath.1
+
+#
+# mesg(1)
+#
+!/src/usr.bin/mesg/Makefile
+!/src/usr.bin/mesg/mesg.1
+!/src/usr.bin/mesg/mesg.c
+
+#
+# mkfifo(1)
+#
+!/src/usr.bin/mkfifo/Makefile
+!/src/usr.bin/mkfifo/mkfifo.1
+!/src/usr.bin/mkfifo/mkfifo.c
+
+#
+# mktemp(1)
+#
+!/src/usr.bin/mktemp/Makefile
+!/src/usr.bin/mktemp/mktemp.1
+!/src/usr.bin/mktemp/mktemp.c
+
+#
+# mt(1)
+#
+!/src/usr.bin/mt/Makefile
+!/src/usr.bin/mt/mt.1
+!/src/usr.bin/mt/mt.c
 
 #
 # nc(1)
@@ -4052,6 +4303,20 @@
 !/src/usr.bin/netstat/unix.c
 
 #
+# nice(1)
+#
+!/src/usr.bin/nice/Makefile
+!/src/usr.bin/nice/nice.1
+!/src/usr.bin/nice/nice.c
+
+#
+# nohup(1)
+#
+!/src/usr.bin/nohup/Makefile
+!/src/usr.bin/nohup/nohup.1
+!/src/usr.bin/nohup/nohup.c
+
+#
 # patch(1)
 #
 !/src/usr.bin/patch/Makefile
@@ -4105,6 +4370,20 @@
 !/src/usr.bin/printf/tests/regress.s.out
 !/src/usr.bin/printf/tests/regress.sh
 !/src/usr.bin/printf/tests/regress.zero.out
+
+#
+# renice(1)
+#
+!/src/usr.bin/renice/Makefile
+!/src/usr.bin/renice/renice.8
+!/src/usr.bin/renice/renice.c
+
+#
+# script(1)
+#
+!/src/usr.bin/script/Makefile
+!/src/usr.bin/script/script.1
+!/src/usr.bin/script/script.c
 
 #
 # sed(1)
@@ -4280,6 +4559,13 @@
 !/src/usr.bin/sed/tests/regress.y.out
 
 #
+# seq(1)
+#
+!/src/usr.bin/seq/Makefile
+!/src/usr.bin/seq/seq.1
+!/src/usr.bin/seq/seq.c
+
+#
 # sockstat(1)
 #
 !/src/usr.bin/sockstat/Makefile
@@ -4307,6 +4593,20 @@
 !/src/usr.bin/sort/sort.h
 !/src/usr.bin/sort/vsort.c
 !/src/usr.bin/sort/vsort.h
+
+#
+# split(1)
+#
+!/src/usr.bin/split/Makefile
+!/src/usr.bin/split/split.1
+!/src/usr.bin/split/split.c
+
+#
+# stat(1)
+#
+!/src/usr.bin/stat/Makefile
+!/src/usr.bin/stat/stat.1
+!/src/usr.bin/stat/stat.c
 
 #
 # su(1)
@@ -4398,6 +4698,66 @@
 !/src/usr.bin/telnet/utilities.c
 
 #
+# tftp(1)
+#
+!/src/usr.bin/tftp/Makefile
+!/src/usr.bin/tftp/main.c
+!/src/usr.bin/tftp/tftp.1
+!/src/usr.bin/tftp/tftp.c
+!/src/usr.bin/tftp/tftp.h
+
+#
+# time(1)
+#
+!/src/usr.bin/time/Makefile
+!/src/usr.bin/time/time.1
+!/src/usr.bin/time/time.c
+
+#
+# top(1)
+#
+!/src/usr.bin/top/ADVERTISEMENT
+!/src/usr.bin/top/Changes
+!/src/usr.bin/top/Configure
+!/src/usr.bin/top/DISCLAIMER
+!/src/usr.bin/top/FAQ
+!/src/usr.bin/top/INSTALL
+!/src/usr.bin/top/Make.desc.X
+!/src/usr.bin/top/Makefile
+!/src/usr.bin/top/Makefile.X
+!/src/usr.bin/top/Porting
+!/src/usr.bin/top/README
+!/src/usr.bin/top/Y2K
+!/src/usr.bin/top/boolean.h
+!/src/usr.bin/top/commands.c
+!/src/usr.bin/top/display.c
+!/src/usr.bin/top/display.h
+!/src/usr.bin/top/getans
+!/src/usr.bin/top/getopt.c
+!/src/usr.bin/top/install-sh
+!/src/usr.bin/top/layout.h
+!/src/usr.bin/top/loadavg.h
+!/src/usr.bin/top/m-template
+!/src/usr.bin/top/machine.c
+!/src/usr.bin/top/machine.h
+!/src/usr.bin/top/metatop
+!/src/usr.bin/top/os.h
+!/src/usr.bin/top/patchlevel.h
+!/src/usr.bin/top/prime.c
+!/src/usr.bin/top/screen.c
+!/src/usr.bin/top/screen.h
+!/src/usr.bin/top/sigconv.awk
+!/src/usr.bin/top/top.c
+!/src/usr.bin/top/top.h
+!/src/usr.bin/top/top.local.1
+!/src/usr.bin/top/top.local.hs
+!/src/usr.bin/top/top.xs
+!/src/usr.bin/top/username.c
+!/src/usr.bin/top/utils.c
+!/src/usr.bin/top/utils.h
+!/src/usr.bin/top/version.c
+
+#
 # touch(1)
 #
 !/src/usr.bin/touch/Makefile
@@ -4411,6 +4771,38 @@
 !/src/usr.bin/tput/clear.sh
 !/src/usr.bin/tput/tput.1
 !/src/usr.bin/tput/tput.c
+
+#
+# tr(1)
+#
+!/src/usr.bin/tr/Makefile
+!/src/usr.bin/tr/cmap.c
+!/src/usr.bin/tr/cmap.h
+!/src/usr.bin/tr/cset.c
+!/src/usr.bin/tr/cset.h
+!/src/usr.bin/tr/extern.h
+!/src/usr.bin/tr/str.c
+!/src/usr.bin/tr/tests/Makefile
+!/src/usr.bin/tr/tests/legacy_test.sh
+!/src/usr.bin/tr/tests/regress.00.out
+!/src/usr.bin/tr/tests/regress.01.out
+!/src/usr.bin/tr/tests/regress.02.out
+!/src/usr.bin/tr/tests/regress.03.out
+!/src/usr.bin/tr/tests/regress.04.out
+!/src/usr.bin/tr/tests/regress.05.out
+!/src/usr.bin/tr/tests/regress.06.out
+!/src/usr.bin/tr/tests/regress.07.out
+!/src/usr.bin/tr/tests/regress.08.out
+!/src/usr.bin/tr/tests/regress.09.out
+!/src/usr.bin/tr/tests/regress.0a.out
+!/src/usr.bin/tr/tests/regress.0b.out
+!/src/usr.bin/tr/tests/regress.0c.out
+!/src/usr.bin/tr/tests/regress.0d.out
+!/src/usr.bin/tr/tests/regress.in
+!/src/usr.bin/tr/tests/regress.sh
+!/src/usr.bin/tr/tests/regress2.in
+!/src/usr.bin/tr/tr.1
+!/src/usr.bin/tr/tr.c
 
 #
 # true(1)
@@ -4433,11 +4825,24 @@
 !/src/usr.bin/tset/wrterm.c
 
 #
+# tty(1)
+#
+!/src/usr.bin/tty/Makefile
+!/src/usr.bin/tty/tty.1
+!/src/usr.bin/tty/tty.c
+
+#
 # uname(1)
 #
 !/src/usr.bin/uname/Makefile
 !/src/usr.bin/uname/uname.1
 !/src/usr.bin/uname/uname.c
+
+#
+# unexpand(1)
+#
+!/src/usr.bin/unexpand/Makefile
+!/src/usr.bin/unexpand/unexpand.c
 
 #
 # uniq(1)
@@ -4454,12 +4859,234 @@
 !/src/usr.bin/unzip/unzip.c
 
 #
+# uudecode(1)
+#
+!/src/usr.bin/uudecode/Makefile
+!/src/usr.bin/uudecode/tests/Makefile
+!/src/usr.bin/uudecode/tests/legacy_test.sh
+!/src/usr.bin/uudecode/tests/regress.base64.in
+!/src/usr.bin/uudecode/tests/regress.out
+!/src/usr.bin/uudecode/tests/regress.sh
+!/src/usr.bin/uudecode/tests/regress.traditional.in
+!/src/usr.bin/uudecode/uudecode.c
+
+#
+# uuencode(1)
+#
+!/src/usr.bin/uuencode/Makefile
+!/src/usr.bin/uuencode/tests/Makefile
+!/src/usr.bin/uuencode/tests/legacy_test.sh
+!/src/usr.bin/uuencode/tests/regress.base64.out
+!/src/usr.bin/uuencode/tests/regress.in
+!/src/usr.bin/uuencode/tests/regress.sh
+!/src/usr.bin/uuencode/tests/regress.traditional.out
+!/src/usr.bin/uuencode/uuencode.1
+!/src/usr.bin/uuencode/uuencode.c
+!/src/usr.bin/uuencode/uuencode.format.5
+
+#
+# vi(1)
+#
+!/src/usr.bin/vi/Makefile
+!/src/usr.bin/vi/catalog/Makefile
+!/src/usr.bin/vi/catalog/Makefile.depend
+!/src/usr.bin/vi/catalog/dutch.UTF-8.base
+!/src/usr.bin/vi/catalog/french.UTF-8.base
+!/src/usr.bin/vi/catalog/german.UTF-8.base
+!/src/usr.bin/vi/catalog/polish.UTF-8.base
+!/src/usr.bin/vi/catalog/ru_RU.UTF-8.base
+!/src/usr.bin/vi/catalog/spanish.UTF-8.base
+!/src/usr.bin/vi/catalog/swedish.UTF-8.base
+!/src/usr.bin/vi/catalog/uk_UA.UTF-8.base
+!/src/usr.bin/vi/catalog/zh_CN.UTF-8.base
+!/src/usr.bin/vi/config.h
+!/src/usr.bin/vi/nvi/LICENSE
+!/src/usr.bin/vi/nvi/README
+!/src/usr.bin/vi/nvi/catalog/Makefile
+!/src/usr.bin/vi/nvi/catalog/README
+!/src/usr.bin/vi/nvi/catalog/dump.c
+!/src/usr.bin/vi/nvi/catalog/dutch.base
+!/src/usr.bin/vi/nvi/catalog/dutch.owner
+!/src/usr.bin/vi/nvi/catalog/english.owner
+!/src/usr.bin/vi/nvi/catalog/french.base
+!/src/usr.bin/vi/nvi/catalog/german.base
+!/src/usr.bin/vi/nvi/catalog/german.owner
+!/src/usr.bin/vi/nvi/catalog/polish.base
+!/src/usr.bin/vi/nvi/catalog/polish.owner
+!/src/usr.bin/vi/nvi/catalog/ru_RU.KOI8-R.base
+!/src/usr.bin/vi/nvi/catalog/ru_RU.KOI8-R.owner
+!/src/usr.bin/vi/nvi/catalog/spanish.base
+!/src/usr.bin/vi/nvi/catalog/swedish.base
+!/src/usr.bin/vi/nvi/catalog/swedish.owner
+!/src/usr.bin/vi/nvi/catalog/uk_UA.KOI8-U.base
+!/src/usr.bin/vi/nvi/catalog/uk_UA.KOI8-U.owner
+!/src/usr.bin/vi/nvi/catalog/zh_CN.GB2312.base
+!/src/usr.bin/vi/nvi/catalog/zh_CN.GB2312.owner
+!/src/usr.bin/vi/nvi/cl/README.signal
+!/src/usr.bin/vi/nvi/cl/cl.h
+!/src/usr.bin/vi/nvi/cl/cl_funcs.c
+!/src/usr.bin/vi/nvi/cl/cl_main.c
+!/src/usr.bin/vi/nvi/cl/cl_read.c
+!/src/usr.bin/vi/nvi/cl/cl_screen.c
+!/src/usr.bin/vi/nvi/cl/cl_term.c
+!/src/usr.bin/vi/nvi/cl/extern.h
+!/src/usr.bin/vi/nvi/common/args.h
+!/src/usr.bin/vi/nvi/common/common.h
+!/src/usr.bin/vi/nvi/common/conv.c
+!/src/usr.bin/vi/nvi/common/conv.h
+!/src/usr.bin/vi/nvi/common/cut.c
+!/src/usr.bin/vi/nvi/common/cut.h
+!/src/usr.bin/vi/nvi/common/delete.c
+!/src/usr.bin/vi/nvi/common/encoding.c
+!/src/usr.bin/vi/nvi/common/exf.c
+!/src/usr.bin/vi/nvi/common/exf.h
+!/src/usr.bin/vi/nvi/common/extern.h
+!/src/usr.bin/vi/nvi/common/gs.h
+!/src/usr.bin/vi/nvi/common/key.c
+!/src/usr.bin/vi/nvi/common/key.h
+!/src/usr.bin/vi/nvi/common/line.c
+!/src/usr.bin/vi/nvi/common/log.c
+!/src/usr.bin/vi/nvi/common/log.h
+!/src/usr.bin/vi/nvi/common/main.c
+!/src/usr.bin/vi/nvi/common/mark.c
+!/src/usr.bin/vi/nvi/common/mark.h
+!/src/usr.bin/vi/nvi/common/mem.h
+!/src/usr.bin/vi/nvi/common/msg.c
+!/src/usr.bin/vi/nvi/common/msg.h
+!/src/usr.bin/vi/nvi/common/multibyte.h
+!/src/usr.bin/vi/nvi/common/options.awk
+!/src/usr.bin/vi/nvi/common/options.c
+!/src/usr.bin/vi/nvi/common/options.h
+!/src/usr.bin/vi/nvi/common/options_def.h
+!/src/usr.bin/vi/nvi/common/options_f.c
+!/src/usr.bin/vi/nvi/common/put.c
+!/src/usr.bin/vi/nvi/common/recover.c
+!/src/usr.bin/vi/nvi/common/screen.c
+!/src/usr.bin/vi/nvi/common/screen.h
+!/src/usr.bin/vi/nvi/common/search.c
+!/src/usr.bin/vi/nvi/common/seq.c
+!/src/usr.bin/vi/nvi/common/seq.h
+!/src/usr.bin/vi/nvi/common/util.c
+!/src/usr.bin/vi/nvi/common/util.h
+!/src/usr.bin/vi/nvi/docs/man/Makefile
+!/src/usr.bin/vi/nvi/docs/man/vi.1
+!/src/usr.bin/vi/nvi/ex/ex.awk
+!/src/usr.bin/vi/nvi/ex/ex.c
+!/src/usr.bin/vi/nvi/ex/ex.h
+!/src/usr.bin/vi/nvi/ex/ex_abbrev.c
+!/src/usr.bin/vi/nvi/ex/ex_append.c
+!/src/usr.bin/vi/nvi/ex/ex_args.c
+!/src/usr.bin/vi/nvi/ex/ex_argv.c
+!/src/usr.bin/vi/nvi/ex/ex_at.c
+!/src/usr.bin/vi/nvi/ex/ex_bang.c
+!/src/usr.bin/vi/nvi/ex/ex_cd.c
+!/src/usr.bin/vi/nvi/ex/ex_cmd.c
+!/src/usr.bin/vi/nvi/ex/ex_cscope.c
+!/src/usr.bin/vi/nvi/ex/ex_def.h
+!/src/usr.bin/vi/nvi/ex/ex_delete.c
+!/src/usr.bin/vi/nvi/ex/ex_display.c
+!/src/usr.bin/vi/nvi/ex/ex_edit.c
+!/src/usr.bin/vi/nvi/ex/ex_equal.c
+!/src/usr.bin/vi/nvi/ex/ex_file.c
+!/src/usr.bin/vi/nvi/ex/ex_filter.c
+!/src/usr.bin/vi/nvi/ex/ex_global.c
+!/src/usr.bin/vi/nvi/ex/ex_init.c
+!/src/usr.bin/vi/nvi/ex/ex_join.c
+!/src/usr.bin/vi/nvi/ex/ex_map.c
+!/src/usr.bin/vi/nvi/ex/ex_mark.c
+!/src/usr.bin/vi/nvi/ex/ex_mkexrc.c
+!/src/usr.bin/vi/nvi/ex/ex_move.c
+!/src/usr.bin/vi/nvi/ex/ex_open.c
+!/src/usr.bin/vi/nvi/ex/ex_preserve.c
+!/src/usr.bin/vi/nvi/ex/ex_print.c
+!/src/usr.bin/vi/nvi/ex/ex_put.c
+!/src/usr.bin/vi/nvi/ex/ex_quit.c
+!/src/usr.bin/vi/nvi/ex/ex_read.c
+!/src/usr.bin/vi/nvi/ex/ex_screen.c
+!/src/usr.bin/vi/nvi/ex/ex_script.c
+!/src/usr.bin/vi/nvi/ex/ex_set.c
+!/src/usr.bin/vi/nvi/ex/ex_shell.c
+!/src/usr.bin/vi/nvi/ex/ex_shift.c
+!/src/usr.bin/vi/nvi/ex/ex_source.c
+!/src/usr.bin/vi/nvi/ex/ex_stop.c
+!/src/usr.bin/vi/nvi/ex/ex_subst.c
+!/src/usr.bin/vi/nvi/ex/ex_tag.c
+!/src/usr.bin/vi/nvi/ex/ex_txt.c
+!/src/usr.bin/vi/nvi/ex/ex_undo.c
+!/src/usr.bin/vi/nvi/ex/ex_usage.c
+!/src/usr.bin/vi/nvi/ex/ex_util.c
+!/src/usr.bin/vi/nvi/ex/ex_version.c
+!/src/usr.bin/vi/nvi/ex/ex_visual.c
+!/src/usr.bin/vi/nvi/ex/ex_write.c
+!/src/usr.bin/vi/nvi/ex/ex_yank.c
+!/src/usr.bin/vi/nvi/ex/ex_z.c
+!/src/usr.bin/vi/nvi/ex/extern.h
+!/src/usr.bin/vi/nvi/ex/script.h
+!/src/usr.bin/vi/nvi/ex/tag.h
+!/src/usr.bin/vi/nvi/ex/version.h
+!/src/usr.bin/vi/nvi/regex/COPYRIGHT
+!/src/usr.bin/vi/nvi/regex/WHATSNEW
+!/src/usr.bin/vi/nvi/regex/cclass.h
+!/src/usr.bin/vi/nvi/regex/cname.h
+!/src/usr.bin/vi/nvi/regex/engine.c
+!/src/usr.bin/vi/nvi/regex/re_format.7
+!/src/usr.bin/vi/nvi/regex/regcomp.c
+!/src/usr.bin/vi/nvi/regex/regerror.c
+!/src/usr.bin/vi/nvi/regex/regex.3
+!/src/usr.bin/vi/nvi/regex/regex.h
+!/src/usr.bin/vi/nvi/regex/regex2.h
+!/src/usr.bin/vi/nvi/regex/regexec.c
+!/src/usr.bin/vi/nvi/regex/regfree.c
+!/src/usr.bin/vi/nvi/regex/utils.h
+!/src/usr.bin/vi/nvi/vi/extern.h
+!/src/usr.bin/vi/nvi/vi/getc.c
+!/src/usr.bin/vi/nvi/vi/v_at.c
+!/src/usr.bin/vi/nvi/vi/v_ch.c
+!/src/usr.bin/vi/nvi/vi/v_cmd.c
+!/src/usr.bin/vi/nvi/vi/v_delete.c
+!/src/usr.bin/vi/nvi/vi/v_ex.c
+!/src/usr.bin/vi/nvi/vi/v_increment.c
+!/src/usr.bin/vi/nvi/vi/v_init.c
+!/src/usr.bin/vi/nvi/vi/v_itxt.c
+!/src/usr.bin/vi/nvi/vi/v_left.c
+!/src/usr.bin/vi/nvi/vi/v_mark.c
+!/src/usr.bin/vi/nvi/vi/v_match.c
+!/src/usr.bin/vi/nvi/vi/v_paragraph.c
+!/src/usr.bin/vi/nvi/vi/v_put.c
+!/src/usr.bin/vi/nvi/vi/v_redraw.c
+!/src/usr.bin/vi/nvi/vi/v_replace.c
+!/src/usr.bin/vi/nvi/vi/v_right.c
+!/src/usr.bin/vi/nvi/vi/v_screen.c
+!/src/usr.bin/vi/nvi/vi/v_scroll.c
+!/src/usr.bin/vi/nvi/vi/v_search.c
+!/src/usr.bin/vi/nvi/vi/v_section.c
+!/src/usr.bin/vi/nvi/vi/v_sentence.c
+!/src/usr.bin/vi/nvi/vi/v_status.c
+!/src/usr.bin/vi/nvi/vi/v_txt.c
+!/src/usr.bin/vi/nvi/vi/v_ulcase.c
+!/src/usr.bin/vi/nvi/vi/v_undo.c
+!/src/usr.bin/vi/nvi/vi/v_util.c
+!/src/usr.bin/vi/nvi/vi/v_word.c
+!/src/usr.bin/vi/nvi/vi/v_xchar.c
+!/src/usr.bin/vi/nvi/vi/v_yank.c
+!/src/usr.bin/vi/nvi/vi/v_z.c
+!/src/usr.bin/vi/nvi/vi/v_zexit.c
+!/src/usr.bin/vi/nvi/vi/vi.c
+!/src/usr.bin/vi/nvi/vi/vi.h
+!/src/usr.bin/vi/nvi/vi/vs_line.c
+!/src/usr.bin/vi/nvi/vi/vs_msg.c
+!/src/usr.bin/vi/nvi/vi/vs_refresh.c
+!/src/usr.bin/vi/nvi/vi/vs_relative.c
+!/src/usr.bin/vi/nvi/vi/vs_smap.c
+!/src/usr.bin/vi/nvi/vi/vs_split.c
+!/src/usr.bin/vi/pathnames.h
+
+#
 # vmstat(1)
 #
 !/src/usr.bin/vmstat/Makefile
 !/src/usr.bin/vmstat/vmstat.8
 !/src/usr.bin/vmstat/vmstat.c
-
 
 #
 # w(1)
@@ -4480,6 +5107,280 @@
 !/src/usr.bin/wall/ttymsg.h
 !/src/usr.bin/wall/wall.1
 !/src/usr.bin/wall/wall.c
+
+#
+# wc(1)
+#
+!/src/usr.bin/wc/Makefile
+!/src/usr.bin/wc/wc.1
+!/src/usr.bin/wc/wc.c
+
+#
+# which(1)
+#
+!/src/usr.bin/which/Makefile
+!/src/usr.bin/which/which.1
+!/src/usr.bin/which/which.c
+
+#
+# who(1)
+#
+!/src/usr.bin/who/Makefile
+!/src/usr.bin/who/who.1
+!/src/usr.bin/who/who.c
+
+#
+# whois(1)
+#
+!/src/usr.bin/whois/Makefile
+!/src/usr.bin/whois/whois.1
+!/src/usr.bin/whois/whois.c
+
+#
+# xargs(1)
+#
+!/src/usr.bin/xargs/Makefile
+!/src/usr.bin/xargs/pathnames.h
+!/src/usr.bin/xargs/strnsubst.c
+!/src/usr.bin/xargs/tests/Makefile
+!/src/usr.bin/xargs/tests/legacy_test.sh
+!/src/usr.bin/xargs/tests/regress.0.in
+!/src/usr.bin/xargs/tests/regress.0.out
+!/src/usr.bin/xargs/tests/regress.0I.out
+!/src/usr.bin/xargs/tests/regress.0J.out
+!/src/usr.bin/xargs/tests/regress.0L.out
+!/src/usr.bin/xargs/tests/regress.0P1.out
+!/src/usr.bin/xargs/tests/regress.I.out
+!/src/usr.bin/xargs/tests/regress.J.out
+!/src/usr.bin/xargs/tests/regress.L.out
+!/src/usr.bin/xargs/tests/regress.P1.out
+!/src/usr.bin/xargs/tests/regress.R.out
+!/src/usr.bin/xargs/tests/regress.in
+!/src/usr.bin/xargs/tests/regress.n1.out
+!/src/usr.bin/xargs/tests/regress.n2.out
+!/src/usr.bin/xargs/tests/regress.n2P0.out
+!/src/usr.bin/xargs/tests/regress.n3.out
+!/src/usr.bin/xargs/tests/regress.normal.out
+!/src/usr.bin/xargs/tests/regress.quotes.in
+!/src/usr.bin/xargs/tests/regress.quotes.out
+!/src/usr.bin/xargs/tests/regress.sh
+!/src/usr.bin/xargs/xargs.1
+!/src/usr.bin/xargs/xargs.c
+
+#
+# xz(1)
+#
+!/src/usr.bin/xz/AUTHORS
+!/src/usr.bin/xz/COPYING
+!/src/usr.bin/xz/ChangeLog
+!/src/usr.bin/xz/FREEBSD-Xlist
+!/src/usr.bin/xz/FREEBSD-upgrade
+!/src/usr.bin/xz/Makefile
+!/src/usr.bin/xz/README
+!/src/usr.bin/xz/THANKS
+!/src/usr.bin/xz/TODO
+!/src/usr.bin/xz/src/common/mythread.h
+!/src/usr.bin/xz/src/common/sysdefs.h
+!/src/usr.bin/xz/src/common/tuklib_common.h
+!/src/usr.bin/xz/src/common/tuklib_config.h
+!/src/usr.bin/xz/src/common/tuklib_cpucores.c
+!/src/usr.bin/xz/src/common/tuklib_cpucores.h
+!/src/usr.bin/xz/src/common/tuklib_exit.c
+!/src/usr.bin/xz/src/common/tuklib_exit.h
+!/src/usr.bin/xz/src/common/tuklib_gettext.h
+!/src/usr.bin/xz/src/common/tuklib_integer.h
+!/src/usr.bin/xz/src/common/tuklib_mbstr.h
+!/src/usr.bin/xz/src/common/tuklib_mbstr_fw.c
+!/src/usr.bin/xz/src/common/tuklib_mbstr_width.c
+!/src/usr.bin/xz/src/common/tuklib_open_stdxxx.c
+!/src/usr.bin/xz/src/common/tuklib_open_stdxxx.h
+!/src/usr.bin/xz/src/common/tuklib_physmem.c
+!/src/usr.bin/xz/src/common/tuklib_physmem.h
+!/src/usr.bin/xz/src/common/tuklib_progname.c
+!/src/usr.bin/xz/src/common/tuklib_progname.h
+!/src/usr.bin/xz/src/liblzma/api/lzma.h
+!/src/usr.bin/xz/src/liblzma/api/lzma/base.h
+!/src/usr.bin/xz/src/liblzma/api/lzma/bcj.h
+!/src/usr.bin/xz/src/liblzma/api/lzma/block.h
+!/src/usr.bin/xz/src/liblzma/api/lzma/check.h
+!/src/usr.bin/xz/src/liblzma/api/lzma/container.h
+!/src/usr.bin/xz/src/liblzma/api/lzma/delta.h
+!/src/usr.bin/xz/src/liblzma/api/lzma/filter.h
+!/src/usr.bin/xz/src/liblzma/api/lzma/hardware.h
+!/src/usr.bin/xz/src/liblzma/api/lzma/index.h
+!/src/usr.bin/xz/src/liblzma/api/lzma/index_hash.h
+!/src/usr.bin/xz/src/liblzma/api/lzma/lzma12.h
+!/src/usr.bin/xz/src/liblzma/api/lzma/stream_flags.h
+!/src/usr.bin/xz/src/liblzma/api/lzma/version.h
+!/src/usr.bin/xz/src/liblzma/api/lzma/vli.h
+!/src/usr.bin/xz/src/liblzma/check/check.c
+!/src/usr.bin/xz/src/liblzma/check/check.h
+!/src/usr.bin/xz/src/liblzma/check/crc32_fast.c
+!/src/usr.bin/xz/src/liblzma/check/crc32_small.c
+!/src/usr.bin/xz/src/liblzma/check/crc32_table.c
+!/src/usr.bin/xz/src/liblzma/check/crc32_table_be.h
+!/src/usr.bin/xz/src/liblzma/check/crc32_table_le.h
+!/src/usr.bin/xz/src/liblzma/check/crc32_tablegen.c
+!/src/usr.bin/xz/src/liblzma/check/crc32_x86.S
+!/src/usr.bin/xz/src/liblzma/check/crc64_fast.c
+!/src/usr.bin/xz/src/liblzma/check/crc64_small.c
+!/src/usr.bin/xz/src/liblzma/check/crc64_table.c
+!/src/usr.bin/xz/src/liblzma/check/crc64_table_be.h
+!/src/usr.bin/xz/src/liblzma/check/crc64_table_le.h
+!/src/usr.bin/xz/src/liblzma/check/crc64_tablegen.c
+!/src/usr.bin/xz/src/liblzma/check/crc64_x86.S
+!/src/usr.bin/xz/src/liblzma/check/crc_macros.h
+!/src/usr.bin/xz/src/liblzma/check/sha256.c
+!/src/usr.bin/xz/src/liblzma/common/alone_decoder.c
+!/src/usr.bin/xz/src/liblzma/common/alone_decoder.h
+!/src/usr.bin/xz/src/liblzma/common/alone_encoder.c
+!/src/usr.bin/xz/src/liblzma/common/auto_decoder.c
+!/src/usr.bin/xz/src/liblzma/common/block_buffer_decoder.c
+!/src/usr.bin/xz/src/liblzma/common/block_buffer_encoder.c
+!/src/usr.bin/xz/src/liblzma/common/block_buffer_encoder.h
+!/src/usr.bin/xz/src/liblzma/common/block_decoder.c
+!/src/usr.bin/xz/src/liblzma/common/block_decoder.h
+!/src/usr.bin/xz/src/liblzma/common/block_encoder.c
+!/src/usr.bin/xz/src/liblzma/common/block_encoder.h
+!/src/usr.bin/xz/src/liblzma/common/block_header_decoder.c
+!/src/usr.bin/xz/src/liblzma/common/block_header_encoder.c
+!/src/usr.bin/xz/src/liblzma/common/block_util.c
+!/src/usr.bin/xz/src/liblzma/common/common.c
+!/src/usr.bin/xz/src/liblzma/common/common.h
+!/src/usr.bin/xz/src/liblzma/common/easy_buffer_encoder.c
+!/src/usr.bin/xz/src/liblzma/common/easy_decoder_memusage.c
+!/src/usr.bin/xz/src/liblzma/common/easy_encoder.c
+!/src/usr.bin/xz/src/liblzma/common/easy_encoder_memusage.c
+!/src/usr.bin/xz/src/liblzma/common/easy_preset.c
+!/src/usr.bin/xz/src/liblzma/common/easy_preset.h
+!/src/usr.bin/xz/src/liblzma/common/filter_buffer_decoder.c
+!/src/usr.bin/xz/src/liblzma/common/filter_buffer_encoder.c
+!/src/usr.bin/xz/src/liblzma/common/filter_common.c
+!/src/usr.bin/xz/src/liblzma/common/filter_common.h
+!/src/usr.bin/xz/src/liblzma/common/filter_decoder.c
+!/src/usr.bin/xz/src/liblzma/common/filter_decoder.h
+!/src/usr.bin/xz/src/liblzma/common/filter_encoder.c
+!/src/usr.bin/xz/src/liblzma/common/filter_encoder.h
+!/src/usr.bin/xz/src/liblzma/common/filter_flags_decoder.c
+!/src/usr.bin/xz/src/liblzma/common/filter_flags_encoder.c
+!/src/usr.bin/xz/src/liblzma/common/hardware_cputhreads.c
+!/src/usr.bin/xz/src/liblzma/common/hardware_physmem.c
+!/src/usr.bin/xz/src/liblzma/common/index.c
+!/src/usr.bin/xz/src/liblzma/common/index.h
+!/src/usr.bin/xz/src/liblzma/common/index_decoder.c
+!/src/usr.bin/xz/src/liblzma/common/index_encoder.c
+!/src/usr.bin/xz/src/liblzma/common/index_encoder.h
+!/src/usr.bin/xz/src/liblzma/common/index_hash.c
+!/src/usr.bin/xz/src/liblzma/common/memcmplen.h
+!/src/usr.bin/xz/src/liblzma/common/outqueue.c
+!/src/usr.bin/xz/src/liblzma/common/outqueue.h
+!/src/usr.bin/xz/src/liblzma/common/stream_buffer_decoder.c
+!/src/usr.bin/xz/src/liblzma/common/stream_buffer_encoder.c
+!/src/usr.bin/xz/src/liblzma/common/stream_decoder.c
+!/src/usr.bin/xz/src/liblzma/common/stream_decoder.h
+!/src/usr.bin/xz/src/liblzma/common/stream_encoder.c
+!/src/usr.bin/xz/src/liblzma/common/stream_encoder_mt.c
+!/src/usr.bin/xz/src/liblzma/common/stream_flags_common.c
+!/src/usr.bin/xz/src/liblzma/common/stream_flags_common.h
+!/src/usr.bin/xz/src/liblzma/common/stream_flags_decoder.c
+!/src/usr.bin/xz/src/liblzma/common/stream_flags_encoder.c
+!/src/usr.bin/xz/src/liblzma/common/vli_decoder.c
+!/src/usr.bin/xz/src/liblzma/common/vli_encoder.c
+!/src/usr.bin/xz/src/liblzma/common/vli_size.c
+!/src/usr.bin/xz/src/liblzma/delta/delta_common.c
+!/src/usr.bin/xz/src/liblzma/delta/delta_common.h
+!/src/usr.bin/xz/src/liblzma/delta/delta_decoder.c
+!/src/usr.bin/xz/src/liblzma/delta/delta_decoder.h
+!/src/usr.bin/xz/src/liblzma/delta/delta_encoder.c
+!/src/usr.bin/xz/src/liblzma/delta/delta_encoder.h
+!/src/usr.bin/xz/src/liblzma/delta/delta_private.h
+!/src/usr.bin/xz/src/liblzma/liblzma.map
+!/src/usr.bin/xz/src/liblzma/liblzma.pc.in
+!/src/usr.bin/xz/src/liblzma/lz/lz_decoder.c
+!/src/usr.bin/xz/src/liblzma/lz/lz_decoder.h
+!/src/usr.bin/xz/src/liblzma/lz/lz_encoder.c
+!/src/usr.bin/xz/src/liblzma/lz/lz_encoder.h
+!/src/usr.bin/xz/src/liblzma/lz/lz_encoder_hash.h
+!/src/usr.bin/xz/src/liblzma/lz/lz_encoder_hash_table.h
+!/src/usr.bin/xz/src/liblzma/lz/lz_encoder_mf.c
+!/src/usr.bin/xz/src/liblzma/lzma/fastpos.h
+!/src/usr.bin/xz/src/liblzma/lzma/fastpos_table.c
+!/src/usr.bin/xz/src/liblzma/lzma/fastpos_tablegen.c
+!/src/usr.bin/xz/src/liblzma/lzma/lzma2_decoder.c
+!/src/usr.bin/xz/src/liblzma/lzma/lzma2_decoder.h
+!/src/usr.bin/xz/src/liblzma/lzma/lzma2_encoder.c
+!/src/usr.bin/xz/src/liblzma/lzma/lzma2_encoder.h
+!/src/usr.bin/xz/src/liblzma/lzma/lzma_common.h
+!/src/usr.bin/xz/src/liblzma/lzma/lzma_decoder.c
+!/src/usr.bin/xz/src/liblzma/lzma/lzma_decoder.h
+!/src/usr.bin/xz/src/liblzma/lzma/lzma_encoder.c
+!/src/usr.bin/xz/src/liblzma/lzma/lzma_encoder.h
+!/src/usr.bin/xz/src/liblzma/lzma/lzma_encoder_optimum_fast.c
+!/src/usr.bin/xz/src/liblzma/lzma/lzma_encoder_optimum_normal.c
+!/src/usr.bin/xz/src/liblzma/lzma/lzma_encoder_presets.c
+!/src/usr.bin/xz/src/liblzma/lzma/lzma_encoder_private.h
+!/src/usr.bin/xz/src/liblzma/rangecoder/price.h
+!/src/usr.bin/xz/src/liblzma/rangecoder/price_table.c
+!/src/usr.bin/xz/src/liblzma/rangecoder/price_tablegen.c
+!/src/usr.bin/xz/src/liblzma/rangecoder/range_common.h
+!/src/usr.bin/xz/src/liblzma/rangecoder/range_decoder.h
+!/src/usr.bin/xz/src/liblzma/rangecoder/range_encoder.h
+!/src/usr.bin/xz/src/liblzma/simple/arm.c
+!/src/usr.bin/xz/src/liblzma/simple/armthumb.c
+!/src/usr.bin/xz/src/liblzma/simple/ia64.c
+!/src/usr.bin/xz/src/liblzma/simple/powerpc.c
+!/src/usr.bin/xz/src/liblzma/simple/simple_coder.c
+!/src/usr.bin/xz/src/liblzma/simple/simple_coder.h
+!/src/usr.bin/xz/src/liblzma/simple/simple_decoder.c
+!/src/usr.bin/xz/src/liblzma/simple/simple_decoder.h
+!/src/usr.bin/xz/src/liblzma/simple/simple_encoder.c
+!/src/usr.bin/xz/src/liblzma/simple/simple_encoder.h
+!/src/usr.bin/xz/src/liblzma/simple/simple_private.h
+!/src/usr.bin/xz/src/liblzma/simple/sparc.c
+!/src/usr.bin/xz/src/liblzma/simple/x86.c
+!/src/usr.bin/xz/src/liblzma/validate_map.sh
+!/src/usr.bin/xz/src/lzmainfo/lzmainfo.1
+!/src/usr.bin/xz/src/lzmainfo/lzmainfo.c
+!/src/usr.bin/xz/src/xz/args.c
+!/src/usr.bin/xz/src/xz/args.h
+!/src/usr.bin/xz/src/xz/coder.c
+!/src/usr.bin/xz/src/xz/coder.h
+!/src/usr.bin/xz/src/xz/file_io.c
+!/src/usr.bin/xz/src/xz/file_io.h
+!/src/usr.bin/xz/src/xz/hardware.c
+!/src/usr.bin/xz/src/xz/hardware.h
+!/src/usr.bin/xz/src/xz/list.c
+!/src/usr.bin/xz/src/xz/list.h
+!/src/usr.bin/xz/src/xz/main.c
+!/src/usr.bin/xz/src/xz/main.h
+!/src/usr.bin/xz/src/xz/message.c
+!/src/usr.bin/xz/src/xz/message.h
+!/src/usr.bin/xz/src/xz/mytime.c
+!/src/usr.bin/xz/src/xz/mytime.h
+!/src/usr.bin/xz/src/xz/options.c
+!/src/usr.bin/xz/src/xz/options.h
+!/src/usr.bin/xz/src/xz/private.h
+!/src/usr.bin/xz/src/xz/signals.c
+!/src/usr.bin/xz/src/xz/signals.h
+!/src/usr.bin/xz/src/xz/suffix.c
+!/src/usr.bin/xz/src/xz/suffix.h
+!/src/usr.bin/xz/src/xz/util.c
+!/src/usr.bin/xz/src/xz/util.h
+!/src/usr.bin/xz/src/xz/xz.1
+!/src/usr.bin/xz/src/xzdec/xzdec.1
+!/src/usr.bin/xz/src/xzdec/xzdec.c
+
+#
+# xzdec(1)
+#
+!/src/usr.bin/xzdec/Makefile
+
+#
+# yes(1)
+#
+!/src/usr.bin/yes/Makefile
+!/src/usr.bin/yes/yes.1
+!/src/usr.bin/yes/yes.c
 
 #
 ## usr.sbin
