@@ -2673,6 +2673,7 @@
 # ncal(1)
 # netstat(1)
 # nice(1)
+# nm(1)
 # nohub(1)
 # passwd(1)
 # patch(1)
@@ -2683,6 +2684,7 @@
 # script(1)
 # sed(1)
 # seq(1)
+# size(1)
 # sockstat(1)
 # split(1)
 # sort(1)
@@ -3820,6 +3822,11 @@
 !/src/usr.bin/nice/nice.c
 
 #
+# nm(1)
+#
+!/src/usr.bin/nm/Makefile
+
+#
 # nohub(1)
 #
 !/src/usr.bin/nohub/Makefile
@@ -4093,6 +4100,11 @@
 !/src/usr.bin/seq/Makefile
 !/src/usr.bin/seq/seq.1
 !/src/usr.bin/seq/seq.c
+
+#
+# size(1)
+#
+!/src/usr.bin/size/Makefile
 
 #
 # sockstat(1)

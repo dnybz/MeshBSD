@@ -14,6 +14,7 @@ SUBDIR=	alias \
 	at \
 	ath \
 	awk \
+	bluetooth \
 	bzip2 \
 	cap_mkdb \
 	chat \
@@ -22,9 +23,11 @@ SUBDIR=	alias \
 	comm \
 	compile_et \
 	compress \
+	cpio \
 	cut \
 	dc \
 	du \
+	ee \
 	elfcopy \
 	env \
 	expand \
@@ -63,6 +66,7 @@ SUBDIR=	alias \
 	ncal \
 	netstat \
 	nice \
+	nm \
 	nohub \
 	patch \
 	passwd \
@@ -73,6 +77,7 @@ SUBDIR=	alias \
 	script \
 	sed \
 	seq \
+	size \
 	sockstat \
 	sort \
 	split \
@@ -113,15 +118,6 @@ SUBDIR=	alias \
 	xzdec \
 	yes \
 	yacc
-
-# NB: keep these sorted by MK_* knobs
-
-SUBDIR.${MK_AT}+=	at
-SUBDIR.${MK_BLUETOOTH}+=	bluetooth
-SUBDIR.${MK_BSD_CPIO}+=	cpio
-SUBDIR.${MK_EE}+=	ee
-
-SUBDIR.${MK_MAN_UTILS}+=	man
 
 .include <bsd.arch.inc.mk>
 

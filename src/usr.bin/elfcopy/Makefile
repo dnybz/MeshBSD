@@ -2,7 +2,7 @@
 
 .include <src.opts.mk>
 
-ELFTCDIR=	${.CURDIR}/../../elftoolchain
+ELFTCDIR=	${.CURDIR}/../../contrib/elftoolchain
 ELFCOPYDIR=	${ELFTCDIR}/elfcopy
 
 .PATH: ${ELFCOPYDIR}
