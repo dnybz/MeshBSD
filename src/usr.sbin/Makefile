@@ -52,6 +52,7 @@ SUBDIR=	adduser \
 	mpsutil \
 	mptutil \
 	mtest \
+	mtree \
 	newsyslog \
 	nfscbd \
 	nfsd \

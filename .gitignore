@@ -54,8 +54,8 @@
 !/src/targets/pseudo/userland/lib/Makefile.depend
 
 ##
-# Sys 
-#
+## Kernel
+##
 
 #
 # Configuration
@@ -120,6 +120,12 @@
 #
 !/src/sys/netgraph/ng_ether.c
 
+## 
+# Sys
+#
+!/src/sys/sys/cdefs.h
+!/src/sys/sys/time.h
+
 #
 # SYS_getdtablecount
 #
@@ -140,7 +146,6 @@
 !/src/share/mk/src.libnames.mk
 
 !/src/lib/Makefile
-
 
 #
 ## libarchive(3)
@@ -883,6 +888,18 @@
 !/src/lib/libc/sys/Symbol.map
 
 #
+## libnetbsd(3)
+#
+!/src/lib/libnetbsd/Makefile
+!/src/lib/libnetbsd/README
+!/src/lib/libnetbsd/netinet/in.h
+!/src/lib/libnetbsd/rmd160.h
+!/src/lib/libnetbsd/sha1.h
+!/src/lib/libnetbsd/sha2.h
+!/src/lib/libnetbsd/sys/cdefs.h
+!/src/lib/libnetbsd/sys/time.h
+
+#
 ## stdlib(3)
 #
 
@@ -997,6 +1014,7 @@
 # atf(8)
 # atrun(8)
 # casper(8)
+# dma(8)
 # ftpd(8)
 # getty(8)
 # pppoed(8)
@@ -1197,6 +1215,44 @@
 !/src/libexec/casper/random/random.c
 !/src/libexec/casper/sysctl/Makefile
 !/src/libexec/casper/sysctl/sysctl.c
+
+#
+# dma(8)
+#
+!/src/libexec/dma/Makefile
+!/src/libexec/dma/Makefile.inc
+!/src/libexec/dma/dma-mbox-create/Makefile
+!/src/libexec/dma/dma/INSTALL
+!/src/libexec/dma/dma/LICENSE
+!/src/libexec/dma/dma/Makefile
+!/src/libexec/dma/dma/Makefile.etc
+!/src/libexec/dma/dma/README.markdown
+!/src/libexec/dma/dma/TODO
+!/src/libexec/dma/dma/VERSION
+!/src/libexec/dma/dma/aliases_parse.y
+!/src/libexec/dma/dma/aliases_scan.l
+!/src/libexec/dma/dma/auth.conf
+!/src/libexec/dma/dma/base64.c
+!/src/libexec/dma/dma/conf.c
+!/src/libexec/dma/dma/crypto.c
+!/src/libexec/dma/dma/dfcompat.c
+!/src/libexec/dma/dma/dfcompat.h
+!/src/libexec/dma/dma/dma-mbox-create.c
+!/src/libexec/dma/dma/dma.8
+!/src/libexec/dma/dma/dma.c
+!/src/libexec/dma/dma/dma.conf
+!/src/libexec/dma/dma/dma.h
+!/src/libexec/dma/dma/dns.c
+!/src/libexec/dma/dma/get-version.sh
+!/src/libexec/dma/dma/local.c
+!/src/libexec/dma/dma/mail.c
+!/src/libexec/dma/dma/net.c
+!/src/libexec/dma/dma/spool.c
+!/src/libexec/dma/dma/test/quote.rfc2822
+!/src/libexec/dma/dma/util.c
+!/src/libexec/dma/dmagent/Makefile
+!/src/libexec/dma/dmagent/dma.conf
+!/src/libexec/dma/dmagent/mailer.conf
 
 #
 # ftpd(8)
@@ -3258,6 +3314,7 @@
 # cksum(1)
 # cmp(1)
 # comm(1)
+# compile_et(1)
 # compress(1)
 # cpio(1)
 # cut(1)
@@ -3288,6 +3345,7 @@
 # logger(1)
 # login(1)
 # logname(1)
+# lorder(1)
 # m4(1)
 # man(1)
 # mesg(1)
@@ -3298,12 +3356,13 @@
 # ncal(1)
 # netstat(1)
 # nice(1)
-# nohup(1)
+# nohub(1)
 # passwd(1)
 # patch(1)
 # printenv(1)
 # printf(1)
 # renice(1)
+# rpcgen(1)
 # script(1)
 # sed(1)
 # seq(1)
@@ -3332,7 +3391,6 @@
 # unzip(1)
 # uudecode(1)
 # uuencode(1)
-# vi(1)
 # vmstat(1)
 # w(1)
 # wall(1)
@@ -3580,6 +3638,26 @@
 !/src/usr.bin/comm/tests/regress.02a.in
 !/src/usr.bin/comm/tests/regress.02b.in
 !/src/usr.bin/comm/tests/regress.sh
+
+#
+# compile_et(1)
+#
+!/src/usr.bin/compile_et/
+!/src/usr.bin/compile_et/ChangeLog
+!/src/usr.bin/compile_et/Makefile
+!/src/usr.bin/compile_et/com_err.3
+!/src/usr.bin/compile_et/com_err.c
+!/src/usr.bin/compile_et/com_err.h
+!/src/usr.bin/compile_et/com_right.h
+!/src/usr.bin/compile_et/compile_et.1
+!/src/usr.bin/compile_et/compile_et.c
+!/src/usr.bin/compile_et/compile_et.h
+!/src/usr.bin/compile_et/error.c
+!/src/usr.bin/compile_et/lex.h
+!/src/usr.bin/compile_et/lex.l
+!/src/usr.bin/compile_et/parse.y
+!/src/usr.bin/compile_et/roken_rename.h
+!/src/usr.bin/compile_et/version-script.map
 
 #
 # compress(1)
@@ -4107,6 +4185,13 @@
 !/src/usr.bin/logname/logname.c
 
 #
+# lorder(1)
+#
+!/src/usr.bin/lorder/Makefile
+!/src/usr.bin/lorder/lorder.1
+!/src/usr.bin/lorder/lorder.sh
+
+#
 # m4(1)
 #
 !/src/usr.bin/m4/Makefile
@@ -4310,11 +4395,11 @@
 !/src/usr.bin/nice/nice.c
 
 #
-# nohup(1)
+# nohub(1)
 #
-!/src/usr.bin/nohup/Makefile
-!/src/usr.bin/nohup/nohup.1
-!/src/usr.bin/nohup/nohup.c
+!/src/usr.bin/nohub/Makefile
+!/src/usr.bin/nohub/nohub.1
+!/src/usr.bin/nohub/nohub.c
 
 #
 # patch(1)
@@ -4377,6 +4462,25 @@
 !/src/usr.bin/renice/Makefile
 !/src/usr.bin/renice/renice.8
 !/src/usr.bin/renice/renice.c
+
+#
+# rpcgen(1)
+#
+!/src/usr.bin/rpcgen/Makefile
+!/src/usr.bin/rpcgen/rpc_clntout.c
+!/src/usr.bin/rpcgen/rpc_cout.c
+!/src/usr.bin/rpcgen/rpc_hout.c
+!/src/usr.bin/rpcgen/rpc_main.c
+!/src/usr.bin/rpcgen/rpc_parse.c
+!/src/usr.bin/rpcgen/rpc_parse.h
+!/src/usr.bin/rpcgen/rpc_sample.c
+!/src/usr.bin/rpcgen/rpc_scan.c
+!/src/usr.bin/rpcgen/rpc_scan.h
+!/src/usr.bin/rpcgen/rpc_svcout.c
+!/src/usr.bin/rpcgen/rpc_tblout.c
+!/src/usr.bin/rpcgen/rpc_util.c
+!/src/usr.bin/rpcgen/rpc_util.h
+!/src/usr.bin/rpcgen/rpcgen.1
 
 #
 # script(1)
@@ -4885,203 +4989,6 @@
 !/src/usr.bin/uuencode/uuencode.format.5
 
 #
-# vi(1)
-#
-!/src/usr.bin/vi/Makefile
-!/src/usr.bin/vi/catalog/Makefile
-!/src/usr.bin/vi/catalog/Makefile.depend
-!/src/usr.bin/vi/catalog/dutch.UTF-8.base
-!/src/usr.bin/vi/catalog/french.UTF-8.base
-!/src/usr.bin/vi/catalog/german.UTF-8.base
-!/src/usr.bin/vi/catalog/polish.UTF-8.base
-!/src/usr.bin/vi/catalog/ru_RU.UTF-8.base
-!/src/usr.bin/vi/catalog/spanish.UTF-8.base
-!/src/usr.bin/vi/catalog/swedish.UTF-8.base
-!/src/usr.bin/vi/catalog/uk_UA.UTF-8.base
-!/src/usr.bin/vi/catalog/zh_CN.UTF-8.base
-!/src/usr.bin/vi/config.h
-!/src/usr.bin/vi/nvi/LICENSE
-!/src/usr.bin/vi/nvi/README
-!/src/usr.bin/vi/nvi/catalog/Makefile
-!/src/usr.bin/vi/nvi/catalog/README
-!/src/usr.bin/vi/nvi/catalog/dump.c
-!/src/usr.bin/vi/nvi/catalog/dutch.base
-!/src/usr.bin/vi/nvi/catalog/dutch.owner
-!/src/usr.bin/vi/nvi/catalog/english.owner
-!/src/usr.bin/vi/nvi/catalog/french.base
-!/src/usr.bin/vi/nvi/catalog/german.base
-!/src/usr.bin/vi/nvi/catalog/german.owner
-!/src/usr.bin/vi/nvi/catalog/polish.base
-!/src/usr.bin/vi/nvi/catalog/polish.owner
-!/src/usr.bin/vi/nvi/catalog/ru_RU.KOI8-R.base
-!/src/usr.bin/vi/nvi/catalog/ru_RU.KOI8-R.owner
-!/src/usr.bin/vi/nvi/catalog/spanish.base
-!/src/usr.bin/vi/nvi/catalog/swedish.base
-!/src/usr.bin/vi/nvi/catalog/swedish.owner
-!/src/usr.bin/vi/nvi/catalog/uk_UA.KOI8-U.base
-!/src/usr.bin/vi/nvi/catalog/uk_UA.KOI8-U.owner
-!/src/usr.bin/vi/nvi/catalog/zh_CN.GB2312.base
-!/src/usr.bin/vi/nvi/catalog/zh_CN.GB2312.owner
-!/src/usr.bin/vi/nvi/cl/README.signal
-!/src/usr.bin/vi/nvi/cl/cl.h
-!/src/usr.bin/vi/nvi/cl/cl_funcs.c
-!/src/usr.bin/vi/nvi/cl/cl_main.c
-!/src/usr.bin/vi/nvi/cl/cl_read.c
-!/src/usr.bin/vi/nvi/cl/cl_screen.c
-!/src/usr.bin/vi/nvi/cl/cl_term.c
-!/src/usr.bin/vi/nvi/cl/extern.h
-!/src/usr.bin/vi/nvi/common/args.h
-!/src/usr.bin/vi/nvi/common/common.h
-!/src/usr.bin/vi/nvi/common/conv.c
-!/src/usr.bin/vi/nvi/common/conv.h
-!/src/usr.bin/vi/nvi/common/cut.c
-!/src/usr.bin/vi/nvi/common/cut.h
-!/src/usr.bin/vi/nvi/common/delete.c
-!/src/usr.bin/vi/nvi/common/encoding.c
-!/src/usr.bin/vi/nvi/common/exf.c
-!/src/usr.bin/vi/nvi/common/exf.h
-!/src/usr.bin/vi/nvi/common/extern.h
-!/src/usr.bin/vi/nvi/common/gs.h
-!/src/usr.bin/vi/nvi/common/key.c
-!/src/usr.bin/vi/nvi/common/key.h
-!/src/usr.bin/vi/nvi/common/line.c
-!/src/usr.bin/vi/nvi/common/log.c
-!/src/usr.bin/vi/nvi/common/log.h
-!/src/usr.bin/vi/nvi/common/main.c
-!/src/usr.bin/vi/nvi/common/mark.c
-!/src/usr.bin/vi/nvi/common/mark.h
-!/src/usr.bin/vi/nvi/common/mem.h
-!/src/usr.bin/vi/nvi/common/msg.c
-!/src/usr.bin/vi/nvi/common/msg.h
-!/src/usr.bin/vi/nvi/common/multibyte.h
-!/src/usr.bin/vi/nvi/common/options.awk
-!/src/usr.bin/vi/nvi/common/options.c
-!/src/usr.bin/vi/nvi/common/options.h
-!/src/usr.bin/vi/nvi/common/options_def.h
-!/src/usr.bin/vi/nvi/common/options_f.c
-!/src/usr.bin/vi/nvi/common/put.c
-!/src/usr.bin/vi/nvi/common/recover.c
-!/src/usr.bin/vi/nvi/common/screen.c
-!/src/usr.bin/vi/nvi/common/screen.h
-!/src/usr.bin/vi/nvi/common/search.c
-!/src/usr.bin/vi/nvi/common/seq.c
-!/src/usr.bin/vi/nvi/common/seq.h
-!/src/usr.bin/vi/nvi/common/util.c
-!/src/usr.bin/vi/nvi/common/util.h
-!/src/usr.bin/vi/nvi/docs/man/Makefile
-!/src/usr.bin/vi/nvi/docs/man/vi.1
-!/src/usr.bin/vi/nvi/ex/ex.awk
-!/src/usr.bin/vi/nvi/ex/ex.c
-!/src/usr.bin/vi/nvi/ex/ex.h
-!/src/usr.bin/vi/nvi/ex/ex_abbrev.c
-!/src/usr.bin/vi/nvi/ex/ex_append.c
-!/src/usr.bin/vi/nvi/ex/ex_args.c
-!/src/usr.bin/vi/nvi/ex/ex_argv.c
-!/src/usr.bin/vi/nvi/ex/ex_at.c
-!/src/usr.bin/vi/nvi/ex/ex_bang.c
-!/src/usr.bin/vi/nvi/ex/ex_cd.c
-!/src/usr.bin/vi/nvi/ex/ex_cmd.c
-!/src/usr.bin/vi/nvi/ex/ex_cscope.c
-!/src/usr.bin/vi/nvi/ex/ex_def.h
-!/src/usr.bin/vi/nvi/ex/ex_delete.c
-!/src/usr.bin/vi/nvi/ex/ex_display.c
-!/src/usr.bin/vi/nvi/ex/ex_edit.c
-!/src/usr.bin/vi/nvi/ex/ex_equal.c
-!/src/usr.bin/vi/nvi/ex/ex_file.c
-!/src/usr.bin/vi/nvi/ex/ex_filter.c
-!/src/usr.bin/vi/nvi/ex/ex_global.c
-!/src/usr.bin/vi/nvi/ex/ex_init.c
-!/src/usr.bin/vi/nvi/ex/ex_join.c
-!/src/usr.bin/vi/nvi/ex/ex_map.c
-!/src/usr.bin/vi/nvi/ex/ex_mark.c
-!/src/usr.bin/vi/nvi/ex/ex_mkexrc.c
-!/src/usr.bin/vi/nvi/ex/ex_move.c
-!/src/usr.bin/vi/nvi/ex/ex_open.c
-!/src/usr.bin/vi/nvi/ex/ex_preserve.c
-!/src/usr.bin/vi/nvi/ex/ex_print.c
-!/src/usr.bin/vi/nvi/ex/ex_put.c
-!/src/usr.bin/vi/nvi/ex/ex_quit.c
-!/src/usr.bin/vi/nvi/ex/ex_read.c
-!/src/usr.bin/vi/nvi/ex/ex_screen.c
-!/src/usr.bin/vi/nvi/ex/ex_script.c
-!/src/usr.bin/vi/nvi/ex/ex_set.c
-!/src/usr.bin/vi/nvi/ex/ex_shell.c
-!/src/usr.bin/vi/nvi/ex/ex_shift.c
-!/src/usr.bin/vi/nvi/ex/ex_source.c
-!/src/usr.bin/vi/nvi/ex/ex_stop.c
-!/src/usr.bin/vi/nvi/ex/ex_subst.c
-!/src/usr.bin/vi/nvi/ex/ex_tag.c
-!/src/usr.bin/vi/nvi/ex/ex_txt.c
-!/src/usr.bin/vi/nvi/ex/ex_undo.c
-!/src/usr.bin/vi/nvi/ex/ex_usage.c
-!/src/usr.bin/vi/nvi/ex/ex_util.c
-!/src/usr.bin/vi/nvi/ex/ex_version.c
-!/src/usr.bin/vi/nvi/ex/ex_visual.c
-!/src/usr.bin/vi/nvi/ex/ex_write.c
-!/src/usr.bin/vi/nvi/ex/ex_yank.c
-!/src/usr.bin/vi/nvi/ex/ex_z.c
-!/src/usr.bin/vi/nvi/ex/extern.h
-!/src/usr.bin/vi/nvi/ex/script.h
-!/src/usr.bin/vi/nvi/ex/tag.h
-!/src/usr.bin/vi/nvi/ex/version.h
-!/src/usr.bin/vi/nvi/regex/COPYRIGHT
-!/src/usr.bin/vi/nvi/regex/WHATSNEW
-!/src/usr.bin/vi/nvi/regex/cclass.h
-!/src/usr.bin/vi/nvi/regex/cname.h
-!/src/usr.bin/vi/nvi/regex/engine.c
-!/src/usr.bin/vi/nvi/regex/re_format.7
-!/src/usr.bin/vi/nvi/regex/regcomp.c
-!/src/usr.bin/vi/nvi/regex/regerror.c
-!/src/usr.bin/vi/nvi/regex/regex.3
-!/src/usr.bin/vi/nvi/regex/regex.h
-!/src/usr.bin/vi/nvi/regex/regex2.h
-!/src/usr.bin/vi/nvi/regex/regexec.c
-!/src/usr.bin/vi/nvi/regex/regfree.c
-!/src/usr.bin/vi/nvi/regex/utils.h
-!/src/usr.bin/vi/nvi/vi/extern.h
-!/src/usr.bin/vi/nvi/vi/getc.c
-!/src/usr.bin/vi/nvi/vi/v_at.c
-!/src/usr.bin/vi/nvi/vi/v_ch.c
-!/src/usr.bin/vi/nvi/vi/v_cmd.c
-!/src/usr.bin/vi/nvi/vi/v_delete.c
-!/src/usr.bin/vi/nvi/vi/v_ex.c
-!/src/usr.bin/vi/nvi/vi/v_increment.c
-!/src/usr.bin/vi/nvi/vi/v_init.c
-!/src/usr.bin/vi/nvi/vi/v_itxt.c
-!/src/usr.bin/vi/nvi/vi/v_left.c
-!/src/usr.bin/vi/nvi/vi/v_mark.c
-!/src/usr.bin/vi/nvi/vi/v_match.c
-!/src/usr.bin/vi/nvi/vi/v_paragraph.c
-!/src/usr.bin/vi/nvi/vi/v_put.c
-!/src/usr.bin/vi/nvi/vi/v_redraw.c
-!/src/usr.bin/vi/nvi/vi/v_replace.c
-!/src/usr.bin/vi/nvi/vi/v_right.c
-!/src/usr.bin/vi/nvi/vi/v_screen.c
-!/src/usr.bin/vi/nvi/vi/v_scroll.c
-!/src/usr.bin/vi/nvi/vi/v_search.c
-!/src/usr.bin/vi/nvi/vi/v_section.c
-!/src/usr.bin/vi/nvi/vi/v_sentence.c
-!/src/usr.bin/vi/nvi/vi/v_status.c
-!/src/usr.bin/vi/nvi/vi/v_txt.c
-!/src/usr.bin/vi/nvi/vi/v_ulcase.c
-!/src/usr.bin/vi/nvi/vi/v_undo.c
-!/src/usr.bin/vi/nvi/vi/v_util.c
-!/src/usr.bin/vi/nvi/vi/v_word.c
-!/src/usr.bin/vi/nvi/vi/v_xchar.c
-!/src/usr.bin/vi/nvi/vi/v_yank.c
-!/src/usr.bin/vi/nvi/vi/v_z.c
-!/src/usr.bin/vi/nvi/vi/v_zexit.c
-!/src/usr.bin/vi/nvi/vi/vi.c
-!/src/usr.bin/vi/nvi/vi/vi.h
-!/src/usr.bin/vi/nvi/vi/vs_line.c
-!/src/usr.bin/vi/nvi/vi/vs_msg.c
-!/src/usr.bin/vi/nvi/vi/vs_refresh.c
-!/src/usr.bin/vi/nvi/vi/vs_relative.c
-!/src/usr.bin/vi/nvi/vi/vs_smap.c
-!/src/usr.bin/vi/nvi/vi/vs_split.c
-!/src/usr.bin/vi/pathnames.h
-
-#
 # vmstat(1)
 #
 !/src/usr.bin/vmstat/Makefile
@@ -5166,6 +5073,13 @@
 !/src/usr.bin/xargs/tests/regress.sh
 !/src/usr.bin/xargs/xargs.1
 !/src/usr.bin/xargs/xargs.c
+
+#
+# xinstall(1)
+#
+!/src/usr.bin/xinstall/Makefile
+!/src/usr.bin/xinstall/install.1
+!/src/usr.bin/xinstall/xinstall.c
 
 #
 # xz(1)
@@ -5376,6 +5290,688 @@
 !/src/usr.bin/xzdec/Makefile
 
 #
+# yacc(1)
+#
+!/src/usr.bin/yacc/ACKNOWLEDGEMENTS
+!/src/usr.bin/yacc/AUTHORS
+!/src/usr.bin/yacc/CHANGES
+!/src/usr.bin/yacc/MANIFEST
+!/src/usr.bin/yacc/Makefile
+!/src/usr.bin/yacc/Makefile.old
+!/src/usr.bin/yacc/NEW_FEATURES
+!/src/usr.bin/yacc/NOTES
+!/src/usr.bin/yacc/NO_WARRANTY
+!/src/usr.bin/yacc/README
+!/src/usr.bin/yacc/README.BTYACC
+!/src/usr.bin/yacc/VERSION
+!/src/usr.bin/yacc/aclocal.m4
+!/src/usr.bin/yacc/btyaccpar.c
+!/src/usr.bin/yacc/btyaccpar.skel
+!/src/usr.bin/yacc/closure.c
+!/src/usr.bin/yacc/config.guess
+!/src/usr.bin/yacc/config.sub
+!/src/usr.bin/yacc/config_h.in
+!/src/usr.bin/yacc/configure
+!/src/usr.bin/yacc/configure.in
+!/src/usr.bin/yacc/defs.h
+!/src/usr.bin/yacc/descrip.mms
+!/src/usr.bin/yacc/error.c
+!/src/usr.bin/yacc/graph.c
+!/src/usr.bin/yacc/install-sh
+!/src/usr.bin/yacc/lalr.c
+!/src/usr.bin/yacc/lr0.c
+!/src/usr.bin/yacc/main.c
+!/src/usr.bin/yacc/makefile.in
+!/src/usr.bin/yacc/mkpar.c
+!/src/usr.bin/yacc/mstring.c
+!/src/usr.bin/yacc/output.c
+!/src/usr.bin/yacc/package/byacc.spec
+!/src/usr.bin/yacc/package/debian/changelog
+!/src/usr.bin/yacc/package/debian/compat
+!/src/usr.bin/yacc/package/debian/control
+!/src/usr.bin/yacc/package/debian/copyright
+!/src/usr.bin/yacc/package/debian/docs
+!/src/usr.bin/yacc/package/debian/postinst
+!/src/usr.bin/yacc/package/debian/prerm
+!/src/usr.bin/yacc/package/debian/rules
+!/src/usr.bin/yacc/package/debian/source/format
+!/src/usr.bin/yacc/package/debian/watch
+!/src/usr.bin/yacc/package/mingw-byacc.spec
+!/src/usr.bin/yacc/package/pkgsrc/DESCR
+!/src/usr.bin/yacc/package/pkgsrc/Makefile
+!/src/usr.bin/yacc/package/pkgsrc/PLIST
+!/src/usr.bin/yacc/package/pkgsrc/distinfo
+!/src/usr.bin/yacc/reader.c
+!/src/usr.bin/yacc/skel2c
+!/src/usr.bin/yacc/symtab.c
+!/src/usr.bin/yacc/test/README
+!/src/usr.bin/yacc/test/btyacc/big_b.error
+!/src/usr.bin/yacc/test/btyacc/big_b.output
+!/src/usr.bin/yacc/test/btyacc/big_l.error
+!/src/usr.bin/yacc/test/btyacc/big_l.output
+!/src/usr.bin/yacc/test/btyacc/btyacc_calc1.error
+!/src/usr.bin/yacc/test/btyacc/btyacc_calc1.output
+!/src/usr.bin/yacc/test/btyacc/btyacc_calc1.tab.c
+!/src/usr.bin/yacc/test/btyacc/btyacc_calc1.tab.h
+!/src/usr.bin/yacc/test/btyacc/btyacc_demo.error
+!/src/usr.bin/yacc/test/btyacc/btyacc_demo.output
+!/src/usr.bin/yacc/test/btyacc/btyacc_demo.tab.c
+!/src/usr.bin/yacc/test/btyacc/btyacc_demo.tab.h
+!/src/usr.bin/yacc/test/btyacc/btyacc_demo2.error
+!/src/usr.bin/yacc/test/btyacc/btyacc_demo2.output
+!/src/usr.bin/yacc/test/btyacc/btyacc_demo2.tab.c
+!/src/usr.bin/yacc/test/btyacc/btyacc_demo2.tab.h
+!/src/usr.bin/yacc/test/btyacc/btyacc_destroy1.error
+!/src/usr.bin/yacc/test/btyacc/btyacc_destroy1.output
+!/src/usr.bin/yacc/test/btyacc/btyacc_destroy1.tab.c
+!/src/usr.bin/yacc/test/btyacc/btyacc_destroy1.tab.h
+!/src/usr.bin/yacc/test/btyacc/btyacc_destroy2.error
+!/src/usr.bin/yacc/test/btyacc/btyacc_destroy2.output
+!/src/usr.bin/yacc/test/btyacc/btyacc_destroy2.tab.c
+!/src/usr.bin/yacc/test/btyacc/btyacc_destroy2.tab.h
+!/src/usr.bin/yacc/test/btyacc/btyacc_destroy3.error
+!/src/usr.bin/yacc/test/btyacc/btyacc_destroy3.output
+!/src/usr.bin/yacc/test/btyacc/btyacc_destroy3.tab.c
+!/src/usr.bin/yacc/test/btyacc/btyacc_destroy3.tab.h
+!/src/usr.bin/yacc/test/btyacc/calc.error
+!/src/usr.bin/yacc/test/btyacc/calc.output
+!/src/usr.bin/yacc/test/btyacc/calc.tab.c
+!/src/usr.bin/yacc/test/btyacc/calc.tab.h
+!/src/usr.bin/yacc/test/btyacc/calc1.error
+!/src/usr.bin/yacc/test/btyacc/calc1.output
+!/src/usr.bin/yacc/test/btyacc/calc1.tab.c
+!/src/usr.bin/yacc/test/btyacc/calc1.tab.h
+!/src/usr.bin/yacc/test/btyacc/calc2.error
+!/src/usr.bin/yacc/test/btyacc/calc2.output
+!/src/usr.bin/yacc/test/btyacc/calc2.tab.c
+!/src/usr.bin/yacc/test/btyacc/calc2.tab.h
+!/src/usr.bin/yacc/test/btyacc/calc3.error
+!/src/usr.bin/yacc/test/btyacc/calc3.output
+!/src/usr.bin/yacc/test/btyacc/calc3.tab.c
+!/src/usr.bin/yacc/test/btyacc/calc3.tab.h
+!/src/usr.bin/yacc/test/btyacc/code_calc.code.c
+!/src/usr.bin/yacc/test/btyacc/code_calc.error
+!/src/usr.bin/yacc/test/btyacc/code_calc.output
+!/src/usr.bin/yacc/test/btyacc/code_calc.tab.c
+!/src/usr.bin/yacc/test/btyacc/code_calc.tab.h
+!/src/usr.bin/yacc/test/btyacc/code_debug.c
+!/src/usr.bin/yacc/test/btyacc/code_debug.error
+!/src/usr.bin/yacc/test/btyacc/code_debug.h
+!/src/usr.bin/yacc/test/btyacc/code_debug.i
+!/src/usr.bin/yacc/test/btyacc/code_debug.output
+!/src/usr.bin/yacc/test/btyacc/code_error.code.c
+!/src/usr.bin/yacc/test/btyacc/code_error.error
+!/src/usr.bin/yacc/test/btyacc/code_error.output
+!/src/usr.bin/yacc/test/btyacc/code_error.tab.c
+!/src/usr.bin/yacc/test/btyacc/code_error.tab.h
+!/src/usr.bin/yacc/test/btyacc/empty.error
+!/src/usr.bin/yacc/test/btyacc/empty.output
+!/src/usr.bin/yacc/test/btyacc/empty.tab.c
+!/src/usr.bin/yacc/test/btyacc/empty.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_inherit1.error
+!/src/usr.bin/yacc/test/btyacc/err_inherit1.output
+!/src/usr.bin/yacc/test/btyacc/err_inherit1.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_inherit1.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_inherit2.error
+!/src/usr.bin/yacc/test/btyacc/err_inherit2.output
+!/src/usr.bin/yacc/test/btyacc/err_inherit2.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_inherit2.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_inherit3.error
+!/src/usr.bin/yacc/test/btyacc/err_inherit3.output
+!/src/usr.bin/yacc/test/btyacc/err_inherit3.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_inherit3.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_inherit4.error
+!/src/usr.bin/yacc/test/btyacc/err_inherit4.output
+!/src/usr.bin/yacc/test/btyacc/err_inherit4.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_inherit4.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_inherit5.error
+!/src/usr.bin/yacc/test/btyacc/err_inherit5.output
+!/src/usr.bin/yacc/test/btyacc/err_inherit5.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_inherit5.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax1.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax1.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax1.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax1.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax10.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax10.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax10.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax10.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax11.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax11.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax11.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax11.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax12.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax12.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax12.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax12.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax13.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax13.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax13.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax13.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax14.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax14.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax14.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax14.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax15.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax15.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax15.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax15.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax16.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax16.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax16.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax16.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax17.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax17.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax17.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax17.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax18.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax18.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax18.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax18.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax19.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax19.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax19.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax19.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax2.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax2.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax2.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax2.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax20.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax20.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax20.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax20.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax21.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax21.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax21.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax21.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax22.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax22.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax22.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax22.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax23.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax23.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax23.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax23.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax24.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax24.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax24.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax24.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax25.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax25.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax25.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax25.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax26.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax26.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax26.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax26.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax27.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax27.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax27.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax27.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax3.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax3.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax3.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax3.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax4.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax4.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax4.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax4.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax5.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax5.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax5.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax5.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax6.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax6.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax6.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax6.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax7.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax7.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax7.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax7.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax7a.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax7a.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax7a.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax7a.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax7b.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax7b.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax7b.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax7b.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax8.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax8.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax8.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax8.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax8a.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax8a.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax8a.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax8a.tab.h
+!/src/usr.bin/yacc/test/btyacc/err_syntax9.error
+!/src/usr.bin/yacc/test/btyacc/err_syntax9.output
+!/src/usr.bin/yacc/test/btyacc/err_syntax9.tab.c
+!/src/usr.bin/yacc/test/btyacc/err_syntax9.tab.h
+!/src/usr.bin/yacc/test/btyacc/error.error
+!/src/usr.bin/yacc/test/btyacc/error.output
+!/src/usr.bin/yacc/test/btyacc/error.tab.c
+!/src/usr.bin/yacc/test/btyacc/error.tab.h
+!/src/usr.bin/yacc/test/btyacc/grammar.dot
+!/src/usr.bin/yacc/test/btyacc/grammar.error
+!/src/usr.bin/yacc/test/btyacc/grammar.output
+!/src/usr.bin/yacc/test/btyacc/grammar.tab.c
+!/src/usr.bin/yacc/test/btyacc/grammar.tab.h
+!/src/usr.bin/yacc/test/btyacc/help.error
+!/src/usr.bin/yacc/test/btyacc/help.output
+!/src/usr.bin/yacc/test/btyacc/inherit0.error
+!/src/usr.bin/yacc/test/btyacc/inherit0.output
+!/src/usr.bin/yacc/test/btyacc/inherit0.tab.c
+!/src/usr.bin/yacc/test/btyacc/inherit0.tab.h
+!/src/usr.bin/yacc/test/btyacc/inherit1.error
+!/src/usr.bin/yacc/test/btyacc/inherit1.output
+!/src/usr.bin/yacc/test/btyacc/inherit1.tab.c
+!/src/usr.bin/yacc/test/btyacc/inherit1.tab.h
+!/src/usr.bin/yacc/test/btyacc/inherit2.error
+!/src/usr.bin/yacc/test/btyacc/inherit2.output
+!/src/usr.bin/yacc/test/btyacc/inherit2.tab.c
+!/src/usr.bin/yacc/test/btyacc/inherit2.tab.h
+!/src/usr.bin/yacc/test/btyacc/no_b_opt.error
+!/src/usr.bin/yacc/test/btyacc/no_b_opt.output
+!/src/usr.bin/yacc/test/btyacc/no_b_opt1.error
+!/src/usr.bin/yacc/test/btyacc/no_b_opt1.output
+!/src/usr.bin/yacc/test/btyacc/no_code_c.error
+!/src/usr.bin/yacc/test/btyacc/no_code_c.output
+!/src/usr.bin/yacc/test/btyacc/no_defines.error
+!/src/usr.bin/yacc/test/btyacc/no_defines.output
+!/src/usr.bin/yacc/test/btyacc/no_graph.error
+!/src/usr.bin/yacc/test/btyacc/no_graph.output
+!/src/usr.bin/yacc/test/btyacc/no_include.error
+!/src/usr.bin/yacc/test/btyacc/no_include.output
+!/src/usr.bin/yacc/test/btyacc/no_opts.error
+!/src/usr.bin/yacc/test/btyacc/no_opts.output
+!/src/usr.bin/yacc/test/btyacc/no_output.error
+!/src/usr.bin/yacc/test/btyacc/no_output.output
+!/src/usr.bin/yacc/test/btyacc/no_output1.error
+!/src/usr.bin/yacc/test/btyacc/no_output1.output
+!/src/usr.bin/yacc/test/btyacc/no_output2.error
+!/src/usr.bin/yacc/test/btyacc/no_output2.output
+!/src/usr.bin/yacc/test/btyacc/no_p_opt.error
+!/src/usr.bin/yacc/test/btyacc/no_p_opt.output
+!/src/usr.bin/yacc/test/btyacc/no_p_opt1.error
+!/src/usr.bin/yacc/test/btyacc/no_p_opt1.output
+!/src/usr.bin/yacc/test/btyacc/no_verbose.error
+!/src/usr.bin/yacc/test/btyacc/no_verbose.output
+!/src/usr.bin/yacc/test/btyacc/nostdin.error
+!/src/usr.bin/yacc/test/btyacc/nostdin.output
+!/src/usr.bin/yacc/test/btyacc/ok_syntax1.error
+!/src/usr.bin/yacc/test/btyacc/ok_syntax1.output
+!/src/usr.bin/yacc/test/btyacc/ok_syntax1.tab.c
+!/src/usr.bin/yacc/test/btyacc/ok_syntax1.tab.h
+!/src/usr.bin/yacc/test/btyacc/pure_calc.error
+!/src/usr.bin/yacc/test/btyacc/pure_calc.output
+!/src/usr.bin/yacc/test/btyacc/pure_calc.tab.c
+!/src/usr.bin/yacc/test/btyacc/pure_calc.tab.h
+!/src/usr.bin/yacc/test/btyacc/pure_error.error
+!/src/usr.bin/yacc/test/btyacc/pure_error.output
+!/src/usr.bin/yacc/test/btyacc/pure_error.tab.c
+!/src/usr.bin/yacc/test/btyacc/pure_error.tab.h
+!/src/usr.bin/yacc/test/btyacc/quote_calc-s.error
+!/src/usr.bin/yacc/test/btyacc/quote_calc-s.output
+!/src/usr.bin/yacc/test/btyacc/quote_calc-s.tab.c
+!/src/usr.bin/yacc/test/btyacc/quote_calc-s.tab.h
+!/src/usr.bin/yacc/test/btyacc/quote_calc.error
+!/src/usr.bin/yacc/test/btyacc/quote_calc.output
+!/src/usr.bin/yacc/test/btyacc/quote_calc.tab.c
+!/src/usr.bin/yacc/test/btyacc/quote_calc.tab.h
+!/src/usr.bin/yacc/test/btyacc/quote_calc2-s.error
+!/src/usr.bin/yacc/test/btyacc/quote_calc2-s.output
+!/src/usr.bin/yacc/test/btyacc/quote_calc2-s.tab.c
+!/src/usr.bin/yacc/test/btyacc/quote_calc2-s.tab.h
+!/src/usr.bin/yacc/test/btyacc/quote_calc2.error
+!/src/usr.bin/yacc/test/btyacc/quote_calc2.output
+!/src/usr.bin/yacc/test/btyacc/quote_calc2.tab.c
+!/src/usr.bin/yacc/test/btyacc/quote_calc2.tab.h
+!/src/usr.bin/yacc/test/btyacc/quote_calc3-s.error
+!/src/usr.bin/yacc/test/btyacc/quote_calc3-s.output
+!/src/usr.bin/yacc/test/btyacc/quote_calc3-s.tab.c
+!/src/usr.bin/yacc/test/btyacc/quote_calc3-s.tab.h
+!/src/usr.bin/yacc/test/btyacc/quote_calc3.error
+!/src/usr.bin/yacc/test/btyacc/quote_calc3.output
+!/src/usr.bin/yacc/test/btyacc/quote_calc3.tab.c
+!/src/usr.bin/yacc/test/btyacc/quote_calc3.tab.h
+!/src/usr.bin/yacc/test/btyacc/quote_calc4-s.error
+!/src/usr.bin/yacc/test/btyacc/quote_calc4-s.output
+!/src/usr.bin/yacc/test/btyacc/quote_calc4-s.tab.c
+!/src/usr.bin/yacc/test/btyacc/quote_calc4-s.tab.h
+!/src/usr.bin/yacc/test/btyacc/quote_calc4.error
+!/src/usr.bin/yacc/test/btyacc/quote_calc4.output
+!/src/usr.bin/yacc/test/btyacc/quote_calc4.tab.c
+!/src/usr.bin/yacc/test/btyacc/quote_calc4.tab.h
+!/src/usr.bin/yacc/test/btyacc/rename_debug.c
+!/src/usr.bin/yacc/test/btyacc/rename_debug.error
+!/src/usr.bin/yacc/test/btyacc/rename_debug.h
+!/src/usr.bin/yacc/test/btyacc/rename_debug.i
+!/src/usr.bin/yacc/test/btyacc/rename_debug.output
+!/src/usr.bin/yacc/test/btyacc/varsyntax_calc1.error
+!/src/usr.bin/yacc/test/btyacc/varsyntax_calc1.output
+!/src/usr.bin/yacc/test/btyacc/varsyntax_calc1.tab.c
+!/src/usr.bin/yacc/test/btyacc/varsyntax_calc1.tab.h
+!/src/usr.bin/yacc/test/btyacc_calc1.y
+!/src/usr.bin/yacc/test/btyacc_demo.y
+!/src/usr.bin/yacc/test/btyacc_destroy1.y
+!/src/usr.bin/yacc/test/btyacc_destroy2.y
+!/src/usr.bin/yacc/test/btyacc_destroy3.y
+!/src/usr.bin/yacc/test/calc.y
+!/src/usr.bin/yacc/test/calc1.y
+!/src/usr.bin/yacc/test/calc2.y
+!/src/usr.bin/yacc/test/calc3.y
+!/src/usr.bin/yacc/test/code_calc.y
+!/src/usr.bin/yacc/test/code_debug.y
+!/src/usr.bin/yacc/test/code_error.y
+!/src/usr.bin/yacc/test/empty.y
+!/src/usr.bin/yacc/test/err_inherit1.y
+!/src/usr.bin/yacc/test/err_inherit2.y
+!/src/usr.bin/yacc/test/err_inherit3.y
+!/src/usr.bin/yacc/test/err_inherit4.y
+!/src/usr.bin/yacc/test/err_inherit5.y
+!/src/usr.bin/yacc/test/err_syntax1.y
+!/src/usr.bin/yacc/test/err_syntax10.y
+!/src/usr.bin/yacc/test/err_syntax11.y
+!/src/usr.bin/yacc/test/err_syntax12.y
+!/src/usr.bin/yacc/test/err_syntax13.y
+!/src/usr.bin/yacc/test/err_syntax14.y
+!/src/usr.bin/yacc/test/err_syntax15.y
+!/src/usr.bin/yacc/test/err_syntax16.y
+!/src/usr.bin/yacc/test/err_syntax17.y
+!/src/usr.bin/yacc/test/err_syntax18.y
+!/src/usr.bin/yacc/test/err_syntax19.y
+!/src/usr.bin/yacc/test/err_syntax2.y
+!/src/usr.bin/yacc/test/err_syntax20.y
+!/src/usr.bin/yacc/test/err_syntax21.y
+!/src/usr.bin/yacc/test/err_syntax22.y
+!/src/usr.bin/yacc/test/err_syntax23.y
+!/src/usr.bin/yacc/test/err_syntax24.y
+!/src/usr.bin/yacc/test/err_syntax25.y
+!/src/usr.bin/yacc/test/err_syntax26.y
+!/src/usr.bin/yacc/test/err_syntax27.y
+!/src/usr.bin/yacc/test/err_syntax3.y
+!/src/usr.bin/yacc/test/err_syntax4.y
+!/src/usr.bin/yacc/test/err_syntax5.y
+!/src/usr.bin/yacc/test/err_syntax6.y
+!/src/usr.bin/yacc/test/err_syntax7.y
+!/src/usr.bin/yacc/test/err_syntax7a.y
+!/src/usr.bin/yacc/test/err_syntax7b.y
+!/src/usr.bin/yacc/test/err_syntax8.y
+!/src/usr.bin/yacc/test/err_syntax8a.y
+!/src/usr.bin/yacc/test/err_syntax9.y
+!/src/usr.bin/yacc/test/error.y
+!/src/usr.bin/yacc/test/grammar.y
+!/src/usr.bin/yacc/test/inherit0.y
+!/src/usr.bin/yacc/test/inherit1.y
+!/src/usr.bin/yacc/test/inherit2.y
+!/src/usr.bin/yacc/test/ok_syntax1.y
+!/src/usr.bin/yacc/test/pure_calc.y
+!/src/usr.bin/yacc/test/pure_error.y
+!/src/usr.bin/yacc/test/quote_calc.y
+!/src/usr.bin/yacc/test/quote_calc2.y
+!/src/usr.bin/yacc/test/quote_calc3.y
+!/src/usr.bin/yacc/test/quote_calc4.y
+!/src/usr.bin/yacc/test/run_lint.sh
+!/src/usr.bin/yacc/test/run_make.sh
+!/src/usr.bin/yacc/test/run_test.sh
+!/src/usr.bin/yacc/test/varsyntax_calc1.y
+!/src/usr.bin/yacc/test/yacc/big_b.error
+!/src/usr.bin/yacc/test/yacc/big_b.output
+!/src/usr.bin/yacc/test/yacc/big_l.error
+!/src/usr.bin/yacc/test/yacc/big_l.output
+!/src/usr.bin/yacc/test/yacc/calc.error
+!/src/usr.bin/yacc/test/yacc/calc.output
+!/src/usr.bin/yacc/test/yacc/calc.tab.c
+!/src/usr.bin/yacc/test/yacc/calc.tab.h
+!/src/usr.bin/yacc/test/yacc/calc1.error
+!/src/usr.bin/yacc/test/yacc/calc1.output
+!/src/usr.bin/yacc/test/yacc/calc1.tab.c
+!/src/usr.bin/yacc/test/yacc/calc1.tab.h
+!/src/usr.bin/yacc/test/yacc/calc2.error
+!/src/usr.bin/yacc/test/yacc/calc2.output
+!/src/usr.bin/yacc/test/yacc/calc2.tab.c
+!/src/usr.bin/yacc/test/yacc/calc2.tab.h
+!/src/usr.bin/yacc/test/yacc/calc3.error
+!/src/usr.bin/yacc/test/yacc/calc3.output
+!/src/usr.bin/yacc/test/yacc/calc3.tab.c
+!/src/usr.bin/yacc/test/yacc/calc3.tab.h
+!/src/usr.bin/yacc/test/yacc/code_calc.code.c
+!/src/usr.bin/yacc/test/yacc/code_calc.error
+!/src/usr.bin/yacc/test/yacc/code_calc.output
+!/src/usr.bin/yacc/test/yacc/code_calc.tab.c
+!/src/usr.bin/yacc/test/yacc/code_calc.tab.h
+!/src/usr.bin/yacc/test/yacc/code_error.code.c
+!/src/usr.bin/yacc/test/yacc/code_error.error
+!/src/usr.bin/yacc/test/yacc/code_error.output
+!/src/usr.bin/yacc/test/yacc/code_error.tab.c
+!/src/usr.bin/yacc/test/yacc/code_error.tab.h
+!/src/usr.bin/yacc/test/yacc/empty.error
+!/src/usr.bin/yacc/test/yacc/empty.output
+!/src/usr.bin/yacc/test/yacc/empty.tab.c
+!/src/usr.bin/yacc/test/yacc/empty.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax1.error
+!/src/usr.bin/yacc/test/yacc/err_syntax1.output
+!/src/usr.bin/yacc/test/yacc/err_syntax1.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax1.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax10.error
+!/src/usr.bin/yacc/test/yacc/err_syntax10.output
+!/src/usr.bin/yacc/test/yacc/err_syntax10.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax10.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax11.error
+!/src/usr.bin/yacc/test/yacc/err_syntax11.output
+!/src/usr.bin/yacc/test/yacc/err_syntax11.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax11.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax12.error
+!/src/usr.bin/yacc/test/yacc/err_syntax12.output
+!/src/usr.bin/yacc/test/yacc/err_syntax12.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax12.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax13.error
+!/src/usr.bin/yacc/test/yacc/err_syntax13.output
+!/src/usr.bin/yacc/test/yacc/err_syntax13.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax13.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax14.error
+!/src/usr.bin/yacc/test/yacc/err_syntax14.output
+!/src/usr.bin/yacc/test/yacc/err_syntax14.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax14.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax15.error
+!/src/usr.bin/yacc/test/yacc/err_syntax15.output
+!/src/usr.bin/yacc/test/yacc/err_syntax15.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax15.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax16.error
+!/src/usr.bin/yacc/test/yacc/err_syntax16.output
+!/src/usr.bin/yacc/test/yacc/err_syntax16.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax16.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax17.error
+!/src/usr.bin/yacc/test/yacc/err_syntax17.output
+!/src/usr.bin/yacc/test/yacc/err_syntax17.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax17.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax18.error
+!/src/usr.bin/yacc/test/yacc/err_syntax18.output
+!/src/usr.bin/yacc/test/yacc/err_syntax18.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax18.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax19.error
+!/src/usr.bin/yacc/test/yacc/err_syntax19.output
+!/src/usr.bin/yacc/test/yacc/err_syntax19.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax19.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax2.error
+!/src/usr.bin/yacc/test/yacc/err_syntax2.output
+!/src/usr.bin/yacc/test/yacc/err_syntax2.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax2.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax20.error
+!/src/usr.bin/yacc/test/yacc/err_syntax20.output
+!/src/usr.bin/yacc/test/yacc/err_syntax20.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax20.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax21.error
+!/src/usr.bin/yacc/test/yacc/err_syntax21.output
+!/src/usr.bin/yacc/test/yacc/err_syntax21.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax21.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax22.error
+!/src/usr.bin/yacc/test/yacc/err_syntax22.output
+!/src/usr.bin/yacc/test/yacc/err_syntax22.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax22.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax23.error
+!/src/usr.bin/yacc/test/yacc/err_syntax23.output
+!/src/usr.bin/yacc/test/yacc/err_syntax23.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax23.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax24.error
+!/src/usr.bin/yacc/test/yacc/err_syntax24.output
+!/src/usr.bin/yacc/test/yacc/err_syntax24.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax24.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax25.error
+!/src/usr.bin/yacc/test/yacc/err_syntax25.output
+!/src/usr.bin/yacc/test/yacc/err_syntax25.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax25.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax26.error
+!/src/usr.bin/yacc/test/yacc/err_syntax26.output
+!/src/usr.bin/yacc/test/yacc/err_syntax26.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax26.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax27.error
+!/src/usr.bin/yacc/test/yacc/err_syntax27.output
+!/src/usr.bin/yacc/test/yacc/err_syntax27.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax27.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax3.error
+!/src/usr.bin/yacc/test/yacc/err_syntax3.output
+!/src/usr.bin/yacc/test/yacc/err_syntax3.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax3.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax4.error
+!/src/usr.bin/yacc/test/yacc/err_syntax4.output
+!/src/usr.bin/yacc/test/yacc/err_syntax4.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax4.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax5.error
+!/src/usr.bin/yacc/test/yacc/err_syntax5.output
+!/src/usr.bin/yacc/test/yacc/err_syntax5.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax5.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax6.error
+!/src/usr.bin/yacc/test/yacc/err_syntax6.output
+!/src/usr.bin/yacc/test/yacc/err_syntax6.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax6.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax7.error
+!/src/usr.bin/yacc/test/yacc/err_syntax7.output
+!/src/usr.bin/yacc/test/yacc/err_syntax7.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax7.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax7a.error
+!/src/usr.bin/yacc/test/yacc/err_syntax7a.output
+!/src/usr.bin/yacc/test/yacc/err_syntax7a.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax7a.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax7b.error
+!/src/usr.bin/yacc/test/yacc/err_syntax7b.output
+!/src/usr.bin/yacc/test/yacc/err_syntax7b.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax7b.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax8.error
+!/src/usr.bin/yacc/test/yacc/err_syntax8.output
+!/src/usr.bin/yacc/test/yacc/err_syntax8.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax8.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax8a.error
+!/src/usr.bin/yacc/test/yacc/err_syntax8a.output
+!/src/usr.bin/yacc/test/yacc/err_syntax8a.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax8a.tab.h
+!/src/usr.bin/yacc/test/yacc/err_syntax9.error
+!/src/usr.bin/yacc/test/yacc/err_syntax9.output
+!/src/usr.bin/yacc/test/yacc/err_syntax9.tab.c
+!/src/usr.bin/yacc/test/yacc/err_syntax9.tab.h
+!/src/usr.bin/yacc/test/yacc/error.error
+!/src/usr.bin/yacc/test/yacc/error.output
+!/src/usr.bin/yacc/test/yacc/error.tab.c
+!/src/usr.bin/yacc/test/yacc/error.tab.h
+!/src/usr.bin/yacc/test/yacc/grammar.dot
+!/src/usr.bin/yacc/test/yacc/grammar.error
+!/src/usr.bin/yacc/test/yacc/grammar.output
+!/src/usr.bin/yacc/test/yacc/grammar.tab.c
+!/src/usr.bin/yacc/test/yacc/grammar.tab.h
+!/src/usr.bin/yacc/test/yacc/help.error
+!/src/usr.bin/yacc/test/yacc/help.output
+!/src/usr.bin/yacc/test/yacc/no_b_opt.error
+!/src/usr.bin/yacc/test/yacc/no_b_opt.output
+!/src/usr.bin/yacc/test/yacc/no_b_opt1.error
+!/src/usr.bin/yacc/test/yacc/no_b_opt1.output
+!/src/usr.bin/yacc/test/yacc/no_code_c.error
+!/src/usr.bin/yacc/test/yacc/no_code_c.output
+!/src/usr.bin/yacc/test/yacc/no_defines.error
+!/src/usr.bin/yacc/test/yacc/no_defines.output
+!/src/usr.bin/yacc/test/yacc/no_graph.error
+!/src/usr.bin/yacc/test/yacc/no_graph.output
+!/src/usr.bin/yacc/test/yacc/no_include.error
+!/src/usr.bin/yacc/test/yacc/no_include.output
+!/src/usr.bin/yacc/test/yacc/no_opts.error
+!/src/usr.bin/yacc/test/yacc/no_opts.output
+!/src/usr.bin/yacc/test/yacc/no_output.error
+!/src/usr.bin/yacc/test/yacc/no_output.output
+!/src/usr.bin/yacc/test/yacc/no_output1.error
+!/src/usr.bin/yacc/test/yacc/no_output1.output
+!/src/usr.bin/yacc/test/yacc/no_output2.error
+!/src/usr.bin/yacc/test/yacc/no_output2.output
+!/src/usr.bin/yacc/test/yacc/no_p_opt.error
+!/src/usr.bin/yacc/test/yacc/no_p_opt.output
+!/src/usr.bin/yacc/test/yacc/no_p_opt1.error
+!/src/usr.bin/yacc/test/yacc/no_p_opt1.output
+!/src/usr.bin/yacc/test/yacc/no_verbose.error
+!/src/usr.bin/yacc/test/yacc/no_verbose.output
+!/src/usr.bin/yacc/test/yacc/nostdin.error
+!/src/usr.bin/yacc/test/yacc/nostdin.output
+!/src/usr.bin/yacc/test/yacc/ok_syntax1.error
+!/src/usr.bin/yacc/test/yacc/ok_syntax1.output
+!/src/usr.bin/yacc/test/yacc/ok_syntax1.tab.c
+!/src/usr.bin/yacc/test/yacc/ok_syntax1.tab.h
+!/src/usr.bin/yacc/test/yacc/pure_calc.error
+!/src/usr.bin/yacc/test/yacc/pure_calc.output
+!/src/usr.bin/yacc/test/yacc/pure_calc.tab.c
+!/src/usr.bin/yacc/test/yacc/pure_calc.tab.h
+!/src/usr.bin/yacc/test/yacc/pure_error.error
+!/src/usr.bin/yacc/test/yacc/pure_error.output
+!/src/usr.bin/yacc/test/yacc/pure_error.tab.c
+!/src/usr.bin/yacc/test/yacc/pure_error.tab.h
+!/src/usr.bin/yacc/test/yacc/quote_calc-s.error
+!/src/usr.bin/yacc/test/yacc/quote_calc-s.output
+!/src/usr.bin/yacc/test/yacc/quote_calc-s.tab.c
+!/src/usr.bin/yacc/test/yacc/quote_calc-s.tab.h
+!/src/usr.bin/yacc/test/yacc/quote_calc.error
+!/src/usr.bin/yacc/test/yacc/quote_calc.output
+!/src/usr.bin/yacc/test/yacc/quote_calc.tab.c
+!/src/usr.bin/yacc/test/yacc/quote_calc.tab.h
+!/src/usr.bin/yacc/test/yacc/quote_calc2-s.error
+!/src/usr.bin/yacc/test/yacc/quote_calc2-s.output
+!/src/usr.bin/yacc/test/yacc/quote_calc2-s.tab.c
+!/src/usr.bin/yacc/test/yacc/quote_calc2-s.tab.h
+!/src/usr.bin/yacc/test/yacc/quote_calc2.error
+!/src/usr.bin/yacc/test/yacc/quote_calc2.output
+!/src/usr.bin/yacc/test/yacc/quote_calc2.tab.c
+!/src/usr.bin/yacc/test/yacc/quote_calc2.tab.h
+!/src/usr.bin/yacc/test/yacc/quote_calc3-s.error
+!/src/usr.bin/yacc/test/yacc/quote_calc3-s.output
+!/src/usr.bin/yacc/test/yacc/quote_calc3-s.tab.c
+!/src/usr.bin/yacc/test/yacc/quote_calc3-s.tab.h
+!/src/usr.bin/yacc/test/yacc/quote_calc3.error
+!/src/usr.bin/yacc/test/yacc/quote_calc3.output
+!/src/usr.bin/yacc/test/yacc/quote_calc3.tab.c
+!/src/usr.bin/yacc/test/yacc/quote_calc3.tab.h
+!/src/usr.bin/yacc/test/yacc/quote_calc4-s.error
+!/src/usr.bin/yacc/test/yacc/quote_calc4-s.output
+!/src/usr.bin/yacc/test/yacc/quote_calc4-s.tab.c
+!/src/usr.bin/yacc/test/yacc/quote_calc4-s.tab.h
+!/src/usr.bin/yacc/test/yacc/quote_calc4.error
+!/src/usr.bin/yacc/test/yacc/quote_calc4.output
+!/src/usr.bin/yacc/test/yacc/quote_calc4.tab.c
+!/src/usr.bin/yacc/test/yacc/quote_calc4.tab.h
+!/src/usr.bin/yacc/test/yacc/rename_debug.c
+!/src/usr.bin/yacc/test/yacc/rename_debug.error
+!/src/usr.bin/yacc/test/yacc/rename_debug.h
+!/src/usr.bin/yacc/test/yacc/rename_debug.i
+!/src/usr.bin/yacc/test/yacc/rename_debug.output
+!/src/usr.bin/yacc/test/yacc/varsyntax_calc1.error
+!/src/usr.bin/yacc/test/yacc/varsyntax_calc1.output
+!/src/usr.bin/yacc/test/yacc/varsyntax_calc1.tab.c
+!/src/usr.bin/yacc/test/yacc/varsyntax_calc1.tab.h
+!/src/usr.bin/yacc/tests/Makefile
+!/src/usr.bin/yacc/tests/yacc_tests.sh
+!/src/usr.bin/yacc/verbose.c
+!/src/usr.bin/yacc/vmsbuild.com
+!/src/usr.bin/yacc/warshall.c
+!/src/usr.bin/yacc/yacc.1
+!/src/usr.bin/yacc/yaccpar.c
+!/src/usr.bin/yacc/yaccpar.skel
+
+#
 # yes(1)
 #
 !/src/usr.bin/yes/Makefile
@@ -5384,6 +5980,13 @@
 
 #
 ## usr.sbin
+#
+# authpf(8)
+# dhcpd(8)
+# ftp-proxy(8)
+# httpd(8)
+# mtree(8)
+#
 #
 !/src/usr.sbin/Makefile
 !/src/usr.sbin/Makefile.inc
@@ -5397,17 +6000,7 @@
 !/src/usr.sbin/authpf/pathnames.h
 
 #
-# ftp-proxy(8)
-#
-!/src/usr.sbin/ftp-proxy/Makefile
-!/src/usr.sbin/ftp-proxy/filter.c
-!/src/usr.sbin/ftp-proxy/filter.h
-!/src/usr.sbin/ftp-proxy/ftp-proxy.8
-!/src/usr.sbin/ftp-proxy/ftp-proxy.c
-
-
-#
-# OpenBSD 5.8 dhcpd(8)
+# dhcpd(8), OpenBSD 5.8 
 #
 !/src/usr.sbin/dhcpd/Makefile
 !/src/usr.sbin/dhcpd/alloc.c
@@ -5445,7 +6038,16 @@
 !/src/usr.sbin/dhcpd/udpsock.c
 
 #
-# OpenBSD 5.8 httpd(8)
+# ftp-proxy(8)
+#
+!/src/usr.sbin/ftp-proxy/Makefile
+!/src/usr.sbin/ftp-proxy/filter.c
+!/src/usr.sbin/ftp-proxy/filter.h
+!/src/usr.sbin/ftp-proxy/ftp-proxy.8
+!/src/usr.sbin/ftp-proxy/ftp-proxy.c
+
+#
+# httpd(8), OpenBSD 5.8
 #
 !src/usr.sbin/httpd/Makefile
 !src/usr.sbin/httpd/config.c
@@ -5464,6 +6066,28 @@
 !src/usr.sbin/httpd/server_file.c
 !src/usr.sbin/httpd/server_http.c
 
+#
+# mtree(8)
+#
+!/src/usr.sbin/mtree/Makefile
+!/src/usr.sbin/mtree/compare.c
+!/src/usr.sbin/mtree/crc.c
+!/src/usr.sbin/mtree/create.c
+!/src/usr.sbin/mtree/excludes.c
+!/src/usr.sbin/mtree/extern.h
+!/src/usr.sbin/mtree/getid.c
+!/src/usr.sbin/mtree/misc.c
+!/src/usr.sbin/mtree/mtree.8
+!/src/usr.sbin/mtree/mtree.c
+!/src/usr.sbin/mtree/mtree.h
+!/src/usr.sbin/mtree/only.c
+!/src/usr.sbin/mtree/spec.c
+!/src/usr.sbin/mtree/specspec.c
+!/src/usr.sbin/mtree/verify.c
+
+#
+# ...
+#
 !/src/usr.sbin/racoon/*
 
 

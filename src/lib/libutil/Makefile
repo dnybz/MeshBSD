@@ -143,7 +143,7 @@ SUBDIR+=	tests
 
 SRC+= 	stat_flags.c
 
-MAN++ 	stat_flags.3
+MAN+= 	stat_flags.3
 MLINKS+=stat_flags.3 string_to_flags.3
 MLINKS+=stat_flags.3 flags_to_string.3
 

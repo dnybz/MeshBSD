@@ -20,6 +20,7 @@ SUBDIR=	alias \
 	cksum \
 	cmp \
 	comm \
+	compile_et \
 	compress \
 	cut \
 	dc \
@@ -47,6 +48,7 @@ SUBDIR=	alias \
 	logger \
 	login \
 	logname \
+	lorder \
 	m4 \
 	man \
 	mesg \
@@ -62,6 +64,7 @@ SUBDIR=	alias \
 	printenv \
 	printf \
 	renice \
+	rpcgen \
 	script \
 	sed \
 	seq \
@@ -90,7 +93,6 @@ SUBDIR=	alias \
 	unzip \
 	uudecode \
 	uuencode \
-	vi \
 	vmstat \
 	w \
 	wall \
@@ -99,9 +101,11 @@ SUBDIR=	alias \
 	who \
 	whois \
 	xargs \
+	xinstall \
 	xz \
 	xzdec \
-	yes 
+	yes \
+	yacc
 
 # NB: keep these sorted by MK_* knobs
 
