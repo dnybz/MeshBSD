@@ -4,7 +4,7 @@
 
 .include <src.opts.mk>
 
-SRCDIR=		${.CURDIR}/nvi
+SRCDIR=		${.CURDIR}/../../contrib/nvi
 SUBDIR+=	catalog
 
 WARNS?=	0	# some warn issues on 32 bit machines

@@ -3,7 +3,7 @@
 
 INTERNALLIB=
 
-ELFTCDIR=	${.CURDIR}/../../elftoolchain
+ELFTCDIR=	${.CURDIR}/../../contrib/elftoolchain
 
 .PATH:	${ELFTCDIR}/libelftc
 

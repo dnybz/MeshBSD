@@ -3,7 +3,7 @@
 
 .include <bsd.own.mk>
 
-V=	${.CURDIR}/../nvi
+V=	${.CURDIR}/../../../contrib/nvi
 
 CAT=	dutch english french german polish ru_RU.KOI8-R spanish swedish \
 	uk_UA.KOI8-U zh_CN.GB2312
