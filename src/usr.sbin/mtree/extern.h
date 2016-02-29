@@ -41,7 +41,7 @@
  
 #include <err.h> 
 #include <fts.h>
-#include <util.h>
+#include <libutil.h>
 #include <stdbool.h>
 
 #if HAVE_NETDB_H

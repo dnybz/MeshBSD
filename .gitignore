@@ -140,7 +140,407 @@
 !/src/sys/sys/sysproto.h
 
 ##
-## Library set.
+## elftoolchain
+##
+!/src/elftoolchain/addr2line/Makefile
+!/src/elftoolchain/addr2line/addr2line.1
+!/src/elftoolchain/addr2line/addr2line.c
+!/src/elftoolchain/ar/Makefile
+!/src/elftoolchain/ar/acplex.l
+!/src/elftoolchain/ar/acpyacc.y
+!/src/elftoolchain/ar/ar.1
+!/src/elftoolchain/ar/ar.5
+!/src/elftoolchain/ar/ar.c
+!/src/elftoolchain/ar/ar.h
+!/src/elftoolchain/ar/benchmark/acp.sh
+!/src/elftoolchain/ar/os.Linux.mk
+!/src/elftoolchain/ar/ranlib.1
+!/src/elftoolchain/ar/read.c
+!/src/elftoolchain/ar/util.c
+!/src/elftoolchain/ar/write.c
+!/src/elftoolchain/brandelf/Makefile
+!/src/elftoolchain/brandelf/brandelf.1
+!/src/elftoolchain/brandelf/brandelf.c
+!/src/elftoolchain/common/Makefile
+!/src/elftoolchain/common/_elftc.h
+!/src/elftoolchain/common/elfdefinitions.h
+!/src/elftoolchain/common/native-elf-format
+!/src/elftoolchain/common/os.Linux.mk
+!/src/elftoolchain/common/utarray.h
+!/src/elftoolchain/common/uthash.h
+!/src/elftoolchain/cxxfilt/Makefile
+!/src/elftoolchain/cxxfilt/c++filt.1
+!/src/elftoolchain/cxxfilt/cxxfilt.c
+!/src/elftoolchain/elfcopy/Makefile
+!/src/elftoolchain/elfcopy/archive.c
+!/src/elftoolchain/elfcopy/ascii.c
+!/src/elftoolchain/elfcopy/binary.c
+!/src/elftoolchain/elfcopy/elfcopy.1
+!/src/elftoolchain/elfcopy/elfcopy.h
+!/src/elftoolchain/elfcopy/main.c
+!/src/elftoolchain/elfcopy/mcs.1
+!/src/elftoolchain/elfcopy/sections.c
+!/src/elftoolchain/elfcopy/segments.c
+!/src/elftoolchain/elfcopy/strip.1
+!/src/elftoolchain/elfcopy/symbols.c
+!/src/elftoolchain/elfdump/Makefile
+!/src/elftoolchain/elfdump/elfdump.1
+!/src/elftoolchain/elfdump/elfdump.c
+!/src/elftoolchain/libdwarf/Makefile
+!/src/elftoolchain/libdwarf/Version.map
+!/src/elftoolchain/libdwarf/_libdwarf.h
+!/src/elftoolchain/libdwarf/dwarf.3
+!/src/elftoolchain/libdwarf/dwarf.h
+!/src/elftoolchain/libdwarf/dwarf_abbrev.c
+!/src/elftoolchain/libdwarf/dwarf_add_AT_comp_dir.3
+!/src/elftoolchain/libdwarf/dwarf_add_AT_const_value_string.3
+!/src/elftoolchain/libdwarf/dwarf_add_AT_dataref.3
+!/src/elftoolchain/libdwarf/dwarf_add_AT_flag.3
+!/src/elftoolchain/libdwarf/dwarf_add_AT_location_expr.3
+!/src/elftoolchain/libdwarf/dwarf_add_AT_name.3
+!/src/elftoolchain/libdwarf/dwarf_add_AT_producer.3
+!/src/elftoolchain/libdwarf/dwarf_add_AT_ref_address.3
+!/src/elftoolchain/libdwarf/dwarf_add_AT_reference.3
+!/src/elftoolchain/libdwarf/dwarf_add_AT_signed_const.3
+!/src/elftoolchain/libdwarf/dwarf_add_AT_string.3
+!/src/elftoolchain/libdwarf/dwarf_add_AT_targ_address.3
+!/src/elftoolchain/libdwarf/dwarf_add_arange.3
+!/src/elftoolchain/libdwarf/dwarf_add_die_to_debug.3
+!/src/elftoolchain/libdwarf/dwarf_add_directory_decl.3
+!/src/elftoolchain/libdwarf/dwarf_add_expr_addr.3
+!/src/elftoolchain/libdwarf/dwarf_add_expr_gen.3
+!/src/elftoolchain/libdwarf/dwarf_add_fde_inst.3
+!/src/elftoolchain/libdwarf/dwarf_add_file_decl.3
+!/src/elftoolchain/libdwarf/dwarf_add_frame_cie.3
+!/src/elftoolchain/libdwarf/dwarf_add_frame_fde.3
+!/src/elftoolchain/libdwarf/dwarf_add_funcname.3
+!/src/elftoolchain/libdwarf/dwarf_add_line_entry.3
+!/src/elftoolchain/libdwarf/dwarf_add_pubname.3
+!/src/elftoolchain/libdwarf/dwarf_add_typename.3
+!/src/elftoolchain/libdwarf/dwarf_add_varname.3
+!/src/elftoolchain/libdwarf/dwarf_add_weakname.3
+!/src/elftoolchain/libdwarf/dwarf_arange.c
+!/src/elftoolchain/libdwarf/dwarf_attr.3
+!/src/elftoolchain/libdwarf/dwarf_attr.c
+!/src/elftoolchain/libdwarf/dwarf_attrlist.3
+!/src/elftoolchain/libdwarf/dwarf_attroffset.3
+!/src/elftoolchain/libdwarf/dwarf_attrval.c
+!/src/elftoolchain/libdwarf/dwarf_attrval_signed.3
+!/src/elftoolchain/libdwarf/dwarf_child.3
+!/src/elftoolchain/libdwarf/dwarf_cu.c
+!/src/elftoolchain/libdwarf/dwarf_dealloc.3
+!/src/elftoolchain/libdwarf/dwarf_dealloc.c
+!/src/elftoolchain/libdwarf/dwarf_def_macro.3
+!/src/elftoolchain/libdwarf/dwarf_die.c
+!/src/elftoolchain/libdwarf/dwarf_die_abbrev_code.3
+!/src/elftoolchain/libdwarf/dwarf_die_link.3
+!/src/elftoolchain/libdwarf/dwarf_diename.3
+!/src/elftoolchain/libdwarf/dwarf_dieoffset.3
+!/src/elftoolchain/libdwarf/dwarf_dump.c
+!/src/elftoolchain/libdwarf/dwarf_end_macro_file.3
+!/src/elftoolchain/libdwarf/dwarf_errmsg.3
+!/src/elftoolchain/libdwarf/dwarf_errmsg.c
+!/src/elftoolchain/libdwarf/dwarf_errno.3
+!/src/elftoolchain/libdwarf/dwarf_expand_frame_instructions.3
+!/src/elftoolchain/libdwarf/dwarf_expr_current_offset.3
+!/src/elftoolchain/libdwarf/dwarf_expr_into_block.3
+!/src/elftoolchain/libdwarf/dwarf_fde_cfa_offset.3
+!/src/elftoolchain/libdwarf/dwarf_find_macro_value_start.3
+!/src/elftoolchain/libdwarf/dwarf_finish.3
+!/src/elftoolchain/libdwarf/dwarf_finish.c
+!/src/elftoolchain/libdwarf/dwarf_form.c
+!/src/elftoolchain/libdwarf/dwarf_formaddr.3
+!/src/elftoolchain/libdwarf/dwarf_formblock.3
+!/src/elftoolchain/libdwarf/dwarf_formexprloc.3
+!/src/elftoolchain/libdwarf/dwarf_formflag.3
+!/src/elftoolchain/libdwarf/dwarf_formref.3
+!/src/elftoolchain/libdwarf/dwarf_formsig8.3
+!/src/elftoolchain/libdwarf/dwarf_formstring.3
+!/src/elftoolchain/libdwarf/dwarf_formudata.3
+!/src/elftoolchain/libdwarf/dwarf_frame.c
+!/src/elftoolchain/libdwarf/dwarf_funcs.m4
+!/src/elftoolchain/libdwarf/dwarf_get_AT_name.3
+!/src/elftoolchain/libdwarf/dwarf_get_abbrev.3
+!/src/elftoolchain/libdwarf/dwarf_get_abbrev_children_flag.3
+!/src/elftoolchain/libdwarf/dwarf_get_abbrev_code.3
+!/src/elftoolchain/libdwarf/dwarf_get_abbrev_entry.3
+!/src/elftoolchain/libdwarf/dwarf_get_abbrev_tag.3
+!/src/elftoolchain/libdwarf/dwarf_get_address_size.3
+!/src/elftoolchain/libdwarf/dwarf_get_arange.3
+!/src/elftoolchain/libdwarf/dwarf_get_arange_info.3
+!/src/elftoolchain/libdwarf/dwarf_get_aranges.3
+!/src/elftoolchain/libdwarf/dwarf_get_cie_index.3
+!/src/elftoolchain/libdwarf/dwarf_get_cie_info.3
+!/src/elftoolchain/libdwarf/dwarf_get_cie_of_fde.3
+!/src/elftoolchain/libdwarf/dwarf_get_cu_die_offset.3
+!/src/elftoolchain/libdwarf/dwarf_get_die_infotypes_flag.3
+!/src/elftoolchain/libdwarf/dwarf_get_elf.3
+!/src/elftoolchain/libdwarf/dwarf_get_fde_at_pc.3
+!/src/elftoolchain/libdwarf/dwarf_get_fde_info_for_all_regs.3
+!/src/elftoolchain/libdwarf/dwarf_get_fde_info_for_all_regs3.3
+!/src/elftoolchain/libdwarf/dwarf_get_fde_info_for_cfa_reg3.3
+!/src/elftoolchain/libdwarf/dwarf_get_fde_info_for_reg.3
+!/src/elftoolchain/libdwarf/dwarf_get_fde_info_for_reg3.3
+!/src/elftoolchain/libdwarf/dwarf_get_fde_instr_bytes.3
+!/src/elftoolchain/libdwarf/dwarf_get_fde_list.3
+!/src/elftoolchain/libdwarf/dwarf_get_fde_n.3
+!/src/elftoolchain/libdwarf/dwarf_get_fde_range.3
+!/src/elftoolchain/libdwarf/dwarf_get_form_class.3
+!/src/elftoolchain/libdwarf/dwarf_get_funcs.3
+!/src/elftoolchain/libdwarf/dwarf_get_globals.3
+!/src/elftoolchain/libdwarf/dwarf_get_loclist_entry.3
+!/src/elftoolchain/libdwarf/dwarf_get_macro_details.3
+!/src/elftoolchain/libdwarf/dwarf_get_pubtypes.3
+!/src/elftoolchain/libdwarf/dwarf_get_ranges.3
+!/src/elftoolchain/libdwarf/dwarf_get_relocation_info.3
+!/src/elftoolchain/libdwarf/dwarf_get_relocation_info_count.3
+!/src/elftoolchain/libdwarf/dwarf_get_section_bytes.3
+!/src/elftoolchain/libdwarf/dwarf_get_section_max_offsets.3
+!/src/elftoolchain/libdwarf/dwarf_get_str.3
+!/src/elftoolchain/libdwarf/dwarf_get_types.3
+!/src/elftoolchain/libdwarf/dwarf_get_vars.3
+!/src/elftoolchain/libdwarf/dwarf_get_weaks.3
+!/src/elftoolchain/libdwarf/dwarf_hasattr.3
+!/src/elftoolchain/libdwarf/dwarf_hasform.3
+!/src/elftoolchain/libdwarf/dwarf_highpc.3
+!/src/elftoolchain/libdwarf/dwarf_init.3
+!/src/elftoolchain/libdwarf/dwarf_init.c
+!/src/elftoolchain/libdwarf/dwarf_lineno.3
+!/src/elftoolchain/libdwarf/dwarf_lineno.c
+!/src/elftoolchain/libdwarf/dwarf_lne_end_sequence.3
+!/src/elftoolchain/libdwarf/dwarf_lne_set_address.3
+!/src/elftoolchain/libdwarf/dwarf_loclist.3
+!/src/elftoolchain/libdwarf/dwarf_loclist.c
+!/src/elftoolchain/libdwarf/dwarf_loclist_from_expr.3
+!/src/elftoolchain/libdwarf/dwarf_macinfo.c
+!/src/elftoolchain/libdwarf/dwarf_nametbl.m4
+!/src/elftoolchain/libdwarf/dwarf_new_die.3
+!/src/elftoolchain/libdwarf/dwarf_new_expr.3
+!/src/elftoolchain/libdwarf/dwarf_new_fde.3
+!/src/elftoolchain/libdwarf/dwarf_next_cu_header.3
+!/src/elftoolchain/libdwarf/dwarf_next_types_section.3
+!/src/elftoolchain/libdwarf/dwarf_object_init.3
+!/src/elftoolchain/libdwarf/dwarf_pro_arange.c
+!/src/elftoolchain/libdwarf/dwarf_pro_attr.c
+!/src/elftoolchain/libdwarf/dwarf_pro_die.c
+!/src/elftoolchain/libdwarf/dwarf_pro_expr.c
+!/src/elftoolchain/libdwarf/dwarf_pro_finish.c
+!/src/elftoolchain/libdwarf/dwarf_pro_frame.c
+!/src/elftoolchain/libdwarf/dwarf_pro_funcs.m4
+!/src/elftoolchain/libdwarf/dwarf_pro_init.c
+!/src/elftoolchain/libdwarf/dwarf_pro_lineno.c
+!/src/elftoolchain/libdwarf/dwarf_pro_macinfo.c
+!/src/elftoolchain/libdwarf/dwarf_pro_nametbl.m4
+!/src/elftoolchain/libdwarf/dwarf_pro_pubnames.m4
+!/src/elftoolchain/libdwarf/dwarf_pro_reloc.c
+!/src/elftoolchain/libdwarf/dwarf_pro_sections.c
+!/src/elftoolchain/libdwarf/dwarf_pro_types.m4
+!/src/elftoolchain/libdwarf/dwarf_pro_vars.m4
+!/src/elftoolchain/libdwarf/dwarf_pro_weaks.m4
+!/src/elftoolchain/libdwarf/dwarf_producer_init.3
+!/src/elftoolchain/libdwarf/dwarf_producer_set_isa.3
+!/src/elftoolchain/libdwarf/dwarf_pubnames.m4
+!/src/elftoolchain/libdwarf/dwarf_pubtypes.m4
+!/src/elftoolchain/libdwarf/dwarf_ranges.c
+!/src/elftoolchain/libdwarf/dwarf_reloc.c
+!/src/elftoolchain/libdwarf/dwarf_reset_section_bytes.3
+!/src/elftoolchain/libdwarf/dwarf_sections.c
+!/src/elftoolchain/libdwarf/dwarf_set_frame_cfa_value.3
+!/src/elftoolchain/libdwarf/dwarf_set_reloc_application.3
+!/src/elftoolchain/libdwarf/dwarf_seterrarg.3
+!/src/elftoolchain/libdwarf/dwarf_seterror.c
+!/src/elftoolchain/libdwarf/dwarf_srcfiles.3
+!/src/elftoolchain/libdwarf/dwarf_srclines.3
+!/src/elftoolchain/libdwarf/dwarf_start_macro_file.3
+!/src/elftoolchain/libdwarf/dwarf_str.c
+!/src/elftoolchain/libdwarf/dwarf_tag.3
+!/src/elftoolchain/libdwarf/dwarf_transform_to_disk_form.3
+!/src/elftoolchain/libdwarf/dwarf_types.m4
+!/src/elftoolchain/libdwarf/dwarf_undef_macro.3
+!/src/elftoolchain/libdwarf/dwarf_vars.m4
+!/src/elftoolchain/libdwarf/dwarf_vendor_ext.3
+!/src/elftoolchain/libdwarf/dwarf_weaks.m4
+!/src/elftoolchain/libdwarf/dwarf_whatattr.3
+!/src/elftoolchain/libdwarf/libdwarf.c
+!/src/elftoolchain/libdwarf/libdwarf.h
+!/src/elftoolchain/libdwarf/libdwarf_abbrev.c
+!/src/elftoolchain/libdwarf/libdwarf_arange.c
+!/src/elftoolchain/libdwarf/libdwarf_attr.c
+!/src/elftoolchain/libdwarf/libdwarf_die.c
+!/src/elftoolchain/libdwarf/libdwarf_elf_access.c
+!/src/elftoolchain/libdwarf/libdwarf_elf_init.c
+!/src/elftoolchain/libdwarf/libdwarf_error.c
+!/src/elftoolchain/libdwarf/libdwarf_frame.c
+!/src/elftoolchain/libdwarf/libdwarf_info.c
+!/src/elftoolchain/libdwarf/libdwarf_init.c
+!/src/elftoolchain/libdwarf/libdwarf_lineno.c
+!/src/elftoolchain/libdwarf/libdwarf_loc.c
+!/src/elftoolchain/libdwarf/libdwarf_loclist.c
+!/src/elftoolchain/libdwarf/libdwarf_macinfo.c
+!/src/elftoolchain/libdwarf/libdwarf_nametbl.c
+!/src/elftoolchain/libdwarf/libdwarf_ranges.c
+!/src/elftoolchain/libdwarf/libdwarf_reloc.c
+!/src/elftoolchain/libdwarf/libdwarf_rw.c
+!/src/elftoolchain/libdwarf/libdwarf_sections.c
+!/src/elftoolchain/libdwarf/libdwarf_str.c
+!/src/elftoolchain/libelf/Makefile
+!/src/elftoolchain/libelf/Version.map
+!/src/elftoolchain/libelf/_libelf.h
+!/src/elftoolchain/libelf/_libelf_ar.h
+!/src/elftoolchain/libelf/_libelf_config.h
+!/src/elftoolchain/libelf/elf.3
+!/src/elftoolchain/libelf/elf.c
+!/src/elftoolchain/libelf/elf_begin.3
+!/src/elftoolchain/libelf/elf_begin.c
+!/src/elftoolchain/libelf/elf_cntl.3
+!/src/elftoolchain/libelf/elf_cntl.c
+!/src/elftoolchain/libelf/elf_data.c
+!/src/elftoolchain/libelf/elf_end.3
+!/src/elftoolchain/libelf/elf_end.c
+!/src/elftoolchain/libelf/elf_errmsg.3
+!/src/elftoolchain/libelf/elf_errmsg.c
+!/src/elftoolchain/libelf/elf_errno.c
+!/src/elftoolchain/libelf/elf_fill.3
+!/src/elftoolchain/libelf/elf_fill.c
+!/src/elftoolchain/libelf/elf_flag.c
+!/src/elftoolchain/libelf/elf_flagdata.3
+!/src/elftoolchain/libelf/elf_getarhdr.3
+!/src/elftoolchain/libelf/elf_getarhdr.c
+!/src/elftoolchain/libelf/elf_getarsym.3
+!/src/elftoolchain/libelf/elf_getarsym.c
+!/src/elftoolchain/libelf/elf_getbase.3
+!/src/elftoolchain/libelf/elf_getbase.c
+!/src/elftoolchain/libelf/elf_getdata.3
+!/src/elftoolchain/libelf/elf_getident.3
+!/src/elftoolchain/libelf/elf_getident.c
+!/src/elftoolchain/libelf/elf_getphdrnum.3
+!/src/elftoolchain/libelf/elf_getphnum.3
+!/src/elftoolchain/libelf/elf_getscn.3
+!/src/elftoolchain/libelf/elf_getshdrnum.3
+!/src/elftoolchain/libelf/elf_getshdrstrndx.3
+!/src/elftoolchain/libelf/elf_getshnum.3
+!/src/elftoolchain/libelf/elf_getshstrndx.3
+!/src/elftoolchain/libelf/elf_hash.3
+!/src/elftoolchain/libelf/elf_hash.c
+!/src/elftoolchain/libelf/elf_kind.3
+!/src/elftoolchain/libelf/elf_kind.c
+!/src/elftoolchain/libelf/elf_memory.3
+!/src/elftoolchain/libelf/elf_memory.c
+!/src/elftoolchain/libelf/elf_next.3
+!/src/elftoolchain/libelf/elf_next.c
+!/src/elftoolchain/libelf/elf_open.3
+!/src/elftoolchain/libelf/elf_open.c
+!/src/elftoolchain/libelf/elf_phnum.c
+!/src/elftoolchain/libelf/elf_rand.3
+!/src/elftoolchain/libelf/elf_rand.c
+!/src/elftoolchain/libelf/elf_rawfile.3
+!/src/elftoolchain/libelf/elf_rawfile.c
+!/src/elftoolchain/libelf/elf_scn.c
+!/src/elftoolchain/libelf/elf_shnum.c
+!/src/elftoolchain/libelf/elf_shstrndx.c
+!/src/elftoolchain/libelf/elf_strptr.3
+!/src/elftoolchain/libelf/elf_strptr.c
+!/src/elftoolchain/libelf/elf_types.m4
+!/src/elftoolchain/libelf/elf_update.3
+!/src/elftoolchain/libelf/elf_update.c
+!/src/elftoolchain/libelf/elf_version.3
+!/src/elftoolchain/libelf/elf_version.c
+!/src/elftoolchain/libelf/gelf.3
+!/src/elftoolchain/libelf/gelf.h
+!/src/elftoolchain/libelf/gelf_cap.c
+!/src/elftoolchain/libelf/gelf_checksum.3
+!/src/elftoolchain/libelf/gelf_checksum.c
+!/src/elftoolchain/libelf/gelf_dyn.c
+!/src/elftoolchain/libelf/gelf_ehdr.c
+!/src/elftoolchain/libelf/gelf_fsize.3
+!/src/elftoolchain/libelf/gelf_fsize.c
+!/src/elftoolchain/libelf/gelf_getcap.3
+!/src/elftoolchain/libelf/gelf_getclass.3
+!/src/elftoolchain/libelf/gelf_getclass.c
+!/src/elftoolchain/libelf/gelf_getdyn.3
+!/src/elftoolchain/libelf/gelf_getehdr.3
+!/src/elftoolchain/libelf/gelf_getmove.3
+!/src/elftoolchain/libelf/gelf_getphdr.3
+!/src/elftoolchain/libelf/gelf_getrel.3
+!/src/elftoolchain/libelf/gelf_getrela.3
+!/src/elftoolchain/libelf/gelf_getshdr.3
+!/src/elftoolchain/libelf/gelf_getsym.3
+!/src/elftoolchain/libelf/gelf_getsyminfo.3
+!/src/elftoolchain/libelf/gelf_getsymshndx.3
+!/src/elftoolchain/libelf/gelf_move.c
+!/src/elftoolchain/libelf/gelf_newehdr.3
+!/src/elftoolchain/libelf/gelf_newphdr.3
+!/src/elftoolchain/libelf/gelf_phdr.c
+!/src/elftoolchain/libelf/gelf_rel.c
+!/src/elftoolchain/libelf/gelf_rela.c
+!/src/elftoolchain/libelf/gelf_shdr.c
+!/src/elftoolchain/libelf/gelf_sym.c
+!/src/elftoolchain/libelf/gelf_syminfo.c
+!/src/elftoolchain/libelf/gelf_symshndx.c
+!/src/elftoolchain/libelf/gelf_update_ehdr.3
+!/src/elftoolchain/libelf/gelf_xlate.c
+!/src/elftoolchain/libelf/gelf_xlatetof.3
+!/src/elftoolchain/libelf/libelf.h
+!/src/elftoolchain/libelf/libelf_align.c
+!/src/elftoolchain/libelf/libelf_allocate.c
+!/src/elftoolchain/libelf/libelf_ar.c
+!/src/elftoolchain/libelf/libelf_ar_util.c
+!/src/elftoolchain/libelf/libelf_checksum.c
+!/src/elftoolchain/libelf/libelf_convert.m4
+!/src/elftoolchain/libelf/libelf_data.c
+!/src/elftoolchain/libelf/libelf_ehdr.c
+!/src/elftoolchain/libelf/libelf_extended.c
+!/src/elftoolchain/libelf/libelf_fsize.m4
+!/src/elftoolchain/libelf/libelf_memory.c
+!/src/elftoolchain/libelf/libelf_msize.m4
+!/src/elftoolchain/libelf/libelf_open.c
+!/src/elftoolchain/libelf/libelf_phdr.c
+!/src/elftoolchain/libelf/libelf_shdr.c
+!/src/elftoolchain/libelf/libelf_xlate.c
+!/src/elftoolchain/libelf/os.FreeBSD.mk
+!/src/elftoolchain/libelf/os.NetBSD.mk
+!/src/elftoolchain/libelftc/Makefile
+!/src/elftoolchain/libelftc/Version.map
+!/src/elftoolchain/libelftc/_libelftc.h
+!/src/elftoolchain/libelftc/elftc.3
+!/src/elftoolchain/libelftc/elftc_bfd_find_target.3
+!/src/elftoolchain/libelftc/elftc_bfdtarget.c
+!/src/elftoolchain/libelftc/elftc_copyfile.3
+!/src/elftoolchain/libelftc/elftc_copyfile.c
+!/src/elftoolchain/libelftc/elftc_demangle.3
+!/src/elftoolchain/libelftc/elftc_demangle.c
+!/src/elftoolchain/libelftc/elftc_set_timestamps.3
+!/src/elftoolchain/libelftc/elftc_set_timestamps.c
+!/src/elftoolchain/libelftc/elftc_string_table.c
+!/src/elftoolchain/libelftc/elftc_string_table_create.3
+!/src/elftoolchain/libelftc/elftc_symbol_table_create.3
+!/src/elftoolchain/libelftc/elftc_version.3
+!/src/elftoolchain/libelftc/libelftc.h
+!/src/elftoolchain/libelftc/libelftc_bfdtarget.c
+!/src/elftoolchain/libelftc/libelftc_dem_arm.c
+!/src/elftoolchain/libelftc/libelftc_dem_gnu2.c
+!/src/elftoolchain/libelftc/libelftc_dem_gnu3.c
+!/src/elftoolchain/libelftc/libelftc_hash.c
+!/src/elftoolchain/libelftc/libelftc_vstr.c
+!/src/elftoolchain/libelftc/make-toolchain-version
+!/src/elftoolchain/libelftc/os.FreeBSD.mk
+!/src/elftoolchain/libelftc/os.Linux.mk
+!/src/elftoolchain/nm/Makefile
+!/src/elftoolchain/nm/nm.1
+!/src/elftoolchain/nm/nm.c
+!/src/elftoolchain/readelf/Makefile
+!/src/elftoolchain/readelf/readelf.1
+!/src/elftoolchain/readelf/readelf.c
+!/src/elftoolchain/size/Makefile
+!/src/elftoolchain/size/size.1
+!/src/elftoolchain/size/size.c
+!/src/elftoolchain/strings/Makefile
+!/src/elftoolchain/strings/strings.1
+!/src/elftoolchain/strings/strings.c
+
+
+##
+## Library set
 ##
 !/src/share/mk/bsd.libnames.mk
 !/src/share/mk/src.libnames.mk
@@ -910,6 +1310,17 @@
 !/src/lib/libc/stdlib/strsuftoll.c
 !/src/lib/libc/stdlib/strsuftoll.3
 !/src/lib/libc/stdlib/Symbol.map
+
+#
+## libelf(3)
+#
+!/src/lib/libelf/Makefile
+
+#
+## libelftc(3)
+#
+!/src/lib/libelftc/Makefile
+!/src/lib/libelftc/elftc_version.c
 
 #
 ## libevent(3)
@@ -3322,6 +3733,10 @@
 # dirname(1)
 # du(1)
 # ee(1)
+
+# elfcopy(1)
+
+
 # env(1)
 # expand(1)
 # false(1)
@@ -3342,6 +3757,7 @@
 # killall(1)
 # last(1)
 # less(1)
+# localedef(1)
 # logger(1)
 # login(1)
 # logname(1)
@@ -3349,6 +3765,10 @@
 # m4(1)
 # man(1)
 # mesg(1)
+# mkcsmapper(1)
+# mkcsmapper_static(1)
+# mkesdb(1)
+# mkesdb_static(1)
 # mkfifo(1)
 # mktemp(1)
 # mt(1)
@@ -3391,7 +3811,9 @@
 # unzip(1)
 # uudecode(1)
 # uuencode(1)
+# vi(1)
 # vmstat(1)
+# vtfontcvt(1)
 # w(1)
 # wall(1)
 # wc(1)
@@ -3399,8 +3821,10 @@
 # who(1)
 # whois(1)
 # xargs(1)
+# xinstall(1)
 # xz(1)
 # xzdec(1)
+# yacc(1)
 # yes(1)
 #
 !/src/usr.bin/Makefile
@@ -3725,6 +4149,11 @@
 !/src/usr.bin/ee/nls/pt_BR.ISO8859-1/ee.msg
 !/src/usr.bin/ee/nls/ru_RU.KOI8-R/ee.msg
 !/src/usr.bin/ee/nls/uk_UA.KOI8-U/ee.msg
+
+#
+# elfcopy(1)
+#
+!/src/usr.bin/elfcopy/Makefile
 
 #
 # env(1)
@@ -4159,6 +4588,25 @@
 !/src/usr.bin/less/zless.sh
 
 #
+# localedef(1)
+#
+!/src/usr.bin/localedef/Makefile
+!/src/usr.bin/localedef/README
+!/src/usr.bin/localedef/charmap.c
+!/src/usr.bin/localedef/collate.c
+!/src/usr.bin/localedef/ctype.c
+!/src/usr.bin/localedef/localedef.1
+!/src/usr.bin/localedef/localedef.c
+!/src/usr.bin/localedef/localedef.h
+!/src/usr.bin/localedef/messages.c
+!/src/usr.bin/localedef/monetary.c
+!/src/usr.bin/localedef/numeric.c
+!/src/usr.bin/localedef/parser.y
+!/src/usr.bin/localedef/scanner.c
+!/src/usr.bin/localedef/time.c
+!/src/usr.bin/localedef/wide.c
+
+#
 # login(1)
 #
 !/src/usr.bin/login/Makefile
@@ -4190,6 +4638,36 @@
 !/src/usr.bin/lorder/Makefile
 !/src/usr.bin/lorder/lorder.1
 !/src/usr.bin/lorder/lorder.sh
+
+#
+# mkcsmapper(1)
+#
+!/src/usr.bin/mkcsmapper/Makefile
+!/src/usr.bin/mkcsmapper/Makefile.inc
+!/src/usr.bin/mkcsmapper/ldef.h
+!/src/usr.bin/mkcsmapper/lex.l
+!/src/usr.bin/mkcsmapper/mkcsmapper.1
+!/src/usr.bin/mkcsmapper/yacc.y
+
+#
+# mkcsmapper_static(1)
+#
+!/src/usr.bin/mkcsmapper_static/Makefile
+
+#
+# mkesdb(1)
+#
+!/src/usr.bin/mkesdb/Makefile
+!/src/usr.bin/mkesdb/Makefile.inc
+!/src/usr.bin/mkesdb/ldef.h
+!/src/usr.bin/mkesdb/lex.l
+!/src/usr.bin/mkesdb/mkesdb.1
+!/src/usr.bin/mkesdb/yacc.y
+
+#
+# mkesdb_static(1)
+#
+!/src/usr.bin/mkesdb_static/Makefile
 
 #
 # m4(1)
@@ -4989,11 +5467,215 @@
 !/src/usr.bin/uuencode/uuencode.format.5
 
 #
+# vi(1)
+#
+!/src/usr.bin/vi/Makefile
+!/src/usr.bin/vi/catalog/Makefile
+!/src/usr.bin/vi/catalog/Makefile.depend
+!/src/usr.bin/vi/catalog/dutch.UTF-8.base
+!/src/usr.bin/vi/catalog/french.UTF-8.base
+!/src/usr.bin/vi/catalog/german.UTF-8.base
+!/src/usr.bin/vi/catalog/polish.UTF-8.base
+!/src/usr.bin/vi/catalog/ru_RU.UTF-8.base
+!/src/usr.bin/vi/catalog/spanish.UTF-8.base
+!/src/usr.bin/vi/catalog/swedish.UTF-8.base
+!/src/usr.bin/vi/catalog/uk_UA.UTF-8.base
+!/src/usr.bin/vi/catalog/zh_CN.UTF-8.base
+!/src/usr.bin/vi/config.h
+!/src/usr.bin/vi/nvi/LICENSE
+!/src/usr.bin/vi/nvi/README
+!/src/usr.bin/vi/nvi/catalog/Makefile
+!/src/usr.bin/vi/nvi/catalog/README
+!/src/usr.bin/vi/nvi/catalog/dump.c
+!/src/usr.bin/vi/nvi/catalog/dutch.base
+!/src/usr.bin/vi/nvi/catalog/dutch.owner
+!/src/usr.bin/vi/nvi/catalog/english.owner
+!/src/usr.bin/vi/nvi/catalog/french.base
+!/src/usr.bin/vi/nvi/catalog/german.base
+!/src/usr.bin/vi/nvi/catalog/german.owner
+!/src/usr.bin/vi/nvi/catalog/polish.base
+!/src/usr.bin/vi/nvi/catalog/polish.owner
+!/src/usr.bin/vi/nvi/catalog/ru_RU.KOI8-R.base
+!/src/usr.bin/vi/nvi/catalog/ru_RU.KOI8-R.owner
+!/src/usr.bin/vi/nvi/catalog/spanish.base
+!/src/usr.bin/vi/nvi/catalog/swedish.base
+!/src/usr.bin/vi/nvi/catalog/swedish.owner
+!/src/usr.bin/vi/nvi/catalog/uk_UA.KOI8-U.base
+!/src/usr.bin/vi/nvi/catalog/uk_UA.KOI8-U.owner
+!/src/usr.bin/vi/nvi/catalog/zh_CN.GB2312.base
+!/src/usr.bin/vi/nvi/catalog/zh_CN.GB2312.owner
+!/src/usr.bin/vi/nvi/cl/README.signal
+!/src/usr.bin/vi/nvi/cl/cl.h
+!/src/usr.bin/vi/nvi/cl/cl_funcs.c
+!/src/usr.bin/vi/nvi/cl/cl_main.c
+!/src/usr.bin/vi/nvi/cl/cl_read.c
+!/src/usr.bin/vi/nvi/cl/cl_screen.c
+!/src/usr.bin/vi/nvi/cl/cl_term.c
+!/src/usr.bin/vi/nvi/cl/extern.h
+!/src/usr.bin/vi/nvi/common/args.h
+!/src/usr.bin/vi/nvi/common/common.h
+!/src/usr.bin/vi/nvi/common/conv.c
+!/src/usr.bin/vi/nvi/common/conv.h
+!/src/usr.bin/vi/nvi/common/cut.c
+!/src/usr.bin/vi/nvi/common/cut.h
+!/src/usr.bin/vi/nvi/common/delete.c
+!/src/usr.bin/vi/nvi/common/encoding.c
+!/src/usr.bin/vi/nvi/common/exf.c
+!/src/usr.bin/vi/nvi/common/exf.h
+!/src/usr.bin/vi/nvi/common/extern.h
+!/src/usr.bin/vi/nvi/common/gs.h
+!/src/usr.bin/vi/nvi/common/key.c
+!/src/usr.bin/vi/nvi/common/key.h
+!/src/usr.bin/vi/nvi/common/line.c
+!/src/usr.bin/vi/nvi/common/log.c
+!/src/usr.bin/vi/nvi/common/log.h
+!/src/usr.bin/vi/nvi/common/main.c
+!/src/usr.bin/vi/nvi/common/mark.c
+!/src/usr.bin/vi/nvi/common/mark.h
+!/src/usr.bin/vi/nvi/common/mem.h
+!/src/usr.bin/vi/nvi/common/msg.c
+!/src/usr.bin/vi/nvi/common/msg.h
+!/src/usr.bin/vi/nvi/common/multibyte.h
+!/src/usr.bin/vi/nvi/common/options.awk
+!/src/usr.bin/vi/nvi/common/options.c
+!/src/usr.bin/vi/nvi/common/options.h
+!/src/usr.bin/vi/nvi/common/options_def.h
+!/src/usr.bin/vi/nvi/common/options_f.c
+!/src/usr.bin/vi/nvi/common/put.c
+!/src/usr.bin/vi/nvi/common/recover.c
+!/src/usr.bin/vi/nvi/common/screen.c
+!/src/usr.bin/vi/nvi/common/screen.h
+!/src/usr.bin/vi/nvi/common/search.c
+!/src/usr.bin/vi/nvi/common/seq.c
+!/src/usr.bin/vi/nvi/common/seq.h
+!/src/usr.bin/vi/nvi/common/util.c
+!/src/usr.bin/vi/nvi/common/util.h
+!/src/usr.bin/vi/nvi/docs/man/Makefile
+!/src/usr.bin/vi/nvi/docs/man/vi.1
+!/src/usr.bin/vi/nvi/ex/ex.awk
+!/src/usr.bin/vi/nvi/ex/ex.c
+!/src/usr.bin/vi/nvi/ex/ex.h
+!/src/usr.bin/vi/nvi/ex/ex_abbrev.c
+!/src/usr.bin/vi/nvi/ex/ex_append.c
+!/src/usr.bin/vi/nvi/ex/ex_args.c
+!/src/usr.bin/vi/nvi/ex/ex_argv.c
+!/src/usr.bin/vi/nvi/ex/ex_at.c
+!/src/usr.bin/vi/nvi/ex/ex_bang.c
+!/src/usr.bin/vi/nvi/ex/ex_cd.c
+!/src/usr.bin/vi/nvi/ex/ex_cmd.c
+!/src/usr.bin/vi/nvi/ex/ex_cscope.c
+!/src/usr.bin/vi/nvi/ex/ex_def.h
+!/src/usr.bin/vi/nvi/ex/ex_delete.c
+!/src/usr.bin/vi/nvi/ex/ex_display.c
+!/src/usr.bin/vi/nvi/ex/ex_edit.c
+!/src/usr.bin/vi/nvi/ex/ex_equal.c
+!/src/usr.bin/vi/nvi/ex/ex_file.c
+!/src/usr.bin/vi/nvi/ex/ex_filter.c
+!/src/usr.bin/vi/nvi/ex/ex_global.c
+!/src/usr.bin/vi/nvi/ex/ex_init.c
+!/src/usr.bin/vi/nvi/ex/ex_join.c
+!/src/usr.bin/vi/nvi/ex/ex_map.c
+!/src/usr.bin/vi/nvi/ex/ex_mark.c
+!/src/usr.bin/vi/nvi/ex/ex_mkexrc.c
+!/src/usr.bin/vi/nvi/ex/ex_move.c
+!/src/usr.bin/vi/nvi/ex/ex_open.c
+!/src/usr.bin/vi/nvi/ex/ex_preserve.c
+!/src/usr.bin/vi/nvi/ex/ex_print.c
+!/src/usr.bin/vi/nvi/ex/ex_put.c
+!/src/usr.bin/vi/nvi/ex/ex_quit.c
+!/src/usr.bin/vi/nvi/ex/ex_read.c
+!/src/usr.bin/vi/nvi/ex/ex_screen.c
+!/src/usr.bin/vi/nvi/ex/ex_script.c
+!/src/usr.bin/vi/nvi/ex/ex_set.c
+!/src/usr.bin/vi/nvi/ex/ex_shell.c
+!/src/usr.bin/vi/nvi/ex/ex_shift.c
+!/src/usr.bin/vi/nvi/ex/ex_source.c
+!/src/usr.bin/vi/nvi/ex/ex_stop.c
+!/src/usr.bin/vi/nvi/ex/ex_subst.c
+!/src/usr.bin/vi/nvi/ex/ex_tag.c
+!/src/usr.bin/vi/nvi/ex/ex_txt.c
+!/src/usr.bin/vi/nvi/ex/ex_undo.c
+!/src/usr.bin/vi/nvi/ex/ex_usage.c
+!/src/usr.bin/vi/nvi/ex/ex_util.c
+!/src/usr.bin/vi/nvi/ex/ex_version.c
+!/src/usr.bin/vi/nvi/ex/ex_visual.c
+!/src/usr.bin/vi/nvi/ex/ex_write.c
+!/src/usr.bin/vi/nvi/ex/ex_yank.c
+!/src/usr.bin/vi/nvi/ex/ex_z.c
+!/src/usr.bin/vi/nvi/ex/extern.h
+!/src/usr.bin/vi/nvi/ex/script.h
+!/src/usr.bin/vi/nvi/ex/tag.h
+!/src/usr.bin/vi/nvi/ex/version.h
+!/src/usr.bin/vi/nvi/regex/COPYRIGHT
+!/src/usr.bin/vi/nvi/regex/WHATSNEW
+!/src/usr.bin/vi/nvi/regex/cclass.h
+!/src/usr.bin/vi/nvi/regex/cname.h
+!/src/usr.bin/vi/nvi/regex/engine.c
+!/src/usr.bin/vi/nvi/regex/re_format.7
+!/src/usr.bin/vi/nvi/regex/regcomp.c
+!/src/usr.bin/vi/nvi/regex/regerror.c
+!/src/usr.bin/vi/nvi/regex/regex.3
+!/src/usr.bin/vi/nvi/regex/regex.h
+!/src/usr.bin/vi/nvi/regex/regex2.h
+!/src/usr.bin/vi/nvi/regex/regexec.c
+!/src/usr.bin/vi/nvi/regex/regfree.c
+!/src/usr.bin/vi/nvi/regex/utils.h
+!/src/usr.bin/vi/nvi/vi/extern.h
+!/src/usr.bin/vi/nvi/vi/getc.c
+!/src/usr.bin/vi/nvi/vi/v_at.c
+!/src/usr.bin/vi/nvi/vi/v_ch.c
+!/src/usr.bin/vi/nvi/vi/v_cmd.c
+!/src/usr.bin/vi/nvi/vi/v_delete.c
+!/src/usr.bin/vi/nvi/vi/v_ex.c
+!/src/usr.bin/vi/nvi/vi/v_increment.c
+!/src/usr.bin/vi/nvi/vi/v_init.c
+!/src/usr.bin/vi/nvi/vi/v_itxt.c
+!/src/usr.bin/vi/nvi/vi/v_left.c
+!/src/usr.bin/vi/nvi/vi/v_mark.c
+!/src/usr.bin/vi/nvi/vi/v_match.c
+!/src/usr.bin/vi/nvi/vi/v_paragraph.c
+!/src/usr.bin/vi/nvi/vi/v_put.c
+!/src/usr.bin/vi/nvi/vi/v_redraw.c
+!/src/usr.bin/vi/nvi/vi/v_replace.c
+!/src/usr.bin/vi/nvi/vi/v_right.c
+!/src/usr.bin/vi/nvi/vi/v_screen.c
+!/src/usr.bin/vi/nvi/vi/v_scroll.c
+!/src/usr.bin/vi/nvi/vi/v_search.c
+!/src/usr.bin/vi/nvi/vi/v_section.c
+!/src/usr.bin/vi/nvi/vi/v_sentence.c
+!/src/usr.bin/vi/nvi/vi/v_status.c
+!/src/usr.bin/vi/nvi/vi/v_txt.c
+!/src/usr.bin/vi/nvi/vi/v_ulcase.c
+!/src/usr.bin/vi/nvi/vi/v_undo.c
+!/src/usr.bin/vi/nvi/vi/v_util.c
+!/src/usr.bin/vi/nvi/vi/v_word.c
+!/src/usr.bin/vi/nvi/vi/v_xchar.c
+!/src/usr.bin/vi/nvi/vi/v_yank.c
+!/src/usr.bin/vi/nvi/vi/v_z.c
+!/src/usr.bin/vi/nvi/vi/v_zexit.c
+!/src/usr.bin/vi/nvi/vi/vi.c
+!/src/usr.bin/vi/nvi/vi/vi.h
+!/src/usr.bin/vi/nvi/vi/vs_line.c
+!/src/usr.bin/vi/nvi/vi/vs_msg.c
+!/src/usr.bin/vi/nvi/vi/vs_refresh.c
+!/src/usr.bin/vi/nvi/vi/vs_relative.c
+!/src/usr.bin/vi/nvi/vi/vs_smap.c
+!/src/usr.bin/vi/nvi/vi/vs_split.c
+!/src/usr.bin/vi/pathnames.h
+
+#
 # vmstat(1)
 #
 !/src/usr.bin/vmstat/Makefile
 !/src/usr.bin/vmstat/vmstat.8
 !/src/usr.bin/vmstat/vmstat.c
+
+#
+# vtfontcvt(1)
+#
+!/src/usr.bin/vtfontcvt/Makefile
+!/src/usr.bin/vtfontcvt/vtfontcvt.8
+!/src/usr.bin/vtfontcvt/vtfontcvt.c
 
 #
 # w(1)

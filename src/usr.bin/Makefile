@@ -25,6 +25,7 @@ SUBDIR=	alias \
 	cut \
 	dc \
 	du \
+	elfcopy \
 	env \
 	expand \
 	false \
@@ -52,6 +53,10 @@ SUBDIR=	alias \
 	m4 \
 	man \
 	mesg \
+	mkcsmapper \
+	mkcsmapper_static \
+	mkesdb \
+	mkesdb_static \
 	mkfifo \
 	mktemp \
 	mt \
@@ -93,7 +98,9 @@ SUBDIR=	alias \
 	unzip \
 	uudecode \
 	uuencode \
+	vi \
 	vmstat \
+	vtfontcvt \
 	w \
 	wall \
 	wc \
