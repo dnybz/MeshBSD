@@ -2,7 +2,7 @@
 
 .include <src.opts.mk>
 
-_LIBARCHIVEDIR=	${.CURDIR}/../../libarchive/src
+_LIBARCHIVEDIR=	${.CURDIR}/../../contrib/libarchive
 _LIBARCHIVECONFDIR=	${.CURDIR}/../../lib/libarchive
 
 PROG=	bsdcpio

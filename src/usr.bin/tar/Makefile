@@ -1,7 +1,7 @@
 # $FreeBSD: head/usr.bin/tar/Makefile 291620 2015-12-01 22:20:04Z bdrewery $
 .include <src.opts.mk>
 
-_LIBARCHIVEDIR=	${.CURDIR}/../../lib/libarchive/src
+_LIBARCHIVEDIR=	${.CURDIR}/../../contrib/libarchive
 
 PROG=	bsdtar
 BSDTAR_VERSION_STRING=	3.1.2

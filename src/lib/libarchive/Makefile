@@ -1,7 +1,7 @@
 # $FreeBSD: head/lib/libarchive/Makefile 291618 2015-12-01 22:04:59Z bdrewery $
 .include <src.opts.mk>
 
-_LIBARCHIVEDIR=	${.CURDIR}/src
+_LIBARCHIVEDIR=	${.CURDIR}/../../contrib/libarchive
 
 LIB=	archive
 
