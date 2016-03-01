@@ -82,6 +82,7 @@ SUBDIR=	alias \
 	sort \
 	split \
 	stat \
+	strings \
 	su \
 	systat \
 	tail \

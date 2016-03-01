@@ -47,6 +47,8 @@
 !/src/share/man/man5/Makefile
 !/src/share/man/man5/myname.5
 
+!/src/contrib/*
+
 ##
 # Targets
 #
@@ -2612,6 +2614,7 @@
 #
 ## usr.bin
 #
+# addr2line(1)
 # alias(1)
 # ar(1)
 # at(1)
@@ -2689,6 +2692,7 @@
 # split(1)
 # sort(1)
 # stat(1)
+# strings(1)
 # su(1)
 # systat(1)
 # tail(1)
@@ -2728,6 +2732,11 @@
 #
 !/src/usr.bin/Makefile
 !/src/usr.bin/Makefile.inc
+
+#
+# addr2line(1)
+#
+!/src/usr.bin/addr2line/Makefile
 
 #
 # alias(1)
@@ -4148,6 +4157,11 @@
 !/src/usr.bin/stat/Makefile
 !/src/usr.bin/stat/stat.1
 !/src/usr.bin/stat/stat.c
+
+#
+# strings(1)
+#
+!/src/usr.bin/strings/Makefile
 
 #
 # su(1)
