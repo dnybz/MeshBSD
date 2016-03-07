@@ -8,6 +8,7 @@ SUBDIR=	${_atf} \
 	${_casper} \
 	${_dma} \
 	getty \
+	${_mail.local} \
 	${_pppoed} \
 	${_rtld-elf} \
 	${_telnetd} \

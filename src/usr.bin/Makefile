@@ -55,6 +55,7 @@ SUBDIR=	alias \
 	lorder \
 	m4 \
 	man \
+	mail \
 	mesg \
 	mkcsmapper \
 	mkcsmapper_static \
