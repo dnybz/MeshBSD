@@ -566,6 +566,8 @@
 #
 ## usr.sbin
 #
+# ac(8)
+# acpi(8)
 # adduser(8)
 # ancontrol(8)
 # arp(8)

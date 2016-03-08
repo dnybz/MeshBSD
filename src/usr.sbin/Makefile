@@ -3,7 +3,8 @@
 
 .include <src.opts.mk>
 
-SUBDIR=		adduser \
+SUBDIR=	ac \
+	adduser \
 	ancontrol \
 	arp \
 	authpf \
