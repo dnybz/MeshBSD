@@ -1,15 +1,10 @@
 IPsec-tools
 ===========
 
-This package provides a way to use the native IPsec functionality 
-in the Linux 2.6+ kernel. It works as well on NetBSD and FreeBSD.
+This package provides a way to use the native IPsec functionality
 
 	- libipsec, a PF_KEYv2 library
-	- setkey, a tool to directly manipulate policies and SAs
 	- racoon, an IKEv1 keying daemon
-
-IPsec-tools were ported to Linux from the KAME project 
-(http://www.kame.net) by Derek Atkins  <derek@ihtfp.com>.
 
 Currently the package is actively maintained and developed by: 
 	Emmanuel Dreyfus <manu@netbsd.org>
