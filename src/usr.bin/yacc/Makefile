@@ -3,6 +3,9 @@
 
 .include <src.opts.mk>
 
+BYACC_SRC=	${.CURDIR}/../../contrib/byacc
+.PATH: ${BYACC_SRC}
+
 PROG=	yacc
 SRCS=	closure.c error.c graph.c lalr.c lr0.c main.c mkpar.c mstring.c output.c \
 	reader.c yaccpar.c symtab.c verbose.c warshall.c

@@ -14,8 +14,6 @@ SUBDIR_ORDERED=	csu \
 	libc_nonshared \
 	libcompiler_rt \
 	${_libclang_rt} \
-	${_libcplusplus} \
-	${_libcxxrt} \
 	libelf \
 	msun
 
@@ -131,7 +129,6 @@ SUBDIR_DEPEND_libarchive= libz libbz2 libexpat liblzma libmd
 SUBDIR_DEPEND_libatm= libmd
 SUBDIR_DEPEND_libauditdm= libbsm
 SUBDIR_DEPEND_libbsnmp= ${_libnetgraph}
-SUBDIR_DEPEND_libc++:= libcxxrt
 SUBDIR_DEPEND_libc= libcompiler_rt
 SUBDIR_DEPEND_libcam= libsbuf
 SUBDIR_DEPEND_libcapsicum= libnv

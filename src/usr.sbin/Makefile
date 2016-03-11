@@ -39,7 +39,6 @@ SUBDIR=	ac \
 	mixer \
 	mld6query \
 	mtest \
-	mtree \
 	nandsim \
 	nandtool \
 	ndp \
