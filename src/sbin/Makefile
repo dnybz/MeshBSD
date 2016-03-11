@@ -5,10 +5,12 @@
 
 # XXX MISSING:		icheck ncheck
 
-SUBDIR=adjkerntz \
+SUBDIR= adjkerntz \
+	casperd \
 	camcontrol \
 	comcontrol \
 	conscontrol \
+	devd \
 	devfs \
 	dhclient \
 	dmesg \
@@ -21,6 +23,7 @@ SUBDIR=adjkerntz \
 	geom \
 	ggate \
 	ifconfig \
+	ipfw \
 	init \
 	kldconfig \
 	kldload \
@@ -36,31 +39,27 @@ SUBDIR=adjkerntz \
 	mount_msdosfs \
 	mount_nfs \
 	mount_nullfs \
+	natd \
+	nandfs \
 	newfs \
 	newfs_msdos \
+	newfs_nandfs \
+	pfctl \
 	ping \
+	ping6 \
+	pflogd \
+	quotacheck \
 	reboot \
 	restore \
 	route \
+	routed \
+	rtsol \
 	setkey \
 	shutdown \
 	swapon \
 	sysctl \
+	tests \
 	umount
-
-SUBDIR.${MK_CASPER}+=	casperd
-SUBDIR.${MK_CXX}+=	devd
-SUBDIR.${MK_INET6}+=	ping6
-SUBDIR.${MK_INET6}+=	rtsol
-SUBDIR.${MK_IPFW}+=	ipfw
-SUBDIR.${MK_IPFW}+=	natd
-SUBDIR.${MK_ISCSI}+=	iscontrol
-SUBDIR.${MK_NAND}+=	nandfs
-SUBDIR.${MK_NAND}+=	newfs_nandfs
-SUBDIR.${MK_PF}+=	pfctl
-SUBDIR.${MK_PF}+=	pflogd
-SUBDIR.${MK_QUOTAS}+=	quotacheck
-SUBDIR.${MK_ROUTED}+=	routed
 
 SUBDIR.${MK_TESTS}+=	tests
 

@@ -13,6 +13,7 @@ SUBDIR=	ac \
 	bsnmpd \
 	chown \
 	chroot \
+	config \
 	cron \
 	crunch \
 	daemon \
@@ -23,7 +24,7 @@ SUBDIR=	ac \
 	flowctl \
 	ftp-proxy \
 	fwcontrol \
-	gpioct \
+	gpioctl \
 	httpd \
 	i2c \
 	inetd \
@@ -97,7 +98,8 @@ SUBDIR=	ac \
 	wlandebug \
 	wlconfig \
 	wpa \
-	zic 
+	zic \
+	zzz
 
 SUBDIR.${MK_TESTS}+=	tests
 
