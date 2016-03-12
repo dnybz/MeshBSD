@@ -64,6 +64,7 @@ SUBDIR=	alias \
 	mkfifo \
 	mktemp \
 	mt \
+	nc \
 	ncal \
 	netstat \
 	nice \
