@@ -4,25 +4,21 @@
 #
 # $FreeBSD: head/tools/bsdbox/Makefile.base 292164 2015-12-13 20:31:36Z adrian $
 #
-
+  
 CRUNCH_PROGS_bin+=	cat cp dd df expr hostname kenv  
 CRUNCH_PROGS_bin+=	kill ln ls mkdir mv ps rm sleep
 
 CRUNCH_PROGS_sbin+=	dmesg init reboot sysctl
 
-CRUNCH_PROGS_usr.bin+= 	hexdump tail nc w head uname tset
-CRUNCH_PROGS_usr.sbin+=	gpioctl
+CRUNCH_PROGS_usr.bin+=	cpio grep head hexdump nc systat 
+CRUNCH_PROGS_usr.bin+= 	tar vmstat tail tset w uname
 
 CRUNCH_ALIAS_w=		uptime
 CRUNCH_ALIAS_tset=	reset
 
-CRUNCH_PROGS_usr.bin+=	vmstat
-#CRUNCH_PROGS_user.bin+=	systat
-CRUNCH_LIBS+=		-ldevstat -lncursesw -lncurses -lmemstat -lkvm -lelf
+CRUNCH_PROGS_usr.sbin+=	gpioctl
 
-# CRUNCH_PROGS_usr.bin+=	tar
-CRUNCH_PROGS_usr.bin+=	cpio
-# XXX SSL ?
+CRUNCH_LIBS+=		-ldevstat -lncursesw -lncurses -lmemstat -lkvm -lelf
 CRUNCH_LIBS+=		-larchive -lbz2 -lz -llzma -lbsdxml -lssl -lcrypto
 
 # Clear requires tput, and it's a shell script so it won't be crunched
