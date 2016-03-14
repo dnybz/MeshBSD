@@ -1,0 +1,27 @@
+#
+# Infrastructure for loading kernel modules.
+#
+
+###################################################################
+# Programs from stock /bin
+#
+
+###################################################################
+# Programs from standard /sbin
+#
+CRUNCH_PROGS_sbin+=	kldload kldunload kldstat
+
+##################################################################
+# Programs from stock /usr/bin
+#
+
+##################################################################
+# Programs from stock /usr/sbin
+#
+
+##################################################################
+# Library dependencies
+#
+
+
+

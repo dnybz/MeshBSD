@@ -80,20 +80,15 @@ CRUNCH_SRCDIRS+= libexec
 CRUNCH_SHLIBS+=	-lc -lutil -lcrypt -lxo -lgpio
 
 .include "Makefile.base"
+.include "Makefile.fs"
+.include "Makefile.kld"
 .include "Makefile.login"
 .include "Makefile.net"
+.include "Makefile.textproc"
 
+#
 #.include "Makefile.hostapd"
-#.include "Makefile.textproc"
-
-# 
-
-#.include "Makefile.kld"
-
-# telnet/telnetd are too broken to include as a crunchgen'ed binary,
-# thanks to some of the horrible layering violations going on.
-# .include "Makefile.telnetd"
-.include "Makefile.fs"
+#
 
 # the crunchgen build environment
 .include <bsd.crunchgen.mk>
