@@ -80,11 +80,14 @@ CRUNCH_SRCDIRS+= libexec
 CRUNCH_SHLIBS+=	-lc -lutil -lcrypt -lxo -lgpio
 
 .include "Makefile.base"
+.include "Makefile.login"
+.include "Makefile.net"
 
-#.include "Makefile.net"
 #.include "Makefile.hostapd"
 #.include "Makefile.textproc"
-#.include "Makefile.login"
+
+# 
+
 #.include "Makefile.kld"
 
 # telnet/telnetd are too broken to include as a crunchgen'ed binary,

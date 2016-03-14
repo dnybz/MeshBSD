@@ -2,7 +2,10 @@
 # This builds a variety of "base" tools, 
 # useful for an embedded system.
 #
-  
+
+###################################################################
+# Programs from stock /bin
+#  
 CRUNCH_PROGS_bin+=	cat cp dd df expr hostname kenv  
 CRUNCH_PROGS_bin+=	kill ln ls mkdir mv ps rm sleep sh
 
@@ -10,8 +13,14 @@ CRUNCH_ALIAS_sh= -sh
 CRUNCH_SUPPRESS_LINK_-sh=	1
 CRUNCH_BUILDTOOLS+=	bin/sh
 
+###################################################################
+# Programs from standard /sbin
+#
 CRUNCH_PROGS_sbin+=	dmesg init mount umount reboot sysctl
 
+##################################################################
+# Programs from stock /usr/bin
+#
 CRUNCH_PROGS_usr.bin+=	cpio grep gzip head hexdump less nc passwd 
 CRUNCH_PROGS_usr.bin+= 	systat tar vmstat tail tput tset w uname
 
@@ -21,8 +30,14 @@ CRUNCH_ALIAS_less=	more
 CRUNCH_ALIAS_tset=	reset
 CRUNCH_ALIAS_w=		uptime
 
+##################################################################
+# Programs from stock /usr/sbin
+#
 CRUNCH_PROGS_usr.sbin+=	chown gpioctl
 
+##################################################################
+# Library dependencies
+#
 CRUNCH_LIBS+= -larchive
 CRUNCH_LIBS+= -lbsdxml
 CRUNCH_LIBS+= -lbz2
