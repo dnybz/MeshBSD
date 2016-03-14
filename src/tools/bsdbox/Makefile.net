@@ -18,12 +18,12 @@ CRUNCH_PROGS_sbin+=	ifconfig ping ping6 route
 ##################################################################
 # Programs from stock /usr/bin
 #
-CRUNCH_PROGS_usr.sbin+=	arp netstat
+CRUNCH_PROGS_usr.bin+=	netstat
 
 ##################################################################
 # Programs from stock /usr/sbin
 #
-CRUNCH_PROGS_usr.sbin+=	inetd tcpdump wlandebug
+CRUNCH_PROGS_usr.sbin+=	arp inetd tcpdump wlandebug
 
 ##################################################################
 # Library dependencies
