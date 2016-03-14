@@ -64,7 +64,6 @@ SUBDIR=	ac \
 	pstat \
 	pw \
 	pwd_mkdb \
-	racoon \
 	rarpd \
 	rip6query \
 	route6d \
@@ -94,7 +93,7 @@ SUBDIR=	ac \
 	utx \
 	vidcontrol \
 	watch \
-	watschdogd \
+	watchdogd \
 	wlandebug \
 	wlconfig \
 	wpa \
