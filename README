@@ -18,12 +18,11 @@ This operation is divided into three major stages:
  #1 Buildup of code-base as free generating set for base operating system.
 
  #2 Divide set of given Makefiles and transition into a set of modularized
-    components acting as building block for generating operating systems
-    targeting embedded systems.
+    components acting as toolkit for generating an operating system targeting  
+    embedded systems and mobile stations.
     
- #3 Creation of an developement environment for building an operating 
-    system for mobile stations targeting ARM architechture based on by 
-    stage #2 generated set.  
+ #3 Generate an developement environment for building aplications as
+    subset on e. g. X.org based GUI.  
 
 TL-WR1043NDv2 (experimental)
 ============================
