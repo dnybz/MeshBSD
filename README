@@ -18,7 +18,7 @@ This operation is divided into three major stages:
  #1 Buildup of code-base as free generating set for base operating system.
 
  #2 Divide set of given Makefiles and transition into a set of modularized
-    compinents acting as building block for generating operating systems
+    components acting as building block for generating operating systems
     targeting embedded systems.
     
  #3 Creation of an developement environment for building an operating 
