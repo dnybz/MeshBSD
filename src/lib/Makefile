@@ -11,7 +11,6 @@
 SUBDIR_ORDERED=	csu \
 	.WAIT \
 	libc \
-	libc_nonshared \
 	libcompiler_rt \
 	${_libclang_rt} \
 	libelf \

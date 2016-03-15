@@ -96,6 +96,7 @@ SRCS+=	__getosreldate.c \
 	psignal.c \
 	pututxline.c \
 	pw_scan.c \
+	pwcache.c \
 	raise.c \
 	readdir.c \
 	readpassphrase.c \
