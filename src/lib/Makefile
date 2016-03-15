@@ -23,13 +23,9 @@ SUBDIR=	${SUBDIR_ORDERED} \
 	.WAIT \
 	libalias \
 	libarchive \
-	${_libatm} \
-	libauditd \
 	libbegemot \
-	libblocksruntime \
-	${_libbluetooth} \
-	${_libbsnmp} \
-	libbsdstat \
+	libbluetooth \
+	libbsnmp \
 	libbsm \
 	libbz2 \
 	libcalendar \
@@ -37,176 +33,84 @@ SUBDIR=	${SUBDIR_ORDERED} \
 	${_libcapsicum} \
 	${_libcasper} \
 	${_libcom_err} \
-	libcompat \
 	libcrypt \
 	libdevctl \
 	libdevinfo \
 	libdevstat \
-	libdpv \
-	libdwarf \
 	libedit \
 	${_libelftc} \
 	libevent \
-	libexecinfo \
-	libexpat \
 	libfetch \
-	libfigpar \
 	libgeom \
 	${_libgpio} \
 	${_libgssapi} \
-	${_librpcsec_gss} \
-	${_libiconv_modules} \
 	libipsec \
 	libjail \
 	libkiconv \
 	libkvm \
 	${_libldns} \
 	liblzma \
-	${_libmagic} \
 	libmemstat \
 	libmd \
-	${_libmilter} \
 	${_libmp} \
 	libmt \
 	${_libnandfs} \
 	lib80211 \
 	libnetbsd \
 	${_libnetgraph} \
-	${_libngatm} \
-	libnv \
-	libopie \
 	libpam \
 	libpcap \
-	libpjdlog \
 	${_libpmc} \
-	${_libproc} \
 	libprocstat \
 	${_libradius} \
 	librpcsvc \
-	librt \
-	${_librtld_db} \
 	libsbuf \
-	${_libsdp} \
-	${_libsm} \
-	libsmb \
-	${_libsmdb} \
-	${_libsmutil} \
-	libsqlite3 \
-	libstand \
-	libstdbuf \
-	libstdthreads \
-	libsysdecode \
-	libtacplus \
-	${_libtelnet} \
 	${_libthr} \
 	libthread_db \
 	libtls \
-	libucl \
 	libufs \
 	libugidfw \
-	libulog \
-	${_libunbound} \
 	${_libusbhid} \
 	${_libusb} \
 	libutil \
-	${_libvgl} \
-	${_libvmmapi} \
 	libwrap \
 	libxo \
-	liby \
-	${_libypclnt} \
 	libz \
 	ncurses \
-	${_atf} \
-	${_clang} \
-	${_cuse} \
 	${_tests}
 
 # Inter-library dependencies.  When the makefile for a library contains LDADD
 # libraries, those libraries should be listed as build order dependencies here.
 
 SUBDIR_DEPEND_libarchive= libz libbz2 libexpat liblzma libmd
-SUBDIR_DEPEND_libatm= libmd
-SUBDIR_DEPEND_libauditdm= libbsm
 SUBDIR_DEPEND_libbsnmp= ${_libnetgraph}
 SUBDIR_DEPEND_libc= libcompiler_rt
 SUBDIR_DEPEND_libcam= libsbuf
 SUBDIR_DEPEND_libcapsicum= libnv
 SUBDIR_DEPEND_libcasper= libcapsicum libnv libpjdlog
 SUBDIR_DEPEND_libdevstat= libkvm
-SUBDIR_DEPEND_libdpv= libfigpar ncurses libutil
 SUBDIR_DEPEND_libedit= ncurses
 SUBDIR_DEPEND_libgeom= libexpat libsbuf
-SUBDIR_DEPEND_liblibrpcsec_gss= libgssapi
-SUBDIR_DEPEND_libmagic= libz
 SUBDIR_DEPEND_libmemstat= libkvm
 SUBDIR_DEPEND_libopie= libmd
 SUBDIR_DEPEND_libpam= libcrypt libopie ${_libradius} librpcsvc libtacplus libutil ${_libypclnt} ${_libcom_err} 
-SUBDIR_DEPEND_libpjdlog= libutil
 SUBDIR_DEPEND_libprocstat= libkvm libutil
 SUBDIR_DEPEND_libradius= libmd
-SUBDIR_DEPEND_libsmb= libkiconv
 SUBDIR_DEPEND_libtacplus= libmd
-SUBDIR_DEPEND_libulog= libmd
-SUBDIR_DEPEND_libunbound= ${_libldns}
 SUBDIR_DEPEND_liblzma= ${_libthr}
 
-# NB: keep these sorted by MK_* knobs
+# XXX: incomplete ... but reorganisation is pending task
 
-.if ${MK_ATM} != "no"
-_libngatm=	libngatm
-.endif
-
-.if ${MK_BLUETOOTH} != "no"
-_libbluetooth=	libbluetooth
-_libsdp=	libsdp
-.endif
-
-.if ${MK_BSNMP} != "no"
 _libbsnmp=	libbsnmp
-.endif
-
-.if ${MK_CASPER} != "no"
 _libcapsicum=	libcapsicum
 _libcasper=	libcasper
-.endif
-
-.if ${MK_CLANG} != "no" && !defined(COMPAT_32BIT)
-_clang=		clang
-.endif
-
-.if ${MK_CUSE} != "no"
-_cuse=		libcuse
-.endif
-
-.if ${MK_TOOLCHAIN} != "no"
 _libelftc=	libelftc
-.endif
-
-.if ${MK_FILE} != "no"
-_libmagic=	libmagic
-.endif
-
-.if ${MK_GPIO} != "no"
 _libgpio=	libgpio
-.endif
-
-.if ${MK_GSSAPI} != "no"
 _libgssapi=	libgssapi
 _librpcsec_gss=	librpcsec_gss
-.endif
-
-.if ${MK_ICONV} != "no"
 _libiconv_modules=	libiconv_modules
-.endif
-
-.if ${MK_KERBEROS_SUPPORT} != "no"
 _libcom_err= libcom_err
-.endif
-
-.if ${MK_LDNS} != "no"
 _libldns=	libldns
-.endif
 
 # The libraries under libclang_rt can only be built by clang, and only make
 # sense to build when clang is enabled at all.  Furthermore, they can only be
@@ -218,26 +122,9 @@ _libldns=	libldns
 _libclang_rt=	libclang_rt
 .endif
 
-.if ${MK_LIBCPLUSPLUS} != "no"
-_libcxxrt=	libcxxrt
-_libcplusplus=	libc++
-.endif
-
-.if ${MK_LIBTHR} != "no"
 _libthr=	libthr
-.endif
-
-.if ${MK_NAND} != "no"
 _libnandfs=	libnandfs
-.endif
-
-.if ${MK_NETGRAPH} != "no"
 _libnetgraph=	libnetgraph
-.endif
-
-.if ${MK_NIS} != "no"
-_libypclnt=	libypclnt
-.endif
 
 .if ${MACHINE_CPUARCH} == "i386" || ${MACHINE_CPUARCH} == "amd64"
 _libvgl=	libvgl
@@ -285,19 +172,8 @@ _libsmdb=	libsmdb
 _libsmutil=	libsmutil
 .endif
 
-.if ${MK_TELNET} != "no"
-_libtelnet=	libtelnet
-.endif
-
-.if ${MK_TESTS_SUPPORT} != "no"
-_atf=		atf
-.endif
 .if ${MK_TESTS} != "no"
 _tests=		tests
-.endif
-
-.if ${MK_UNBOUND} != "no"
-_libunbound=	libunbound
 .endif
 
 .if ${MK_USB} != "no"
