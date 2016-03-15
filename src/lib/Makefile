@@ -30,20 +30,21 @@ SUBDIR=	${SUBDIR_ORDERED} \
 	libbz2 \
 	libcalendar \
 	libcam \
-	${_libcapsicum} \
-	${_libcasper} \
-	${_libcom_err} \
+	libcapsicum \
+	libcasper \
+	libcom_err \
 	libcrypt \
 	libdevctl \
 	libdevinfo \
 	libdevstat \
 	libedit \
-	${_libelftc} \
+	libelftc \
 	libevent \
+	libexpat \
 	libfetch \
 	libgeom \
-	${_libgpio} \
-	${_libgssapi} \
+	libgpio \
+	libgssapi \
 	libipsec \
 	libjail \
 	libkiconv \
@@ -54,18 +55,20 @@ SUBDIR=	${SUBDIR_ORDERED} \
 	libmd \
 	${_libmp} \
 	libmt \
-	${_libnandfs} \
+	libnandfs \
 	lib80211 \
 	libnetbsd \
-	${_libnetgraph} \
+	libnetgraph \
+	libnv \
 	libpam \
 	libpcap \
+	libpjdlog \
 	${_libpmc} \
 	libprocstat \
 	${_libradius} \
 	librpcsvc \
 	libsbuf \
-	${_libthr} \
+	libthr \
 	libthread_db \
 	libtls \
 	libufs \
@@ -83,7 +86,7 @@ SUBDIR=	${SUBDIR_ORDERED} \
 # libraries, those libraries should be listed as build order dependencies here.
 
 SUBDIR_DEPEND_libarchive= libz libbz2 libexpat liblzma libmd
-SUBDIR_DEPEND_libbsnmp= ${_libnetgraph}
+SUBDIR_DEPEND_libbsnmp= libnetgraph
 SUBDIR_DEPEND_libc= libcompiler_rt
 SUBDIR_DEPEND_libcam= libsbuf
 SUBDIR_DEPEND_libcapsicum= libnv
@@ -93,24 +96,11 @@ SUBDIR_DEPEND_libedit= ncurses
 SUBDIR_DEPEND_libgeom= libexpat libsbuf
 SUBDIR_DEPEND_libmemstat= libkvm
 SUBDIR_DEPEND_libopie= libmd
-SUBDIR_DEPEND_libpam= libcrypt libopie ${_libradius} librpcsvc libtacplus libutil ${_libypclnt} ${_libcom_err} 
+SUBDIR_DEPEND_libpam= libcrypt libopie ${_libradius} librpcsvc libtacplus libutil ${_libypclnt} libcom_err
 SUBDIR_DEPEND_libprocstat= libkvm libutil
 SUBDIR_DEPEND_libradius= libmd
 SUBDIR_DEPEND_libtacplus= libmd
-SUBDIR_DEPEND_liblzma= ${_libthr}
-
-# XXX: incomplete ... but reorganisation is pending task
-
-_libbsnmp=	libbsnmp
-_libcapsicum=	libcapsicum
-_libcasper=	libcasper
-_libelftc=	libelftc
-_libgpio=	libgpio
-_libgssapi=	libgssapi
-_librpcsec_gss=	librpcsec_gss
-_libiconv_modules=	libiconv_modules
-_libcom_err= libcom_err
-_libldns=	libldns
+SUBDIR_DEPEND_liblzma= libthr
 
 # The libraries under libclang_rt can only be built by clang, and only make
 # sense to build when clang is enabled at all.  Furthermore, they can only be
@@ -121,10 +111,6 @@ _libldns=	libldns
     (${MACHINE_CPUARCH} == "i386"))
 _libclang_rt=	libclang_rt
 .endif
-
-_libthr=	libthr
-_libnandfs=	libnandfs
-_libnetgraph=	libnetgraph
 
 .if ${MACHINE_CPUARCH} == "i386" || ${MACHINE_CPUARCH} == "amd64"
 _libvgl=	libvgl
