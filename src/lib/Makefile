@@ -60,22 +60,26 @@ SUBDIR=	${SUBDIR_ORDERED} \
 	libnetbsd \
 	libnetgraph \
 	libnv \
+	libopie \
 	libpam \
 	libpcap \
 	libpjdlog \
-	${_libpmc} \
+	libpmc \
+	${_libproc} \
 	libprocstat \
-	${_libradius} \
+	libradius \
 	librpcsvc \
 	libsbuf \
+	libtacplus \
 	libthr \
 	libthread_db \
 	libtls \
 	libufs \
 	libugidfw \
-	${_libusbhid} \
-	${_libusb} \
+	libusbhid \
+	libusb \
 	libutil \
+	${_libvgl} \
 	libwrap \
 	libxo \
 	libz \
@@ -96,7 +100,7 @@ SUBDIR_DEPEND_libedit= ncurses
 SUBDIR_DEPEND_libgeom= libexpat libsbuf
 SUBDIR_DEPEND_libmemstat= libkvm
 SUBDIR_DEPEND_libopie= libmd
-SUBDIR_DEPEND_libpam= libcrypt libopie ${_libradius} librpcsvc libtacplus libutil ${_libypclnt} libcom_err
+SUBDIR_DEPEND_libpam= libcrypt libopie libradius librpcsvc libtacplus libutil ${_libypclnt} libcom_err
 SUBDIR_DEPEND_libprocstat= libkvm libutil
 SUBDIR_DEPEND_libradius= libmd
 SUBDIR_DEPEND_libtacplus= libmd
@@ -118,12 +122,6 @@ _libproc=	libproc
 _librtld_db=	librtld_db
 .endif
 
-.if ${MACHINE_CPUARCH} == "amd64"
-.if ${MK_BHYVE} != "no"
-_libvmmapi=	libvmmapi
-.endif
-.endif
-
 .if ${MACHINE_CPUARCH} == "mips"
 _libproc=	libproc
 _librtld_db=	librtld_db
@@ -143,14 +141,6 @@ _librtld_db=	librtld_db
 _libmp=		libmp
 .endif
 
-.if ${MK_PMC} != "no"
-_libpmc=	libpmc
-.endif
-
-.if ${MK_RADIUS_SUPPORT} != "no"
-_libradius=	libradius
-.endif
-
 .if ${MK_SENDMAIL} != "no"
 _libmilter=	libmilter
 _libsm=		libsm
@@ -160,11 +150,6 @@ _libsmutil=	libsmutil
 
 .if ${MK_TESTS} != "no"
 _tests=		tests
-.endif
-
-.if ${MK_USB} != "no"
-_libusbhid=	libusbhid
-_libusb=	libusb
 .endif
 
 .if !make(install)
