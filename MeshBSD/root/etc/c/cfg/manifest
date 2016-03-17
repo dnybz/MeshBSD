@@ -15,5 +15,6 @@ etc/passwd
 etc/pf.conf
 etc/rc.conf
 etc/services
+etc/sysctl.conf
 etc/ttys
 etc/wpa_supplicant.conf

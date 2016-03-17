@@ -17,15 +17,12 @@ SUBDIR=	alias \
 	bluetooth \
 	bzip2 \
 	cap_mkdb \
-	chat \
 	cksum \
 	cmp \
-	comm \
 	compile_et \
 	compress \
 	cpio \
 	cut \
-	dc \
 	du \
 	ee \
 	elfcopy \

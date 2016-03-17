@@ -8,19 +8,21 @@ cfg_load
 
 FUNCS_ONLY=1 . /etc/rc.subr
 
+_rc_sysctl_conf
+
 echo "*** Populating /var .."
 
+mkdir -p /var/run/ppp
 mkdir -p /var/run/rc.d
 mkdir -p /var/log
 mkdir -p /var/tmp
 mkdir -p /var/db
 mkdir -p /var/empty
-mkdir -p /var/cron
-mkdir -p /var/cron/tabs
 
 echo "*** Generating password/login databases .."
-/usr/sbin/pwd_mkdb /etc/master.passwd
-/usr/bin/cap_mkdb /etc/login.conf
+
+/usr/sbin/pwd_mkdb /etc/master.passwd > /dev/null 2>&1
+/usr/bin/cap_mkdb /etc/login.conf > /dev/null 2>&1
 
 echo "*** Generating services database .."
 /usr/sbin/services_mkdb /etc/services > /dev/null 2>&1
@@ -110,13 +112,6 @@ done
 echo "*** Starting daemons .."
 
 _rc_parse_conf
-
-#
-# XXX: I'll refactor this.
-#
-
-/sbin/sysctl net.inet.ip.forwarding=1
-
 
 echo "*** Done!"
 

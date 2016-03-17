@@ -13,7 +13,6 @@ SUBDIR= cat \
 	echo \
 	ed \
 	expr \
-	getfacl \
 	hostname \
 	kenv \
 	kill \
@@ -21,7 +20,6 @@ SUBDIR= cat \
 	ls \
 	mkdir \
 	mv \
-	pax \
 	pkill \
 	ps \
 	pwait \
@@ -29,7 +27,6 @@ SUBDIR= cat \
 	realpath \
 	rm \
 	rmdir \
-	setfacl \
 	sh \
 	sleep \
 	stty \
