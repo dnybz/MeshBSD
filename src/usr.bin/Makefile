@@ -37,6 +37,7 @@ SUBDIR=	alias \
 	fold \
 	fsync \
 	ftp \
+	getcap \
 	getopt \
 	grep \
 	gzip \

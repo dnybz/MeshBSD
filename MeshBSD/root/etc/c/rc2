@@ -1,17 +1,22 @@
 #!/bin/sh
 
+echo "*** Loading configuration files .."
+
+cfg_load
+
+. /etc/rc.conf
+
+FUNCS_ONLY=1 . /etc/rc.subr
+
 echo "*** Populating /var .."
 
-mkdir -p /var/run/hostapd
+mkdir -p /var/run/rc.d
 mkdir -p /var/log
 mkdir -p /var/tmp
 mkdir -p /var/db
 mkdir -p /var/empty
 mkdir -p /var/cron
 mkdir -p /var/cron/tabs
-
-echo "*** Loading configuration files .."
-cfg_load
 
 echo "*** Generating password/login databases .."
 /usr/sbin/pwd_mkdb /etc/master.passwd
@@ -22,9 +27,7 @@ echo "*** Generating services database .."
 
 echo "*** Starting network .."
 
-. /etc/rc.d/rc.subr
-
-# Hostname shall be set by parsing
+# Hostname shall set by parsing
 # 
 #  /etc/myname
 # 
@@ -89,8 +92,6 @@ else
 	ip6kernel=NO
 fi
 
-. /etc/rc.conf
-
 # 
 # Configure interfaces.
 #
@@ -103,43 +104,19 @@ fi
 # argument vector for processing by ifconfig(8).
 #
 for ift in ${network_interface_types}; do
-	ifmstart ${ift}
+	_rc_ifmstart ${ift}
 done
 
-#
-# XXX: Well, heres a good place to inherit values 
-# XXX: from rc.conf, rc.conf.local and rc.local.
-#
+echo "*** Starting daemons .."
 
-/sbin/sysctl net.inet.ip.forwarding=1
+_rc_parse_conf
 
 #
 # XXX: I'll refactor this.
 #
 
-if [ X"${pf_enable}" == X"YES" ]; then
-	if [ -f ${pf_conf} ]; then
-		/sbin/pfctl -ef ${pf_conf}
-	fi
-fi
+/sbin/sysctl net.inet.ip.forwarding=1
 
-if [ X"${dhcpd_enable}" == X"YES" ]; then
-	if [ -f ${dhcpd_conf} ]; then
-		/usr/sbin/dhcpd -c ${dhcpd_conf}
-	fi
-fi
-
-if [ X"${hostapd_enable}" == X"YES" ]; then
-	if [ -f ${hostapd_conf} ]; then
-		/usr/sbin/hostapd ${hostapd_conf}
-	fi
-fi
-
-if [ X"${ntpd_enable}" == X"YES" ]; then
-	if [ -f ${ntpd_conf} ]; then
-		/usr/sbin/ntpd -c ${ntpd_conf}
-	fi
-fi
 
 echo "*** Done!"
 
