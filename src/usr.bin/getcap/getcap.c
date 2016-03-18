@@ -30,7 +30,7 @@ enum captype {
 };
 
 void lookup_cap(char *, char *, enum captype, int);
-__dead void usage(void);
+void usage(void);
 
 int
 main(int argc, char *argv[])
@@ -167,7 +167,7 @@ lookup_cap(char *buf, char *cap, enum captype type, int useprefix)
 	}
 }
 
-__dead void
+void
 usage(void)
 {
 	extern char *__progname;

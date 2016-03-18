@@ -11,6 +11,7 @@
 SUBDIR_ORDERED=	csu \
 	.WAIT \
 	libc \
+	libc_nonshared \
 	libcompiler_rt \
 	${_libclang_rt} \
 	libelf \
@@ -68,6 +69,7 @@ SUBDIR=	${SUBDIR_ORDERED} \
 	libprocstat \
 	libradius \
 	librpcsvc \
+	librtld_db \
 	libsbuf \
 	libtacplus \
 	libthr \
@@ -118,22 +120,18 @@ _libclang_rt=	libclang_rt
 .if ${MACHINE_CPUARCH} == "i386" || ${MACHINE_CPUARCH} == "amd64"
 _libvgl=	libvgl
 _libproc=	libproc
-_librtld_db=	librtld_db
 .endif
 
 .if ${MACHINE_CPUARCH} == "mips"
 _libproc=	libproc
-_librtld_db=	librtld_db
 .endif
 
 .if ${MACHINE_CPUARCH} == "powerpc"
 _libproc=	libproc
-_librtld_db=	librtld_db
 .endif
 
 .if ${MACHINE_CPUARCH} == "aarch64" || ${MACHINE_CPUARCH} == "arm"
 _libproc=	libproc
-_librtld_db=	librtld_db
 .endif
 
 .if ${MK_OPENSSL} != "no"

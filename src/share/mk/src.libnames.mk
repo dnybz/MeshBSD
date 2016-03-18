@@ -257,12 +257,6 @@ _DP_pam=	radius tacplus opie md util
 .if ${MK_KERBEROS} != "no"
 _DP_pam+=	krb5
 .endif
-.if ${MK_OPENSSH} != "no"
-_DP_pam+=	ssh
-.endif
-.if ${MK_NIS} != "no"
-_DP_pam+=	ypclnt
-.endif
 _DP_readline=	ncursesw
 _DP_roken=	crypt
 _DP_kadm5clnt=	com_err krb5 roken
@@ -487,7 +481,6 @@ LIBNCURSESWDIR=	${OBJTOP}/lib/ncurses/ncursesw
 LIBPANELDIR=	${OBJTOP}/lib/ncurses/panel
 LIBPANELWDIR=	${OBJTOP}/lib/ncurses/panelw
 LIBCRYPTODIR=	${OBJTOP}/secure/lib/libcrypto
-LIBSSHDIR=	${OBJTOP}/secure/lib/libssh
 LIBSSLDIR=	${OBJTOP}/secure/lib/libssl
 LIBTEKENDIR=	${OBJTOP}/sys/teken/libteken
 LIBEGACYDIR=	${OBJTOP}/tools/build
