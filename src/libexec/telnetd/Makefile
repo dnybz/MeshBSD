@@ -5,7 +5,8 @@
 
 .include <src.opts.mk>
 
-TELNETDIR=	${.CURDIR}/../../usr.bin/telnet
+TELNETDIR=	${.CURDIR}/../../contrib/telnet
+.PATH:		${TELNETDIR}/telnetd
 
 PROG=		telnetd
 MAN=		telnetd.8
@@ -24,6 +25,7 @@ CFLAGS+=	-DINET6
 .endif
 
 CFLAGS+=	-I${TELNETDIR}
+CFLAGS+=	-I${TELNETDIR}/telnet
 
 LIBTELNET=	${.OBJDIR}/../../lib/libtelnet/libtelnet.a
 

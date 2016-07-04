@@ -41,7 +41,7 @@ static char sccsid[] = "@(#)xinstall.c	8.1 (Berkeley) 7/21/93";
 #endif
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/xinstall/xinstall.c 291091 2015-11-20 08:45:59Z bapt $");
+__FBSDID("$FreeBSD: head/usr.bin/xinstall/xinstall.c 299942 2016-05-16 12:56:28Z jilles $");
 
 #include <sys/param.h>
 #include <sys/mman.h>

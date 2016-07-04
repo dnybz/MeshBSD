@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)unistd.h	8.12 (Berkeley) 4/27/95
- * $FreeBSD: head/include/unistd.h 290394 2015-11-05 14:55:58Z pfg $
+ * $FreeBSD: head/include/unistd.h 296162 2016-02-28 17:52:33Z kib $
  */
 
 #ifndef _UNISTD_H_
@@ -112,7 +112,7 @@ typedef	__useconds_t	useconds_t;
 #define	_POSIX_THREAD_PRIO_INHERIT	200112L
 #define	_POSIX_THREAD_PRIO_PROTECT	200112L
 #define	_POSIX_THREAD_PRIORITY_SCHEDULING 200112L
-#define	_POSIX_THREAD_PROCESS_SHARED	-1
+#define	_POSIX_THREAD_PROCESS_SHARED	200112L
 #define	_POSIX_THREAD_SAFE_FUNCTIONS	-1
 #define	_POSIX_THREAD_SPORADIC_SERVER	-1
 #define	_POSIX_THREADS			200112L
@@ -587,12 +587,6 @@ void	*valloc(size_t);			/* obsoleted by malloc() */
 extern int optreset;			/* getopt(3) external variable */
 #endif
 #endif /* __BSD_VISIBLE */
-
-/*
- * For compatibility on imsg_init(3).
- */
-int	 getdtablecount(void);
-
 __END_DECLS
 
 #endif /* !_UNISTD_H_ */

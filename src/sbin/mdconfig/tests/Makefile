@@ -1,4 +1,4 @@
-# $FreeBSD: head/sbin/mdconfig/tests/Makefile 289172 2015-10-12 08:16:03Z ngie $
+# $FreeBSD: head/sbin/mdconfig/tests/Makefile 299094 2016-05-04 23:20:53Z ngie $
 
 ATF_TESTS_SH=	mdconfig_test
 

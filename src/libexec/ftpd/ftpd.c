@@ -42,7 +42,7 @@ static char sccsid[] = "@(#)ftpd.c	8.4 (Berkeley) 4/16/94";
 #endif /* not lint */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/libexec/ftpd/ftpd.c 262136 2014-02-17 22:27:32Z brueffer $");
+__FBSDID("$FreeBSD: head/libexec/ftpd/ftpd.c 299585 2016-05-13 01:52:41Z truckman $");
 
 /*
  * FTP server.
@@ -1671,14 +1671,14 @@ retrieve(char *cmd, char *name)
 	struct stat st;
 	int (*closefunc)(FILE *);
 	time_t start;
+	char line[BUFSIZ];
 
 	if (cmd == 0) {
 		fin = fopen(name, "r"), closefunc = fclose;
 		st.st_size = 0;
 	} else {
-		char line[BUFSIZ];
-
-		(void) snprintf(line, sizeof(line), cmd, name), name = line;
+		(void) snprintf(line, sizeof(line), cmd, name);
+		name = line;
 		fin = ftpd_popen(line, "r"), closefunc = ftpd_pclose;
 		st.st_size = -1;
 		st.st_blksize = BUFSIZ;
@@ -2048,7 +2048,7 @@ pdata_err:
 	} while (0)
 
 /*
- * Tranfer the contents of "instr" to "outstr" peer using the appropriate
+ * Transfer the contents of "instr" to "outstr" peer using the appropriate
  * encapsulation of the data subject to Mode, Structure, and Type.
  *
  * NB: Form isn't handled.
@@ -2820,7 +2820,7 @@ myoob(void)
 		return (0);
 	}
 	cp = tmpline;
-	ret = getline(cp, 7, stdin);
+	ret = get_line(cp, 7, stdin);
 	if (ret == -1) {
 		reply(221, "You could at least say goodbye.");
 		dologout(0);

@@ -47,7 +47,7 @@ static char sccsid[] = "@(#)ps.c	8.4 (Berkeley) 4/2/94";
 #endif
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/bin/ps/ps.c 283867 2015-06-01 06:00:04Z araujo $");
+__FBSDID("$FreeBSD: head/bin/ps/ps.c 298233 2016-04-19 00:40:43Z araujo $");
 
 #include <sys/param.h>
 #include <sys/jail.h>
@@ -451,7 +451,7 @@ main(int argc, char *argv[])
 		xkeep = xkeep_implied;
 
 	kd = kvm_openfiles(nlistf, memf, NULL, O_RDONLY, errbuf);
-	if (kd == 0)
+	if (kd == NULL)
 		xo_errx(1, "%s", errbuf);
 
 	if (!_fmt)

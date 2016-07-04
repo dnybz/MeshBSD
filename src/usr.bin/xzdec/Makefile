@@ -6,7 +6,7 @@ LINKS=	${BINDIR}/xzdec ${BINDIR}/lzdec
 
 MLINKS= xzdec.1 lzmadec.1
 
-XZDIR=	${.CURDIR}/../../xz/src
+XZDIR=	${.CURDIR}/../../contrib/xz/src
 LZMALIBDIR=	${.CURDIR}/../../lib/liblzma
 
 .PATH: ${XZDIR}/xzdec

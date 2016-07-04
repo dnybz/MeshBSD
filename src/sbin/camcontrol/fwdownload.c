@@ -48,7 +48,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sbin/camcontrol/fwdownload.c 286965 2015-08-20 16:07:51Z ken $");
+__FBSDID("$FreeBSD: head/sbin/camcontrol/fwdownload.c 299490 2016-05-11 22:25:14Z cem $");
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -216,7 +216,7 @@ static struct fw_vendor vendors_list[] = {
 	 * since we won't actually send a WRITE BUFFER with any of the
 	 * listed parameters.  If a SATA device is behind a SAS controller,
 	 * the SCSI to ATA translation code (at least for LSI) doesn't
-	 * generaly translate a SCSI WRITE BUFFER into an ATA DOWNLOAD
+	 * generally translate a SCSI WRITE BUFFER into an ATA DOWNLOAD
 	 * MICROCODE command.  So, we use the SCSI ATA PASS_THROUGH command
 	 * to send the ATA DOWNLOAD MICROCODE command instead.
 	 */
@@ -488,6 +488,7 @@ fw_validate_ibm(struct cam_device *dev, int retry_count, int timeout, int fd,
 				CAM_EPF_ALL, stderr);
 
 		cam_freeccb(ccb);
+		ccb = NULL;
 		goto bailout;
 	}
 
@@ -549,7 +550,8 @@ fw_validate_ibm(struct cam_device *dev, int retry_count, int timeout, int fd,
 		fprintf(stdout, "Firmware file is valid for this drive.\n");
 	retval = 0;
 bailout:
-	cam_freeccb(ccb);
+	if (ccb != NULL)
+		cam_freeccb(ccb);
 
 	return (retval);
 }

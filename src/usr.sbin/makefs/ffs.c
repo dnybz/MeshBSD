@@ -66,7 +66,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/makefs/ffs.c 289203 2015-10-13 02:32:15Z adrian $");
+__FBSDID("$FreeBSD: head/usr.sbin/makefs/ffs.c 300069 2016-05-17 18:20:33Z pfg $");
 
 #include <sys/param.h>
 
@@ -1125,9 +1125,10 @@ ffs_write_inode(union dinode *dp, uint32_t ino, const fsinfo_t *fsopts)
 	    initediblk < ufs_rw32(cgp->cg_niblk, fsopts->needswap)) {
 		memset(buf, 0, fs->fs_bsize);
 		dip = (struct ufs2_dinode *)buf;
+		/* Seeding affects reproducible builds. */
 		srandom(time(NULL));
 		for (i = 0; i < INOPB(fs); i++) {
-			dip->di_gen = random() / 2 + 1;
+			dip->di_gen = random();
 			dip++;
 		}
 		ffs_wtfs(fsbtodb(fs, ino_to_fsba(fs,

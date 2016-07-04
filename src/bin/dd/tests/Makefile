@@ -1,4 +1,4 @@
-# $FreeBSD: head/bin/dd/tests/Makefile 289487 2015-10-18 05:49:58Z ngie $
+# $FreeBSD: head/bin/dd/tests/Makefile 299094 2016-05-04 23:20:53Z ngie $
 
 NETBSD_ATF_TESTS_SH=	dd_test
 

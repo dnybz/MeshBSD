@@ -1,5 +1,6 @@
-# $FreeBSD: head/libexec/atrun/Makefile 284095 2015-06-06 19:15:08Z adrian $
+# $FreeBSD: head/libexec/atrun/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
+PACKAGE=at
 MAINSRC=${.CURDIR}/../../usr.bin/at
 
 .include "${MAINSRC}/Makefile.inc"

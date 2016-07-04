@@ -33,33 +33,9 @@
  *
  *	@(#)kern_descrip.c	8.6 (Berkeley) 4/19/94
  */
-/*
- * Copyright (c) 2016 Henning Matyschok
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
+
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_descrip.c 290473 2015-11-07 00:18:14Z mjg $");
+__FBSDID("$FreeBSD: head/sys/kern/kern_descrip.c 299227 2016-05-08 03:26:12Z mjg $");
 
 #include "opt_capsicum.h"
 #include "opt_compat.h"
@@ -376,25 +352,6 @@ sys_getdtablesize(struct thread *td, struct getdtablesize_args *uap)
 	if (lim < td->td_retval[0])
 		td->td_retval[0] = lim;
 #endif
-	return (0);
-}
-
-/*
- * Extension for MeshBSD, imported from OpenBSD.
- *
- * Returns number of allocated file descriptors.
- */
-#ifndef _SYS_SYSPROTO_H_
-struct getdtablecount_args {
-	int	ga_dummy;
-};
-#endif
-
-int
-sys_getdtablecount(struct thread *td, struct getdtablecount_args *uap)
-{
-	td->td_retval[0] = td->td_proc->p_fd->fd_nfiles;
-	
 	return (0);
 }
 
@@ -1438,9 +1395,8 @@ sys_fpathconf(struct thread *td, struct fpathconf_args *uap)
 	if (error != 0)
 		return (error);
 
-	/* If asynchronous I/O is available, it works for all descriptors. */
 	if (uap->name == _PC_ASYNC_IO) {
-		td->td_retval[0] = async_io_version;
+		td->td_retval[0] = _POSIX_ASYNCHRONOUS_IO;
 		goto out;
 	}
 	vp = fp->f_vnode;
@@ -1574,7 +1530,7 @@ fdgrowtable_exp(struct filedesc *fdp, int nfd)
 }
 
 /*
- * Grow the file table to accomodate (at least) nfd descriptors.
+ * Grow the file table to accommodate (at least) nfd descriptors.
  */
 static void
 fdgrowtable(struct filedesc *fdp, int nfd)
@@ -1588,7 +1544,7 @@ fdgrowtable(struct filedesc *fdp, int nfd)
 
 	/*
 	 * If lastfile is -1 this struct filedesc was just allocated and we are
-	 * growing it to accomodate for the one we are going to copy from. There
+	 * growing it to accommodate for the one we are going to copy from. There
 	 * is no need to have a lock on this one as it's not visible to anyone.
 	 */
 	if (fdp->fd_lastfile != -1)
@@ -1753,7 +1709,7 @@ fdallocn(struct thread *td, int minfd, int *fds, int n)
 }
 
 /*
- * Create a new open file structure and allocate a file decriptor for the
+ * Create a new open file structure and allocate a file descriptor for the
  * process that refers to it.  We add one reference to the file for the
  * descriptor table and one reference for resultfp. This is to prevent us
  * being preempted and the entry in the descriptor table closed after we
@@ -2351,7 +2307,7 @@ fdcloseexec(struct thread *td)
 			FILEDESC_XLOCK(fdp);
 			fdfree(fdp, i);
 			(void) closefp(fdp, i, fp, td, 0);
-			/* closefp() drops the FILEDESC lock. */
+			FILEDESC_UNLOCK_ASSERT(fdp);
 		}
 	}
 }
@@ -2579,7 +2535,7 @@ fget_unlocked(struct filedesc *fdp, int fd, cap_rights_t *needrightsp,
  *
  * File's rights will be checked against the capability rights mask.
  *
- * If an error occured the non-zero error is returned and *fpp is set to
+ * If an error occurred the non-zero error is returned and *fpp is set to
  * NULL.  Otherwise *fpp is held and set and zero is returned.  Caller is
  * responsible for fdrop().
  */
@@ -4002,7 +3958,7 @@ badfo_chown(struct file *fp, uid_t uid, gid_t gid, struct ucred *active_cred,
 static int
 badfo_sendfile(struct file *fp, int sockfd, struct uio *hdr_uio,
     struct uio *trl_uio, off_t offset, size_t nbytes, off_t *sent, int flags,
-    int kflags, struct thread *td)
+    struct thread *td)
 {
 
 	return (EBADF);
@@ -4088,7 +4044,7 @@ invfo_chown(struct file *fp, uid_t uid, gid_t gid, struct ucred *active_cred,
 int
 invfo_sendfile(struct file *fp, int sockfd, struct uio *hdr_uio,
     struct uio *trl_uio, off_t offset, size_t nbytes, off_t *sent, int flags,
-    int kflags, struct thread *td)
+    struct thread *td)
 {
 
 	return (EINVAL);

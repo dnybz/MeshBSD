@@ -10,7 +10,6 @@ SUBDIR=	ac \
 	authpf \
 	autofs \
 	bluetooth \
-	bsnmpd \
 	chown \
 	chroot \
 	config \

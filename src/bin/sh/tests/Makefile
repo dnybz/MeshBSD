@@ -1,4 +1,4 @@
-# $FreeBSD: head/bin/sh/tests/Makefile 289393 2015-10-15 22:55:08Z bdrewery $
+# $FreeBSD: head/bin/sh/tests/Makefile 299094 2016-05-04 23:20:53Z ngie $
 
 .include <bsd.own.mk>
 
@@ -9,7 +9,5 @@ TESTS_SUBDIRS+=	expansion
 TESTS_SUBDIRS+=	parameters
 TESTS_SUBDIRS+=	parser
 TESTS_SUBDIRS+=	set-e
-
-SUBDIR_PARALLEL=
 
 .include <bsd.test.mk>

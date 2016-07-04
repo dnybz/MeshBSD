@@ -8,7 +8,7 @@
 #
 #CFLAGS+=-DGATE_SERVER=\"ftp-gw.host\" # -DGATE_PORT=21
 
-TNFTP=	${.CURDIR}
+TNFTP=	${.CURDIR}/../../contrib/tnftp
 .PATH: ${TNFTP}/src
 
 PROG=	ftp

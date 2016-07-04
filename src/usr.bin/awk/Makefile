@@ -1,6 +1,6 @@
-# $FreeBSD: head/usr.bin/awk/Makefile 291320 2015-11-25 19:44:43Z bdrewery $
+# $FreeBSD: head/usr.bin/awk/Makefile 299289 2016-05-09 22:21:09Z bdrewery $
 
-AWKSRC=	${.CURDIR}/one-true-awk
+AWKSRC=	${.CURDIR}/../../contrib/one-true-awk
 .PATH: ${AWKSRC}
 
 PROG=	awk
@@ -21,9 +21,9 @@ ytab.h: awkgram.h .NOMETA
 	ln -sf ${.ALLSRC} ${.TARGET}
 
 proctab.c: maketab
-	./maketab > proctab.c
+	${BTOOLSPATH:U.}/maketab > proctab.c
 
 build-tools: maketab
-maketab: ytab.h ${AWKSRC}/maketab.c
+maketab: ytab.h ${AWKSRC}/maketab.c ${BUILD_TOOLS_META}
 
 .include <bsd.prog.mk>

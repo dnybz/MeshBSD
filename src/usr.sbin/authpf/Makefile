@@ -1,5 +1,7 @@
 # $FreeBSD: head/usr.sbin/authpf/Makefile 281336 2015-04-09 21:33:57Z bapt $
 
+.PATH:	${.CURDIR}/../../contrib/pf/authpf
+
 PROG=	authpf
 MAN=	authpf.8
 BINOWN=	root

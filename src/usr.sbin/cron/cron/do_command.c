@@ -17,7 +17,7 @@
 
 #if !defined(lint) && !defined(LINT)
 static const char rcsid[] =
-  "$FreeBSD: head/usr.sbin/cron/cron/do_command.c 292608 2015-12-22 15:42:53Z pfg $";
+  "$FreeBSD: head/usr.sbin/cron/cron/do_command.c 295671 2016-02-16 20:59:49Z pfg $";
 #endif
 
 
@@ -337,8 +337,9 @@ child_process(e, u)
 				_exit(OK_EXIT);
 			}
 # endif /*DEBUGGING*/
-			execle(shell, shell, "-c", e->cmd, (char *)0, e->envp);
-			warn("execl: couldn't exec `%s'", shell);
+			execle(shell, shell, "-c", e->cmd, (char *)NULL,
+			    e->envp);
+			warn("execle: couldn't exec `%s'", shell);
 			_exit(ERROR_EXIT);
 		}
 		break;

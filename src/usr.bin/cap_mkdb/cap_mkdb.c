@@ -40,7 +40,7 @@ static char sccsid[] = "@(#)cap_mkdb.c	8.2 (Berkeley) 4/27/95";
 #endif
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/cap_mkdb/cap_mkdb.c 293312 2016-01-07 10:39:13Z garga $");
+__FBSDID("$FreeBSD: head/usr.bin/cap_mkdb/cap_mkdb.c 295800 2016-02-19 08:42:13Z se $");
 
 #include <sys/param.h>
 #include <sys/stat.h>
@@ -119,7 +119,7 @@ main(int argc, char *argv[])
 	(void)snprintf(buf, sizeof(buf), "%s.db", capname ? capname : *argv);
 	if ((capname = strdup(buf)) == NULL)
 		errx(1, "strdup failed");
-	if ((capdbp = dbopen(capname, O_CREAT | O_TRUNC | O_RDWR | O_SYNC,
+	if ((capdbp = dbopen(capname, O_CREAT | O_TRUNC | O_RDWR,
 	    DEFFILEMODE, DB_HASH, &openinfo)) == NULL)
 		err(1, "%s", buf);
 

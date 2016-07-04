@@ -1,6 +1,7 @@
 #	@(#)Makefile	8.1 (Berkeley) 6/4/93
-#	$FreeBSD: head/lib/libutil/Makefile 284421 2015-06-15 19:28:07Z bapt $
+#	$FreeBSD: head/lib/libutil/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
+PACKAGE=lib${LIB}
 SHLIBDIR?= /lib
 
 .include <src.opts.mk>
@@ -16,7 +17,7 @@ SRCS=	_secure_path.c auth.c expand_number.c flopen.c fparseln.c gr_util.c \
 	login_class.c login_crypt.c login_ok.c login_times.c login_tty.c \
 	pidfile.c property.c pty.c pw_util.c quotafile.c realhostname.c \
 	stub.c trimdomain.c uucplock.c
-INCS= 	libutil.h login_cap.h
+INCS=	libutil.h login_cap.h
 
 CFLAGS+= -DLIBC_SCCS
 
@@ -83,70 +84,8 @@ MLINKS+=pw_util.3 pw_copy.3 \
 	pw_util.3 pw_tempname.3 \
 	pw_util.3 pw_tmp.3
 
-#
-# From OpenBSD 5.6-RELEASE inherited subset.
-#
- 
-SRCS+=	imsg.c imsg-buffer.c 
-HDRS+= imesg.h
-	
-MAN+= 	imsg_init.3
-MLINKS+=imsg_init.3 imsg_read.3
-MLINKS+=imsg_init.3 imsg_get.3
-MLINKS+=imsg_init.3 imsg_compose.3
-MLINKS+=imsg_init.3 imsg_composev.3
-MLINKS+=imsg_init.3 imsg_create.3
-MLINKS+=imsg_init.3 imsg_add.3
-MLINKS+=imsg_init.3 imsg_close.3
-MLINKS+=imsg_init.3 imsg_free.3
-MLINKS+=imsg_init.3 imsg_flush.3
-MLINKS+=imsg_init.3 imsg_clear.3
-MLINKS+=imsg_init.3 ibuf_open.3
-MLINKS+=imsg_init.3 ibuf_dynamic.3
-MLINKS+=imsg_init.3 ibuf_add.3
-MLINKS+=imsg_init.3 ibuf_reserve.3
-MLINKS+=imsg_init.3 ibuf_seek.3
-MLINKS+=imsg_init.3 ibuf_size.3
-MLINKS+=imsg_init.3 ibuf_left.3
-MLINKS+=imsg_init.3 ibuf_close.3
-MLINKS+=imsg_init.3 ibuf_write.3
-MLINKS+=imsg_init.3 ibuf_free.3
-MLINKS+=imsg_init.3 msgbuf_init.3
-MLINKS+=imsg_init.3 msgbuf_clear.3
-MLINKS+=imsg_init.3 msgbuf_write.3
-MLINKS+=imsg_init.3 msgbuf_drain.3
- 
-SRCS+=	ohash.c
-HDRS+= ohash.h
-
-MAN +=	ohash_init.3 ohash_interval.3
-MLINKS += ohash_init.3 ohash_delete.3 \
-	ohash_init.3 ohash_lookup_interval.3 \
-	ohash_init.3 ohash_lookup_memory.3 \
-	ohash_init.3 ohash_find.3 \
-	ohash_init.3 ohash_remove.3 \
-	ohash_init.3 ohash_insert.3 \
-	ohash_init.3 ohash_first.3 \
-	ohash_init.3 ohash_next.3 \
-	ohash_init.3 ohash_entries.3 \
-	ohash_interval.3 ohash_create_entry.3 \
-	ohash_interval.3 ohash_qlookupi.3 \
-	ohash_interval.3 ohash_qlookup.3
-
 .if ${MK_TESTS} != "no"
 SUBDIR+=	tests
 .endif
-
-#
-# From NetBSD 6.1-RELEASE inherited subset.
-#
-
-SRC+= 	stat_flags.c
-
-MAN+= 	stat_flags.3
-MLINKS+=stat_flags.3 string_to_flags.3
-MLINKS+=stat_flags.3 flags_to_string.3
-
-WARNS?=	0
 
 .include <bsd.lib.mk>

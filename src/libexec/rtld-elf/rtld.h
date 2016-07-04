@@ -22,7 +22,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/libexec/rtld-elf/rtld.h 294373 2016-01-20 07:21:33Z kib $
+ * $FreeBSD: head/libexec/rtld-elf/rtld.h 296319 2016-03-02 16:36:24Z kib $
  */
 
 #ifndef RTLD_H /* { */
@@ -385,6 +385,7 @@ void *allocate_module_tls(int index);
 bool allocate_tls_offset(Obj_Entry *obj);
 void free_tls_offset(Obj_Entry *obj);
 const Ver_Entry *fetch_ventry(const Obj_Entry *obj, unsigned long);
+int convert_prot(int elfflags);
 
 /*
  * MD function declarations.

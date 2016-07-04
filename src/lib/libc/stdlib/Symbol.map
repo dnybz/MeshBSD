@@ -68,8 +68,6 @@ FBSD_1.0 {
 	setenv;
 	unsetenv;
 	strfmon;
-	strsuftoll;
-	strsuftollx;
 	strtoimax;
 	strtol;
 	strtoll;

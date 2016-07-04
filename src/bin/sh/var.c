@@ -36,7 +36,7 @@ static char sccsid[] = "@(#)var.c	8.3 (Berkeley) 5/4/95";
 #endif
 #endif /* not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/bin/sh/var.c 293635 2016-01-10 16:31:28Z jilles $");
+__FBSDID("$FreeBSD: head/bin/sh/var.c 294593 2016-01-22 20:10:08Z jilles $");
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -802,6 +802,7 @@ poplocalvars(void)
 			ckfree(lvp->text);
 			optschanged();
 		} else if ((lvp->flags & (VUNSET|VSTRFIXED)) == VUNSET) {
+			vp->flags &= ~VREADONLY;
 			(void)unsetvar(vp->text);
 		} else {
 			islocalevar = (vp->flags | lvp->flags) & VEXPORT &&

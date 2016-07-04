@@ -1,7 +1,9 @@
 #	@(#)Makefile	8.1 (Berkeley) 6/18/93
-# $FreeBSD: head/share/man/man4/Makefile 294452 2016-01-20 18:47:33Z brooks $
+# $FreeBSD: head/share/man/man4/Makefile 299097 2016-05-04 23:38:27Z adrian $
 
 .include <src.opts.mk>
+
+PACKAGE=runtime-manuals
 
 MAN=	aac.4 \
 	aacraid.4 \
@@ -69,9 +71,12 @@ MAN=	aac.4 \
 	axe.4 \
 	axge.4 \
 	bce.4 \
+	bcma.4 \
 	bfe.4 \
 	bge.4 \
 	${_bhyve.4} \
+	bhnd.4 \
+	bhndb.4 \
 	bktr.4 \
 	blackhole.4 \
 	bpf.4 \
@@ -165,7 +170,6 @@ MAN=	aac.4 \
 	geom_fox.4 \
 	geom_linux_lvm.4 \
 	geom_map.4 \
-	geom_uncompress.4 \
 	geom_uzip.4 \
 	gif.4 \
 	gpio.4 \
@@ -527,7 +531,6 @@ MAN=	aac.4 \
 	txp.4 \
 	ure.4 \
 	vale.4 \
-	vether.4 \
 	vga.4 \
 	vge.4 \
 	viapm.4 \
@@ -660,6 +663,8 @@ MLINKS+=lp.4 plip.4
 MLINKS+=malo.4 if_malo.4
 MLINKS+=md.4 vn.4
 MLINKS+=mem.4 kmem.4
+MLINKS+=mfi.4 mfi_linux.4 \
+	mfi.4 mfip.4
 MLINKS+=mlx5en.4 mce.4
 MLINKS+=mn.4 if_mn.4
 MLINKS+=mos.4 if_mos.4

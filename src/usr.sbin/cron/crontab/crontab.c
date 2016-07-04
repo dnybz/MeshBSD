@@ -18,7 +18,7 @@
 
 #if !defined(lint) && !defined(LINT)
 static const char rcsid[] =
-  "$FreeBSD: head/usr.sbin/cron/crontab/crontab.c 292606 2015-12-22 15:30:26Z pfg $";
+  "$FreeBSD: head/usr.sbin/cron/crontab/crontab.c 295672 2016-02-16 21:19:39Z pfg $";
 #endif
 
 /* crontab - install and manage per-user crontab files
@@ -532,7 +532,7 @@ replace_cmd() {
 	Set_LineNum(1)
 	while (EOF != (ch = get_char(NewCrontab)))
 		putc(ch, tmp);
-	ftruncate(fileno(tmp), ftell(tmp));
+	ftruncate(fileno(tmp), ftello(tmp));
 	fflush(tmp);  rewind(tmp);
 
 	if (ferror(tmp)) {

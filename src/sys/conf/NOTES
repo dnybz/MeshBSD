@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/conf/NOTES 293746 2016-01-12 10:19:56Z brueffer $
+# $FreeBSD: head/sys/conf/NOTES 300065 2016-05-17 16:59:53Z gnn $
 #
 # NOTES -- Lines that can be cut/pasted into kernel and hints configs.
 #
@@ -146,25 +146,42 @@ options 	BOOTVERBOSE=1
 options 	BOOTHOWTO=RB_MULTIPLE
 
 options 	GEOM_AES		# Don't use, use GEOM_BDE
-
-
-
 options 	GEOM_BDE		# Disk encryption.
 options 	GEOM_BSD		# BSD disklabels
-
+options 	GEOM_CACHE		# Disk cache.
+options 	GEOM_CONCAT		# Disk concatenation.
 options 	GEOM_ELI		# Disk encryption.
+options 	GEOM_FOX		# Redundant path mitigation
 options 	GEOM_GATE		# Userland services.
+options 	GEOM_JOURNAL		# Journaling.
 options 	GEOM_LABEL		# Providers labelization.
+options 	GEOM_LINUX_LVM		# Linux LVM2 volumes
 options 	GEOM_MAP		# Map based partitioning
 options 	GEOM_MBR		# DOS/MBR partitioning
+options 	GEOM_MIRROR		# Disk mirroring.
+options 	GEOM_MULTIPATH		# Disk multipath
 options 	GEOM_NOP		# Test class.
-
+options 	GEOM_PART_APM		# Apple partitioning
 options 	GEOM_PART_BSD		# BSD disklabel
-options 	GEOM_PART_MBR		# MBR partitioning
+options 	GEOM_PART_BSD64		# BSD disklabel64
+options 	GEOM_PART_EBR		# Extended Boot Records
+options 	GEOM_PART_EBR_COMPAT	# Backward compatible partition names
 options 	GEOM_PART_GPT		# GPT partitioning
-
-options 	GEOM_UNCOMPRESS		# Read-only compressed disks (lzma, zip)
+options 	GEOM_PART_LDM		# Logical Disk Manager
+options 	GEOM_PART_MBR		# MBR partitioning
+options 	GEOM_PART_PC98		# PC-9800 disk partitioning
+options 	GEOM_PART_VTOC8		# SMI VTOC8 disk label
+options 	GEOM_PC98		# NEC PC9800 partitioning
+options 	GEOM_RAID		# Soft RAID functionality.
+options 	GEOM_RAID3		# RAID3 functionality.
+options 	GEOM_SHSEC		# Shared secret.
+options 	GEOM_STRIPE		# Disk striping.
+options 	GEOM_SUNLABEL		# Sun/Solaris partitioning
 options 	GEOM_UZIP		# Read-only compressed disks
+options 	GEOM_VINUM		# Vinum logical volume manager
+options 	GEOM_VIRSTOR		# Virtual storage.
+options 	GEOM_VOL		# Volume names from UFS superblock
+options 	GEOM_ZERO		# Performance testing helper.
 
 #
 # The root device and filesystem type can be compiled in;
@@ -206,13 +223,27 @@ options 	SCHED_STATS
 # Mandatory:
 options 	SMP			# Symmetric MultiProcessor Kernel
 
+# EARLY_AP_STARTUP releases the Application Processors earlier in the
+# kernel startup process (before devices are probed) rather than at the
+# end.  This is a temporary option for use during the transition from
+# late to early AP startup.
+options		EARLY_AP_STARTUP
+
 # MAXCPU defines the maximum number of CPUs that can boot in the system.
 # A default value should be already present, for every architecture.
 options 	MAXCPU=32
 
 # MAXMEMDOM defines the maximum number of memory domains that can boot in the
 # system.  A default value should already be defined by every architecture.
-options 	MAXMEMDOM=1
+options 	MAXMEMDOM=2
+
+# VM_NUMA_ALLOC enables use of memory domain-aware allocation in the VM
+# system.
+options 	VM_NUMA_ALLOC
+
+# DEVICE_NUMA enables reporting of domain affinity of I/O devices via
+# bus_get_domain(), etc.
+options 	DEVICE_NUMA
 
 # ADAPTIVE_MUTEXES changes the behavior of blocking mutexes to spin
 # if the thread that currently owns the mutex is executing on another
@@ -602,6 +633,12 @@ options 	IPSEC			#IP security (requires device crypto)
 #
 options		IPSEC_NAT_T		#NAT-T support, UDP encap of ESP
 
+#
+# SMB/CIFS requester
+# NETSMB enables support for SMB protocol, it requires LIBMCHAIN and LIBICONV
+# options.
+options 	NETSMB			#SMB/CIFS requester
+
 # mchain library. It can be either loaded as KLD or compiled into kernel
 options 	LIBMCHAIN
 
@@ -687,8 +724,9 @@ options 	ALTQ
 options 	ALTQ_CBQ	# Class Based Queueing
 options 	ALTQ_RED	# Random Early Detection
 options 	ALTQ_RIO	# RED In/Out
+options 	ALTQ_CODEL	# CoDel Active Queueing
 options 	ALTQ_HFSC	# Hierarchical Packet Scheduler
-options		ALTQ_FAIRQ	# Fair Packet Scheduler
+options 	ALTQ_FAIRQ	# Fair Packet Scheduler
 options 	ALTQ_CDNR	# Traffic conditioner
 options 	ALTQ_PRIQ	# Priority Queueing
 options 	ALTQ_NOPCC	# Required if the TSC is unusable
@@ -703,10 +741,68 @@ options 	ALTQ_DEBUG
 options 	NETGRAPH		# netgraph(4) system
 options 	NETGRAPH_DEBUG		# enable extra debugging, this
 					# affects netgraph(4) and nodes
-					
+# Node types
+options 	NETGRAPH_ASYNC
+options 	NETGRAPH_ATMLLC
+options 	NETGRAPH_ATM_ATMPIF
+options 	NETGRAPH_BLUETOOTH		# ng_bluetooth(4)
+options 	NETGRAPH_BLUETOOTH_BT3C		# ng_bt3c(4)
+options 	NETGRAPH_BLUETOOTH_HCI		# ng_hci(4)
+options 	NETGRAPH_BLUETOOTH_L2CAP	# ng_l2cap(4)
+options 	NETGRAPH_BLUETOOTH_SOCKET	# ng_btsocket(4)
+options 	NETGRAPH_BLUETOOTH_UBT		# ng_ubt(4)
+options 	NETGRAPH_BLUETOOTH_UBTBCMFW	# ubtbcmfw(4)
+options 	NETGRAPH_BPF
+options 	NETGRAPH_BRIDGE
+options 	NETGRAPH_CAR
+options 	NETGRAPH_CISCO
+options 	NETGRAPH_DEFLATE
+options 	NETGRAPH_DEVICE
+options 	NETGRAPH_ECHO
+options 	NETGRAPH_EIFACE
 options 	NETGRAPH_ETHER
+options 	NETGRAPH_FRAME_RELAY
+options 	NETGRAPH_GIF
+options 	NETGRAPH_GIF_DEMUX
+options 	NETGRAPH_HOLE
+options 	NETGRAPH_IFACE
+options 	NETGRAPH_IP_INPUT
+options 	NETGRAPH_IPFW
+options 	NETGRAPH_KSOCKET
+options 	NETGRAPH_L2TP
+options 	NETGRAPH_LMI
+# MPPC compression requires proprietary files (not included)
+#options 	NETGRAPH_MPPC_COMPRESSION
+options 	NETGRAPH_MPPC_ENCRYPTION
+options 	NETGRAPH_NETFLOW
+options 	NETGRAPH_NAT
+options 	NETGRAPH_ONE2MANY
+options 	NETGRAPH_PATCH
+options 	NETGRAPH_PIPE
+options 	NETGRAPH_PPP
 options 	NETGRAPH_PPPOE
+options 	NETGRAPH_PPTPGRE
+options 	NETGRAPH_PRED1
+options 	NETGRAPH_RFC1490
 options 	NETGRAPH_SOCKET
+options 	NETGRAPH_SPLIT
+options 	NETGRAPH_SPPP
+options 	NETGRAPH_TAG
+options 	NETGRAPH_TCPMSS
+options 	NETGRAPH_TEE
+options 	NETGRAPH_UI
+options 	NETGRAPH_VJC
+options 	NETGRAPH_VLAN
+
+# NgATM - Netgraph ATM
+options 	NGATM_ATM
+options 	NGATM_ATMBASE
+options 	NGATM_SSCOP
+options 	NGATM_SSCFU
+options 	NGATM_UNI
+options 	NGATM_CCATM
+
+device		mn	# Munich32x/Falc54 Nx64kbit/sec cards.
 
 # Network stack virtualization.
 #options	VIMAGE
@@ -758,10 +854,42 @@ device		wlan_xauth
 device		wlan_acl
 device		wlan_amrr
 
+# Generic TokenRing
+device		token
+
+#  The `fddi' device provides generic code to support FDDI.
+device		fddi
+
+#  The `arcnet' device provides generic code to support Arcnet.
+device		arcnet
+
+#  The `sppp' device serves a similar role for certain types
+#  of synchronous PPP links (like `cx', `ar').
+device		sppp
+
 #  The `bpf' device enables the Berkeley Packet Filter.  Be
 #  aware of the legal and administrative consequences of enabling this
 #  option.  DHCP requires bpf.
 device		bpf
+
+#  The `netmap' device implements memory-mapped access to network
+#  devices from userspace, enabling wire-speed packet capture and
+#  generation even at 10Gbit/s. Requires support in the device
+#  driver. Supported drivers are ixgbe, e1000, re.
+device		netmap
+
+#  The `disc' device implements a minimal network interface,
+#  which throws away all packets sent and never receives any.  It is
+#  included for testing and benchmarking purposes.
+device		disc
+
+# The `epair' device implements a virtual back-to-back connected Ethernet
+# like interface pair.
+device		epair
+
+#  The `edsc' device implements a minimal Ethernet interface,
+#  which discards all packets sent and receives none.
+device		edsc
 
 #  The `tap' device is a pty-like virtual Ethernet interface
 device		tap
@@ -861,12 +989,10 @@ options 	IPFIREWALL_VERBOSE_LIMIT=100	#limit verbosity
 options 	IPFIREWALL_DEFAULT_TO_ACCEPT	#allow everything by default
 options 	IPFIREWALL_NAT		#ipfw kernel nat support
 options 	IPDIVERT		#divert sockets
-
 options 	IPFILTER		#ipfilter support
 options 	IPFILTER_LOG		#ipfilter logging
 options 	IPFILTER_LOOKUP		#ipfilter pools
 options 	IPFILTER_DEFAULT_BLOCK	#block all packets by default
-
 options 	IPSTEALTH		#support for stealth forwarding
 options 	PF_DEFAULT_TO_DROP	#drop everything by default
 options 	TCPDEBUG
@@ -921,6 +1047,7 @@ options 	NFSCL			#Network File System client
 
 # The rest are optional:
 options 	AUTOFS			#Automounter filesystem
+options 	CD9660			#ISO 9660 filesystem
 options 	FDESCFS			#File descriptor filesystem
 options 	FUSE			#FUSE support module
 options 	MSDOSFS			#MS DOS File System (FAT, FAT32)
@@ -932,8 +1059,10 @@ options 	NULLFS			#NULL filesystem
 options 	PROCFS			#Process filesystem (requires PSEUDOFS)
 options 	PSEUDOFS		#Pseudo-filesystem framework
 options 	PSEUDOFS_TRACE		#Debugging support for PSEUDOFS
+options 	SMBFS			#SMB/CIFS filesystem
 options 	TMPFS			#Efficient memory filesystem
-
+options 	UDF			#Universal Disk Format
+options 	UNIONFS			#Union filesystem
 # The xFS_ROOT options REQUIRE the associated ``options xFS''
 options 	NFS_ROOT		#NFS usable as root device
 
@@ -963,6 +1092,14 @@ options 	UFS_GJOURNAL
 
 # Make space in the kernel for a root filesystem on a md device.
 # Define to the number of kilobytes to reserve for the filesystem.
+# This is now optional.
+# If not defined, the root filesystem passed in as the MFS_IMAGE makeoption
+# will be automatically embedded in the kernel during linking. Its exact size
+# will be consumed within the kernel.
+# If defined, the old way of embedding the filesystem in the kernel will be
+# used. That is to say MD_ROOT_SIZE KB will be allocated in the kernel and
+# later, the filesystem image passed in as the MFS_IMAGE makeoption will be
+# dd'd into the reserved space if it fits.
 options 	MD_ROOT_SIZE=10
 
 # Make the md device a potential root device, either with preloaded
@@ -994,10 +1131,13 @@ options 	NFS_MINDIRATTRTIMO=30	# VDIR attrib cache timeout in sec
 options 	NFS_MAXDIRATTRTIMO=60
 options 	NFS_DEBUG		# Enable NFS Debugging
 
-# Use real implementations of the aio_* system calls.  There are numerous
-# stability and security issues in the current aio code that make it
-# unsuitable for inclusion on machines with untrusted local users.
-options 	VFS_AIO
+#
+# Add support for the EXT2FS filesystem of Linux fame.  Be a bit
+# careful with this - the ext2fs code has a tendency to lag behind
+# changes and not be exercised very much, so mounting read/write could
+# be dangerous (and even mounting read only could result in panics.)
+#
+options 	EXT2FS
 
 # Cryptographically secure random number generator; /dev/random
 device		random
@@ -1010,7 +1150,9 @@ device		ksyms
 
 # Optional character code conversion support with LIBICONV.
 # Each option requires their base file system and LIBICONV.
+options 	CD9660_ICONV
 options 	MSDOSFS_ICONV
+options 	UDF_ICONV
 
 
 #####################################################################
@@ -1164,10 +1306,87 @@ hint.sa.1.target="6"
 # The pass driver provides a passthrough API to access the CAM subsystem.
 
 device		scbus		#base SCSI code
+device		ch		#SCSI media changers
 device		da		#SCSI direct access devices (aka disks)
+device		sa		#SCSI tapes
+device		cd		#SCSI CD-ROMs
+device		ses		#Enclosure Services (SES and SAF-TE)
+device		pt		#SCSI processor
+device		targ		#SCSI Target Mode Code
+device		targbh		#SCSI Target Mode Blackhole Device
 device		pass		#CAM passthrough driver
+device		sg		#Linux SCSI passthrough
 device		ctl		#CAM Target Layer
 
+# CAM OPTIONS:
+# debugging options:
+# CAMDEBUG		Compile in all possible debugging.
+# CAM_DEBUG_COMPILE	Debug levels to compile in.
+# CAM_DEBUG_FLAGS	Debug levels to enable on boot.
+# CAM_DEBUG_BUS		Limit debugging to the given bus.
+# CAM_DEBUG_TARGET	Limit debugging to the given target.
+# CAM_DEBUG_LUN		Limit debugging to the given lun.
+# CAM_DEBUG_DELAY	Delay in us after printing each debug line.
+#
+# CAM_MAX_HIGHPOWER: Maximum number of concurrent high power (start unit) cmds
+# SCSI_NO_SENSE_STRINGS: When defined disables sense descriptions
+# SCSI_NO_OP_STRINGS: When defined disables opcode descriptions
+# SCSI_DELAY: The number of MILLISECONDS to freeze the SIM (scsi adapter)
+#             queue after a bus reset, and the number of milliseconds to
+#             freeze the device queue after a bus device reset.  This
+#             can be changed at boot and runtime with the
+#             kern.cam.scsi_delay tunable/sysctl.
+options 	CAMDEBUG
+options 	CAM_DEBUG_COMPILE=-1
+options 	CAM_DEBUG_FLAGS=(CAM_DEBUG_INFO|CAM_DEBUG_PROBE|CAM_DEBUG_PERIPH)
+options 	CAM_DEBUG_BUS=-1
+options 	CAM_DEBUG_TARGET=-1
+options 	CAM_DEBUG_LUN=-1
+options 	CAM_DEBUG_DELAY=1
+options 	CAM_MAX_HIGHPOWER=4
+options 	SCSI_NO_SENSE_STRINGS
+options 	SCSI_NO_OP_STRINGS
+options 	SCSI_DELAY=5000	# Be pessimistic about Joe SCSI device
+options 	CAM_NETFLIX_IOSCHED
+
+# Options for the CAM CDROM driver:
+# CHANGER_MIN_BUSY_SECONDS: Guaranteed minimum time quantum for a changer LUN
+# CHANGER_MAX_BUSY_SECONDS: Maximum time quantum per changer LUN, only
+#                           enforced if there is I/O waiting for another LUN
+# The compiled in defaults for these variables are 2 and 10 seconds,
+# respectively.
+#
+# These can also be changed on the fly with the following sysctl variables:
+# kern.cam.cd.changer.min_busy_seconds
+# kern.cam.cd.changer.max_busy_seconds
+#
+options 	CHANGER_MIN_BUSY_SECONDS=2
+options 	CHANGER_MAX_BUSY_SECONDS=10
+
+# Options for the CAM sequential access driver:
+# SA_IO_TIMEOUT: Timeout for read/write/wfm  operations, in minutes
+# SA_SPACE_TIMEOUT: Timeout for space operations, in minutes
+# SA_REWIND_TIMEOUT: Timeout for rewind operations, in minutes
+# SA_ERASE_TIMEOUT: Timeout for erase operations, in minutes
+# SA_1FM_AT_EOD: Default to model which only has a default one filemark at EOT.
+options 	SA_IO_TIMEOUT=4
+options 	SA_SPACE_TIMEOUT=60
+options 	SA_REWIND_TIMEOUT=(2*60)
+options 	SA_ERASE_TIMEOUT=(4*60)
+options 	SA_1FM_AT_EOD
+
+# Optional timeout for the CAM processor target (pt) device
+# This is specified in seconds.  The default is 60 seconds.
+options 	SCSI_PT_DEFAULT_TIMEOUT=60
+
+# Optional enable of doing SES passthrough on other devices (e.g., disks)
+#
+# Normally disabled because a lot of newer SCSI disks report themselves
+# as having SES capabilities, but this can then clot up attempts to build
+# a topology with the SES device that's on the box these drives are in....
+options 	SES_ENABLE_PASSTHROUGH
+
+
 #####################################################################
 # MISCELLANEOUS DEVICES AND OPTIONS
 
@@ -1175,6 +1394,7 @@ device		pty		#BSD-style compatibility pseudo ttys
 device		nmdm		#back-to-back tty devices
 device		md		#Memory/malloc disk
 device		snp		#Snoop device - to look at pty/vty/etc..
+device		ccd		#Concatenated disk driver
 device		firmware	#firmware(9) support
 
 # Kernel side iconv library
@@ -1182,6 +1402,17 @@ options 	LIBICONV
 
 # Size of the kernel message buffer.  Should be N * pagesize.
 options 	MSGBUF_SIZE=40960
+
+
+#####################################################################
+# HARDWARE BUS CONFIGURATION
+
+#
+# PCI bus & PCI options:
+#
+device		pci
+options 	PCI_HP			# PCI-Express native HotPlug
+options 	PCI_IOV			# PCI SR-IOV support
 
 
 #####################################################################
@@ -1199,9 +1430,71 @@ options 	MSGBUF_SIZE=40960
 options 	KBD_DISABLE_KEYMAP_LOAD	# refuse to load a keymap
 options 	KBD_INSTALL_CDEV	# install a CDEV entry in /dev
 
+device		kbdmux			# keyboard multiplexer
+options		KBDMUX_DFLT_KEYMAP	# specify the built-in keymap
+makeoptions	KBDMUX_DFLT_KEYMAP=it.iso
+
 options 	FB_DEBUG		# Frame buffer debugging
 
 device		splash			# Splash screen and screen saver support
+
+# Various screen savers.
+device		blank_saver
+device		daemon_saver
+device		dragon_saver
+device		fade_saver
+device		fire_saver
+device		green_saver
+device		logo_saver
+device		rain_saver
+device		snake_saver
+device		star_saver
+device		warp_saver
+
+# The syscons console driver (SCO color console compatible).
+device		sc
+hint.sc.0.at="isa"
+options 	MAXCONS=16		# number of virtual consoles
+options 	SC_ALT_MOUSE_IMAGE	# simplified mouse cursor in text mode
+options 	SC_DFLT_FONT		# compile font in
+makeoptions	SC_DFLT_FONT=cp850
+options 	SC_DISABLE_KDBKEY	# disable `debug' key
+options 	SC_DISABLE_REBOOT	# disable reboot key sequence
+options 	SC_HISTORY_SIZE=200	# number of history buffer lines
+options 	SC_MOUSE_CHAR=0x3	# char code for text mode mouse cursor
+options 	SC_PIXEL_MODE		# add support for the raster text mode
+
+# The following options will let you change the default colors of syscons.
+options 	SC_NORM_ATTR=(FG_GREEN|BG_BLACK)
+options 	SC_NORM_REV_ATTR=(FG_YELLOW|BG_GREEN)
+options 	SC_KERNEL_CONS_ATTR=(FG_RED|BG_BLACK)
+options 	SC_KERNEL_CONS_REV_ATTR=(FG_BLACK|BG_RED)
+
+# The following options will let you change the default behavior of
+# cut-n-paste feature
+options 	SC_CUT_SPACES2TABS	# convert leading spaces into tabs
+options 	SC_CUT_SEPCHARS=\"x09\"	# set of characters that delimit words
+					# (default is single space - \"x20\")
+
+# If you have a two button mouse, you may want to add the following option
+# to use the right button of the mouse to paste text.
+options 	SC_TWOBUTTON_MOUSE
+
+# You can selectively disable features in syscons.
+options 	SC_NO_CUTPASTE
+options 	SC_NO_FONT_LOADING
+options 	SC_NO_HISTORY
+options 	SC_NO_MODE_CHANGE
+options 	SC_NO_SYSMOUSE
+options 	SC_NO_SUSPEND_VTYSWITCH
+
+# `flags' for sc
+#	0x80	Put the video card in the VESA 800x600 dots, 16 color mode
+#	0x100	Probe for a keyboard device periodically if one is not present
+
+# Enable experimental features of the syscons terminal emulator (teken).
+options 	TEKEN_CONS25		# cons25-style terminal emulation
+options 	TEKEN_UTF8		# UTF-8 output handling
 
 # The vt video console driver.
 device		vt
@@ -1221,6 +1514,317 @@ options		TERMINAL_KERN_ATTR=(FG_LIGHTRED|BG_BLACK)
 # Optional devices:
 #
 
+#
+# SCSI host adapters:
+#
+# adv: All Narrow SCSI bus AdvanSys controllers.
+# adw: Second Generation AdvanSys controllers including the ADV940UW.
+# aha: Adaptec 154x/1535/1640
+# ahb: Adaptec 174x EISA controllers
+# ahc: Adaptec 274x/284x/2910/293x/294x/394x/3950x/3960x/398X/4944/
+#      19160x/29160x, aic7770/aic78xx
+# ahd: Adaptec 29320/39320 Controllers.
+# aic: Adaptec 6260/6360, APA-1460 (PC Card), NEC PC9801-100 (C-BUS)
+# bt:  Most Buslogic controllers: including BT-445, BT-54x, BT-64x, BT-74x,
+#      BT-75x, BT-946, BT-948, BT-956, BT-958, SDC3211B, SDC3211F, SDC3222F
+# esp: Emulex ESP, NCR 53C9x and QLogic FAS families based controllers
+#      including the AMD Am53C974 (found on devices such as the Tekram
+#      DC-390(T)) and the Sun ESP and FAS families of controllers
+# isp: Qlogic ISP 1020, 1040 and 1040B PCI SCSI host adapters,
+#      ISP 1240 Dual Ultra SCSI, ISP 1080 and 1280 (Dual) Ultra2,
+#      ISP 12160 Ultra3 SCSI,
+#      Qlogic ISP 2100 and ISP 2200 1Gb Fibre Channel host adapters.
+#      Qlogic ISP 2300 and ISP 2312 2Gb Fibre Channel host adapters.
+#      Qlogic ISP 2322 and ISP 6322 2Gb Fibre Channel host adapters.
+# ispfw: Firmware module for Qlogic host adapters
+# mpt: LSI-Logic MPT/Fusion 53c1020 or 53c1030 Ultra4
+#      or FC9x9 Fibre Channel host adapters.
+# ncr: NCR 53C810, 53C825 self-contained SCSI host adapters.
+# sym: Symbios/Logic 53C8XX family of PCI-SCSI I/O processors:
+#      53C810, 53C810A, 53C815, 53C825,  53C825A, 53C860, 53C875,
+#      53C876, 53C885,  53C895, 53C895A, 53C896,  53C897, 53C1510D,
+#      53C1010-33, 53C1010-66.
+# trm: Tekram DC395U/UW/F DC315U adapters.
+# wds: WD7000
+
+#
+# Note that the order is important in order for Buslogic ISA/EISA cards to be
+# probed correctly.
+#
+device		bt
+hint.bt.0.at="isa"
+hint.bt.0.port="0x330"
+device		adv
+hint.adv.0.at="isa"
+device		adw
+device		aha
+hint.aha.0.at="isa"
+device		aic
+hint.aic.0.at="isa"
+device		ahb
+device		ahc
+device		ahd
+device		esp
+device		iscsi_initiator
+device		isp
+hint.isp.0.disable="1"
+hint.isp.0.role="3"
+hint.isp.0.prefer_iomap="1"
+hint.isp.0.prefer_memmap="1"
+hint.isp.0.fwload_disable="1"
+hint.isp.0.ignore_nvram="1"
+hint.isp.0.fullduplex="1"
+hint.isp.0.topology="lport"
+hint.isp.0.topology="nport"
+hint.isp.0.topology="lport-only"
+hint.isp.0.topology="nport-only"
+# we can't get u_int64_t types, nor can we get strings if it's got
+# a leading 0x, hence this silly dodge.
+hint.isp.0.portwnn="w50000000aaaa0000"
+hint.isp.0.nodewnn="w50000000aaaa0001"
+device		ispfw
+device		mpt
+device		ncr
+device		sym
+device		trm
+device		wds
+hint.wds.0.at="isa"
+hint.wds.0.port="0x350"
+hint.wds.0.irq="11"
+hint.wds.0.drq="6"
+
+# The aic7xxx driver will attempt to use memory mapped I/O for all PCI
+# controllers that have it configured only if this option is set. Unfortunately,
+# this doesn't work on some motherboards, which prevents it from being the
+# default.
+options 	AHC_ALLOW_MEMIO
+
+# Dump the contents of the ahc controller configuration PROM.
+options 	AHC_DUMP_EEPROM
+
+# Bitmap of units to enable targetmode operations.
+options 	AHC_TMODE_ENABLE
+
+# Compile in Aic7xxx Debugging code.
+options 	AHC_DEBUG
+
+# Aic7xxx driver debugging options. See sys/dev/aic7xxx/aic7xxx.h
+options 	AHC_DEBUG_OPTS
+
+# Print register bitfields in debug output.  Adds ~128k to driver
+# See ahc(4).
+options 	AHC_REG_PRETTY_PRINT
+
+# Compile in aic79xx debugging code.
+options 	AHD_DEBUG
+
+# Aic79xx driver debugging options.  Adds ~215k to driver.  See ahd(4).
+options 	AHD_DEBUG_OPTS=0xFFFFFFFF
+
+# Print human-readable register definitions when debugging
+options 	AHD_REG_PRETTY_PRINT
+
+# Bitmap of units to enable targetmode operations.
+options 	AHD_TMODE_ENABLE
+
+# The adw driver will attempt to use memory mapped I/O for all PCI
+# controllers that have it configured only if this option is set.
+options 	ADW_ALLOW_MEMIO
+
+# Options used in dev/iscsi (Software iSCSI stack)
+#
+options 	ISCSI_INITIATOR_DEBUG=9
+
+# Options used in dev/isp/ (Qlogic SCSI/FC driver).
+#
+#	ISP_TARGET_MODE		-	enable target mode operation
+#
+options 	ISP_TARGET_MODE=1
+#
+#	ISP_DEFAULT_ROLES	-	default role
+#		none=0
+#		target=1
+#		initiator=2
+#		both=3			(not supported currently)
+#
+#	ISP_INTERNAL_TARGET		(trivial internal disk target, for testing)
+#
+options 	ISP_DEFAULT_ROLES=0
+
+# Options used in dev/sym/ (Symbios SCSI driver).
+#options 	SYM_SETUP_LP_PROBE_MAP	#-Low Priority Probe Map (bits)
+					# Allows the ncr to take precedence
+					# 1 (1<<0) -> 810a, 860
+					# 2 (1<<1) -> 825a, 875, 885, 895
+					# 4 (1<<2) -> 895a, 896, 1510d
+#options 	SYM_SETUP_SCSI_DIFF	#-HVD support for 825a, 875, 885
+					# disabled:0 (default), enabled:1
+#options 	SYM_SETUP_PCI_PARITY	#-PCI parity checking
+					# disabled:0, enabled:1 (default)
+#options 	SYM_SETUP_MAX_LUN	#-Number of LUNs supported
+					# default:8, range:[1..64]
+
+# The 'dpt' driver provides support for old DPT controllers (http://www.dpt.com/).
+# These have hardware RAID-{0,1,5} support, and do multi-initiator I/O.
+# The DPT controllers are commonly re-licensed under other brand-names -
+# some controllers by Olivetti, Dec, HP, AT&T, SNI, AST, Alphatronic, NEC and
+# Compaq are actually DPT controllers.
+#
+# See src/sys/dev/dpt for debugging and other subtle options.
+#  DPT_MEASURE_PERFORMANCE  Enables a set of (semi)invasive metrics. Various
+#                           instruments are enabled.  The tools in
+#                           /usr/sbin/dpt_* assume these to be enabled.
+#  DPT_DEBUG_xxxx           These are controllable from sys/dev/dpt/dpt.h
+#  DPT_RESET_HBA            Make "reset" actually reset the controller
+#                           instead of fudging it.  Only enable this if you
+#			    are 100% certain you need it.
+
+device		dpt
+
+# DPT options
+#!CAM# options 	DPT_MEASURE_PERFORMANCE
+options 	DPT_RESET_HBA
+
+#
+# Compaq "CISS" RAID controllers (SmartRAID 5* series)
+# These controllers have a SCSI-like interface, and require the
+# CAM infrastructure.
+#
+device		ciss
+
+#
+# Intel Integrated RAID controllers.
+# This driver was developed and is maintained by Intel.  Contacts
+# at Intel for this driver are
+# "Kannanthanam, Boji T" <boji.t.kannanthanam@intel.com> and
+# "Leubner, Achim" <achim.leubner@intel.com>.
+#
+device		iir
+
+#
+# Mylex AcceleRAID and eXtremeRAID controllers with v6 and later
+# firmware.  These controllers have a SCSI-like interface, and require
+# the CAM infrastructure.
+#
+device		mly
+
+#
+# Compaq Smart RAID, Mylex DAC960 and AMI MegaRAID controllers.  Only
+# one entry is needed; the code will find and configure all supported
+# controllers.
+#
+device		ida		# Compaq Smart RAID
+device		mlx		# Mylex DAC960
+device		amr		# AMI MegaRAID
+device		amrp		# SCSI Passthrough interface (optional, CAM req.)
+device		mfi		# LSI MegaRAID SAS
+device		mfip		# LSI MegaRAID SAS passthrough, requires CAM
+options 	MFI_DEBUG
+device		mrsas		# LSI/Avago MegaRAID SAS/SATA, 6Gb/s and 12Gb/s
+
+#
+# 3ware ATA RAID
+#
+device		twe		# 3ware ATA RAID
+
+#
+# Serial ATA host controllers:
+#
+# ahci: Advanced Host Controller Interface (AHCI) compatible
+# mvs:  Marvell 88SX50XX/88SX60XX/88SX70XX/SoC controllers
+# siis: SiliconImage SiI3124/SiI3132/SiI3531 controllers
+#
+# These drivers are part of cam(4) subsystem. They supersede less featured
+# ata(4) subsystem drivers, supporting same hardware.
+
+device		ahci
+device		mvs
+device		siis
+
+#
+# The 'ATA' driver supports all legacy ATA/ATAPI controllers, including
+# PC Card devices. You only need one "device ata" for it to find all
+# PCI and PC Card ATA/ATAPI devices on modern machines.
+# Alternatively, individual bus and chipset drivers may be chosen by using
+# the 'atacore' driver then selecting the drivers on a per vendor basis.
+# For example to build a system which only supports a VIA chipset,
+# omit 'ata' and include the 'atacore', 'atapci' and 'atavia' drivers.
+device		ata
+
+# Modular ATA
+#device		atacore		# Core ATA functionality
+#device		atacard		# CARDBUS support
+#device		atabus		# PC98 cbus support
+#device		ataisa		# ISA bus support
+#device		atapci		# PCI bus support; only generic chipset support
+
+# PCI ATA chipsets
+#device		ataacard	# ACARD
+#device		ataacerlabs	# Acer Labs Inc. (ALI)
+#device		ataamd		# American Micro Devices (AMD)
+#device		ataati		# ATI
+#device		atacenatek	# Cenatek
+#device		atacypress	# Cypress
+#device		atacyrix	# Cyrix
+#device		atahighpoint	# HighPoint
+#device		ataintel	# Intel
+#device		ataite		# Integrated Technology Inc. (ITE)
+#device		atajmicron	# JMicron
+#device		atamarvell	# Marvell
+#device		atamicron	# Micron
+#device		atanational	# National
+#device		atanetcell	# NetCell
+#device		atanvidia	# nVidia
+#device		atapromise	# Promise
+#device		ataserverworks	# ServerWorks
+#device		atasiliconimage	# Silicon Image Inc. (SiI) (formerly CMD)
+#device		atasis		# Silicon Integrated Systems Corp.(SiS)
+#device		atavia		# VIA Technologies Inc.
+
+#
+# For older non-PCI, non-PnPBIOS systems, these are the hints lines to add:
+hint.ata.0.at="isa"
+hint.ata.0.port="0x1f0"
+hint.ata.0.irq="14"
+hint.ata.1.at="isa"
+hint.ata.1.port="0x170"
+hint.ata.1.irq="15"
+
+#
+# The following options are valid on the ATA driver:
+#
+# ATA_REQUEST_TIMEOUT:	the number of seconds to wait for an ATA request
+#			before timing out.
+
+#options 	ATA_REQUEST_TIMEOUT=10
+
+#
+# Standard floppy disk controllers and floppy tapes, supports
+# the Y-E DATA External FDD (PC Card)
+#
+device		fdc
+hint.fdc.0.at="isa"
+hint.fdc.0.port="0x3F0"
+hint.fdc.0.irq="6"
+hint.fdc.0.drq="2"
+#
+# FDC_DEBUG enables floppy debugging.  Since the debug output is huge, you
+# gotta turn it actually on by setting the variable fd_debug with DDB,
+# however.
+options 	FDC_DEBUG
+#
+# Activate this line if you happen to have an Insight floppy tape.
+# Probing them proved to be dangerous for people with floppy disks only,
+# so it's "hidden" behind a flag:
+#hint.fdc.0.flags="1"
+
+# Specify floppy devices
+hint.fd.0.at="fdc0"
+hint.fd.0.drive="0"
+hint.fd.1.at="fdc0"
+hint.fd.1.drive="1"
+
+#
 # uart: newbusified driver for serial interfaces.  It consolidates the sio(4),
 #	sab(4) and zs(4) drivers.
 #
@@ -2213,9 +2817,6 @@ device		urndis
 # Realtek RTL8187B/L wireless driver
 device		urtw
 #
-# Realtek RTL8188CU/RTL8192CU wireless driver
-device		urtwn
-#
 # ZyDas ZD1211/ZD1211B wireless driver
 device		zyd
 #
@@ -2455,8 +3056,10 @@ options		EM_MULTIQUEUE # Activate multiqueue features/disable MSI-X
 # This enables support for compressed core dumps.
 options 	GZIO
 
+# BHND(4) drivers
+options		BHND_LOGLEVEL	# Logging threshold level
+
 #
 # MeshBSD -- Inspecting rfc-2516 frames by if_bridge(4) and ipfw(4).
 #
 options 	PPPOE_PFIL
-

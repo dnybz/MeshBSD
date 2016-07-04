@@ -3,10 +3,7 @@
 
 .include <src.opts.mk>
 
-# XXX MISSING:		icheck ncheck
-
 SUBDIR= adjkerntz \
-	casperd \
 	camcontrol \
 	comcontrol \
 	conscontrol \

@@ -7,16 +7,14 @@
 .include <src.opts.mk>
 
 PROG=	m4
-CFLAGS+= 	-DEXTENDED
-CFLAGS+= 	-I${.CURDIR}
-CFLAGS+=	-I${.CURDIR}/../../lib/libutil
-LIBADD=	y l m util
+CFLAGS+=-DEXTENDED -I${.CURDIR} -I${.CURDIR}/../../lib/libopenbsd
+LIBADD=	y l m openbsd
 
 NO_WMISSING_VARIABLE_DECLARATIONS=
 
 SRCS=	eval.c expr.c look.c main.c misc.c gnum4.c trace.c parser.y tokenizer.l
 
-WARNS?=	0
+WARNS=	3
 
 tokenizer.o: parser.h
 

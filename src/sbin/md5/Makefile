@@ -1,6 +1,7 @@
 #	@(#)Makefile	8.1 (Berkeley) 6/9/93
-# $FreeBSD: head/sbin/md5/Makefile 292782 2015-12-27 17:33:59Z allanjude $
+# $FreeBSD: head/sbin/md5/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
+PACKAGE=runtime
 PROG=	md5
 
 LINKS=	${BINDIR}/md5 ${BINDIR}/rmd160 \

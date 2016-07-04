@@ -1,6 +1,6 @@
 # $FreeBSD: head/usr.bin/less/Makefile.common 201386 2010-01-02 10:27:05Z ed $
 
-LSDIR=	${.CURDIR}/src
+LSDIR=	${.CURDIR}/../../contrib/less
 .PATH:	${LSDIR}
 
 CFLAGS+=-I${.CURDIR}/../less -I${LSDIR}

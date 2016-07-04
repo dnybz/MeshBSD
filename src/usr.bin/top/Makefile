@@ -1,11 +1,14 @@
 # $FreeBSD: head/usr.bin/top/Makefile 284345 2015-06-13 19:20:56Z sjg $
 
+TOPDIR=	${.CURDIR}/../../contrib/top
+.PATH: ${TOPDIR}
+
 PROG=	top
 SRCS=	commands.c display.c machine.c screen.c top.c \
 	username.c utils.c version.c
 SRCS+=	sigdesc.h top.local.h
 CFLAGS+= -DHAVE_GETOPT -DHAVE_STRERROR -DORDER
-CFLAGS+= -I${.CURDIR} -I.
+CFLAGS+= -I${.CURDIR} -I${TOPDIR} -I.
 
 WARNS?=	0
 
@@ -21,7 +24,7 @@ CFLAGS+= -D"Table_size=${TOP_TABLE_SIZE}"
 LIBADD=	ncursesw m kvm jail
 
 CLEANFILES= sigdesc.h
-SIGCONV_AWK= ${.CURDIR}/sigconv.awk
+SIGCONV_AWK= ${.CURDIR}/../../contrib/top/sigconv.awk
 STAGED_INCLUDE_DIR?= ${DESTDIR}/usr/include
 SIGNAL_H= ${STAGED_INCLUDE_DIR}/sys/signal.h
 sigdesc.h: ${SIGCONV_AWK} ${SIGNAL_H}

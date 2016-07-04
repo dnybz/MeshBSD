@@ -1,4 +1,4 @@
-# $FreeBSD: head/bin/mv/tests/Makefile 289172 2015-10-12 08:16:03Z ngie $
+# $FreeBSD: head/bin/mv/tests/Makefile 299094 2016-05-04 23:20:53Z ngie $
 
 .include <bsd.own.mk>
 

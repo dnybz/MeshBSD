@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)paths.h	8.1 (Berkeley) 6/2/93
- * $FreeBSD: head/include/paths.h 293204 2016-01-05 16:21:20Z jilles $
+ * $FreeBSD: head/include/paths.h 297205 2016-03-23 04:18:57Z imp $
  */
 
 #ifndef _PATHS_H_
@@ -56,6 +56,7 @@
 #define	_PATH_DRUM	"/dev/drum"
 #define	_PATH_ESDB	"/usr/share/i18n/esdb"
 #define	_PATH_ETC	"/etc"
+#define	_PATH_FIRMWARE	"/usr/share/firmware"
 #define	_PATH_FTPUSERS	"/etc/ftpusers"
 #define	_PATH_FWMEM	"/dev/fwmem"
 #define	_PATH_GBDE	"/sbin/gbde"
@@ -105,5 +106,40 @@
 __BEGIN_DECLS
 const char *getbootfile(void);
 __END_DECLS
+
+#ifdef RESCUE
+#undef	_PATH_DEFPATH
+#define	_PATH_DEFPATH	"/rescue:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin"
+#undef	_PATH_STDPATH
+#define	_PATH_STDPATH	"/rescue:/usr/bin:/bin:/usr/sbin:/sbin"
+#undef	_PATH_SYSPATH
+#define	_PATH_SYSPATH	"/rescue:/sbin:/usr/sbin"
+#undef	_PATH_BSHELL
+#define	_PATH_BSHELL	"/rescue/sh"
+#undef	_PATH_CP
+#define	_PATH_CP	"/rescue/cp"
+#undef	_PATH_CSHELL
+#define	_PATH_CSHELL	"/rescue/csh"
+#undef	_PATH_HALT
+#define	_PATH_HALT	"/rescue/halt"
+#undef	_PATH_IFCONFIG
+#define	_PATH_IFCONFIG	"/rescue/ifconfig"
+#undef	_PATH_MDCONFIG
+#define	_PATH_MDCONFIG	"/rescue/mdconfig"
+#undef	_PATH_MOUNT
+#define	_PATH_MOUNT	"/rescue/mount"
+#undef	_PATH_NEWFS
+#define	_PATH_NEWFS	"/rescue/newfs"
+#undef	_PATH_RCP
+#define	_PATH_RCP	"/rescue/rcp"
+#undef	_PATH_REBOOT
+#define	_PATH_REBOOT	"/rescue/reboot"
+#undef	_PATH_RM
+#define	_PATH_RM	"/rescue/rm"
+#undef	_PATH_VI
+#define	_PATH_VI	"/rescue/vi"
+#undef	_PATH_WALL
+#define	_PATH_WALL	"/rescue/wall"
+#endif /* RESCUE */
 
 #endif /* !_PATHS_H_ */

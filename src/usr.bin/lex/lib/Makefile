@@ -2,7 +2,7 @@
 
 .include <src.opts.mk>
 
-.PATH:	${.CURDIR}/../flex
+.PATH:	${.CURDIR}/../../../contrib/flex
 
 LIB=    ln
 SRCS=   libmain.c libyywrap.c

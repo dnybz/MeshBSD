@@ -1,5 +1,6 @@
-# $FreeBSD: head/sbin/camcontrol/Makefile 284192 2015-06-09 21:39:38Z ken $
+# $FreeBSD: head/sbin/camcontrol/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
+PACKAGE=runtime
 PROG=	camcontrol
 SRCS=	camcontrol.c util.c
 .if !defined(RELEASE_CRUNCH)
