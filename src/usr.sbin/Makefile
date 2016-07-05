@@ -3,6 +3,12 @@
 
 .include <src.opts.mk>
 
+#
+# XXX: httpd(8) commented out, but after substtution  
+# XXX: of OpenSSL with LibreSSL, I'll re-integrate
+# XXX: this deamon in conjuction with libtls(3) 
+#
+
 SUBDIR=	ac \
 	adduser \
 	ancontrol \
@@ -24,7 +30,6 @@ SUBDIR=	ac \
 	ftp-proxy \
 	fwcontrol \
 	gpioctl \
-	httpd \
 	i2c \
 	inetd \
 	ip6addrctl \
