@@ -45,10 +45,6 @@ SUBDIR=	alias \
 	man \
 	mail \
 	mesg \
-	mkcsmapper \
-	mkcsmapper_static \
-	mkesdb \
-	mkesdb_static \
 	mkfifo \
 	mktemp \
 	mt \

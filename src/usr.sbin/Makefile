@@ -38,8 +38,6 @@ SUBDIR=	ac \
 	mixer \
 	mld6query \
 	mtest \
-	nandsim \
-	nandtool \
 	ndp \
 	newsyslog \
 	ngctl \

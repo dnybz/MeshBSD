@@ -9,7 +9,11 @@ SRCS=	bootp.c confpars.c db.c dhcp.c dhcpd.c bpf.c packet.c errwarn.c \
 PROG=	dhcpd
 MAN=	dhcpd.8 dhcpd.conf.5 dhcpd.leases.5 dhcp-options.5
 
-LIBADD+= crypto md
+LIBADD+=crypto 
+LIBADD+=md
+
 CFLAGS+=-Wall -D__dead=''
+
+WARNS?=	2
 
 .include <bsd.prog.mk>

@@ -74,7 +74,7 @@ int
 main(int argc, char *argv[])
 {
 	int ch, cftest = 0, daemonize = 1, rdomain = -1, udpsockmode = 0;
-	extern char *__progname;
+/*	extern char *__progname; */
 	char *sync_iface = NULL;
 	char *sync_baddr = NULL;
 	u_short sync_port = 0;
