@@ -6,15 +6,12 @@
 SUBDIR=	alias \
 	ar \
 	at \
-	ath \
 	awk \
 	bluetooth \
 	bzip2 \
 	cap_mkdb \
 	cksum \
 	cmp \
-	compile_et \
-	compress \
 	cpio \
 	cut \
 	du \

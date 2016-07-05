@@ -54,7 +54,8 @@ __FBSDID("$FreeBSD: head/sbin/newfs_nandfs/newfs_nandfs.c 298871 2016-05-01 02:1
 #include <unistd.h>
 
 #include <fs/nandfs/nandfs_fs.h>
-#include <dev/nand/nand_dev.h>
+
+#include "../../sys/dev/nand/nand_dev.h"
 
 #define DEBUG
 #undef DEBUG

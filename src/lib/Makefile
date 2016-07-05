@@ -236,13 +236,8 @@ _libcplusplus=	libc++
 _libthr=	libthr
 .endif
 
-.if ${MK_NAND} != "no"
 _libnandfs=	libnandfs
-.endif
-
-.if ${MK_NETGRAPH} != "no"
 _libnetgraph=	libnetgraph
-.endif
 
 .if ${MK_NIS} != "no"
 _libypclnt=	libypclnt
