@@ -33,9 +33,6 @@ SUBDIR= adjkerntz \
 	mknod \
 	mksnap_ffs \
 	mount \
-	mount_msdosfs \
-	mount_nfs \
-	mount_nullfs \
 	natd \
 	nandfs \
 	newfs \
