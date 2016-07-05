@@ -60,7 +60,7 @@ SUBDIR=	alias \
 	netstat \
 	nice \
 	nm \
-	nohub \
+	nohup \
 	patch \
 	passwd \
 	printenv \
