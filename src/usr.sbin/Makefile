@@ -3,6 +3,10 @@
 
 .include <src.opts.mk>
 
+#
+# XXX: powerd(8) will be replaced by powerd++(8)
+#
+
 SUBDIR=	ac \
 	adduser \
 	ancontrol \
@@ -46,14 +50,9 @@ SUBDIR=	ac \
 	nologin \
 	nscd \
 	ntp \
-	nvram \
 	pciconf \
 	periodic \
 	phttpget \
-	pmcannotate \
-	pmccontrol \
-	pmcstat \
-	pmcstudy \
 	powerd \
 	ppp \
 	pppctl \
