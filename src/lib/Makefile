@@ -3,6 +3,12 @@
 
 .include <src.opts.mk>
 
+#
+# XXX: after replacement of OpenSSL by LibreSSL,
+# XXX: libtls(3) as dependency for httpd(8) shall 
+# XXX: integrated on library set
+#
+
 # The SUBDIR_ORDERED list is a small set of libraries which are used by many
 # of the other libraries.  These are built first with a .WAIT between them
 # and the main list to avoid needing a SUBDIR_DEPEND line on every library
@@ -30,7 +36,6 @@ SUBDIR=	${SUBDIR_ORDERED} \
 	libbz2 \
 	libcalendar \
 	libcam \
-	libcapsicum \
 	libcasper \
 	libcom_err \
 	libcrypt \
@@ -74,7 +79,6 @@ SUBDIR=	${SUBDIR_ORDERED} \
 	libtacplus \
 	libthr \
 	libthread_db \
-	libtls \
 	libufs \
 	libugidfw \
 	libusbhid \
