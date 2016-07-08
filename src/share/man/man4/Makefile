@@ -851,21 +851,6 @@ MAN+=		ng_bluetooth.4
 _ccd.4=		ccd.4
 .endif
 
-.if ${MK_CDDL} != "no"
-_dtrace_io.4=	dtrace_io.4
-_dtrace_ip.4=	dtrace_ip.4
-_dtrace_proc.4=	dtrace_proc.4
-_dtrace_sched.4= dtrace_sched.4
-_dtrace_tcp.4=	dtrace_tcp.4
-_dtrace_udp.4=	dtrace_udp.4
-.endif
-
-.if ${MK_ISCSI} != "no"
-MAN+=		iscsi.4
-MAN+=		iscsi_initiator.4
-
-.endif
-
 .if ${MK_TESTS} != "no"
 ATF=            ${.CURDIR}/../../../contrib/atf
 .PATH:          ${ATF}/doc

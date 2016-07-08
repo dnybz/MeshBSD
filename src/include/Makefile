@@ -183,11 +183,6 @@ copies:
 	cd ${.CURDIR}/../sys/fs/cd9660/; \
 	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 *.h \
 	    ${DESTDIR}${INCLUDEDIR}/isofs/cd9660
-.if ${MK_IPFILTER} != "no"
-	cd ${.CURDIR}/../sys/contrib/ipfilter/netinet; \
-	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 *.h \
-	    ${DESTDIR}${INCLUDEDIR}/netinet
-.endif
 .if ${MK_PF} != "no"
 	cd ${.CURDIR}/../sys/netpfil/pf; \
 	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 *.h \
@@ -277,13 +272,6 @@ symlinks:
 		${INSTALL_SYMLINK} ${TAG_ARGS} ../../../../../sys/$i/$$h ${DESTDIR}${INCLUDEDIR}/$i; \
 	done
 .endfor
-.if ${MK_IPFILTER} != "no"
-	cd ${.CURDIR}/../sys/contrib/ipfilter/netinet; \
-	for h in *.h; do \
-		${INSTALL_SYMLINK} ${TAG_ARGS} ../../../sys/contrib/ipfilter/netinet/$$h \
-		    ${DESTDIR}${INCLUDEDIR}/netinet; \
-	done
-.endif
 .if ${MK_PF} != "no"
 	cd ${.CURDIR}/../sys/netpfil/pf; \
 	for h in *.h; do \
