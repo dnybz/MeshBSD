@@ -43,7 +43,6 @@ SUBDIR=	${SUBDIR_ORDERED} \
 	libcalendar \
 	libcam \
 	${_libcasper} \
-	${_libcom_err} \
 	libcompat \
 	libcrypt \
 	libdevctl \
@@ -106,7 +105,6 @@ SUBDIR=	${SUBDIR_ORDERED} \
 	libstdthreads \
 	libsysdecode \
 	libtacplus \
-	${_libtelnet} \
 	${_libthr} \
 	libthread_db \
 	libucl \
@@ -149,7 +147,7 @@ SUBDIR_DEPEND_liblibrpcsec_gss= libgssapi
 SUBDIR_DEPEND_libmagic= libz
 SUBDIR_DEPEND_libmemstat= libkvm
 SUBDIR_DEPEND_libopie= libmd
-SUBDIR_DEPEND_libpam= libcrypt libopie ${_libradius} librpcsvc libtacplus libutil ${_libypclnt} ${_libcom_err} 
+SUBDIR_DEPEND_libpam= libcrypt libopie ${_libradius} librpcsvc libtacplus libutil ${_libypclnt}
 SUBDIR_DEPEND_libpjdlog= libutil
 SUBDIR_DEPEND_libprocstat= libkvm libutil
 SUBDIR_DEPEND_libradius= libmd
@@ -161,10 +159,6 @@ SUBDIR_DEPEND_libunbound= ${_libldns}
 SUBDIR_DEPEND_liblzma= ${_libthr}
 
 # NB: keep these sorted by MK_* knobs
-
-.if ${MK_ATM} != "no"
-_libngatm=	libngatm
-.endif
 
 .if ${MK_BLUETOOTH} != "no"
 _libbluetooth=	libbluetooth
@@ -200,17 +194,8 @@ _libmagic=	libmagic
 _libgpio=	libgpio
 .endif
 
-.if ${MK_GSSAPI} != "no"
-_libgssapi=	libgssapi
-_librpcsec_gss=	librpcsec_gss
-.endif
-
 .if ${MK_ICONV} != "no"
 _libiconv_modules=	libiconv_modules
-.endif
-
-.if ${MK_KERBEROS_SUPPORT} != "no"
-_libcom_err= libcom_err
 .endif
 
 .if ${MK_LDNS} != "no"
@@ -288,10 +273,6 @@ _libmilter=	libmilter
 _libsm=		libsm
 _libsmdb=	libsmdb
 _libsmutil=	libsmutil
-.endif
-
-.if ${MK_TELNET} != "no"
-_libtelnet=	libtelnet
 .endif
 
 .if ${MK_TESTS_SUPPORT} != "no"

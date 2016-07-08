@@ -28,11 +28,13 @@ SRCS=	accounting.c aes-omac1.c ap_config.c ap_drv_ops.c ap_mlme.c authsrv.c \
 
 MAN=	hostapd.8 hostapd.conf.5
 
-.if ${MK_EXAMPLES} != "no"
-FILESDIR= ${SHAREDIR}/examples/hostapd
-.PATH:	${HOSTAPD_DISTDIR}
-FILES=	hostapd.conf hostapd.eap_user hostapd.wpa_psk
-.endif
+#
+# XXX: missing @ /etc/
+#
+#FILESDIR= ${SHAREDIR}/etc
+#.PATH:	${HOSTAPD_DISTDIR}
+#FILES=	hostapd.conf hostapd.eap_user hostapd.wpa_psk
+#
 
 CFLAGS+=-DCONFIG_DRIVER_BSD \
 	-DCONFIG_DRIVER_RADIUS_ACL \

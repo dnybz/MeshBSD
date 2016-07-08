@@ -74,7 +74,6 @@ SUBDIR=	alias \
 	tail \
 	tar \
 	tee \
-	telnet \
 	tftp \
 	time \
 	touch \

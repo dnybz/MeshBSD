@@ -11,7 +11,6 @@ SUBDIR=	${_atf} \
 	${_mail.local} \
 	${_pppoed} \
 	${_rtld-elf} \
-	${_telnetd} \
 	${_tests} \
 	${_tftp-proxy} \
 	ulog-helper 
@@ -42,10 +41,6 @@ _tftp-proxy=	tftp-proxy
 
 .if !defined(NO_PIC) && !defined(NO_RTLD)
 _rtld-elf=	rtld-elf
-.endif
-
-.if ${MK_TELNET} != "no"
-_telnetd=	telnetd
 .endif
 
 .if ${MK_TFTP} != "no"

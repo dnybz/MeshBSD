@@ -27,11 +27,13 @@ SRCS=	ap_drv_ops.c base64.c blacklist.c bss.c common.c config.c \
 
 MAN=	wpa_supplicant.8 wpa_supplicant.conf.5
 
-.if ${MK_EXAMPLES} != "no"
-FILESDIR= ${SHAREDIR}/examples/etc
-.PATH:	${WPA_SUPPLICANT_DISTDIR}
-FILES=	wpa_supplicant.conf
-.endif
+#
+# XXX: missing @ /etc/
+#
+#FILESDIR= ${SHAREDIR}/examples/etc
+#.PATH:	${WPA_SUPPLICANT_DISTDIR}
+#FILES=	wpa_supplicant.conf
+#
 
 CFLAGS+=-DCONFIG_BACKEND_FILE \
 	-DCONFIG_DEBUG_SYSLOG \

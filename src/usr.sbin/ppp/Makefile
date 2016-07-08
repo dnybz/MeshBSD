@@ -25,9 +25,14 @@ CONFS=	ppp.conf
 CONFSDIR=	${CONFDIR}/ppp
 CONFSMODE=	600
 
-.if ${MK_ATM} == "no"
+#
+# XXX: I'll cleanup the sources 
+# XXX: on unwanted options for
+# XXX: reducing the size 
+#
+
 PPP_NO_ATM=
-.endif
+
 .if ${MK_NETGRAPH} == "no"
 PPP_NO_NETGRAPH=
 .endif
