@@ -169,9 +169,7 @@ _libsdp=	libsdp
 _libbsnmp=	libbsnmp
 .endif
 
-.if ${MK_CASPER} != "no"
 _libcasper=	libcasper
-.endif
 
 .if ${MK_CLANG} != "no" && !defined(COMPAT_32BIT) && !defined(COMPAT_SOFTFP)
 _clang=		clang

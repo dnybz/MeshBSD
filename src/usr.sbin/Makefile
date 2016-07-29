@@ -76,7 +76,6 @@ SUBDIR=	ac \
 	snapinfo \
 	syslogd \
 	tcpdrop \
-	tcpdump \
 	timed \
 	traceroute \
 	traceroute6 \

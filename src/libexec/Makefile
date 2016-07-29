@@ -15,37 +15,22 @@ SUBDIR=	${_atf} \
 	${_tftp-proxy} \
 	ulog-helper 
 
-.if ${MK_AT} != "no"
+
 _atrun=		atrun
-.endif
+_casper=	
 
-.if ${MK_CASPER} != "no"
-_casper=	casper
-.endif
-
-.if ${MK_FTP} != "no"
 SUBDIR+=	ftpd
-.endif
 
-.if ${MK_DMAGENT} != "no"
 _dma=		dma
-.endif
-
-.if ${MK_NETGRAPH} != "no"
 _pppoed=	pppoed
-.endif
-
-.if ${MK_PF} != "no"
 _tftp-proxy=	tftp-proxy
-.endif
 
 .if !defined(NO_PIC) && !defined(NO_RTLD)
 _rtld-elf=	rtld-elf
 .endif
 
-.if ${MK_TFTP} != "no"
+
 SUBDIR+=	tftpd
-.endif
 
 .if ${MK_TESTS} != "no"
 _atf=		atf
