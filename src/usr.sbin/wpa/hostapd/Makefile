@@ -28,13 +28,9 @@ SRCS=	accounting.c aes-omac1.c ap_config.c ap_drv_ops.c ap_mlme.c authsrv.c \
 
 MAN=	hostapd.8 hostapd.conf.5
 
-#
-# XXX: missing @ /etc/
-#
-#FILESDIR= ${SHAREDIR}/etc
-#.PATH:	${HOSTAPD_DISTDIR}
-#FILES=	hostapd.conf hostapd.eap_user hostapd.wpa_psk
-#
+FILESDIR= /etc/hostapd
+.PATH:	${HOSTAPD_DISTDIR}
+FILES=	hostapd.conf hostapd.eap_user hostapd.wpa_psk
 
 CFLAGS+=-DCONFIG_DRIVER_BSD \
 	-DCONFIG_DRIVER_RADIUS_ACL \

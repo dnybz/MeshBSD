@@ -90,7 +90,6 @@ SUBDIR=	ac \
 	watch \
 	watchdogd \
 	wlandebug \
-	wpa \
 	zic \
 	zzz
 
