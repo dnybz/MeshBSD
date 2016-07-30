@@ -21,5 +21,7 @@
 #ifndef _GMT2LOCAL_H
 #define _GMT2LOCAL_H
 
-int32_t gmt2local(time_t);
+#include <time.h>
+
+int     gmt2local(time_t);
 #endif  /* _GMT2LOCAL_H */

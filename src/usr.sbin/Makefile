@@ -90,7 +90,6 @@ SUBDIR=	ac \
 	watch \
 	watchdogd \
 	wlandebug \
-	wlconfig \
 	wpa \
 	zic \
 	zzz

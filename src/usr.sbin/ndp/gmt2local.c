@@ -20,7 +20,6 @@
  */
 
 #include <stdio.h>
-#include <time.h>
 
 #include "gmt2local.h"
 
@@ -28,7 +27,7 @@
  * Returns the difference between gmt and local time in seconds.
  * Use gmtime() and localtime() to keep things simple.
  */
-int32_t
+int     
 gmt2local(time_t t)
 {
 	register int dt, dir;
