@@ -91,10 +91,10 @@ device		wlan_xauth	# 802.11 hostap support
 device		ath             # Atheros network device
 device		ath_rate_sample
 device		ath_ahb		# Atheros host bus glue
-options 	ATH_DEBUG
-options 	ATH_DIAGAPI
+#options 	ATH_DEBUG
+#options 	ATH_DIAGAPI
 option		ATH_ENABLE_11N
-option 		AH_DEBUG_ALQ
+#option 		AH_DEBUG_ALQ
 
 #device		ath_hal
 device		ath_ar9300		# AR9330 HAL; no need for the others
@@ -103,16 +103,16 @@ device		ath_ar9300		# AR9330 HAL; no need for the others
 
 option		AH_SUPPORT_AR5416	# 11n HAL support
 option		AH_SUPPORT_QCA9550	# Chipset support
-option		AH_DEBUG_ALQ
+#option		AH_DEBUG_ALQ
 option		AH_AR5416_INTERRUPT_MITIGATION
 
 device		mii
 device		arge
-options		ARGE_DEBUG
+#options		ARGE_DEBUG
 
 device		usb
 options 	USB_EHCI_BIG_ENDIAN_DESC        # handle big-endian byte order
-options 	USB_DEBUG
+#options 	USB_DEBUG
 options 	USB_HOST_ALIGN=32		# AR71XX (MIPS in general?) requires this
 device		ehci
 
@@ -139,6 +139,8 @@ device		md
 device		bpf
 device		random
 device		if_bridge
+device      if_vether
+
 device		gpio
 device		gpioled
 

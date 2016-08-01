@@ -70,7 +70,7 @@
  * $FreeBSD: head/sys/net/if_bridgevar.h 173320 2007-11-04 08:32:27Z thompsa $
  */
 /*
- * Copyright (c) 2015 Henning Matyschok
+ * Copyright (c) 2014, 2015, 2016 Henning Matyschok
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
