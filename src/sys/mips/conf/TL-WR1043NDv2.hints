@@ -132,11 +132,19 @@ hint.map.0.readonly=1
 # then the rootfs will be placed hopefully at a 64KiB alignment
 # by whatever calls mktplinkfw.
 
+#
+# Kernelspace
+#
+
 hint.map.1.at="flash/spi0"
 hint.map.1.start=0x00020000
 hint.map.1.end="search:0x00020000:0x10000:.!/bin/sh"
 hint.map.1.name="kernel"
 hint.map.1.readonly=1
+
+#
+# Userspace
+#
 
 hint.map.2.at="flash/spi0"
 hint.map.2.start="search:0x00020000:0x10000:.!/bin/sh"
