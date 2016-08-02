@@ -1,5 +1,5 @@
 /*
- * ng_ether_echo.h
+ * ng_socket.h
  */
 
 /*-
@@ -35,17 +35,35 @@
  * THIS SOFTWARE, EVEN IF WHISTLE COMMUNICATIONS IS ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  *
- * Author: Archie Cobbs <archie@freebsd.org>
+ * Author: Julian Elischer <julian@freebsd.org>
  *
- * $FreeBSD: head/sys/netgraph/ng_ether_echo.h 186481 2008-12-25 00:01:29Z julian $
- * $Whistle: ng_echo.h,v 1.3 1999/01/20 00:22:12 archie Exp $
+ * $FreeBSD: head/sys/netgraph/ng_socket.h 163462 2006-10-17 11:03:55Z glebius $
+ * $Whistle: ng_socket.h,v 1.5 1999/01/20 00:22:14 archie Exp $
  */
 
-#ifndef _NETGRAPH_NG_ETHER_ECHO_H_
-#define _NETGRAPH_NG_ETHER_ECHO_H_
+#ifndef _NETGRAPH_NG_SOCKET_H_
+#define _NETGRAPH_NG_SOCKET_H_
 
-/* Node type name and magic cookie */
-#define NG_ETHER_ECHO_NODE_TYPE	"ether_echo"
-#define NGM_ETHER_ECHO_COOKIE		1230155201
+/* Netgraph node type name and cookie */
+#define	NG_SOCKET_NODE_TYPE	"socket"
+#define	NGM_SOCKET_COOKIE	851601233
 
-#endif /* _NETGRAPH_NG_ETHER_ECHO_H_ */
+/* Netgraph socket(2) constants */
+#define	NG_DATA			1
+#define	NG_CONTROL		2
+
+/* Commands */
+enum {
+	NGM_SOCK_CMD_NOLINGER = 1,	/* close the socket with last hook */
+	NGM_SOCK_CMD_LINGER		/* Keep socket even if 0 hooks */
+};
+
+/* Netgraph version of struct sockaddr */
+struct sockaddr_ng {
+	unsigned char	sg_len;		/* total length */
+	sa_family_t	sg_family;	/* address family */
+	char		sg_data[14];	/* actually longer; address value */
+};
+
+#endif /* _NETGRAPH_NG_SOCKET_H_ */
+
