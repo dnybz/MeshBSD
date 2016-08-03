@@ -127,13 +127,6 @@
 #define	PRIV_FIRMWARE_LOAD	100	/* Can load firmware. */
 
 /*
- * Jail privileges.
- */
-#define	PRIV_JAIL_ATTACH	110	/* Attach to a jail. */
-#define	PRIV_JAIL_SET		111	/* Set jail parameters. */
-#define	PRIV_JAIL_REMOVE	112	/* Remove a jail. */
-
-/*
  * Kernel environment privileges.
  */
 #define	PRIV_KENV_SET		120	/* Set kernel env. variables. */
