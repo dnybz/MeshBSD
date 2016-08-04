@@ -153,14 +153,8 @@ procfs_doprocstatus(PFS_FILL_ARGS)
 		sbuf_printf(sb, ",%lu", (u_long)cr->cr_groups[i]);
 	}
 
-	if (jailed(cr)) {
-		mtx_lock(&cr->cr_prison->pr_mtx);
-		sbuf_printf(sb, " %s",
-		    prison_name(td->td_ucred->cr_prison, cr->cr_prison));
-		mtx_unlock(&cr->cr_prison->pr_mtx);
-	} else {
-		sbuf_printf(sb, " -");
-	}
+	sbuf_printf(sb, " -");
+
 	PROC_UNLOCK(p);
 	sbuf_printf(sb, "\n");
 
