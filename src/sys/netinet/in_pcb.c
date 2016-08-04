@@ -572,8 +572,7 @@ in_pcbbind_setup(struct inpcb *inp, struct sockaddr *nam, in_addr_t *laddrp,
 	if ((so->so_options & (SO_REUSEADDR|SO_REUSEPORT)) == 0)
 		lookupflags = INPLOOKUP_WILDCARD;
 	if (nam == NULL) {
-		if ((error = prison_local_ip4(cred, &laddr)) != 0)
-			return (error);
+		return (EINVAL);
 	} else {
 		sin = (struct sockaddr_in *)nam;
 		if (nam->sa_len != sizeof (*sin))
@@ -586,9 +585,7 @@ in_pcbbind_setup(struct inpcb *inp, struct sockaddr *nam, in_addr_t *laddrp,
 		if (sin->sin_family != AF_INET)
 			return (EAFNOSUPPORT);
 #endif
-		error = prison_local_ip4(cred, &sin->sin_addr);
-		if (error)
-			return (error);
+		
 		if (sin->sin_port != *lportp) {
 			/* Don't allow the port to change. */
 			if (*lportp != 0)

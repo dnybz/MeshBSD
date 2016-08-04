@@ -461,25 +461,6 @@ rip_output(struct mbuf *m, struct socket *so, ...)
 		ip->ip_len = htons(m->m_pkthdr.len);
 		ip->ip_src = inp->inp_laddr;
 		ip->ip_dst.s_addr = dst;
-		if (jailed(inp->inp_cred)) {
-			/*
-			 * prison_local_ip4() would be good enough but would
-			 * let a source of INADDR_ANY pass, which we do not
-			 * want to see from jails.
-			 */
-			if (ip->ip_src.s_addr == INADDR_ANY) {
-				error = in_pcbladdr(inp, &ip->ip_dst, &ip->ip_src,
-				    inp->inp_cred);
-			} else {
-				error = prison_local_ip4(inp->inp_cred,
-				    &ip->ip_src);
-			}
-			if (error != 0) {
-				INP_RUNLOCK(inp);
-				m_freem(m);
-				return (error);
-			}
-		}
 		ip->ip_ttl = inp->inp_ip_ttl;
 	} else {
 		if (m->m_pkthdr.len > IP_MAXPACKET) {

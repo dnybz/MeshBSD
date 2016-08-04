@@ -2884,7 +2884,7 @@ sctp_inpcb_bind(struct socket *so, struct sockaddr *addr,
 				 * will transmute the ip address to the
 				 * proper value.
 				 */
-				if (p && (error = prison_local_ip4(p->td_ucred, &sin->sin_addr)) != 0) {
+				if (p) {
 					SCTP_LTRACE_ERR_RET(inp, NULL, NULL, SCTP_FROM_SCTP_PCB, error);
 					return (error);
 				}
