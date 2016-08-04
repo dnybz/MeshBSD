@@ -672,7 +672,7 @@ bridge_clone_create(struct if_clone *ifc, int unit, caddr_t params)
 	struct bridge_softc *sc, *sc2;
 	struct ifnet *bifp, *ifp;
 	int fb, retry;
-	unsigned long hostid;
+	unsigned long _hostid;
 
 	sc = malloc(sizeof(*sc), M_DEVBUF, M_WAITOK|M_ZERO);
 	ifp = sc->sc_ifp = if_alloc(IFT_ETHER);
@@ -711,18 +711,18 @@ bridge_clone_create(struct if_clone *ifc, int unit, caddr_t params)
 	 * The first try uses the hostid and falls back to arc4rand().
 	 */
 	fb = 0;
-	getcredhostid(curthread->td_ucred, &hostid);
+	_hostid = hostid;
 	do {
-		if (fb || hostid == 0) {
+		if (fb || _hostid == 0) {
 			arc4rand(sc->sc_defaddr, ETHER_ADDR_LEN, 1);
 			sc->sc_defaddr[0] &= ~1;/* clear multicast bit */
 			sc->sc_defaddr[0] |= 2;	/* set the LAA bit */
 		} else {
 			sc->sc_defaddr[0] = 0x2;
-			sc->sc_defaddr[1] = (hostid >> 24) & 0xff;
-			sc->sc_defaddr[2] = (hostid >> 16) & 0xff;
-			sc->sc_defaddr[3] = (hostid >> 8 ) & 0xff;
-			sc->sc_defaddr[4] =  hostid        & 0xff;
+			sc->sc_defaddr[1] = (_hostid >> 24) & 0xff;
+			sc->sc_defaddr[2] = (_hostid >> 16) & 0xff;
+			sc->sc_defaddr[3] = (_hostid >> 8 ) & 0xff;
+			sc->sc_defaddr[4] =  _hostid        & 0xff;
 			sc->sc_defaddr[5] = ifp->if_dunit & 0xff;
 		}
 

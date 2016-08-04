@@ -331,14 +331,12 @@ SYSCTL_STRING(_kern, OID_AUTO, conftxt, CTLFLAG_RD, kernconfstring, 0,
 static int
 sysctl_hostid(SYSCTL_HANDLER_ARGS)
 {
-	u_long tmpid;
-
 	/*
 	 * Like sysctl_hostname, except it operates on a u_long
 	 * instead of a string, and is used only for hostid.
 	 */
 
-	return (sysctl_handle_long(oidp, &tmpid, 0, req));
+	return (sysctl_handle_long(oidp, &hostid, 0, req));
 }
 
 SYSCTL_PROC(_kern, KERN_HOSTID, hostid,
