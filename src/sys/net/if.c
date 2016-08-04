@@ -1082,12 +1082,6 @@ if_vmove(struct ifnet *ifp, struct vnet *new_vnet)
 	CURVNET_RESTORE();
 }
 
-static int
-if_vmove_reclaim(struct thread *td, char *ifname, int jid)
-{
-
-	return (ENXIO);
-}
 #endif /* VIMAGE */
 
 /*
@@ -2567,9 +2561,7 @@ ifioctl(struct socket *so, u_long cmd, caddr_t data, struct thread *td)
 #ifdef VIMAGE
 	case SIOCSIFRVNET:
 		error = priv_check(td, PRIV_NET_SETIFVNET);
-		if (error == 0)
-			error = if_vmove_reclaim(td, ifr->ifr_name,
-			    ifr->ifr_jid);
+
 		CURVNET_RESTORE();
 		return (error);
 #endif
