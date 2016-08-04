@@ -60,7 +60,6 @@ __FBSDID("$FreeBSD: head/sys/netinet/in_pcb.c 297225 2016-03-24 07:54:56Z gnn $"
 #include <sys/priv.h>
 #include <sys/proc.h>
 #include <sys/refcount.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/sysctl.h>
 
@@ -774,13 +773,6 @@ in_pcbladdr(struct inpcb *inp, struct in_addr *faddr, struct in_addr *laddr,
 
 	KASSERT(laddr != NULL, ("%s: laddr NULL", __func__));
 
-	/*
-	 * Bypass source address selection and use the primary jail IP
-	 * if requested.
-	 */
-	if (cred != NULL && !prison_saddrsel_ip4(cred, laddr))
-		return (0);
-
 	error = 0;
 	bzero(&sro, sizeof(sro));
 
@@ -856,58 +848,12 @@ in_pcbladdr(struct inpcb *inp, struct in_addr *faddr, struct in_addr *laddr,
 	/*
 	 * If the outgoing interface on the route found is not
 	 * a loopback interface, use the address from that interface.
-	 * In case of jails do those three steps:
-	 * 1. check if the interface address belongs to the jail. If so use it.
-	 * 2. check if we have any address on the outgoing interface
-	 *    belonging to this jail. If so use it.
-	 * 3. as a last resort return the 'default' jail address.
 	 */
 	if ((sro.ro_rt->rt_ifp->if_flags & IFF_LOOPBACK) == 0) {
 		struct in_ifaddr *ia;
-		struct ifnet *ifp;
 
-		/* If not jailed, use the default returned. */
-		if (cred == NULL || !prison_flag(cred, PR_IP4)) {
-			ia = (struct in_ifaddr *)sro.ro_rt->rt_ifa;
-			laddr->s_addr = ia->ia_addr.sin_addr.s_addr;
-			goto done;
-		}
-
-		/* Jailed. */
-		/* 1. Check if the iface address belongs to the jail. */
-		sin = (struct sockaddr_in *)sro.ro_rt->rt_ifa->ifa_addr;
-		if (prison_check_ip4(cred, &sin->sin_addr) == 0) {
-			ia = (struct in_ifaddr *)sro.ro_rt->rt_ifa;
-			laddr->s_addr = ia->ia_addr.sin_addr.s_addr;
-			goto done;
-		}
-
-		/*
-		 * 2. Check if we have any address on the outgoing interface
-		 *    belonging to this jail.
-		 */
-		ia = NULL;
-		ifp = sro.ro_rt->rt_ifp;
-		IF_ADDR_RLOCK(ifp);
-		TAILQ_FOREACH(ifa, &ifp->if_addrhead, ifa_link) {
-			sa = ifa->ifa_addr;
-			if (sa->sa_family != AF_INET)
-				continue;
-			sin = (struct sockaddr_in *)sa;
-			if (prison_check_ip4(cred, &sin->sin_addr) == 0) {
-				ia = (struct in_ifaddr *)ifa;
-				break;
-			}
-		}
-		if (ia != NULL) {
-			laddr->s_addr = ia->ia_addr.sin_addr.s_addr;
-			IF_ADDR_RUNLOCK(ifp);
-			goto done;
-		}
-		IF_ADDR_RUNLOCK(ifp);
-
-		/* 3. As a last resort return the 'default' jail address. */
-		error = prison_get_ip4(cred, laddr);
+		ia = (struct in_ifaddr *)sro.ro_rt->rt_ifa;
+		laddr->s_addr = ia->ia_addr.sin_addr.s_addr;
 		goto done;
 	}
 
@@ -937,47 +883,15 @@ in_pcbladdr(struct inpcb *inp, struct in_addr *faddr, struct in_addr *laddr,
 		if (ia == NULL)
 			ia = ifatoia(ifa_ifwithaddr(sintosa(&sain)));
 
-		if (cred == NULL || !prison_flag(cred, PR_IP4)) {
+		if (cred == NULL) {
 			if (ia == NULL) {
 				error = ENETUNREACH;
 				goto done;
+			} else {
+			    laddr->s_addr = ia->ia_addr.sin_addr.s_addr;
+			    ifa_free(&ia->ia_ifa);
 			}
-			laddr->s_addr = ia->ia_addr.sin_addr.s_addr;
-			ifa_free(&ia->ia_ifa);
-			goto done;
 		}
-
-		/* Jailed. */
-		if (ia != NULL) {
-			struct ifnet *ifp;
-
-			ifp = ia->ia_ifp;
-			ifa_free(&ia->ia_ifa);
-			ia = NULL;
-			IF_ADDR_RLOCK(ifp);
-			TAILQ_FOREACH(ifa, &ifp->if_addrhead, ifa_link) {
-
-				sa = ifa->ifa_addr;
-				if (sa->sa_family != AF_INET)
-					continue;
-				sin = (struct sockaddr_in *)sa;
-				if (prison_check_ip4(cred,
-				    &sin->sin_addr) == 0) {
-					ia = (struct in_ifaddr *)ifa;
-					break;
-				}
-			}
-			if (ia != NULL) {
-				laddr->s_addr = ia->ia_addr.sin_addr.s_addr;
-				IF_ADDR_RUNLOCK(ifp);
-				goto done;
-			}
-			IF_ADDR_RUNLOCK(ifp);
-		}
-
-		/* 3. As a last resort return the 'default' jail address. */
-		error = prison_get_ip4(cred, laddr);
-		goto done;
 	}
 
 done:
@@ -1658,17 +1572,13 @@ in_pcblookup_group(struct inpcbinfo *pcbinfo, struct inpcbgroup *pcbgroup,
 #ifdef INET6
 		struct inpcb *local_wild_mapped = NULL;
 #endif
-		struct inpcb *jail_wild = NULL;
 		struct inpcbhead *head;
-		int injail;
 
-		/*
-		 * Order of socket selection - we always prefer jails.
-		 *      1. jailed, non-wild.
-		 *      2. jailed, wild.
-		 *      3. non-jailed, non-wild.
-		 *      4. non-jailed, wild.
-		 */
+/*
+ * Order of socket selection.
+ *      1. non-wild.
+ *      2. wild.
+ */
 
 		head = &pcbgroup->ipg_hashbase[INP_PCBHASH(INADDR_ANY,
 		    lport, 0, pcbgroup->ipg_hashmask)];
@@ -1682,21 +1592,11 @@ in_pcblookup_group(struct inpcbinfo *pcbinfo, struct inpcbgroup *pcbgroup,
 			    inp->inp_lport != lport)
 				continue;
 
-			injail = prison_flag(inp->inp_cred, PR_IP4);
-			if (injail) {
-				if (prison_check_ip4(inp->inp_cred,
-				    &laddr) != 0)
-					continue;
-			} else {
-				if (local_exact != NULL)
-					continue;
-			}
+			if (local_exact != NULL)
+				continue;
 
 			if (inp->inp_laddr.s_addr == laddr.s_addr) {
-				if (injail)
-					goto found;
-				else
-					local_exact = inp;
+				local_exact = inp;
 			} else if (inp->inp_laddr.s_addr == INADDR_ANY) {
 #ifdef INET6
 				/* XXX inp locking, NULL check */
@@ -1704,14 +1604,10 @@ in_pcblookup_group(struct inpcbinfo *pcbinfo, struct inpcbgroup *pcbgroup,
 					local_wild_mapped = inp;
 				else
 #endif
-					if (injail)
-						jail_wild = inp;
-					else
-						local_wild = inp;
+					local_wild = inp;
 			}
 		} /* LIST_FOREACH */
 
-		inp = jail_wild;
 		if (inp == NULL)
 			inp = local_exact;
 		if (inp == NULL)
@@ -1733,17 +1629,13 @@ in_pcblookup_group(struct inpcbinfo *pcbinfo, struct inpcbgroup *pcbgroup,
 #ifdef INET6
 		struct inpcb *local_wild_mapped = NULL;
 #endif
-		struct inpcb *jail_wild = NULL;
 		struct inpcbhead *head;
-		int injail;
 
-		/*
-		 * Order of socket selection - we always prefer jails.
-		 *      1. jailed, non-wild.
-		 *      2. jailed, wild.
-		 *      3. non-jailed, non-wild.
-		 *      4. non-jailed, wild.
-		 */
+/*
+ * Order of socket selection.
+ *      1. non-wild.
+ *      2. wild.
+ */
 		head = &pcbinfo->ipi_wildbase[INP_PCBHASH(INADDR_ANY, lport,
 		    0, pcbinfo->ipi_wildmask)];
 		LIST_FOREACH(inp, head, inp_pcbgroup_wild) {
@@ -1756,21 +1648,11 @@ in_pcblookup_group(struct inpcbinfo *pcbinfo, struct inpcbgroup *pcbgroup,
 			    inp->inp_lport != lport)
 				continue;
 
-			injail = prison_flag(inp->inp_cred, PR_IP4);
-			if (injail) {
-				if (prison_check_ip4(inp->inp_cred,
-				    &laddr) != 0)
-					continue;
-			} else {
-				if (local_exact != NULL)
-					continue;
-			}
+			if (local_exact != NULL)
+				continue;
 
 			if (inp->inp_laddr.s_addr == laddr.s_addr) {
-				if (injail)
-					goto found;
-				else
-					local_exact = inp;
+				local_exact = inp;
 			} else if (inp->inp_laddr.s_addr == INADDR_ANY) {
 #ifdef INET6
 				/* XXX inp locking, NULL check */
@@ -1778,13 +1660,10 @@ in_pcblookup_group(struct inpcbinfo *pcbinfo, struct inpcbgroup *pcbgroup,
 					local_wild_mapped = inp;
 				else
 #endif
-					if (injail)
-						jail_wild = inp;
-					else
-						local_wild = inp;
+					local_wild = inp;
 			}
 		} /* LIST_FOREACH */
-		inp = jail_wild;
+		
 		if (inp == NULL)
 			inp = local_exact;
 		if (inp == NULL)
@@ -1873,16 +1752,12 @@ in_pcblookup_hash_locked(struct inpcbinfo *pcbinfo, struct in_addr faddr,
 #ifdef INET6
 		struct inpcb *local_wild_mapped = NULL;
 #endif
-		struct inpcb *jail_wild = NULL;
-		int injail;
 
-		/*
-		 * Order of socket selection - we always prefer jails.
-		 *      1. jailed, non-wild.
-		 *      2. jailed, wild.
-		 *      3. non-jailed, non-wild.
-		 *      4. non-jailed, wild.
-		 */
+/*
+ * Order of socket selection.
+ *      1. non-wild.
+ *      2. wild.
+ */
 
 		head = &pcbinfo->ipi_hashbase[INP_PCBHASH(INADDR_ANY, lport,
 		    0, pcbinfo->ipi_hashmask)];
@@ -1896,21 +1771,11 @@ in_pcblookup_hash_locked(struct inpcbinfo *pcbinfo, struct in_addr faddr,
 			    inp->inp_lport != lport)
 				continue;
 
-			injail = prison_flag(inp->inp_cred, PR_IP4);
-			if (injail) {
-				if (prison_check_ip4(inp->inp_cred,
-				    &laddr) != 0)
-					continue;
-			} else {
-				if (local_exact != NULL)
-					continue;
-			}
+			if (local_exact != NULL)
+				continue;
 
 			if (inp->inp_laddr.s_addr == laddr.s_addr) {
-				if (injail)
-					return (inp);
-				else
-					local_exact = inp;
+				local_exact = inp;
 			} else if (inp->inp_laddr.s_addr == INADDR_ANY) {
 #ifdef INET6
 				/* XXX inp locking, NULL check */
@@ -1918,14 +1783,10 @@ in_pcblookup_hash_locked(struct inpcbinfo *pcbinfo, struct in_addr faddr,
 					local_wild_mapped = inp;
 				else
 #endif
-					if (injail)
-						jail_wild = inp;
-					else
-						local_wild = inp;
+					local_wild = inp;
 			}
 		} /* LIST_FOREACH */
-		if (jail_wild != NULL)
-			return (jail_wild);
+		
 		if (local_exact != NULL)
 			return (local_exact);
 		if (local_wild != NULL)

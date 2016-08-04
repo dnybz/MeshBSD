@@ -43,7 +43,6 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_mib.c 295941 2016-02-23 23:37:10Z bdrewer
 #include "opt_config.h"
 
 #include <sys/param.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/lock.h>
 #include <sys/mutex.h>
@@ -270,7 +269,7 @@ sysctl_hostname(SYSCTL_HANDLER_ARGS)
 	struct prison *pr, *cpr;
 	size_t pr_offset;
 	char tmpname[MAXHOSTNAMELEN];
-	int descend, error, len;
+	int len;
 
 	/*
 	 * This function can set: hostname domainname hostuuid.
@@ -285,34 +284,13 @@ sysctl_hostname(SYSCTL_HANDLER_ARGS)
 	if (!(pr->pr_allow & PR_ALLOW_SET_HOSTNAME) && req->newptr)
 		return (EPERM);
 	/*
-	 * Make a local copy of hostname to get/set so we don't have to hold
-	 * the jail mutex during the sysctl copyin/copyout activities.
+	 * Make a local copy of hostname to get/set.
 	 */
 	mtx_lock(&pr->pr_mtx);
 	bcopy((char *)pr + pr_offset, tmpname, len);
 	mtx_unlock(&pr->pr_mtx);
 
-	error = sysctl_handle_string(oidp, tmpname, len, req);
-
-	if (req->newptr != NULL && error == 0) {
-		/*
-		 * Copy the locally set hostname to all jails that share
-		 * this host info.
-		 */
-		sx_slock(&allprison_lock);
-		while (!(pr->pr_flags & PR_HOST))
-			pr = pr->pr_parent;
-		mtx_lock(&pr->pr_mtx);
-		bcopy(tmpname, (char *)pr + pr_offset, len);
-		FOREACH_PRISON_DESCENDANT_LOCKED(pr, cpr, descend)
-			if (cpr->pr_flags & PR_HOST)
-				descend = 0;
-			else
-				bcopy(tmpname, (char *)cpr + pr_offset, len);
-		mtx_unlock(&pr->pr_mtx);
-		sx_sunlock(&allprison_lock);
-	}
-	return (error);
+	return (sysctl_handle_string(oidp, tmpname, len, req));
 }
 
 SYSCTL_PROC(_kern, KERN_HOSTNAME, hostname,
@@ -338,41 +316,12 @@ SYSCTL_INT(_regression, OID_AUTO, securelevel_nonmonotonic, CTLFLAG_RW,
 static int
 sysctl_kern_securelvl(SYSCTL_HANDLER_ARGS)
 {
-	struct prison *pr, *cpr;
-	int descend, error, level;
-
-	pr = req->td->td_ucred->cr_prison;
-
+	int level;
 	/*
-	 * Reading the securelevel is easy, since the current jail's level
-	 * is known to be at least as secure as any higher levels.  Perform
-	 * a lockless read since the securelevel is an integer.
+	 * Perform a lockless read since the securelevel is an integer.
 	 */
-	level = pr->pr_securelevel;
-	error = sysctl_handle_int(oidp, &level, 0, req);
-	if (error || !req->newptr)
-		return (error);
-	/* Permit update only if the new securelevel exceeds the old. */
-	sx_slock(&allprison_lock);
-	mtx_lock(&pr->pr_mtx);
-	if (!regression_securelevel_nonmonotonic &&
-	    level < pr->pr_securelevel) {
-		mtx_unlock(&pr->pr_mtx);
-		sx_sunlock(&allprison_lock);
-		return (EPERM);
-	}
-	pr->pr_securelevel = level;
-	/*
-	 * Set all child jails to be at least this level, but do not lower
-	 * them (even if regression_securelevel_nonmonotonic).
-	 */
-	FOREACH_PRISON_DESCENDANT_LOCKED(pr, cpr, descend) {
-		if (cpr->pr_securelevel < level)
-			cpr->pr_securelevel = level;
-	}
-	mtx_unlock(&pr->pr_mtx);
-	sx_sunlock(&allprison_lock);
-	return (error);
+
+	return (sysctl_handle_int(oidp, &level, 0, req));
 }
 
 SYSCTL_PROC(_kern, KERN_SECURELVL, securelevel,
@@ -390,35 +339,14 @@ SYSCTL_STRING(_kern, OID_AUTO, conftxt, CTLFLAG_RD, kernconfstring, 0,
 static int
 sysctl_hostid(SYSCTL_HANDLER_ARGS)
 {
-	struct prison *pr, *cpr;
 	u_long tmpid;
-	int descend, error;
 
 	/*
 	 * Like sysctl_hostname, except it operates on a u_long
 	 * instead of a string, and is used only for hostid.
 	 */
-	pr = req->td->td_ucred->cr_prison;
-	if (!(pr->pr_allow & PR_ALLOW_SET_HOSTNAME) && req->newptr)
-		return (EPERM);
-	tmpid = pr->pr_hostid;
-	error = sysctl_handle_long(oidp, &tmpid, 0, req);
 
-	if (req->newptr != NULL && error == 0) {
-		sx_slock(&allprison_lock);
-		while (!(pr->pr_flags & PR_HOST))
-			pr = pr->pr_parent;
-		mtx_lock(&pr->pr_mtx);
-		pr->pr_hostid = tmpid;
-		FOREACH_PRISON_DESCENDANT_LOCKED(pr, cpr, descend)
-			if (cpr->pr_flags & PR_HOST)
-				descend = 0;
-			else
-				cpr->pr_hostid = tmpid;
-		mtx_unlock(&pr->pr_mtx);
-		sx_sunlock(&allprison_lock);
-	}
-	return (error);
+	return (sysctl_handle_long(oidp, &tmpid, 0, req));
 }
 
 SYSCTL_PROC(_kern, KERN_HOSTID, hostid,
@@ -426,17 +354,13 @@ SYSCTL_PROC(_kern, KERN_HOSTID, hostid,
     NULL, 0, sysctl_hostid, "LU", "Host ID");
 
 /*
- * The osrelease string is copied from the global (osrelease in vers.c) into
- * prison0 by a sysinit and is inherited by child jails if not changed at jail
- * creation, so we always return the copy from the current prison data.
+ * The osrelease string is copied from the global (osrelease in vers.c).
  */
 static int
 sysctl_osrelease(SYSCTL_HANDLER_ARGS)
 {
-	struct prison *pr;
 
-	pr = req->td->td_ucred->cr_prison;
-	return (SYSCTL_OUT(req, pr->pr_osrelease, strlen(pr->pr_osrelease) + 1));
+	return (SYSCTL_OUT(req, osrelease, strlen(osrelease) + 1));
 
 }
 
@@ -445,9 +369,7 @@ SYSCTL_PROC(_kern, KERN_OSRELEASE, osrelease,
     NULL, 0, sysctl_osrelease, "A", "Operating system release");
 
 /*
- * The osreldate number is copied from the global (osreldate in vers.c) into
- * prison0 by a sysinit and is inherited by child jails if not changed at jail
- * creation, so we always return the value from the current prison data.
+ * The osreldate number is copied from the global (osreldate in vers.c).
  */
 static int
 sysctl_osreldate(SYSCTL_HANDLER_ARGS)
@@ -455,7 +377,7 @@ sysctl_osreldate(SYSCTL_HANDLER_ARGS)
 	struct prison *pr;
 
 	pr = req->td->td_ucred->cr_prison;
-	return (SYSCTL_OUT(req, &pr->pr_osreldate, sizeof(pr->pr_osreldate)));
+	return (SYSCTL_OUT(req, &osreldate, sizeof(osreldate)));
 
 }
 
