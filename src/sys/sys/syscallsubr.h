@@ -39,7 +39,6 @@ struct filecaps;
 enum idtype;
 struct itimerval;
 struct image_args;
-struct jail;
 struct kevent;
 struct kevent_copyops;
 struct kld_file_stat;
@@ -119,9 +118,6 @@ int	kern_getsockname(struct thread *td, int fd, struct sockaddr **sa,
 int	kern_getsockopt(struct thread *td, int s, int level, int name,
 	    void *optval, enum uio_seg valseg, socklen_t *valsize);
 int	kern_ioctl(struct thread *td, int fd, u_long com, caddr_t data);
-int	kern_jail(struct thread *td, struct jail *j);
-int	kern_jail_get(struct thread *td, struct uio *options, int flags);
-int	kern_jail_set(struct thread *td, struct uio *options, int flags);
 int	kern_kevent(struct thread *td, int fd, int nchanges, int nevents,
 	    struct kevent_copyops *k_ops, const struct timespec *timeout);
 int	kern_kevent_anonymous(struct thread *td, int nevents,

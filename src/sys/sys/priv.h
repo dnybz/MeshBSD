@@ -200,7 +200,6 @@
  */
 #define	PRIV_SYSCTL_DEBUG	240	/* Can invoke sysctl.debug. */
 #define	PRIV_SYSCTL_WRITE	241	/* Can write sysctls. */
-#define	PRIV_SYSCTL_WRITEJAIL	242	/* Can write sysctls, jail permitted. */
 
 /*
  * TTY privileges.
@@ -220,15 +219,6 @@
 #define	PRIV_UFS_QUOTAOFF	271	/* quotaoff(). */
 #define	PRIV_UFS_QUOTAON	272	/* quotaon(). */
 #define	PRIV_UFS_SETUSE		273	/* setuse(). */
-
-/*
- * ZFS-specific privileges.
- */
-#define	PRIV_ZFS_POOL_CONFIG	280	/* Can configure ZFS pools. */
-#define	PRIV_ZFS_INJECT		281	/* Can inject faults in the ZFS fault
-					   injection framework. */
-#define	PRIV_ZFS_JAIL		282	/* Can attach/detach ZFS file systems
-					   to/from jails. */
 
 /*
  * NFS-specific privileges.

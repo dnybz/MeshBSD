@@ -41,7 +41,6 @@ __FBSDID("$FreeBSD: head/sys/compat/freebsd32/freebsd32_misc.c 297400 2016-03-29
 #include <sys/fcntl.h>
 #include <sys/filedesc.h>
 #include <sys/imgact.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/limits.h>
 #include <sys/linker.h>
@@ -1903,112 +1902,6 @@ freebsd32_sysctl(struct thread *td, struct freebsd32_sysctl_args *uap)
 	if (uap->oldlenp)
 		suword32(uap->oldlenp, j);
 	return (0);
-}
-
-int
-freebsd32_jail(struct thread *td, struct freebsd32_jail_args *uap)
-{
-	uint32_t version;
-	int error;
-	struct jail j;
-
-	error = copyin(uap->jail, &version, sizeof(uint32_t));
-	if (error)
-		return (error);
-
-	switch (version) {
-	case 0:
-	{
-		/* FreeBSD single IPv4 jails. */
-		struct jail32_v0 j32_v0;
-
-		bzero(&j, sizeof(struct jail));
-		error = copyin(uap->jail, &j32_v0, sizeof(struct jail32_v0));
-		if (error)
-			return (error);
-		CP(j32_v0, j, version);
-		PTRIN_CP(j32_v0, j, path);
-		PTRIN_CP(j32_v0, j, hostname);
-		j.ip4s = htonl(j32_v0.ip_number);	/* jail_v0 is host order */
-		break;
-	}
-
-	case 1:
-		/*
-		 * Version 1 was used by multi-IPv4 jail implementations
-		 * that never made it into the official kernel.
-		 */
-		return (EINVAL);
-
-	case 2:	/* JAIL_API_VERSION */
-	{
-		/* FreeBSD multi-IPv4/IPv6,noIP jails. */
-		struct jail32 j32;
-
-		error = copyin(uap->jail, &j32, sizeof(struct jail32));
-		if (error)
-			return (error);
-		CP(j32, j, version);
-		PTRIN_CP(j32, j, path);
-		PTRIN_CP(j32, j, hostname);
-		PTRIN_CP(j32, j, jailname);
-		CP(j32, j, ip4s);
-		CP(j32, j, ip6s);
-		PTRIN_CP(j32, j, ip4);
-		PTRIN_CP(j32, j, ip6);
-		break;
-	}
-
-	default:
-		/* Sci-Fi jails are not supported, sorry. */
-		return (EINVAL);
-	}
-	return (kern_jail(td, &j));
-}
-
-int
-freebsd32_jail_set(struct thread *td, struct freebsd32_jail_set_args *uap)
-{
-	struct uio *auio;
-	int error;
-
-	/* Check that we have an even number of iovecs. */
-	if (uap->iovcnt & 1)
-		return (EINVAL);
-
-	error = freebsd32_copyinuio(uap->iovp, uap->iovcnt, &auio);
-	if (error)
-		return (error);
-	error = kern_jail_set(td, auio, uap->flags);
-	free(auio, M_IOV);
-	return (error);
-}
-
-int
-freebsd32_jail_get(struct thread *td, struct freebsd32_jail_get_args *uap)
-{
-	struct iovec32 iov32;
-	struct uio *auio;
-	int error, i;
-
-	/* Check that we have an even number of iovecs. */
-	if (uap->iovcnt & 1)
-		return (EINVAL);
-
-	error = freebsd32_copyinuio(uap->iovp, uap->iovcnt, &auio);
-	if (error)
-		return (error);
-	error = kern_jail_get(td, auio, uap->flags);
-	if (error == 0)
-		for (i = 0; i < uap->iovcnt; i++) {
-			PTROUT_CP(auio->uio_iov[i], iov32, iov_base);
-			CP(auio->uio_iov[i], iov32, iov_len);
-			error = copyout(&iov32, uap->iovp + i, sizeof(iov32));
-			if (error != 0)
-				break;
-		}
-	free(auio, M_IOV);
-	return (error);
 }
 
 int

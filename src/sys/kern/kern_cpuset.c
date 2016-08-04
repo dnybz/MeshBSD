@@ -36,7 +36,6 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_cpuset.c 297748 2016-04-09 13:58:04Z jhb 
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/sysproto.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/lock.h>
 #include <sys/malloc.h>
@@ -233,18 +232,6 @@ cpuset_lookup(cpusetid_t setid, struct thread *td)
 	mtx_unlock_spin(&cpuset_lock);
 
 	KASSERT(td != NULL, ("[%s:%d] td is NULL", __func__, __LINE__));
-	if (set != NULL && jailed(td->td_ucred)) {
-		struct cpuset *jset, *tset;
-
-		jset = td->td_ucred->cr_prison->pr_cpuset;
-		for (tset = set; tset != NULL; tset = tset->cs_parent)
-			if (tset == jset)
-				break;
-		if (tset == NULL) {
-			cpuset_rel(set);
-			set = NULL;
-		}
-	}
 
 	return (set);
 }
@@ -362,15 +349,6 @@ cpuset_modify(struct cpuset *set, cpuset_t *mask)
 	if (error)
 		return (error);
 	/*
-	 * In case we are called from within the jail
-	 * we do not allow modifying the dedicated root
-	 * cpuset of the jail but may still allow to
-	 * change child sets.
-	 */
-	if (jailed(curthread->td_ucred) &&
-	    set->cs_flags & CPU_SET_ROOT)
-		return (EPERM);
-	/*
 	 * Verify that we have access to this set of
 	 * cpus.
 	 */
@@ -446,21 +424,6 @@ cpuset_which(cpuwhich_t which, id_t id, struct proc **pp, struct thread **tdp,
 			return (0);
 		}
 		return (ESRCH);
-	case CPU_WHICH_JAIL:
-	{
-		/* Find `set' for prison with given id. */
-		struct prison *pr;
-
-		sx_slock(&allprison_lock);
-		pr = prison_find_child(curthread->td_ucred->cr_prison, id);
-		sx_sunlock(&allprison_lock);
-		if (pr == NULL)
-			return (ESRCH);
-		cpuset_ref(pr->pr_cpuset);
-		*setp = pr->pr_cpuset;
-		mtx_unlock(&pr->pr_mtx);
-		return (0);
-	}
 	case CPU_WHICH_IRQ:
 	case CPU_WHICH_DOMAIN:
 		return (0);
@@ -1024,7 +987,6 @@ sys_cpuset_getid(struct thread *td, struct cpuset_getid_args *uap)
 		PROC_UNLOCK(p);
 		break;
 	case CPU_WHICH_CPUSET:
-	case CPU_WHICH_JAIL:
 		break;
 	case CPU_WHICH_IRQ:
 	case CPU_WHICH_DOMAIN:
@@ -1088,7 +1050,6 @@ sys_cpuset_getaffinity(struct thread *td, struct cpuset_getaffinity_args *uap)
 			thread_unlock(ttd);
 			break;
 		case CPU_WHICH_CPUSET:
-		case CPU_WHICH_JAIL:
 			break;
 		case CPU_WHICH_IRQ:
 		case CPU_WHICH_DOMAIN:
@@ -1117,7 +1078,6 @@ sys_cpuset_getaffinity(struct thread *td, struct cpuset_getaffinity_args *uap)
 			}
 			break;
 		case CPU_WHICH_CPUSET:
-		case CPU_WHICH_JAIL:
 			CPU_COPY(&set->cs_mask, mask);
 			break;
 		case CPU_WHICH_IRQ:
@@ -1204,7 +1164,6 @@ sys_cpuset_setaffinity(struct thread *td, struct cpuset_setaffinity_args *uap)
 			PROC_UNLOCK(p);
 			break;
 		case CPU_WHICH_CPUSET:
-		case CPU_WHICH_JAIL:
 			break;
 		case CPU_WHICH_IRQ:
 		case CPU_WHICH_DOMAIN:
@@ -1228,7 +1187,6 @@ sys_cpuset_setaffinity(struct thread *td, struct cpuset_setaffinity_args *uap)
 			error = cpuset_setproc(uap->id, NULL, mask);
 			break;
 		case CPU_WHICH_CPUSET:
-		case CPU_WHICH_JAIL:
 			error = cpuset_which(uap->which, uap->id, &p,
 			    &ttd, &set);
 			if (error == 0) {
