@@ -62,7 +62,6 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_prot.c 298819 2016-04-29 22:15:33Z pfg $"
 #include <sys/priv.h>
 #include <sys/proc.h>
 #include <sys/sysproto.h>
-#include <sys/jail.h>
 #include <sys/pioctl.h>
 #include <sys/racct.h>
 #include <sys/resourcevar.h>
@@ -1859,11 +1858,7 @@ crfree(struct ucred *cr)
 			uifree(cr->cr_uidinfo);
 		if (cr->cr_ruidinfo != NULL)
 			uifree(cr->cr_ruidinfo);
-		/*
-		 * Free a prison, if any.
-		 */
-		if (cr->cr_prison != NULL)
-			prison_free(cr->cr_prison);
+		
 		if (cr->cr_loginclass != NULL)
 			loginclass_free(cr->cr_loginclass);
 #ifdef AUDIT
