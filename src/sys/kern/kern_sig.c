@@ -85,8 +85,6 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_sig.c 292894 2015-12-29 23:25:26Z jhb $")
 #include <vm/vm_extern.h>
 #include <vm/uma.h>
 
-#include <sys/jail.h>
-
 #include <machine/cpu.h>
 
 #include <security/audit/audit.h>
@@ -3181,8 +3179,6 @@ corefile_open(const char *comm, uid_t uid, pid_t pid, struct thread *td,
 					hostname = malloc(MAXHOSTNAMELEN,
 					    M_TEMP, M_WAITOK);
 				}
-				getcredhostname(td->td_ucred, hostname,
-				    MAXHOSTNAMELEN);
 				sbuf_printf(&sb, "%s", hostname);
 				break;
 			case 'I':	/* autoincrementing index */

@@ -266,8 +266,6 @@ SYSCTL_STRING(_kern, OID_AUTO, supported_archs, CTLFLAG_RD | CTLFLAG_MPSAFE,
 static int
 sysctl_hostname(SYSCTL_HANDLER_ARGS)
 {
-	struct prison *pr, *cpr;
-	size_t pr_offset;
 	char tmpname[MAXHOSTNAMELEN];
 	int len;
 
@@ -275,20 +273,14 @@ sysctl_hostname(SYSCTL_HANDLER_ARGS)
 	 * This function can set: hostname domainname hostuuid.
 	 * Keep that in mind when comments say "hostname".
 	 */
-	pr_offset = (size_t)arg1;
 	len = arg2;
 	KASSERT(len <= sizeof(tmpname),
 	    ("length %d too long for %s", len, __func__));
 
-	pr = req->td->td_ucred->cr_prison;
-	if (!(pr->pr_allow & PR_ALLOW_SET_HOSTNAME) && req->newptr)
-		return (EPERM);
 	/*
 	 * Make a local copy of hostname to get/set.
 	 */
-	mtx_lock(&pr->pr_mtx);
-	bcopy((char *)pr + pr_offset, tmpname, len);
-	mtx_unlock(&pr->pr_mtx);
+	bcopy(hostname, tmpname, len);
 
 	return (sysctl_handle_string(oidp, tmpname, len, req));
 }
@@ -374,11 +366,8 @@ SYSCTL_PROC(_kern, KERN_OSRELEASE, osrelease,
 static int
 sysctl_osreldate(SYSCTL_HANDLER_ARGS)
 {
-	struct prison *pr;
 
-	pr = req->td->td_ucred->cr_prison;
 	return (SYSCTL_OUT(req, &osreldate, sizeof(osreldate)));
-
 }
 
 /*

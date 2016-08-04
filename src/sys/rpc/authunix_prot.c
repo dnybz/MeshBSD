@@ -43,7 +43,6 @@ __FBSDID("$FreeBSD: head/sys/rpc/authunix_prot.c 258578 2013-11-25 19:04:36Z hrs
  */
 
 #include <sys/param.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/systm.h>
 #include <sys/ucred.h>
@@ -72,7 +71,7 @@ xdr_authunix_parms(XDR *xdrs, uint32_t *time, struct xucred *cred)
 		/*
 		 * Restrict name length to 255 according to RFC 1057.
 		 */
-		getcredhostname(NULL, hostbuf, sizeof(hostbuf));
+		bcopy(hostname, hostbuf, sizeof(hostbuf));
 		namelen = strlen(hostbuf);
 		if (namelen > 255)
 			namelen = 255;
