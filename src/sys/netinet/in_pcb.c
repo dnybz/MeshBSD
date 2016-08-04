@@ -1425,13 +1425,10 @@ in_pcblookup_local(struct inpcbinfo *pcbinfo, struct in_addr laddr,
 			if (inp->inp_faddr.s_addr == INADDR_ANY &&
 			    inp->inp_laddr.s_addr == laddr.s_addr &&
 			    inp->inp_lport == lport) {
-				/*
-				 * Found?
-				 */
-				if (cred == NULL ||
-				    prison_equal_ip4(cred->cr_prison,
-					inp->inp_cred->cr_prison))
-					return (inp);
+/*
+ * Found!
+ */				
+				return (inp);
 			}
 		}
 		/*
@@ -1461,10 +1458,7 @@ in_pcblookup_local(struct inpcbinfo *pcbinfo, struct in_addr laddr,
 			 */
 			LIST_FOREACH(inp, &phd->phd_pcblist, inp_portlist) {
 				wildcard = 0;
-				if (cred != NULL &&
-				    !prison_equal_ip4(inp->inp_cred->cr_prison,
-					cred->cr_prison))
-					continue;
+				
 #ifdef INET6
 				/* XXX inp locking */
 				if ((inp->inp_vflag & INP_IPV4) == 0)
