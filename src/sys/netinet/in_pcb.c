@@ -957,9 +957,6 @@ in_pcbconnect_setup(struct inpcb *inp, struct sockaddr *nam,
 			faddr =
 			    IA_SIN(TAILQ_FIRST(&V_in_ifaddrhead))->sin_addr;
 			IN_IFADDR_RUNLOCK(&in_ifa_tracker);
-			if (cred != NULL &&
-			    (error = prison_get_ip4(cred, &faddr)) != 0)
-				return (error);
 		} else if (faddr.s_addr == (u_long)INADDR_BROADCAST) {
 			IN_IFADDR_RLOCK(&in_ifa_tracker);
 			if (TAILQ_FIRST(&V_in_ifaddrhead)->ia_ifp->if_flags &
