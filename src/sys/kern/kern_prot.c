@@ -1887,7 +1887,6 @@ crcopy(struct ucred *dest, struct ucred *src)
 	crsetgroups(dest, src->cr_ngroups, src->cr_groups);
 	uihold(dest->cr_uidinfo);
 	uihold(dest->cr_ruidinfo);
-	prison_hold(dest->cr_prison);
 	loginclass_hold(dest->cr_loginclass);
 #ifdef AUDIT
 	audit_cred_copy(src, dest);
