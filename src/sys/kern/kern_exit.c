@@ -52,7 +52,6 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_exit.c 300043 2016-05-17 09:56:22Z kib $"
 #include <sys/proc.h>
 #include <sys/procdesc.h>
 #include <sys/pioctl.h>
-#include <sys/jail.h>
 #include <sys/tty.h>
 #include <sys/wait.h>
 #include <sys/vmmeter.h>
@@ -496,9 +495,6 @@ exit1(struct thread *td, int rval, int signo)
 	/* Save exit status. */
 	PROC_LOCK(p);
 	p->p_xthread = td;
-
-	/* Tell the prison that we are gone. */
-	prison_proc_free(p->p_ucred->cr_prison);
 
 #ifdef KDTRACE_HOOKS
 	/*
