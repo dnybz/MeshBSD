@@ -42,7 +42,6 @@ __FBSDID("$FreeBSD: head/sys/netinet/in.c 298675 2016-04-26 23:13:48Z cem $");
 #include <sys/malloc.h>
 #include <sys/priv.h>
 #include <sys/socket.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/lock.h>
 #include <sys/proc.h>
@@ -266,10 +265,6 @@ in_control(struct socket *so, u_long cmd, caddr_t data, struct ifnet *ifp,
 		return ((*ifp->if_ioctl)(ifp, cmd, data));
 	}
 
-	if (addr->sin_addr.s_addr != INADDR_ANY &&
-	    prison_check_ip4(td->td_ucred, &addr->sin_addr) != 0)
-		return (EADDRNOTAVAIL);
-
 	/*
 	 * Find address for this interface, if it exists.  If an
 	 * address was specified, find that one instead of the
@@ -287,9 +282,7 @@ in_control(struct socket *so, u_long cmd, caddr_t data, struct ifnet *ifp,
 		TAILQ_FOREACH(ifa, &ifp->if_addrhead, ifa_link)
 			if (ifa->ifa_addr->sa_family == AF_INET) {
 				ia = (struct in_ifaddr *)ifa;
-				if (prison_check_ip4(td->td_ucred,
-				    &ia->ia_addr.sin_addr) == 0)
-					break;
+				break;
 			}
 
 	if (ifa == NULL) {
@@ -383,8 +376,7 @@ in_aifaddr_ioctl(u_long cmd, caddr_t data, struct ifnet *ifp, struct thread *td)
 
 		it = (struct in_ifaddr *)ifa;
 		iaIsFirst = false;
-		if (it->ia_addr.sin_addr.s_addr == addr->sin_addr.s_addr &&
-		    prison_check_ip4(td->td_ucred, &addr->sin_addr) == 0)
+		if (it->ia_addr.sin_addr.s_addr == addr->sin_addr.s_addr)
 			ia = it;
 	}
 	IF_ADDR_RUNLOCK(ifp);
@@ -575,13 +567,10 @@ in_difaddr_ioctl(caddr_t data, struct ifnet *ifp, struct thread *td)
 			continue;
 
 		it = (struct in_ifaddr *)ifa;
-		if (deleteAny && ia == NULL && (td == NULL ||
-		    prison_check_ip4(td->td_ucred, &it->ia_addr.sin_addr) == 0))
+		if (deleteAny && ia == NULL)
 			ia = it;
 
-		if (it->ia_addr.sin_addr.s_addr == addr->sin_addr.s_addr &&
-		    (td == NULL || prison_check_ip4(td->td_ucred,
-		    &addr->sin_addr) == 0))
+		if (it->ia_addr.sin_addr.s_addr == addr->sin_addr.s_addr)
 			ia = it;
 
 		if (it != ia)

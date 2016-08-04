@@ -825,10 +825,8 @@ in_pcbladdr(struct inpcb *inp, struct in_addr *faddr, struct in_addr *laddr,
 			if (sa->sa_family != AF_INET)
 				continue;
 			sin = (struct sockaddr_in *)sa;
-			if (prison_check_ip4(cred, &sin->sin_addr) == 0) {
-				ia = (struct in_ifaddr *)ifa;
-				break;
-			}
+			ia = (struct in_ifaddr *)ifa;
+			break;
 		}
 		if (ia != NULL) {
 			laddr->s_addr = ia->ia_addr.sin_addr.s_addr;
@@ -980,10 +978,7 @@ in_pcbconnect_setup(struct inpcb *inp, struct sockaddr *nam,
 				ifp = imo->imo_multicast_ifp;
 				IN_IFADDR_RLOCK(&in_ifa_tracker);
 				TAILQ_FOREACH(ia, &V_in_ifaddrhead, ia_link) {
-					if ((ia->ia_ifp == ifp) &&
-					    (cred == NULL ||
-					    prison_check_ip4(cred,
-					    &ia->ia_addr.sin_addr) == 0))
+					if (ia->ia_ifp == ifp)
 						break;
 				}
 				if (ia == NULL)

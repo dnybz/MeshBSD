@@ -307,14 +307,7 @@ rip_input(struct mbuf **mp, int *offp, int proto)
 			continue;
 		if (inp->inp_faddr.s_addr != ip->ip_src.s_addr)
 			continue;
-		if (jailed_without_vnet(inp->inp_cred)) {
-			/*
-			 * XXX: If faddr was bound to multicast group,
-			 * jailed raw socket will drop datagram.
-			 */
-			if (prison_check_ip4(inp->inp_cred, &ip->ip_dst) != 0)
-				continue;
-		}
+		
 		if (last != NULL) {
 			struct mbuf *n;
 
@@ -341,16 +334,7 @@ rip_input(struct mbuf **mp, int *offp, int proto)
 		if (!in_nullhost(inp->inp_faddr) &&
 		    !in_hosteq(inp->inp_faddr, ip->ip_src))
 			continue;
-		if (jailed_without_vnet(inp->inp_cred)) {
-			/*
-			 * Allow raw socket in jail to receive multicast;
-			 * assume process had PRIV_NETINET_RAW at attach,
-			 * and fall through into normal filter path if so.
-			 */
-			if (!IN_MULTICAST(ntohl(ip->ip_dst.s_addr)) &&
-			    prison_check_ip4(inp->inp_cred, &ip->ip_dst) != 0)
-				continue;
-		}
+		
 		/*
 		 * If this raw socket has multicast state, and we
 		 * have received a multicast, check if this socket
@@ -469,12 +453,6 @@ rip_output(struct mbuf *m, struct socket *so, ...)
 		}
 		INP_RLOCK(inp);
 		ip = mtod(m, struct ip *);
-		error = prison_check_ip4(inp->inp_cred, &ip->ip_src);
-		if (error != 0) {
-			INP_RUNLOCK(inp);
-			m_freem(m);
-			return (error);
-		}
 
 		/*
 		 * Don't allow both user specified and setsockopt options,
@@ -892,10 +870,6 @@ rip_bind(struct socket *so, struct sockaddr *nam, struct thread *td)
 
 	if (nam->sa_len != sizeof(*addr))
 		return (EINVAL);
-
-	error = prison_check_ip4(td->td_ucred, &addr->sin_addr);
-	if (error != 0)
-		return (error);
 
 	inp = sotoinpcb(so);
 	KASSERT(inp != NULL, ("rip_bind: inp == NULL"));

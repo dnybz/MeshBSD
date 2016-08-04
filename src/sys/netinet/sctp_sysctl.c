@@ -253,10 +253,7 @@ sctp_sysctl_copy_out_local_addresses(struct sctp_inpcb *inp, struct sctp_tcb *st
 						sin = &sctp_ifa->address.sin;
 						if (sin->sin_addr.s_addr == 0)
 							continue;
-						if (prison_check_ip4(inp->ip_inp.inp.inp_cred,
-						    &sin->sin_addr) != 0) {
-							continue;
-						}
+						
 						if ((ipv4_local_scope == 0) && (IN4_ISPRIVATE_ADDRESS(&sin->sin_addr)))
 							continue;
 					} else {

@@ -1883,22 +1883,14 @@ sctp_addr_mgmt_assoc(struct sctp_inpcb *inp, struct sctp_tcb *stcb,
 	 * this is boundall or subset bound w/ASCONF allowed
 	 */
 
-	/* first, make sure that the address is IPv4 or IPv6 and not jailed */
+	/* first, make sure that the address is IPv4 or IPv6 */
 	switch (ifa->address.sa.sa_family) {
 #ifdef INET6
 	case AF_INET6:
-		if (prison_check_ip6(inp->ip_inp.inp.inp_cred,
-		    &ifa->address.sin6.sin6_addr) != 0) {
-			return;
-		}
 		break;
 #endif
 #ifdef INET
 	case AF_INET:
-		if (prison_check_ip4(inp->ip_inp.inp.inp_cred,
-		    &ifa->address.sin.sin_addr) != 0) {
-			return;
-		}
 		break;
 #endif
 	default:
@@ -2159,10 +2151,7 @@ sctp_asconf_iterator_stcb(struct sctp_inpcb *inp, struct sctp_tcb *stcb,
 					/* we skip unspecifed addresses */
 					continue;
 				}
-				if (prison_check_ip4(inp->ip_inp.inp.inp_cred,
-				    &sin->sin_addr) != 0) {
-					continue;
-				}
+				
 				if (stcb->asoc.scope.ipv4_local_scope == 0 &&
 				    IN4_ISPRIVATE_ADDRESS(&sin->sin_addr)) {
 					continue;
@@ -2479,10 +2468,7 @@ sctp_find_valid_localaddr(struct sctp_tcb *stcb, int addr_locked)
 						/* skip unspecifed addresses */
 						continue;
 					}
-					if (prison_check_ip4(stcb->sctp_ep->ip_inp.inp.inp_cred,
-					    &sin->sin_addr) != 0) {
-						continue;
-					}
+
 					if (stcb->asoc.scope.ipv4_local_scope == 0 &&
 					    IN4_ISPRIVATE_ADDRESS(&sin->sin_addr))
 						continue;
@@ -3116,10 +3102,7 @@ sctp_check_address_list_all(struct sctp_tcb *stcb, struct mbuf *m, int offset,
 #ifdef INET
 			case AF_INET:
 				sin = &sctp_ifa->address.sin;
-				if (prison_check_ip4(stcb->sctp_ep->ip_inp.inp.inp_cred,
-				    &sin->sin_addr) != 0) {
-					continue;
-				}
+				
 				if ((ipv4_scope == 0) &&
 				    (IN4_ISPRIVATE_ADDRESS(&sin->sin_addr))) {
 					/* private address not in scope */
@@ -3436,10 +3419,7 @@ sctp_asconf_send_nat_state_update(struct sctp_tcb *stcb,
 #ifdef INET
 				case AF_INET:
 					to = &sctp_ifap->address.sin;
-					if (prison_check_ip4(stcb->sctp_ep->ip_inp.inp.inp_cred,
-					    &to->sin_addr) != 0) {
-						continue;
-					}
+					
 					if (IN4_ISPRIVATE_ADDRESS(&to->sin_addr)) {
 						continue;
 					}

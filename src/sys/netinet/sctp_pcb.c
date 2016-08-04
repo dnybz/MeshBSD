@@ -900,10 +900,7 @@ sctp_does_stcb_own_this_addr(struct sctp_tcb *stcb, struct sockaddr *to)
 						    IN4_ISPRIVATE_ADDRESS(&sin->sin_addr)) {
 							continue;
 						}
-						if (prison_check_ip4(stcb->sctp_ep->ip_inp.inp.inp_cred,
-						    &sin->sin_addr) != 0) {
-							continue;
-						}
+						
 						if (sin->sin_addr.s_addr == rsin->sin_addr.s_addr) {
 							SCTP_IPI_ADDR_RUNLOCK();
 							return (1);
@@ -1077,11 +1074,6 @@ sctp_tcb_special_locate(struct sctp_inpcb **inp_p, struct sockaddr *from,
 				struct sockaddr_in *sin;
 
 				sin = (struct sockaddr_in *)to;
-				if (prison_check_ip4(inp->ip_inp.inp.inp_cred,
-				    &sin->sin_addr) != 0) {
-					SCTP_INP_RUNLOCK(inp);
-					continue;
-				}
 				break;
 			}
 #endif
@@ -1677,11 +1669,6 @@ sctp_endpoint_probe(struct sockaddr *nam, struct sctppcbhead *head,
 					 * IPv4 on a IPv6 socket with ONLY
 					 * IPv6 set
 					 */
-					SCTP_INP_RUNLOCK(inp);
-					continue;
-				}
-				if (prison_check_ip4(inp->ip_inp.inp.inp_cred,
-				    &sin->sin_addr) != 0) {
 					SCTP_INP_RUNLOCK(inp);
 					continue;
 				}

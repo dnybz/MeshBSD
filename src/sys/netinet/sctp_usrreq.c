@@ -1139,10 +1139,7 @@ sctp_fill_up_addresses_vrf(struct sctp_inpcb *inp,
 							 */
 							continue;
 						}
-						if (prison_check_ip4(inp->ip_inp.inp.inp_cred,
-						    &sin->sin_addr) != 0) {
-							continue;
-						}
+						
 						if ((ipv4_local_scope == 0) &&
 						    (IN4_ISPRIVATE_ADDRESS(&sin->sin_addr))) {
 							continue;
@@ -5883,12 +5880,7 @@ sctp_setopt(struct socket *so, int optname, void *optval, size_t optsize,
 							struct sockaddr_in *sin;
 
 							sin = (struct sockaddr_in *)addr;
-							if (prison_check_ip4(inp->ip_inp.inp.inp_cred,
-							    &sin->sin_addr) != 0) {
-								SCTP_LTRACE_ERR_RET(inp, NULL, NULL, SCTP_FROM_SCTP_USRREQ, EINVAL);
-								error = EINVAL;
-								goto out_of_it;
-							}
+
 							break;
 						}
 #endif
