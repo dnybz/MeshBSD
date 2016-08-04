@@ -53,7 +53,6 @@ __FBSDID("$FreeBSD: head/sys/kern/init_main.c 298433 2016-04-21 19:57:40Z pfg $"
 #include <sys/exec.h>
 #include <sys/file.h>
 #include <sys/filedesc.h>
-#include <sys/jail.h>
 #include <sys/ktr.h>
 #include <sys/lock.h>
 #include <sys/loginclass.h>

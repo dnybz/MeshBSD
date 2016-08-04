@@ -431,7 +431,7 @@ struct	ifreq {
 #define	ifr_buffer	ifr_ifru.ifru_buffer	/* user supplied buffer with its length */
 #define	ifr_flags	ifr_ifru.ifru_flags[0]	/* flags (low 16 bits) */
 #define	ifr_flagshigh	ifr_ifru.ifru_flags[1]	/* flags (high 16 bits) */
-#define	ifr_jid		ifr_ifru.ifru_jid	/* jail/vnet */
+#define	ifr_jid		ifr_ifru.ifru_jid	/* XXX: jail/vnet */
 #define	ifr_metric	ifr_ifru.ifru_metric	/* metric */
 #define	ifr_mtu		ifr_ifru.ifru_mtu	/* mtu */
 #define ifr_phys	ifr_ifru.ifru_phys	/* physical wire */
