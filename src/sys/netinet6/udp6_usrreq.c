@@ -77,7 +77,6 @@ __FBSDID("$FreeBSD: head/sys/netinet6/udp6_usrreq.c 298798 2016-04-29 20:13:35Z 
 #include "opt_rss.h"
 
 #include <sys/param.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/lock.h>
 #include <sys/mbuf.h>
@@ -1113,9 +1112,7 @@ udp6_connect(struct socket *so, struct sockaddr *nam, struct thread *td)
 		in6_sin6_2_sin(&sin, sin6);
 		inp->inp_vflag |= INP_IPV4;
 		inp->inp_vflag &= ~INP_IPV6;
-		error = prison_remote_ip4(td->td_ucred, &sin.sin_addr);
-		if (error != 0)
-			goto out;
+
 		INP_HASH_WLOCK(pcbinfo);
 		error = in_pcbconnect(inp, (struct sockaddr *)&sin,
 		    td->td_ucred);

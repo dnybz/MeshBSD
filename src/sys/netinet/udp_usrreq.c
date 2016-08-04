@@ -1329,20 +1329,11 @@ udp_output(struct inpcb *inp, struct mbuf *m, struct sockaddr *addr,
 		}
 
 		/*
-		 * Jail may rewrite the destination address, so let it do
-		 * that before we use it.
-		 */
-		error = prison_remote_ip4(td->td_ucred, &sin->sin_addr);
-		if (error)
-			goto release;
-
-		/*
 		 * If a local address or port hasn't yet been selected, or if
 		 * the destination address needs to be rewritten due to using
 		 * a special INADDR_ constant, invoke in_pcbconnect_setup()
 		 * to do the heavy lifting.  Once a port is selected, we
-		 * commit the binding back to the socket; we also commit the
-		 * binding of the address if in jail.
+		 * commit the binding back to the socket.
 		 *
 		 * If we already have a valid binding and we're not
 		 * requesting a destination address rewrite, use a fast path.
@@ -1367,11 +1358,7 @@ udp_output(struct inpcb *inp, struct mbuf *m, struct sockaddr *addr,
 			    inp->inp_lport == 0) {
 				INP_WLOCK_ASSERT(inp);
 				INP_HASH_WLOCK_ASSERT(pcbinfo);
-				/*
-				 * Remember addr if jailed, to prevent
-				 * rebinding.
-				 */
-				
+
 				inp->inp_lport = lport;
 				if (in_pcbinshash(inp) != 0) {
 					inp->inp_lport = 0;
@@ -1840,11 +1827,7 @@ udp_connect(struct socket *so, struct sockaddr *nam, struct thread *td)
 		return (EISCONN);
 	}
 	sin = (struct sockaddr_in *)nam;
-	error = prison_remote_ip4(td->td_ucred, &sin->sin_addr);
-	if (error != 0) {
-		INP_WUNLOCK(inp);
-		return (error);
-	}
+
 	INP_HASH_WLOCK(pcbinfo);
 	error = in_pcbconnect(inp, nam, td->td_ucred);
 	INP_HASH_WUNLOCK(pcbinfo);
