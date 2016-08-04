@@ -759,7 +759,7 @@ in_pcbconnect(struct inpcb *inp, struct sockaddr *nam, struct ucred *cred)
 
 /*
  * Do proper source address selection on an unbound socket in case
- * of connect. Take jails into account as well.
+ * of connect.
  */
 int
 in_pcbladdr(struct inpcb *inp, struct in_addr *faddr, struct in_addr *laddr,
@@ -812,7 +812,7 @@ in_pcbladdr(struct inpcb *inp, struct in_addr *faddr, struct in_addr *laddr,
 			goto done;
 		}
 
-		if (cred == NULL || !prison_flag(cred, PR_IP4)) {
+		if (cred == NULL) {
 			laddr->s_addr = ia->ia_addr.sin_addr.s_addr;
 			ifa_free(&ia->ia_ifa);
 			goto done;
@@ -840,8 +840,6 @@ in_pcbladdr(struct inpcb *inp, struct in_addr *faddr, struct in_addr *laddr,
 		}
 		IF_ADDR_RUNLOCK(ifp);
 
-		/* 3. As a last resort return the 'default' jail address. */
-		error = prison_get_ip4(cred, laddr);
 		goto done;
 	}
 
@@ -863,8 +861,6 @@ in_pcbladdr(struct inpcb *inp, struct in_addr *faddr, struct in_addr *laddr,
 	 * Try to find the interface of the destination address and then
 	 * take the address from there. That interface is not necessarily
 	 * a loopback interface.
-	 * In case of jails, check that it is an address of the jail
-	 * and if we cannot find, fall back to the 'default' jail address.
 	 */
 	if ((sro.ro_rt->rt_ifp->if_flags & IFF_LOOPBACK) != 0) {
 		struct sockaddr_in sain;
