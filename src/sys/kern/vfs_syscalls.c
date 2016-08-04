@@ -309,7 +309,6 @@ kern_statfs(struct thread *td, char *path, enum uio_seg pathseg,
 	if (priv_check(td, PRIV_VFS_GENERATION)) {
 		bcopy(sp, &sb, sizeof(sb));
 		sb.f_fsid.val[0] = sb.f_fsid.val[1] = 0;
-		prison_enforce_statfs(td->td_ucred, mp, &sb);
 		sp = &sb;
 	}
 	*buf = *sp;
@@ -394,7 +393,6 @@ kern_fstatfs(struct thread *td, int fd, struct statfs *buf)
 	if (priv_check(td, PRIV_VFS_GENERATION)) {
 		bcopy(sp, &sb, sizeof(sb));
 		sb.f_fsid.val[0] = sb.f_fsid.val[1] = 0;
-		prison_enforce_statfs(td->td_ucred, mp, &sb);
 		sp = &sb;
 	}
 	*buf = *sp;
@@ -505,7 +503,6 @@ kern_getfsstat(struct thread *td, struct statfs **buf, size_t bufsize,
 			if (priv_check(td, PRIV_VFS_GENERATION)) {
 				bcopy(sp, &sb, sizeof(sb));
 				sb.f_fsid.val[0] = sb.f_fsid.val[1] = 0;
-				prison_enforce_statfs(td->td_ucred, mp, &sb);
 				sp = &sb;
 			}
 			if (bufseg == UIO_SYSSPACE)
