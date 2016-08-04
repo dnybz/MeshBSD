@@ -1604,8 +1604,7 @@ in_pcblookup_group(struct inpcbinfo *pcbinfo, struct inpcbgroup *pcbgroup,
 			}
 		} /* LIST_FOREACH */
 
-		if (inp == NULL)
-			inp = local_exact;
+		inp = local_exact;
 		if (inp == NULL)
 			inp = local_wild;
 #ifdef INET6
@@ -1660,8 +1659,7 @@ in_pcblookup_group(struct inpcbinfo *pcbinfo, struct inpcbgroup *pcbgroup,
 			}
 		} /* LIST_FOREACH */
 		
-		if (inp == NULL)
-			inp = local_exact;
+		inp = local_exact;
 		if (inp == NULL)
 			inp = local_wild;
 #ifdef INET6

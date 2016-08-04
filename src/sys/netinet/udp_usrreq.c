@@ -1371,8 +1371,7 @@ udp_output(struct inpcb *inp, struct mbuf *m, struct sockaddr *addr,
 				 * Remember addr if jailed, to prevent
 				 * rebinding.
 				 */
-				if (prison_flag(td->td_ucred, PR_IP4))
-					inp->inp_laddr = laddr;
+				
 				inp->inp_lport = lport;
 				if (in_pcbinshash(inp) != 0) {
 					inp->inp_lport = 0;
