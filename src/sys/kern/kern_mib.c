@@ -286,15 +286,15 @@ sysctl_hostname(SYSCTL_HANDLER_ARGS)
 }
 
 SYSCTL_PROC(_kern, KERN_HOSTNAME, hostname,
-    CTLTYPE_STRING | CTLFLAG_RW | CTLFLAG_PRISON | CTLFLAG_MPSAFE,
+    CTLTYPE_STRING | CTLFLAG_RW | CTLFLAG_MPSAFE,
     (void *)(offsetof(struct prison, pr_hostname)), MAXHOSTNAMELEN,
     sysctl_hostname, "A", "Hostname");
 SYSCTL_PROC(_kern, KERN_NISDOMAINNAME, domainname,
-    CTLTYPE_STRING | CTLFLAG_RW | CTLFLAG_PRISON | CTLFLAG_MPSAFE,
+    CTLTYPE_STRING | CTLFLAG_RW | CTLFLAG_MPSAFE,
     (void *)(offsetof(struct prison, pr_domainname)), MAXHOSTNAMELEN,
     sysctl_hostname, "A", "Name of the current YP/NIS domain");
 SYSCTL_PROC(_kern, KERN_HOSTUUID, hostuuid,
-    CTLTYPE_STRING | CTLFLAG_RW | CTLFLAG_PRISON | CTLFLAG_MPSAFE,
+    CTLTYPE_STRING | CTLFLAG_RW | CTLFLAG_MPSAFE,
     (void *)(offsetof(struct prison, pr_hostuuid)), HOSTUUIDLEN,
     sysctl_hostname, "A", "Host UUID");
 
@@ -317,7 +317,7 @@ sysctl_kern_securelvl(SYSCTL_HANDLER_ARGS)
 }
 
 SYSCTL_PROC(_kern, KERN_SECURELVL, securelevel,
-    CTLTYPE_INT|CTLFLAG_RW|CTLFLAG_PRISON, 0, 0, sysctl_kern_securelvl,
+    CTLTYPE_INT|CTLFLAG_RW, 0, 0, sysctl_kern_securelvl,
     "I", "Current secure level");
 
 #ifdef INCLUDE_CONFIG_FILE
@@ -340,7 +340,7 @@ sysctl_hostid(SYSCTL_HANDLER_ARGS)
 }
 
 SYSCTL_PROC(_kern, KERN_HOSTID, hostid,
-    CTLTYPE_ULONG | CTLFLAG_RW | CTLFLAG_PRISON | CTLFLAG_MPSAFE | CTLFLAG_CAPRD,
+    CTLTYPE_ULONG | CTLFLAG_RW | CTLFLAG_MPSAFE | CTLFLAG_CAPRD,
     NULL, 0, sysctl_hostid, "LU", "Host ID");
 
 /*

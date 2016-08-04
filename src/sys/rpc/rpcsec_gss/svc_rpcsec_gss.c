@@ -65,7 +65,6 @@ __FBSDID("$FreeBSD: head/sys/rpc/rpcsec_gss/svc_rpcsec_gss.c 298336 2016-04-20 0
 
 #include <sys/param.h>
 #include <sys/systm.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/kobj.h>
 #include <sys/lock.h>

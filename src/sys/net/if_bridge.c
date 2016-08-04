@@ -112,7 +112,6 @@ __FBSDID("$FreeBSD: head/sys/net/if_bridge.c 284348 2015-06-13 19:39:21Z kp $");
 #include <sys/malloc.h>
 #include <sys/protosw.h>
 #include <sys/systm.h>
-#include <sys/jail.h>
 #include <sys/time.h>
 #include <sys/socket.h> /* for net/if.h */
 #include <sys/sockio.h>

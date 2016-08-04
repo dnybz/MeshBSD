@@ -59,7 +59,6 @@ __FBSDID("$FreeBSD: head/sys/dev/altera/atse/if_atse.c 298955 2016-05-03 03:41:2
 #include <sys/kernel.h>
 #include <sys/bus.h>
 #include <sys/endian.h>
-#include <sys/jail.h>
 #include <sys/lock.h>
 #include <sys/module.h>
 #include <sys/mutex.h>

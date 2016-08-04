@@ -1808,7 +1808,7 @@ tcp_getcred(SYSCTL_HANDLER_ARGS)
 }
 
 SYSCTL_PROC(_net_inet_tcp, OID_AUTO, getcred,
-    CTLTYPE_OPAQUE|CTLFLAG_RW|CTLFLAG_PRISON, 0, 0,
+    CTLTYPE_OPAQUE|CTLFLAG_RW, 0, 0,
     tcp_getcred, "S,xucred", "Get the xucred of a TCP connection");
 #endif /* INET */
 
@@ -1872,7 +1872,7 @@ tcp6_getcred(SYSCTL_HANDLER_ARGS)
 }
 
 SYSCTL_PROC(_net_inet6_tcp6, OID_AUTO, getcred,
-    CTLTYPE_OPAQUE|CTLFLAG_RW|CTLFLAG_PRISON, 0, 0,
+    CTLTYPE_OPAQUE|CTLFLAG_RW, 0, 0,
     tcp6_getcred, "S,xucred", "Get the xucred of a TCP6 connection");
 #endif /* INET6 */
 

@@ -973,7 +973,7 @@ udp_getcred(SYSCTL_HANDLER_ARGS)
 }
 
 SYSCTL_PROC(_net_inet_udp, OID_AUTO, getcred,
-    CTLTYPE_OPAQUE|CTLFLAG_RW|CTLFLAG_PRISON, 0, 0,
+    CTLTYPE_OPAQUE|CTLFLAG_RW, 0, 0,
     udp_getcred, "S,xucred", "Get the xucred of a UDP connection");
 #endif /* INET */
 

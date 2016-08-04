@@ -51,7 +51,6 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_sysctl.c 298819 2016-04-29 22:15:33Z pfg 
 #include <sys/malloc.h>
 #include <sys/priv.h>
 #include <sys/proc.h>
-#include <sys/jail.h>
 #include <sys/lock.h>
 #include <sys/mutex.h>
 #include <sys/rmlock.h>
