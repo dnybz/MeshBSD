@@ -50,7 +50,6 @@
 #include <sys/namei.h>
 #include <sys/proc.h>
 #include <sys/vnode.h>
-#include <sys/jail.h>
 
 #include <fs/nullfs/null.h>
 
@@ -83,8 +82,6 @@ nullfs_mount(struct mount *mp)
 
 	NULLFSDEBUG("nullfs_mount(mp = %p)\n", (void *)mp);
 
-	if (!prison_allow(td->td_ucred, PR_ALLOW_MOUNT_NULLFS))
-		return (EPERM);
 	if (mp->mnt_flag & MNT_ROOTFS)
 		return (EOPNOTSUPP);
 

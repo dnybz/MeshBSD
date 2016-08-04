@@ -31,8 +31,6 @@
 #ifndef _PSEUDOFS_H_INCLUDED
 #define _PSEUDOFS_H_INCLUDED
 
-#include <sys/jail.h>
-
 /*
  * Opaque structures
  */
@@ -283,8 +281,6 @@ static struct pfs_info name##_info = {					\
 									\
 static int								\
 _##name##_mount(struct mount *mp) {					\
-        if (jflag && !prison_allow(curthread->td_ucred, jflag))		\
-                return (EPERM);						\
 	return pfs_mount(&name##_info, mp);				\
 }									\
 									\
