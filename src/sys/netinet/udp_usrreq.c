@@ -48,7 +48,6 @@ __FBSDID("$FreeBSD: head/sys/netinet/udp_usrreq.c 298747 2016-04-28 15:53:10Z rr
 #include <sys/param.h>
 #include <sys/domain.h>
 #include <sys/eventhandler.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/lock.h>
 #include <sys/malloc.h>

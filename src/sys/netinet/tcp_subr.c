@@ -46,7 +46,6 @@ __FBSDID("$FreeBSD: head/sys/netinet/tcp_subr.c 300096 2016-05-17 23:14:17Z gleb
 #include <sys/kernel.h>
 #include <sys/khelp.h>
 #include <sys/sysctl.h>
-#include <sys/jail.h>
 #include <sys/malloc.h>
 #include <sys/refcount.h>
 #include <sys/mbuf.h>
