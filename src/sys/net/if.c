@@ -2799,8 +2799,6 @@ again:
 		TAILQ_FOREACH(ifa, &ifp->if_addrhead, ifa_link) {
 			struct sockaddr *sa = ifa->ifa_addr;
 
-			if (prison_if(curthread->td_ucred, sa) != 0)
-				continue;
 			addrs++;
 			if (sa->sa_len <= sizeof(*sa)) {
 				ifr.ifr_addr = *sa;

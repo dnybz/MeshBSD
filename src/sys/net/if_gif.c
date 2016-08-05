@@ -37,7 +37,6 @@ __FBSDID("$FreeBSD: head/sys/net/if_gif.c 297793 2016-04-10 23:07:00Z pfg $");
 
 #include <sys/param.h>
 #include <sys/systm.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/lock.h>
 #include <sys/malloc.h>
@@ -875,19 +874,12 @@ gif_ioctl(struct ifnet *ifp, u_long cmd, caddr_t data)
 #ifdef INET
 		case SIOCGIFPSRCADDR:
 		case SIOCGIFPDSTADDR:
-			error = prison_if(curthread->td_ucred,
-			    (struct sockaddr *)sin);
-			if (error != 0)
-				memset(sin, 0, sizeof(*sin));
 			break;
 #endif
 #ifdef INET6
 		case SIOCGIFPSRCADDR_IN6:
 		case SIOCGIFPDSTADDR_IN6:
-			error = prison_if(curthread->td_ucred,
-			    (struct sockaddr *)sin6);
-			if (error == 0)
-				error = sa6_recoverscope(sin6);
+			error = sa6_recoverscope(sin6);
 			if (error != 0)
 				memset(sin6, 0, sizeof(*sin6));
 #endif

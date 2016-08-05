@@ -677,10 +677,7 @@ route_output(struct mbuf *m, struct socket *so, ...)
 
 report:
 		RT_LOCK_ASSERT(rt);
-		if ((rt->rt_flags & RTF_HOST) == 0
-		    ? jailed_without_vnet(curthread->td_ucred)
-		    : prison_if(curthread->td_ucred,
-		    rt_key(rt)) != 0) {
+		if ((rt->rt_flags & RTF_HOST) == 0) {
 			RT_UNLOCK(rt);
 			senderr(ESRCH);
 		}
@@ -1402,9 +1399,7 @@ sysctl_dumpentry(struct radix_node *rn, void *vw)
 
 	if (w->w_op == NET_RT_FLAGS && !(rt->rt_flags & w->w_arg))
 		return 0;
-	if ((rt->rt_flags & RTF_HOST) == 0
-	    ? jailed_without_vnet(w->w_req->td->td_ucred)
-	    : prison_if(w->w_req->td->td_ucred, rt_key(rt)) != 0)
+	if ((rt->rt_flags & RTF_HOST) == 0)
 		return (0);
 	bzero((caddr_t)&info, sizeof(info));
 	info.rti_info[RTAX_DST] = rt_key(rt);
@@ -1605,9 +1600,7 @@ sysctl_iflist(int af, struct walkarg *w)
 		while ((ifa = TAILQ_NEXT(ifa, ifa_link)) != NULL) {
 			if (af && af != ifa->ifa_addr->sa_family)
 				continue;
-			if (prison_if(w->w_req->td->td_ucred,
-			    ifa->ifa_addr) != 0)
-				continue;
+
 			info.rti_info[RTAX_IFA] = ifa->ifa_addr;
 			info.rti_info[RTAX_NETMASK] = rtsock_fix_netmask(
 			    ifa->ifa_addr, ifa->ifa_netmask, &ss);
@@ -1658,9 +1651,7 @@ sysctl_ifmalist(int af, struct walkarg *w)
 		TAILQ_FOREACH(ifma, &ifp->if_multiaddrs, ifma_link) {
 			if (af && af != ifma->ifma_addr->sa_family)
 				continue;
-			if (prison_if(w->w_req->td->td_ucred,
-			    ifma->ifma_addr) != 0)
-				continue;
+
 			info.rti_info[RTAX_IFA] = ifma->ifma_addr;
 			info.rti_info[RTAX_GATEWAY] =
 			    (ifma->ifma_addr->sa_family != AF_LINK) ?

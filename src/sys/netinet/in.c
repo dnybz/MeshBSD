@@ -1341,15 +1341,12 @@ in_lltable_dump_entry(struct lltable *llt, struct llentry *lle,
 				return (0);
 			/* Skip if jailed and not a valid IP of the prison. */
 			lltable_fill_sa_entry(lle,(struct sockaddr *)&arpc.sin);
-			if (prison_if(wr->td->td_ucred,
-			    (struct sockaddr *)&arpc.sin) != 0)
-				return (0);
-			/*
-			 * produce a msg made of:
-			 *  struct rt_msghdr;
-			 *  struct sockaddr_in; (IPv4)
-			 *  struct sockaddr_dl;
-			 */
+/*
+ * produce a msg made of:
+ *  struct rt_msghdr;
+ *  struct sockaddr_in; (IPv4)
+ *  struct sockaddr_dl;
+ */
 			arpc.rtm.rtm_msglen = sizeof(arpc);
 			arpc.rtm.rtm_version = RTM_VERSION;
 			arpc.rtm.rtm_type = RTM_GET;

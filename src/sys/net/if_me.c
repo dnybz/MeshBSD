@@ -28,7 +28,6 @@
 __FBSDID("$FreeBSD: head/sys/net/if_me.c 288575 2015-10-03 09:15:23Z hrs $");
 
 #include <sys/param.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/lock.h>
 #include <sys/libkern.h>
@@ -296,9 +295,6 @@ me_ioctl(struct ifnet *ifp, u_long cmd, caddr_t data)
 			break;
 		}
 		ME_RUNLOCK(sc);
-		error = prison_if(curthread->td_ucred, sintosa(src));
-		if (error != 0)
-			memset(src, 0, sizeof(*src));
 		break;
 	case SIOCGTUNFIB:
 		ifr->ifr_fib = sc->me_fibnum;
