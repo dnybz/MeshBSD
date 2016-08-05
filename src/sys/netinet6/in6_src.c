@@ -327,11 +327,6 @@ in6_selectsrc(uint32_t fibnum, struct sockaddr_in6 *dstsock,
 		if (!V_ip6_use_deprecated && IFA6_IS_DEPRECATED(ia))
 			continue;
 
-		/* If jailed only take addresses of the jail into account. */
-		if (cred != NULL &&
-		    prison_check_ip6(cred, &ia->ia_addr.sin6_addr) != 0)
-			continue;
-
 		/* Rule 1: Prefer same address */
 		if (IN6_ARE_ADDR_EQUAL(&dst, &ia->ia_addr.sin6_addr)) {
 			ia_best = ia;

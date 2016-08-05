@@ -67,7 +67,6 @@ __FBSDID("$FreeBSD: head/sys/netinet6/raw_ip6.c 298075 2016-04-15 17:30:33Z pfg 
 
 #include <sys/param.h>
 #include <sys/errno.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/lock.h>
 #include <sys/malloc.h>
@@ -187,17 +186,7 @@ rip6_input(struct mbuf **mp, int *offp, int proto)
 		if (!IN6_IS_ADDR_UNSPECIFIED(&in6p->in6p_faddr) &&
 		    !IN6_ARE_ADDR_EQUAL(&in6p->in6p_faddr, &ip6->ip6_src))
 			continue;
-		if (jailed_without_vnet(in6p->inp_cred)) {
-			/*
-			 * Allow raw socket in jail to receive multicast;
-			 * assume process had PRIV_NETINET_RAW at attach,
-			 * and fall through into normal filter path if so.
-			 */
-			if (!IN6_IS_ADDR_MULTICAST(&ip6->ip6_dst) &&
-			    prison_check_ip6(in6p->inp_cred,
-			    &ip6->ip6_dst) != 0)
-				continue;
-		}
+
 		INP_RLOCK(in6p);
 		if (in6p->in6p_cksum != -1) {
 			RIP6STAT_INC(rip6s_isum);
@@ -466,9 +455,7 @@ rip6_output(struct mbuf *m, struct socket *so, ...)
 
 	if (error)
 		goto bad;
-	error = prison_check_ip6(in6p->inp_cred, &in6a);
-	if (error != 0)
-		goto bad;
+
 	ip6->ip6_src = in6a;
 
 	ip6->ip6_dst = dstsock->sin6_addr;
@@ -740,8 +727,7 @@ rip6_bind(struct socket *so, struct sockaddr *nam, struct thread *td)
 
 	if (nam->sa_len != sizeof(*addr))
 		return (EINVAL);
-	if ((error = prison_check_ip6(td->td_ucred, &addr->sin6_addr)) != 0)
-		return (error);
+
 	if (TAILQ_EMPTY(&V_ifnet) || addr->sin6_family != AF_INET6)
 		return (EADDRNOTAVAIL);
 	if ((error = sa6_embedscope(addr, V_ip6_use_defzone)) != 0)

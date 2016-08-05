@@ -70,7 +70,6 @@ __FBSDID("$FreeBSD: head/sys/netinet6/in6.c 299824 2016-05-15 03:01:40Z markj $"
 #include <sys/param.h>
 #include <sys/eventhandler.h>
 #include <sys/errno.h>
-#include <sys/jail.h>
 #include <sys/malloc.h>
 #include <sys/socket.h>
 #include <sys/socketvar.h>
@@ -388,9 +387,7 @@ in6_control(struct socket *so, u_long cmd, caddr_t data,
 			error = in6_setscope(&sa6->sin6_addr, ifp, NULL);
 		if (error != 0)
 			return (error);
-		if (td != NULL && (error = prison_check_ip6(td->td_ucred,
-		    &sa6->sin6_addr)) != 0)
-			return (error);
+
 		ia = in6ifa_ifpwithaddr(ifp, &sa6->sin6_addr);
 	} else
 		ia = NULL;
