@@ -1402,10 +1402,9 @@ cr_seeothergids(struct ucred *u1, struct ucred *u2)
 int
 cr_cansee(struct ucred *u1, struct ucred *u2)
 {
+
 	int error;
 
-	if ((error = prison_check(u1, u2)))
-		return (error);
 #ifdef MAC
 	if ((error = mac_cred_check_visible(u1, u2)))
 		return (error);
@@ -1464,9 +1463,7 @@ cr_cansignal(struct ucred *cred, struct proc *proc, int signum)
 	 * Jail semantics limit the scope of signalling to proc in the
 	 * same jail as cred, if cred is in jail.
 	 */
-	error = prison_check(cred, proc->p_ucred);
-	if (error)
-		return (error);
+
 #ifdef MAC
 	if ((error = mac_proc_check_signal(cred, proc, signum)))
 		return (error);
@@ -1582,8 +1579,7 @@ p_cansched(struct thread *td, struct proc *p)
 	PROC_LOCK_ASSERT(p, MA_OWNED);
 	if (td->td_proc == p)
 		return (0);
-	if ((error = prison_check(td->td_ucred, p->p_ucred)))
-		return (error);
+
 #ifdef MAC
 	if ((error = mac_proc_check_sched(td->td_ucred, p)))
 		return (error);
@@ -1639,8 +1635,6 @@ p_candebug(struct thread *td, struct proc *p)
 	}
 	if (td->td_proc == p)
 		return (0);
-	if ((error = prison_check(td->td_ucred, p->p_ucred)))
-		return (error);
 #ifdef MAC
 	if ((error = mac_proc_check_debug(td->td_ucred, p)))
 		return (error);
@@ -1729,12 +1723,9 @@ p_candebug(struct thread *td, struct proc *p)
 int
 cr_canseesocket(struct ucred *cred, struct socket *so)
 {
-	int error;
+#ifdef MAC	
+    int error;
 
-	error = prison_check(cred, so->so_cred);
-	if (error)
-		return (ENOENT);
-#ifdef MAC
 	error = mac_socket_check_visible(cred, so);
 	if (error)
 		return (error);
@@ -1755,12 +1746,9 @@ cr_canseesocket(struct ucred *cred, struct socket *so)
 int
 cr_canseeinpcb(struct ucred *cred, struct inpcb *inp)
 {
+    #ifdef MAC
 	int error;
 
-	error = prison_check(cred, inp->inp_cred);
-	if (error)
-		return (ENOENT);
-#ifdef MAC
 	INP_LOCK_ASSERT(inp);
 	error = mac_inpcb_check_visible(cred, inp);
 	if (error)
@@ -1787,12 +1775,12 @@ cr_canseeinpcb(struct ucred *cred, struct inpcb *inp)
 int
 p_canwait(struct thread *td, struct proc *p)
 {
-	int error;
-
+#ifdef MAC	
+    int error;
+#endif
 	KASSERT(td == curthread, ("%s: td not curthread", __func__));
 	PROC_LOCK_ASSERT(p, MA_OWNED);
-	if ((error = prison_check(td->td_ucred, p->p_ucred)))
-		return (error);
+
 #ifdef MAC
 	if ((error = mac_proc_check_wait(td->td_ucred, p)))
 		return (error);

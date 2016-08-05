@@ -686,13 +686,6 @@ vfs_suser(struct mount *mp, struct thread *td)
 		return (EPERM);
 
 	/*
-	 * If the file system was mounted outside the jail of the calling
-	 * thread, deny immediately.
-	 */
-	if (prison_check(td->td_ucred, mp->mnt_cred) != 0)
-		return (EPERM);
-
-	/*
 	 * If file system supports delegated administration, we don't check
 	 * for the PRIV_VFS_MOUNT_OWNER privilege - it will be better verified
 	 * by the file system itself.
