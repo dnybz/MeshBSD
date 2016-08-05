@@ -33,7 +33,7 @@
 
 /*
  * Lock key:
- *   (c) container lock (e.g. jail's pr_mtx) and/or osd_object_lock
+ *   (c) container lock and/or osd_object_lock
  *   (l) osd_list_lock
  */
 struct osd {
@@ -45,8 +45,7 @@ struct osd {
 #ifdef _KERNEL
 
 #define	OSD_THREAD	0
-#define	OSD_JAIL	1
-#define	OSD_KHELP	2
+#define	OSD_KHELP	1
 
 #define	OSD_FIRST	OSD_THREAD
 #define	OSD_LAST	OSD_KHELP
@@ -87,23 +86,6 @@ void osd_exit(u_int type, struct osd *osd);
 	osd_call(OSD_THREAD, (method), (td), (data))
 #define	osd_thread_exit(td)						\
 	osd_exit(OSD_THREAD, &(td)->td_osd)
-
-#define	osd_jail_register(destructor, methods)				\
-	osd_register(OSD_JAIL, (destructor), (methods))
-#define	osd_jail_deregister(slot)					\
-	osd_deregister(OSD_JAIL, (slot))
-#define	osd_jail_set(pr, slot, value)					\
-	osd_set(OSD_JAIL, &(pr)->pr_osd, (slot), (value))
-#define	osd_jail_set_reserved(pr, slot, rsv, value)			\
-	osd_set_reserved(OSD_JAIL, &(pr)->pr_osd, (slot), (rsv), (value))
-#define	osd_jail_get(pr, slot)						\
-	osd_get(OSD_JAIL, &(pr)->pr_osd, (slot))
-#define	osd_jail_del(pr, slot)						\
-	osd_del(OSD_JAIL, &(pr)->pr_osd, (slot))
-#define	osd_jail_call(pr, method, data)					\
-	osd_call(OSD_JAIL, (method), (pr), (data))
-#define	osd_jail_exit(pr)						\
-	osd_exit(OSD_JAIL, &(pr)->pr_osd)
 
 #endif	/* _KERNEL */
 

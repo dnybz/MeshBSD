@@ -32,7 +32,6 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_osd.c 298661 2016-04-26 19:57:35Z cem $")
 #include <sys/systm.h>
 #include <sys/sysctl.h>
 #include <sys/errno.h>
-#include <sys/jail.h>
 #include <sys/malloc.h>
 #include <sys/lock.h>
 #include <sys/mutex.h>
@@ -80,9 +79,7 @@ static void do_osd_del(u_int type, struct osd *osd, u_int slot,
 /*
  * List of objects with OSD.
  */
-struct osd_master osdm[OSD_LAST + 1] = {
-	[OSD_JAIL] = { .osd_nmethods = PR_MAXMETHOD },
-};
+struct osd_master osdm[OSD_LAST + 1];
 
 static void
 osd_default_destructor(void *value __unused)

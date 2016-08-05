@@ -17,9 +17,8 @@ After I've read
  | https://www.kernel.org/doc/Documentation/stable_api_nonsense.txt
  
 I was disgusted and I've decided to provide a set 
-of components to build operating systems based on
-compoments from FreeBSD and OpenBSD operating
-system. 
+of components to build an operating system based on
+compoments from FreeBSD and OpenBSD operating system. 
 
 This operation is divided into three major stages:
 --------------------------------------------------
