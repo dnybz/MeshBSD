@@ -46,7 +46,32 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-
+/*
+ * Copyright (c) 2016 Henning Matyschok
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+ 
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD: head/sys/kern/sysv_msg.c 298661 2016-04-26 19:57:35Z cem $");
 
@@ -71,7 +96,6 @@ __FBSDID("$FreeBSD: head/sys/kern/sysv_msg.c 298661 2016-04-26 19:57:35Z cem $")
 #include <sys/sysent.h>
 #include <sys/sysctl.h>
 #include <sys/malloc.h>
-#include <sys/jail.h>
 
 #include <security/mac/mac_framework.h>
 
@@ -83,14 +107,6 @@ static int msginit(void);
 static int msgunload(void);
 static int sysvmsg_modload(struct module *, int, void *);
 static void msq_remove(struct msqid_kernel *);
-static struct prison *msg_find_prison(struct ucred *);
-static int msq_prison_cansee(struct prison *, struct msqid_kernel *);
-static int msg_prison_check(void *, void *);
-static int msg_prison_set(void *, void *);
-static int msg_prison_get(void *, void *);
-static int msg_prison_remove(void *, void *);
-static void msg_prison_cleanup(struct prison *);
-
 
 #ifdef MSG_DEBUG
 #define DPRINTF(a)	printf a
@@ -165,7 +181,6 @@ static struct msgmap *msgmaps;	/* MSGSEG msgmap structures */
 static struct msg *msghdrs;	/* MSGTQL msg headers */
 static struct msqid_kernel *msqids;	/* MSGMNI msqid_kernel struct's */
 static struct mtx msq_mtx;	/* global mutex for message queues. */
-static unsigned msg_prison_slot;/* prison OSD slot */
 
 static struct syscall_helper_data msg_syscalls[] = {
 	SYSCALL_INIT_HELPER(msgctl),
@@ -205,15 +220,7 @@ static struct syscall_helper_data msg32_syscalls[] = {
 static int
 msginit()
 {
-	struct prison *pr;
-	void **rsv;
 	int i, error;
-	osd_method_t methods[PR_MAXMETHOD] = {
-	    [PR_METHOD_CHECK] =		msg_prison_check,
-	    [PR_METHOD_SET] =		msg_prison_set,
-	    [PR_METHOD_GET] =		msg_prison_get,
-	    [PR_METHOD_REMOVE] =	msg_prison_remove,
-	};
 
 	msginfo.msgmax = msginfo.msgseg * msginfo.msgssz;
 	msgpool = malloc(msginfo.msgmax, M_MSG, M_WAITOK);
@@ -271,29 +278,6 @@ msginit()
 	}
 	mtx_init(&msq_mtx, "msq", NULL, MTX_DEF);
 
-	/* Set current prisons according to their allow.sysvipc. */
-	msg_prison_slot = osd_jail_register(NULL, methods);
-	rsv = osd_reserve(msg_prison_slot);
-	prison_lock(&prison0);
-	(void)osd_jail_set_reserved(&prison0, msg_prison_slot, rsv, &prison0);
-	prison_unlock(&prison0);
-	rsv = NULL;
-	sx_slock(&allprison_lock);
-	TAILQ_FOREACH(pr, &allprison, pr_list) {
-		if (rsv == NULL)
-			rsv = osd_reserve(msg_prison_slot);
-		prison_lock(pr);
-		if ((pr->pr_allow & PR_ALLOW_SYSVIPC) && pr->pr_ref > 0) {
-			(void)osd_jail_set_reserved(pr, msg_prison_slot, rsv,
-			    &prison0);
-			rsv = NULL;
-		}
-		prison_unlock(pr);
-	}
-	if (rsv != NULL)
-		osd_free_reserved(rsv);
-	sx_sunlock(&allprison_lock);
-
 	error = syscall_helper_register(msg_syscalls, SY_THR_STATIC_KLD);
 	if (error != 0)
 		return (error);
@@ -334,8 +318,6 @@ msgunload()
 	if (msqid != msginfo.msgmni)
 		return (EBUSY);
 
-	if (msg_prison_slot != 0)
-		osd_jail_deregister(msg_prison_slot);
 #ifdef MAC
 	for (i = 0; i < msginfo.msgtql; i++)
 		mac_sysvmsg_destroy(&msghdrs[i]);
@@ -448,29 +430,6 @@ msq_remove(struct msqid_kernel *msqkptr)
 	wakeup(msqkptr);
 }
 
-static struct prison *
-msg_find_prison(struct ucred *cred)
-{
-	struct prison *pr, *rpr;
-
-	pr = cred->cr_prison;
-	prison_lock(pr);
-	rpr = osd_jail_get(pr, msg_prison_slot);
-	prison_unlock(pr);
-	return rpr;
-}
-
-static int
-msq_prison_cansee(struct prison *rpr, struct msqid_kernel *msqkptr)
-{
-
-	if (msqkptr->cred == NULL ||
-	    !(rpr == msqkptr->cred->cr_prison ||
-	      prison_ischild(rpr, msqkptr->cred->cr_prison)))
-		return (EINVAL);
-	return (0);
-}
-
 #ifndef _SYS_SYSPROTO_H_
 struct msgctl_args {
 	int	msqid;
@@ -507,11 +466,6 @@ kern_msgctl(td, msqid, cmd, msqbuf)
 {
 	int rval, error, msqix;
 	register struct msqid_kernel *msqkptr;
-	struct prison *rpr;
-
-	rpr = msg_find_prison(td->td_ucred);
-	if (rpr == NULL)
-		return (ENOSYS);
 
 	msqix = IPCID_TO_IX(msqid);
 
@@ -532,12 +486,6 @@ kern_msgctl(td, msqid, cmd, msqbuf)
 	if (msqkptr->u.msg_perm.seq != IPCID_TO_SEQ(msqid)) {
 		DPRINTF(("wrong sequence number\n"));
 		error = EINVAL;
-		goto done2;
-	}
-
-	error = msq_prison_cansee(rpr, msqkptr);
-	if (error != 0) {
-		DPRINTF(("requester can't see prison\n"));
 		goto done2;
 	}
 
@@ -615,8 +563,6 @@ kern_msgctl(td, msqid, cmd, msqbuf)
 			goto done2;
 		}
 		*msqbuf = msqkptr->u;
-		if (td->td_ucred->cr_prison != msqkptr->cred->cr_prison)
-			msqbuf->msg_perm.key = IPC_PRIVATE;
 		break;
 
 	default:
@@ -652,16 +598,11 @@ sys_msgget(td, uap)
 
 	DPRINTF(("msgget(0x%x, 0%o)\n", key, msgflg));
 
-	if (msg_find_prison(cred) == NULL)
-		return (ENOSYS);
-
 	mtx_lock(&msq_mtx);
 	if (key != IPC_PRIVATE) {
 		for (msqid = 0; msqid < msginfo.msgmni; msqid++) {
 			msqkptr = &msqids[msqid];
 			if (msqkptr->u.msg_qbytes != 0 &&
-			    msqkptr->cred != NULL &&
-			    msqkptr->cred->cr_prison == cred->cr_prison &&
 			    msqkptr->u.msg_perm.key == key)
 				break;
 		}
@@ -774,15 +715,10 @@ kern_msgsnd(td, msqid, msgp, msgsz, msgflg, mtype)
 	int msqix, segs_needed, error = 0;
 	register struct msqid_kernel *msqkptr;
 	register struct msg *msghdr;
-	struct prison *rpr;
 	short next;
 #ifdef RACCT
 	size_t saved_msgsz;
 #endif
-
-	rpr = msg_find_prison(td->td_ucred);
-	if (rpr == NULL)
-		return (ENOSYS);
 
 	mtx_lock(&msq_mtx);
 	msqix = IPCID_TO_IX(msqid);
@@ -803,11 +739,6 @@ kern_msgsnd(td, msqid, msgp, msgsz, msgflg, mtype)
 	if (msqkptr->u.msg_perm.seq != IPCID_TO_SEQ(msqid)) {
 		DPRINTF(("wrong sequence number\n"));
 		error = EINVAL;
-		goto done2;
-	}
-
-	if ((error = msq_prison_cansee(rpr, msqkptr))) {
-		DPRINTF(("requester can't see prison\n"));
 		goto done2;
 	}
 
@@ -1149,13 +1080,8 @@ kern_msgrcv(td, msqid, msgp, msgsz, msgtyp, msgflg, mtype)
 	size_t len;
 	register struct msqid_kernel *msqkptr;
 	register struct msg *msghdr;
-	struct prison *rpr;
 	int msqix, error = 0;
 	short next;
-
-	rpr = msg_find_prison(td->td_ucred);
-	if (rpr == NULL)
-		return (ENOSYS);
 
 	msqix = IPCID_TO_IX(msqid);
 
@@ -1175,11 +1101,6 @@ kern_msgrcv(td, msqid, msgp, msgsz, msgtyp, msgflg, mtype)
 	if (msqkptr->u.msg_perm.seq != IPCID_TO_SEQ(msqid)) {
 		DPRINTF(("wrong sequence number\n"));
 		error = EINVAL;
-		goto done2;
-	}
-
-	if ((error = msq_prison_cansee(rpr, msqkptr))) {
-		DPRINTF(("requester can't see prison\n"));
 		goto done2;
 	}
 
@@ -1423,22 +1344,16 @@ static int
 sysctl_msqids(SYSCTL_HANDLER_ARGS)
 {
 	struct msqid_kernel tmsqk;
-	struct prison *pr, *rpr;
 	int error, i;
 
-	pr = req->td->td_ucred->cr_prison;
-	rpr = msg_find_prison(req->td->td_ucred);
 	error = 0;
 	for (i = 0; i < msginfo.msgmni; i++) {
 		mtx_lock(&msq_mtx);
-		if (msqids[i].u.msg_qbytes == 0 || rpr == NULL ||
-		    msq_prison_cansee(rpr, &msqids[i]) != 0)
+		if (msqids[i].u.msg_qbytes == 0) {
 			bzero(&tmsqk, sizeof(tmsqk));
-		else {
+		} else { 
 			tmsqk = msqids[i];
-			if (tmsqk.cred->cr_prison != pr)
-				tmsqk.u.msg_perm.key = IPC_PRIVATE;
-		}
+        }
 		mtx_unlock(&msq_mtx);
 		error = SYSCTL_OUT(req, &tmsqk, sizeof(tmsqk));
 		if (error != 0)
@@ -1462,181 +1377,6 @@ SYSCTL_INT(_kern_ipc, OID_AUTO, msgseg, CTLFLAG_RDTUN, &msginfo.msgseg, 0,
 SYSCTL_PROC(_kern_ipc, OID_AUTO, msqids,
     CTLTYPE_OPAQUE | CTLFLAG_RD | CTLFLAG_MPSAFE,
     NULL, 0, sysctl_msqids, "", "Message queue IDs");
-
-static int
-msg_prison_check(void *obj, void *data)
-{
-	struct prison *pr = obj;
-	struct prison *prpr;
-	struct vfsoptlist *opts = data;
-	int error, jsys;
-
-	/*
-	 * sysvmsg is a jailsys integer.
-	 * It must be "disable" if the parent jail is disabled.
-	 */
-	error = vfs_copyopt(opts, "sysvmsg", &jsys, sizeof(jsys));
-	if (error != ENOENT) {
-		if (error != 0)
-			return (error);
-		switch (jsys) {
-		case JAIL_SYS_DISABLE:
-			break;
-		case JAIL_SYS_NEW:
-		case JAIL_SYS_INHERIT:
-			prison_lock(pr->pr_parent);
-			prpr = osd_jail_get(pr->pr_parent, msg_prison_slot);
-			prison_unlock(pr->pr_parent);
-			if (prpr == NULL)
-				return (EPERM);
-			break;
-		default:
-			return (EINVAL);
-		}
-	}
-
-	return (0);
-}
-
-static int
-msg_prison_set(void *obj, void *data)
-{
-	struct prison *pr = obj;
-	struct prison *tpr, *orpr, *nrpr, *trpr;
-	struct vfsoptlist *opts = data;
-	void *rsv;
-	int jsys, descend;
-
-	/*
-	 * sysvmsg controls which jail is the root of the associated msgs (this
-	 * jail or same as the parent), or if the feature is available at all.
-	 */
-	if (vfs_copyopt(opts, "sysvmsg", &jsys, sizeof(jsys)) == ENOENT)
-		jsys = vfs_flagopt(opts, "allow.sysvipc", NULL, 0)
-		    ? JAIL_SYS_INHERIT
-		    : vfs_flagopt(opts, "allow.nosysvipc", NULL, 0)
-		    ? JAIL_SYS_DISABLE
-		    : -1;
-	if (jsys == JAIL_SYS_DISABLE) {
-		prison_lock(pr);
-		orpr = osd_jail_get(pr, msg_prison_slot);
-		if (orpr != NULL)
-			osd_jail_del(pr, msg_prison_slot);
-		prison_unlock(pr);
-		if (orpr != NULL) {
-			if (orpr == pr)
-				msg_prison_cleanup(pr);
-			/* Disable all child jails as well. */
-			FOREACH_PRISON_DESCENDANT(pr, tpr, descend) {
-				prison_lock(tpr);
-				trpr = osd_jail_get(tpr, msg_prison_slot);
-				if (trpr != NULL) {
-					osd_jail_del(tpr, msg_prison_slot);
-					prison_unlock(tpr);
-					if (trpr == tpr)
-						msg_prison_cleanup(tpr);
-				} else {
-					prison_unlock(tpr);
-					descend = 0;
-				}
-			}
-		}
-	} else if (jsys != -1) {
-		if (jsys == JAIL_SYS_NEW)
-			nrpr = pr;
-		else {
-			prison_lock(pr->pr_parent);
-			nrpr = osd_jail_get(pr->pr_parent, msg_prison_slot);
-			prison_unlock(pr->pr_parent);
-		}
-		rsv = osd_reserve(msg_prison_slot);
-		prison_lock(pr);
-		orpr = osd_jail_get(pr, msg_prison_slot);
-		if (orpr != nrpr)
-			(void)osd_jail_set_reserved(pr, msg_prison_slot, rsv,
-			    nrpr);
-		else
-			osd_free_reserved(rsv);
-		prison_unlock(pr);
-		if (orpr != nrpr) {
-			if (orpr == pr)
-				msg_prison_cleanup(pr);
-			if (orpr != NULL) {
-				/* Change child jails matching the old root, */
-				FOREACH_PRISON_DESCENDANT(pr, tpr, descend) {
-					prison_lock(tpr);
-					trpr = osd_jail_get(tpr,
-					    msg_prison_slot);
-					if (trpr == orpr) {
-						(void)osd_jail_set(tpr,
-						    msg_prison_slot, nrpr);
-						prison_unlock(tpr);
-						if (trpr == tpr)
-							msg_prison_cleanup(tpr);
-					} else {
-						prison_unlock(tpr);
-						descend = 0;
-					}
-				}
-			}
-		}
-	}
-
-	return (0);
-}
-
-static int
-msg_prison_get(void *obj, void *data)
-{
-	struct prison *pr = obj;
-	struct prison *rpr;
-	struct vfsoptlist *opts = data;
-	int error, jsys;
-
-	/* Set sysvmsg based on the jail's root prison. */
-	prison_lock(pr);
-	rpr = osd_jail_get(pr, msg_prison_slot);
-	prison_unlock(pr);
-	jsys = rpr == NULL ? JAIL_SYS_DISABLE
-	    : rpr == pr ? JAIL_SYS_NEW : JAIL_SYS_INHERIT;
-	error = vfs_setopt(opts, "sysvmsg", &jsys, sizeof(jsys));
-	if (error == ENOENT)
-		error = 0;
-	return (error);
-}
-
-static int
-msg_prison_remove(void *obj, void *data __unused)
-{
-	struct prison *pr = obj;
-	struct prison *rpr;
-
-	prison_lock(pr);
-	rpr = osd_jail_get(pr, msg_prison_slot);
-	prison_unlock(pr);
-	if (rpr == pr)
-		msg_prison_cleanup(pr);
-	return (0);
-}
-
-static void
-msg_prison_cleanup(struct prison *pr)
-{
-	struct msqid_kernel *msqkptr;
-	int i;
-
-	/* Remove any msqs that belong to this jail. */
-	mtx_lock(&msq_mtx);
-	for (i = 0; i < msginfo.msgmni; i++) {
-		msqkptr = &msqids[i];
-		if (msqkptr->u.msg_qbytes != 0 &&
-		    msqkptr->cred != NULL && msqkptr->cred->cr_prison == pr)
-			msq_remove(msqkptr);
-	}
-	mtx_unlock(&msq_mtx);
-}
-
-SYSCTL_JAIL_PARAM_SYS_NODE(sysvmsg, CTLFLAG_RW, "SYSV message queues");
 
 #ifdef COMPAT_FREEBSD32
 int
