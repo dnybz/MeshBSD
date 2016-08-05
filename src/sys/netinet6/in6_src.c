@@ -80,7 +80,6 @@ __FBSDID("$FreeBSD: head/sys/netinet6/in6_src.c 297705 2016-04-08 11:13:24Z ae $
 #include <sys/sysctl.h>
 #include <sys/errno.h>
 #include <sys/time.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/rmlock.h>
 #include <sys/sx.h>
@@ -283,13 +282,6 @@ in6_selectsrc(uint32_t fibnum, struct sockaddr_in6 *dstsock,
 		bcopy(&inp->in6p_laddr, srcp, sizeof(*srcp));
 		return (0);
 	}
-
-	/*
-	 * Bypass source address selection and use the primary jail IP
-	 * if requested.
-	 */
-	if (cred != NULL && !prison_saddrsel_ip6(cred, srcp))
-		return (0);
 
 	/*
 	 * If the address is not specified, choose the best one based on
