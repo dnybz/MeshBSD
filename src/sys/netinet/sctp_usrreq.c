@@ -6892,10 +6892,6 @@ sctp_connect(struct socket *so, struct sockaddr *addr, struct thread *p)
 				return (EINVAL);
 			}
 			sin6p = (struct sockaddr_in6 *)addr;
-			if (p != NULL) {
-				SCTP_LTRACE_ERR_RET(inp, NULL, NULL, SCTP_FROM_SCTP_USRREQ, error);
-				return (error);
-			}
 			break;
 		}
 #endif
@@ -6909,10 +6905,6 @@ sctp_connect(struct socket *so, struct sockaddr *addr, struct thread *p)
 				return (EINVAL);
 			}
 			sinp = (struct sockaddr_in *)addr;
-			if (p != NULL) {
-				SCTP_LTRACE_ERR_RET(inp, NULL, NULL, SCTP_FROM_SCTP_USRREQ, error);
-				return (error);
-			}
 			break;
 		}
 #endif

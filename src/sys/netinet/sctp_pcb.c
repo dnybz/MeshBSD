@@ -2866,15 +2866,7 @@ sctp_inpcb_bind(struct socket *so, struct sockaddr *addr,
 				}
 				sin = (struct sockaddr_in *)addr;
 				lport = sin->sin_port;
-				/*
-				 * For LOOPBACK the prison_local_ip4() call
-				 * will transmute the ip address to the
-				 * proper value.
-				 */
-				if (p) {
-					SCTP_LTRACE_ERR_RET(inp, NULL, NULL, SCTP_FROM_SCTP_PCB, error);
-					return (error);
-				}
+				
 				if (sin->sin_addr.s_addr != INADDR_ANY) {
 					bindall = 0;
 				}
@@ -2898,10 +2890,6 @@ sctp_inpcb_bind(struct socket *so, struct sockaddr *addr,
 				}
 				lport = sin6->sin6_port;
 
-				if (p) {
-					SCTP_LTRACE_ERR_RET(inp, NULL, NULL, SCTP_FROM_SCTP_PCB, error);
-					return (error);
-				}
 				if (!IN6_IS_ADDR_UNSPECIFIED(&sin6->sin6_addr)) {
 					bindall = 0;
 					/* KAME hack: embed scopeid */
