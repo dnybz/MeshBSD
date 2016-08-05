@@ -1,0 +1,8 @@
+ssh		 22/sctp   #Secure Shell Login
+ssh		 22/tcp	   #Secure Shell Login
+ssh		 22/udp	   #Secure Shell Login
+bootps		 67/tcp	   dhcps	#Bootstrap Protocol Server
+bootps		 67/udp	   dhcps	#Bootstrap Protocol Server
+http		 80/sctp   www www-http	#World Wide Web HTTP
+http		 80/tcp	   www www-http	#World Wide Web HTTP
+http		 80/udp	   www www-http	#World Wide Web HTTP
