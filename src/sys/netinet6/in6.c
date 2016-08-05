@@ -2338,16 +2338,13 @@ in6_lltable_dump_entry(struct lltable *llt, struct llentry *lle,
 				return (0);
 			/* Skip if jailed and not a valid IP of the prison. */
 			lltable_fill_sa_entry(lle,
-			    (struct sockaddr *)&ndpc.sin6);
-			if (prison_if(wr->td->td_ucred,
-			    (struct sockaddr *)&ndpc.sin6) != 0)
-				return (0);
-			/*
-			 * produce a msg made of:
-			 *  struct rt_msghdr;
-			 *  struct sockaddr_in6 (IPv6)
-			 *  struct sockaddr_dl;
-			 */
+			    (struct sockaddr *)&ndpc.sin6);			
+/*
+ * produce a msg made of:
+ *  struct rt_msghdr;
+ *  struct sockaddr_in6 (IPv6)
+ *  struct sockaddr_dl;
+ */
 			ndpc.rtm.rtm_msglen = sizeof(ndpc);
 			ndpc.rtm.rtm_version = RTM_VERSION;
 			ndpc.rtm.rtm_type = RTM_GET;
