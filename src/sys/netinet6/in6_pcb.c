@@ -131,9 +131,7 @@ in6_pcbbind(register struct inpcb *inp, struct sockaddr *nam,
 	if ((so->so_options & (SO_REUSEADDR|SO_REUSEPORT)) == 0)
 		lookupflags = INPLOOKUP_WILDCARD;
 	if (nam == NULL) {
-		if ((error = prison_local_ip6(cred, &inp->in6p_laddr,
-		    ((inp->inp_flags & IN6P_IPV6_V6ONLY) != 0))) != 0)
-			return (error);
+		return (EINVAL);
 	} else {
 		sin6 = (struct sockaddr_in6 *)nam;
 		if (nam->sa_len != sizeof(*sin6))
@@ -146,10 +144,6 @@ in6_pcbbind(register struct inpcb *inp, struct sockaddr *nam,
 
 		if ((error = sa6_embedscope(sin6, V_ip6_use_defzone)) != 0)
 			return(error);
-
-		if ((error = prison_local_ip6(cred, &sin6->sin6_addr,
-		    ((inp->inp_flags & IN6P_IPV6_V6ONLY) != 0))) != 0)
-			return (error);
 
 		lport = sin6->sin6_port;
 		if (IN6_IS_ADDR_MULTICAST(&sin6->sin6_addr)) {

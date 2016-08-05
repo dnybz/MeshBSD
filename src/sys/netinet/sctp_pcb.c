@@ -2897,13 +2897,8 @@ sctp_inpcb_bind(struct socket *so, struct sockaddr *addr,
 					return (EINVAL);
 				}
 				lport = sin6->sin6_port;
-				/*
-				 * For LOOPBACK the prison_local_ip6() call
-				 * will transmute the ipv6 address to the
-				 * proper value.
-				 */
-				if (p && (error = prison_local_ip6(p->td_ucred, &sin6->sin6_addr,
-				    (SCTP_IPV6_V6ONLY(inp) != 0))) != 0) {
+
+				if (p) {
 					SCTP_LTRACE_ERR_RET(inp, NULL, NULL, SCTP_FROM_SCTP_PCB, error);
 					return (error);
 				}

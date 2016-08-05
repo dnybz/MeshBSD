@@ -244,9 +244,6 @@ in6_selectsrc(uint32_t fibnum, struct sockaddr_in6 *dstsock,
 			if (error)
 				return (error);
 		}
-		if (cred != NULL && (error = prison_local_ip6(cred,
-		    &tmp, (inp->inp_flags & IN6P_IPV6_V6ONLY) != 0)) != 0)
-			return (error);
 
 		/*
 		 * If IPV6_BINDANY socket option is set, we allow to specify
@@ -275,10 +272,6 @@ in6_selectsrc(uint32_t fibnum, struct sockaddr_in6 *dstsock,
 	 * Otherwise, if the socket has already bound the source, just use it.
 	 */
 	if (inp != NULL && !IN6_IS_ADDR_UNSPECIFIED(&inp->in6p_laddr)) {
-		if (cred != NULL &&
-		    (error = prison_local_ip6(cred, &inp->in6p_laddr,
-		    ((inp->inp_flags & IN6P_IPV6_V6ONLY) != 0))) != 0)
-			return (error);
 		bcopy(&inp->in6p_laddr, srcp, sizeof(*srcp));
 		return (0);
 	}
@@ -509,17 +502,9 @@ in6_selectsrc(uint32_t fibnum, struct sockaddr_in6 *dstsock,
 	 * but it could still be, that we want to further restrict it, e.g.
 	 * theoratically IN6_IS_ADDR_LOOPBACK.
 	 * It must not be IN6_IS_ADDR_UNSPECIFIED anymore.
-	 * prison_local_ip6() will fix an IN6_IS_ADDR_LOOPBACK but should
-	 * let all others previously selected pass.
 	 * Use tmp to not change ::1 on lo0 to the primary jail address.
 	 */
-	tmp = ia->ia_addr.sin6_addr;
-	if (cred != NULL && prison_local_ip6(cred, &tmp, (inp != NULL &&
-	    (inp->inp_flags & IN6P_IPV6_V6ONLY) != 0)) != 0) {
-		IN6_IFADDR_RUNLOCK(&in6_ifa_tracker);
-		IP6STAT_INC(ip6s_sources_none);
-		return (EADDRNOTAVAIL);
-	}
+	tmp = ia->ia_addr.sin6_addr;	
 
 	if (ifpp)
 		*ifpp = ifp;
@@ -959,11 +944,6 @@ in6_pcbsetport(struct in6_addr *laddr, struct inpcb *inp, struct ucred *cred)
 
 	INP_WLOCK_ASSERT(inp);
 	INP_HASH_WLOCK_ASSERT(pcbinfo);
-
-	error = prison_local_ip6(cred, laddr,
-	    ((inp->inp_flags & IN6P_IPV6_V6ONLY) != 0));
-	if (error)
-		return(error);
 
 	/* XXX: this is redundant when called from in6_pcbbind */
 	if ((so->so_options & (SO_REUSEADDR|SO_REUSEPORT)) == 0)

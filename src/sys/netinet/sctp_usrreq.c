@@ -5946,8 +5946,7 @@ sctp_setopt(struct socket *so, int optname, void *optval, size_t optsize,
 					error = EINVAL;
 					break;
 				}
-				if (td != NULL && (error = prison_local_ip6(td->td_ucred, &(((struct sockaddr_in6 *)(addrs->addr))->sin6_addr),
-				    (SCTP_IPV6_V6ONLY(inp) != 0))) != 0) {
+				if (td != NULL) {
 					SCTP_LTRACE_ERR_RET(inp, stcb, NULL, SCTP_FROM_SCTP_USRREQ, error);
 					break;
 				}
@@ -5990,10 +5989,7 @@ sctp_setopt(struct socket *so, int optname, void *optval, size_t optsize,
 					error = EINVAL;
 					break;
 				}
-				if (td != NULL &&
-				    (error = prison_local_ip6(td->td_ucred,
-				    &(((struct sockaddr_in6 *)(addrs->addr))->sin6_addr),
-				    (SCTP_IPV6_V6ONLY(inp) != 0))) != 0) {
+				if (td != NULL) {
 					SCTP_LTRACE_ERR_RET(inp, stcb, NULL, SCTP_FROM_SCTP_USRREQ, error);
 					break;
 				}
