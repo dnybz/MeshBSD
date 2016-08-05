@@ -347,8 +347,6 @@ in6_pcbladdr(register struct inpcb *inp, struct sockaddr *nam,
 		if (IN6_IS_ADDR_UNSPECIFIED(&sin6->sin6_addr))
 			sin6->sin6_addr = in6addr_loopback;
 	}
-	if ((error = prison_remote_ip6(inp->inp_cred, &sin6->sin6_addr)) != 0)
-		return (error);
 
 	error = in6_selectsrc_socket(sin6, inp->in6p_outputopts,
 	    inp, inp->inp_cred, scope_ambiguous, &in6a, NULL);

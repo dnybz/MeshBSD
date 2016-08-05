@@ -6892,7 +6892,7 @@ sctp_connect(struct socket *so, struct sockaddr *addr, struct thread *p)
 				return (EINVAL);
 			}
 			sin6p = (struct sockaddr_in6 *)addr;
-			if (p != NULL && (error = prison_remote_ip6(p->td_ucred, &sin6p->sin6_addr)) != 0) {
+			if (p != NULL) {
 				SCTP_LTRACE_ERR_RET(inp, NULL, NULL, SCTP_FROM_SCTP_USRREQ, error);
 				return (error);
 			}

@@ -1128,9 +1128,7 @@ udp6_connect(struct socket *so, struct sockaddr *nam, struct thread *td)
 	}
 	inp->inp_vflag &= ~INP_IPV4;
 	inp->inp_vflag |= INP_IPV6;
-	error = prison_remote_ip6(td->td_ucred, &sin6->sin6_addr);
-	if (error != 0)
-		goto out;
+
 	INP_HASH_WLOCK(pcbinfo);
 	error = in6_pcbconnect(inp, nam, td->td_ucred);
 	INP_HASH_WUNLOCK(pcbinfo);
