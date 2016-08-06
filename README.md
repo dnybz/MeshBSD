@@ -4,20 +4,18 @@ MeshBSD (under construction)
 Extensions on FreeBSD 11-RELEASE operating system for embedded systems.
 
 <pre><code>
- |
- | This project is at an early stage! 
- | 
- | Please, be patient, there is recent work 
- | in progress to reach the goal to provide
- | an operating system for embedded systems 
- | based on FreeBSD 11-RELEASE. 
- |
+  This project is at an early stage! 
+  
+  Please, be patient, there is recent work 
+  in progress to reach the goal to provide
+  an operating system for embedded systems 
+  based on FreeBSD 11-RELEASE. 
 </code></pre>
 
 After I've read 
 
 <pre><code>
- | https://www.kernel.org/doc/Documentation/stable_api_nonsense.txt
+  https://www.kernel.org/doc/Documentation/stable_api_nonsense.txt
 </code></pre>
  
 I was disgusted and I've decided to provide a set 
@@ -70,7 +68,7 @@ Basic requirements for installation of (experimental) firmware image are:
    access through interconnected usb cable. 
    
     +-----+-----+-----+-----+
-    | VCC   GND   RX  | TX  |
+    | VCC | GND | RX  | TX  |
     +-----+-----+-----+-----+
      3.3V
 
@@ -83,52 +81,52 @@ On host running FreeBSD, access to serial console might
 be performed e. g. through use of priveleged terminal:   
 
 <pre><code> 
- | # cu -l /dev/ttyU0 -s 115200
+  # cu -l /dev/ttyU0 -s 115200
 </code></pre>
 
 Then, appliance (or router board) shall be switched on. 
 
 <pre><code>
- | 
- | U-Boot 1.1.4 (Jun 13 2014 - 15:14:01)
- | 
- | ap135 - Scorpion 1.0DRAM:  
- | sri
- | Scorpion 1.0
- | ath_ddr_initial_config(178): (16bit) ddr2 init
- | tap = 0x00000003
- | Tap (low, high) = (0x0, 0x1c)
- | Tap values = (0xe, 0xe, 0xe, 0xe)
- | 64 MB
- | Flash Manuf Id 0xef, DeviceId0 0x40, DeviceId1 0x17
- | flash size 8MB, sector count = 128
- | Flash:  8 MB
- | Using default environment
- | 
- | *** Warning *** : PCIe WLAN Module not found !!!
- | *** Warning *** : PCIe WLAN Module not found !!!
- | In:    serial
- | Out:   serial
- | Err:   serial
- | Net:   ath_gmac_enet_initialize...
- | athrs_sgmii_res_cal: cal value = 0x6
- | No valid address in Flash. Using fixed address
- | No valid address in Flash. Using fixed address
- | ath_gmac_enet_initialize: reset mask:c02200 
- | Scorpion  ----> S17 PHY *
- | athrs17_reg_init: complete
- | : cfg1 0x80000000 cfg2 0x7114
- | eth0: ba:be:fa:ce:08:41
- | eth0 up
- | athrs17_reg_init_wan done
- | SGMII in forced mode
- | athr_gmac_sgmii_setup SGMII done
- | : cfg1 0x800c0000 cfg2 0x7214
- | eth1: ba:be:fa:ce:08:41
- | eth1 up
- | eth0, eth1
- | Setting 0x18116290 to 0x58b1a14f
- | Autobooting in 1 seconds
+  
+  U-Boot 1.1.4 (Jun 13 2014 - 15:14:01)
+  
+  ap135 - Scorpion 1.0DRAM:  
+  sri
+  Scorpion 1.0
+  ath_ddr_initial_config(178): (16bit) ddr2 init
+  tap = 0x00000003
+  Tap (low, high) = (0x0, 0x1c)
+  Tap values = (0xe, 0xe, 0xe, 0xe)
+  64 MB
+  Flash Manuf Id 0xef, DeviceId0 0x40, DeviceId1 0x17
+  flash size 8MB, sector count = 128
+  Flash:  8 MB
+  Using default environment
+  
+  *** Warning *** : PCIe WLAN Module not found !!!
+  *** Warning *** : PCIe WLAN Module not found !!!
+  In:    serial
+  Out:   serial
+  Err:   serial
+  Net:   ath_gmac_enet_initialize...
+  athrs_sgmii_res_cal: cal value = 0x6
+  No valid address in Flash. Using fixed address
+  No valid address in Flash. Using fixed address
+  ath_gmac_enet_initialize: reset mask:c02200 
+  Scorpion  ----> S17 PHY *
+  athrs17_reg_init: complete
+  : cfg1 0x80000000 cfg2 0x7114
+  eth0: ba:be:fa:ce:08:41
+  eth0 up
+  athrs17_reg_init_wan done
+  SGMII in forced mode
+  athr_gmac_sgmii_setup SGMII done
+  : cfg1 0x800c0000 cfg2 0x7214
+  eth1: ba:be:fa:ce:08:41
+  eth1 up
+  eth0, eth1
+  Setting 0x18116290 to 0x58b1a14f
+  Autobooting in 1 seconds
 </code></pre>
 
 The booting procedure may interrupted by entering 
@@ -140,183 +138,183 @@ The booting procedure may interrupted by entering
 within time intervall, shown as above. Then 
 
 <pre><code>
- | ap135>
+  ap135>
 </code></pre>
 
 occours as prompt on screen, awaiting input.
 
 <pre><code>
- | ap135> printenv 
+  ap135> printenv 
 </code></pre>
  
 shows environment for bootstrapping an operating system.  
 
 <pre><code>
- | bootargs=console=ttyS0,115200 root=31:02 rootfstype=jffs2 init=/sbin/init mtdparts=ath-nor0:256k(u-boot),64k(u-boot-env),6336k(rootfs),1408k(uImage),64k(mib0),64k(ART)
- | bootcmd=bootm 0x9f020000
- | bootdelay=1
- | baudrate=115200
- | ethaddr=0xba:0xbe:0xfa:0xce:0x08:0x41
- | ipaddr=192.168.1.111
- | serverip=192.168.1.100
- | dir=
- | lu=tftp 0x80060000 ${dir}u-boot.bin&&erase 0x9f000000 +$filesize&&cp.b $fileaddr 0x9f000000 $filesize
- | lf=tftp 0x80060000 ${dir}ap135${bc}-jffs2&&erase 0x9f050000 +0x630000&&cp.b $fileaddr 0x9f050000 $filesize
- | lk=tftp 0x80060000 ${dir}vmlinux${bc}.lzma.uImage&&erase 0x9f680000 +$filesize&&cp.b $fileaddr 0x9f680000 $filesize
- | stdin=serial
- | stdout=serial
- | stderr=serial
- | ethact=eth0
- |
- | Environment size: 686/65532 bytes
+  bootargs=console=ttyS0,115200 root=31:02 rootfstype=jffs2 init=/sbin/init mtdparts=ath-nor0:256k(u-boot),64k(u-boot-env),6336k(rootfs),1408k(uImage),64k(mib0),64k(ART)
+  bootcmd=bootm 0x9f020000
+  bootdelay=1
+  baudrate=115200
+  ethaddr=0xba:0xbe:0xfa:0xce:0x08:0x41
+  ipaddr=192.168.1.111
+  serverip=192.168.1.100
+  dir=
+  lu=tftp 0x80060000 ${dir}u-boot.bin&&erase 0x9f000000 +$filesize&&cp.b $fileaddr 0x9f000000 $filesize
+  lf=tftp 0x80060000 ${dir}ap135${bc}-jffs2&&erase 0x9f050000 +0x630000&&cp.b $fileaddr 0x9f050000 $filesize
+  lk=tftp 0x80060000 ${dir}vmlinux${bc}.lzma.uImage&&erase 0x9f680000 +$filesize&&cp.b $fileaddr 0x9f680000 $filesize
+  stdin=serial
+  stdout=serial
+  stderr=serial
+  ethact=eth0
+ 
+  Environment size: 686/65532 bytes
 </code></pre>
 
 It is obvious that host might be configured by
 
 <pre><code>
- | # ifconfig re0 inet 192.168.1.100/24 up 
- | # route add -4 192.168.1.111 192.168.1.100
- | add host 192.168.1.111: gateway 192.168.1.100
+  # ifconfig re0 inet 192.168.1.100/24 up 
+  # route add -4 192.168.1.111 192.168.1.100
+  add host 192.168.1.111: gateway 192.168.1.100
 </code></pre>
 
 in conjuction with 
 
 <pre><code>
- | # cat >> /etc/inetd.conf << EOF
- | > tftp dgram udp wait root /usr/libexec/tftpd tftpd -l -s /tftpboot
- | > EOF
+  # cat >> /etc/inetd.conf << EOF
+  > tftp dgram udp wait root /usr/libexec/tftpd tftpd -l -s /tftpboot
+  > EOF
 </code></pre>
 
 then
 
 <pre><code>
- | # service inetd {one}{re}start
+  # service inetd {one}{re}start
 </code></pre>
 
 initializes tftpd(8) daemon manually.
 
 <pre><code>
- | ap135> tftpboot 0x80060000 MeshBSD.tl-wr1043ndv2.201601291719.factory.bin
+  ap135> tftpboot 0x80060000 MeshBSD.tl-wr1043ndv2.201601291719.factory.bin
 </code></pre>
 
 loads 
 
 <pre><code>
- | dup 1 speed 1000
- | Using eth1 device
- | TFTP from server 192.168.1.100; our IP address is 192.168.1.111
- | Filename 'MeshBSD.tl-wr1043ndv2.201601291719.factory.bin'.
- | Load address: 0x80060000
- | Loading: #################################################################
- |          #################################################################
- |          #################################################################
- |          #################################################################
- |          #################################################################
- |          #################################################################
- |          #################################################################
- |          #################################################################
- |          #################################################################
- |          #################################################################
- |          #################################################################
- |          #################################################################
- |          #################################################################
- |          #################################################################
- |          #################################################################
- |          #################################################################
- |          #################################################################
- |          #################################################################
- |          #################################################################
- |          #########
- | done
- | Bytes transferred = 6368768 (612e00 hex)
+  dup 1 speed 1000
+  Using eth1 device
+  TFTP from server 192.168.1.100; our IP address is 192.168.1.111
+  Filename 'MeshBSD.tl-wr1043ndv2.201601291719.factory.bin'.
+  Load address: 0x80060000
+  Loading: #################################################################
+           #################################################################
+           #################################################################
+           #################################################################
+           #################################################################
+           #################################################################
+           #################################################################
+           #################################################################
+           #################################################################
+           #################################################################
+           #################################################################
+           #################################################################
+           #################################################################
+           #################################################################
+           #################################################################
+           #################################################################
+           #################################################################
+           #################################################################
+           #################################################################
+           #########
+  done
+  Bytes transferred = 6368768 (612e00 hex)
 </code></pre>
 
 the (experimental) firmware image into random access memory starting at 
 address 0x80060000 on (this) ap135 (router) board.
 
 <pre><code>
- | ap135> erase 0x9f020000 +0x7c0000
- | Erasing flash... 
+  ap135> erase 0x9f020000 +0x7c0000
+  Erasing flash... 
 </code></pre>
 
 erases contents of flash memory at 0x9f020000 through 0x7c0000 bytes offset:
 
 <pre><code>
- | First 0x2 last 0x7d sector size 0x10000
- | 125
- | Erased 124 sectors  
+  First 0x2 last 0x7d sector size 0x10000
+  125
+  Erased 124 sectors  
 </code></pre>
  
 The flash memory is now ready for copying in the firmware
 
 <pre><code>
- | ap135> cp.b 0x80060000 0x9f020000 0x7c0000
- | Copy to Flash... write addr: 9f020000
- | done 
+  ap135> cp.b 0x80060000 0x9f020000 0x7c0000
+  Copy to Flash... write addr: 9f020000
+  done 
 </code></pre>
 
 then 
 
 <pre><code>
- | ap135> bootm 0x9f020000
+  ap135> bootm 0x9f020000
 </code></pre>
  
 starts bootstrapping. 
 
 <pre><code> 
- | ## Booting image at 9f020000 ...
- |    Uncompressing Kernel Image ... OK
- |
- | Starting kernel ...
+  ## Booting image at 9f020000 ...
+     Uncompressing Kernel Image ... OK
+ 
+  Starting kernel ...
 </code></pre>
 
 When operating system kernel and init(8) process are running, then
 
 <pre><code>
- | FreeBSD/mips (styx.testenv.local) (ttyu0)
- |
- | login: 
+  FreeBSD/mips (styx.testenv.local) (ttyu0)
+ 
+  login: 
 </code></pre>
 
 shall occour as login prompt on serial console. After logging in 
 
 <pre><code>
- | login: root
+  login: root
 </code></pre>
 
 by use of an empty password. It will be changed by
 
 <pre><code> 
- | # passwd root
- | Changing local password for user
- | New Password:
- | Retype New Password:
+  # passwd root
+  Changing local password for user
+  New Password:
+  Retype New Password:
 </code></pre>
 
 then
 
 <pre><code>
- | # ifconfig
+  # ifconfig
 </code></pre>
  
 provides a listing 
 
 <pre><code>
- | arge0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1500
- |        options=8<VLAN_MTU>
- |        ether c4:6e:1f:b9:19:e1
- |        media: Ethernet 1000baseT <full-duplex>
- |        status: active
- | arge1: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1492
- |        options=8<VLAN_MTU>
- |        ether c4:6e:1f:b9:19:e2
- |        inet 192.168.1.1 netmask 0xffffff00 broadcast 192.168.1.255 
- |        media: Ethernet 1000baseT <full-duplex>
- |        status: active
- | lo0: flags=8049<UP,LOOPBACK,RUNNING,MULTICAST> metric 0 mtu 16384
- |        options=600003<RXCSUM,TXCSUM,RXCSUM_IPV6,TXCSUM_IPV6>
- |        inet 127.0.0.1 netmask 0xff000000 
- |        groups: lo 
+  arge0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1500
+         options=8<VLAN_MTU>
+         ether c4:6e:1f:b9:19:e1
+         media: Ethernet 1000baseT <full-duplex>
+         status: active
+  arge1: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1492
+         options=8<VLAN_MTU>
+         ether c4:6e:1f:b9:19:e2
+         inet 192.168.1.1 netmask 0xffffff00 broadcast 192.168.1.255 
+         media: Ethernet 1000baseT <full-duplex>
+         status: active
+  lo0: flags=8049<UP,LOOPBACK,RUNNING,MULTICAST> metric 0 mtu 16384
+         options=600003<RXCSUM,TXCSUM,RXCSUM_IPV6,TXCSUM_IPV6>
+         inet 127.0.0.1 netmask 0xff000000 
+         groups: lo 
 </code></pre>
 
 about configured network interfaces on link-layer. Any persistent configuration 
@@ -343,12 +341,12 @@ variable in
 configuration file. Implecitely, 
 
 <pre><code>
- | # cat >> /etc/hostname.wlan0 << EOF
- | > create wlandev ath0 wlanmode adhoc
- | > inet 192.168.2.1 netmask 255.255.255.0 ssid tiamat
- | > mtu 1492
- | > up
- | > EOF 
+  # cat >> /etc/hostname.wlan0 << EOF
+  > create wlandev ath0 wlanmode adhoc
+  > inet 192.168.2.1 netmask 255.255.255.0 ssid tiamat
+  > mtu 1492
+  > up
+  > EOF 
 </code></pre>
 
 in conjunction with 
@@ -360,7 +358,7 @@ in conjunction with
 creates an instance of wlan(4) device automatically. Therefore
 
 <pre><code>
- | # cfg_save 
+  # cfg_save 
 </code></pre>
     
 stores any in 
@@ -372,81 +370,81 @@ stores any in
 enlisted and e. g.  by
 
 <pre><code>
- | # cat >> /etc/cfg/manifest << EOF
- | > etc/hostname.wlan0
- | > EOF
+  # cat >> /etc/cfg/manifest << EOF
+  > etc/hostname.wlan0
+  > EOF
 </code></pre>
 
 additionally promoted 
 
 <pre><code> 
- | *** Storing configuration files from /etc/cfg/manifest -> /dev/map/cfg..
- | etc/cfg/manifest
- | etc/ppp/ppp.conf
- | etc/dhcpd.conf
- | etc/group
- | etc/hostapd.conf
- | etc/hostname.arge0
- | etc/hostname.arge1
- | etc/ipsec.conf
- | etc/login.conf
- | etc/master.passwd
- | etc/myname
- | etc/nsswitch.conf
- | etc/ntp.conf
- | etc/passwd
- | etc/pf.conf
- | etc/rc.conf
- | etc/services
- | etc/ttys
- | etc/wpa_supplicant.conf
- | etc/hostname.wlan0
- | 36 blocks
- | 0+1 records in
- | 1+0 records out
- | 65536 bytes transferred in 0.497583 secs (131709 bytes/sec)
- | *** Completed.
+  *** Storing configuration files from /etc/cfg/manifest -> /dev/map/cfg..
+  etc/cfg/manifest
+  etc/ppp/ppp.conf
+  etc/dhcpd.conf
+  etc/group
+  etc/hostapd.conf
+  etc/hostname.arge0
+  etc/hostname.arge1
+  etc/ipsec.conf
+  etc/login.conf
+  etc/master.passwd
+  etc/myname
+  etc/nsswitch.conf
+  etc/ntp.conf
+  etc/passwd
+  etc/pf.conf
+  etc/rc.conf
+  etc/services
+  etc/ttys
+  etc/wpa_supplicant.conf
+  etc/hostname.wlan0
+  36 blocks
+  0+1 records in
+  1+0 records out
+  65536 bytes transferred in 0.497583 secs (131709 bytes/sec)
+  *** Completed.
 </code></pre>
 
 configuration file as compressed image into NVRAM. When
 
 <pre><code>
- | # reboot
+  # reboot
 </code></pre>
  
 takes place then
 
 <pre><code>
- | # ifconfig
+  # ifconfig
 </code></pre>
  
 shows 
 
 <pre><code>
- | arge0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1500
- |         options=8<VLAN_MTU>
- |         ether c4:6e:1f:b9:19:e1
- |         media: Ethernet 1000baseT <full-duplex>
- |         status: active
- | arge1: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1492
- |         options=8<VLAN_MTU>
- |         ether c4:6e:1f:b9:19:e2
- |         inet 192.168.1.1 netmask 0xffffff00 broadcast 255.255.255.0 
- |         media: Ethernet 1000baseT <full-duplex>
- |         status: active
- | lo0: flags=8049<UP,LOOPBACK,RUNNING,MULTICAST> metric 0 mtu 16384
- |         options=600003<RXCSUM,TXCSUM,RXCSUM_IPV6,TXCSUM_IPV6>
- |         inet 127.0.0.1 netmask 0xff000000 
- |         groups: lo 
- | wlan0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1492
- |         ether c4:6e:1f:b9:19:e0
- |         inet 192.168.2.1 netmask 0xffffff00 broadcast 192.168.2.255 
- |         media: IEEE 802.11 Wireless Ethernet autoselect mode 11ng <adhoc>
- |         status: running
- |         ssid tiamat channel 10 (2457 MHz 11g ht/40-) bssid 86:18:5a:e0:41:d5
- |         country US ecm authmode OPEN privacy OFF txpower 27 scanvalid 60
- |         protmode CTS ampdulimit 8k ampdudensity 8 shortgi wme burst ff
- |         groups: wlan
+  arge0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1500
+          options=8<VLAN_MTU>
+          ether c4:6e:1f:b9:19:e1
+          media: Ethernet 1000baseT <full-duplex>
+          status: active
+  arge1: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1492
+          options=8<VLAN_MTU>
+          ether c4:6e:1f:b9:19:e2
+          inet 192.168.1.1 netmask 0xffffff00 broadcast 255.255.255.0 
+          media: Ethernet 1000baseT <full-duplex>
+          status: active
+  lo0: flags=8049<UP,LOOPBACK,RUNNING,MULTICAST> metric 0 mtu 16384
+          options=600003<RXCSUM,TXCSUM,RXCSUM_IPV6,TXCSUM_IPV6>
+          inet 127.0.0.1 netmask 0xff000000 
+          groups: lo 
+  wlan0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> metric 0 mtu 1492
+          ether c4:6e:1f:b9:19:e0
+          inet 192.168.2.1 netmask 0xffffff00 broadcast 192.168.2.255 
+          media: IEEE 802.11 Wireless Ethernet autoselect mode 11ng <adhoc>
+          status: running
+          ssid tiamat channel 10 (2457 MHz 11g ht/40-) bssid 86:18:5a:e0:41:d5
+          country US ecm authmode OPEN privacy OFF txpower 27 scanvalid 60
+          protmode CTS ampdulimit 8k ampdudensity 8 shortgi wme burst ff
+          groups: wlan
 </code></pre>
  
 enabled wlan(4) device. If e. g.
@@ -458,9 +456,9 @@ enabled wlan(4) device. If e. g.
 may configured by DHCP, then
 
 <pre><code>
- | # cat > /etc/hostname.arge0 << EOF
- | > dhcp
- | > EOF 
+  # cat > /etc/hostname.arge0 << EOF
+  > dhcp
+  > EOF 
 </code></pre>
 
 overwrites contents of interface-specific configuration file and enables DHCP.
