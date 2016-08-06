@@ -1,5 +1,5 @@
 MeshBSD (under construction)
-============================
+----------------------------
 
 Extensions on FreeBSD 11-RELEASE operating system for embedded systems.
 
@@ -38,10 +38,10 @@ This operation is divided into three major stages:
     subset on e. g. X.org based GUI.
 </code></pre>
 
-[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=hmatyschok&url=https://github.com/hmatyschok/MeshBSD&title=MeshBSD&language=&tags=github&category=software)
+Please feel free to support me anytime: [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=hmatyschok&url=https://github.com/hmatyschok/MeshBSD&title=MeshBSD&language=&tags=github&category=software)
 
 TL-WR1043NDv2 (experimental)
-============================
+----------------------------
 
 Now, there exists an experimental firmware image 
 
