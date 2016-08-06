@@ -38,7 +38,7 @@ This operation is divided into three major stages:
     subset on e. g. X.org based GUI.
 </code></pre>
 
-Please feel free to support me anytime: [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=hmatyschok&url=https://github.com/hmatyschok/MeshBSD&title=MeshBSD&language=&tags=github&category=software)
+[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=hmatyschok&url=https://github.com/hmatyschok/MeshBSD&title=MeshBSD&language=&tags=github&category=software) Please feel free to support me anytime.
 
 TL-WR1043NDv2 (experimental)
 ----------------------------
