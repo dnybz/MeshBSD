@@ -1,9 +1,0 @@
-#!/bin/sh
-#
-#
-
-daemon="/sbin/pfctl"
-
-. /etc/rc.subr
-
-rc_cmd $1
