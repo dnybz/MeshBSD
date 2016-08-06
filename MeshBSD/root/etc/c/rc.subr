@@ -1,0 +1,425 @@
+#
+#	$OpenBSD: rc.subr,v 1.92 2015/01/02 14:44:05 ajacoutot Exp $
+#
+# Copyright (c) 2010, 2011, 2014 Antoine Jacoutot <ajacoutot@openbsd.org>
+# Copyright (c) 2010, 2011 Ingo Schwarze <schwarze@openbsd.org>
+# Copyright (c) 2010, 2011, 2014 Robert Nagy <robert@openbsd.org>
+#
+# Permission to use, copy, modify, and distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+# Copyright (c) 2016, Henning Matyschok
+#
+# Permission to use, copy, modify, and distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#
+_rc_actions="start status stop restart"
+readonly _rc_actions
+
+#
+# Apply sysctl(8) settings.
+#
+
+# Strip comments (and leading/trailing whitespace if IFS is set) from a file
+# and spew to stdout.
+_rc_stripcom() {
+	local _file="$1"
+	local _line
+
+	{
+		while read _line ; do
+			_line=${_line%%#*}		# strip comments
+			[ -z "$_line" ] && continue
+			echo $_line
+		done
+	} <$_file
+}
+
+# Update resource limits when sysctl changes.
+# Usage: update_limit -X loginconf_name
+_rc_update_limit() {
+	local _fl="$1"	# ulimit flag
+	local _lc="$2"	# login.conf name
+	local _new _suf
+
+	for _suf in "" -cur -max; do
+		_new=`getcap -f /etc/login.conf -s ${_lc}${_suf} daemon 2>/dev/null`
+		if [ X"$_new" != X"" ]; then
+			if [ X"$_new" = X"infinity" ]; then
+				_new=unlimited
+			fi
+			case "$_suf" in
+			-cur)
+				ulimit -S $_fl $_new
+				;;
+			-max)
+				ulimit -H $_fl $_new
+				;;
+			*)
+				ulimit $_fl $_new
+				return
+				;;
+			esac
+		fi
+	done
+}
+
+_rc_sysctl_conf() {
+	[ -s /etc/sysctl.conf ] || return
+
+	# delete comments and blank lines
+	set -- `_rc_stripcom /etc/sysctl.conf`
+	while [ $# -ge 1 ] ; do
+		sysctl $1
+		# update limits if needed
+		case $1 in
+		kern.maxproc=*)
+			_rc_update_limit -p maxproc
+			;;
+		kern.maxfiles=*)
+			_rc_update_limit -n openfiles
+			;;
+		esac
+		shift
+	done
+}
+
+#
+# Subroutines on Interface-layer.
+# 
+
+# Generate ppp.conf(5) for rfc-2516.
+_rc_pppoe_conf() {
+	local _if=$1
+	local _authname=$2	
+	local _authkey=$3
+	
+	cat > /etc/ppp/ppp.conf << EOF
+default:                                               
+     set device PPPoE:${_if}                      
+     set MTU 1492
+     set MRU 1492
+     set dial
+     set timeout 360
+     set crtscts off
+     set speed sync
+    
+     disable lqr
+     disable deflate
+     disable pred1
+     disable vjcomp
+     disable acfcomp
+     disable protocomp
+    
+     enable dns
+
+     set log Phase LCP IPCP CCP Warning Error Alert
+     set ifaddr 10.0.0.1/0 10.0.0.2/0 0.0.0.0 0.0.0.0
+     add default HISADDR
+     set login
+tsp:
+     set authname ${_authname}
+     set authkey ${_authkey}
+EOF
+}
+
+# Start the $1 interface
+_rc_ifstart() {
+	local _if=$1
+    local _file=/etc/hostname.$_if
+	
+	if ! [ -f $_file ]; then
+		echo "_ifstart: $_file: No such file or directory"
+		return
+	fi
+#
+# Now parse the hostname.* file.
+# 
+# Each line is either by 
+# 
+#    dhclient(8) 
+#
+# or 
+#
+#    ifconfig(8)
+#
+# accepted argument-vector.
+#
+	while read -r _af _line; do
+		case "${_af}" in
+		"#"*|"") # skip comments and empty lines
+			continue
+			;;
+		"pppoe")
+			_rc_pppoe_conf $_if $_line
+			ppp -auto tsp
+			return
+			;;
+		"dhcp")
+			dhclient $_if
+			return
+			;;
+		"create")
+			if ! ifconfig $_if >/dev/null 2>&1; then
+				ifconfig $_if $_af $_line
+			fi
+			;;	
+		*)
+			ifconfig $_if $_af $_line
+			;;
+		esac
+	done < $_file
+}
+
+# Start multiple:
+#   start "$1" interfaces in order or all interfaces if empty
+#   don't start "$2" interfaces
+_rc_ifmstart() {
+	for _xif in ${1:-ALL}; do
+		for _hn in /etc/hostname.*; do
+			# Strip off /etc/hostname. prefix
+			_if=${_hn#/etc/hostname.}
+			test "$_if" = "*" && continue
+
+			# Skip unwanted ifs
+			_x=""
+			for _xf in $2; do
+				test "$_xf" = "${_if%%[0-9]*}" && _x="1" && break
+			done
+			test "$_x" = "1" && continue
+
+			# Start wanted ifs
+			test "$_xif" = "ALL" -o \
+			     "$_xif" = "${_if%%[0-9]*}" \
+				&& _rc_ifstart $_if
+		done
+	done
+}
+
+#
+# rc.d daemon control scripts
+#
+
+_rc_err() {
+	[ -n "${1}" ] && echo "${1}" 1>&2
+	[ -n "${2}" ] && exit "${2}" || exit 1
+}
+
+_rc_usage() {
+	local _a _allsup
+	for _a in ${_rc_actions}; do
+		_rc_not_supported ${_a} || _allsup="${_allsup:+$_allsup|}${_a}"
+	done
+	_rc_err "usage: $0 [-df] ${_allsup}"
+}
+
+_rc_write_runfile() {
+	[ -d ${_RC_RUNDIR} ] || mkdir -p ${_RC_RUNDIR} && \
+		echo -en -- "${pexp}" > ${_RC_RUNFILE}
+}
+
+_rc_read_runfile() {
+	local _new_pexp
+	[ -f ${_RC_RUNFILE} ] && _new_pexp=$(< ${_RC_RUNFILE})
+	[ -n "${_new_pexp}" ] && pexp="${_new_pexp}"
+}
+
+_rc_rm_runfile() {
+	rm -f ${_RC_RUNFILE}
+}
+
+_rc_do() {
+	if [ -n "${_RC_DEBUG}" ]; then
+		echo "doing $@" && "$@"
+	else
+		"$@" >/dev/null 2>&1
+	fi
+}
+
+_rc_exit() {
+	local _pfix
+	[ -z "${INRC}" -o X"$1" != X"ok" ] && _pfix="($1)"
+	echo ${INRC:+'-n'} "${_pfix}"
+	[ X"$1" = X"ok" ] && exit 0 || exit 1
+}
+
+_rc_wait() {
+	local _i=0
+	while [ $_i -lt ${daemon_timeout} ]; do
+		case "$1" in
+			reload|start)
+				_rc_do rc_status && return 0
+				;;
+			stop)
+				_rc_do rc_status || return 0
+				;;
+			*)
+				break
+				;;
+		esac
+		sleep 1
+		_i=$(expr $_i + 1)
+	done
+	return 1
+}
+
+# Initialize set containing daemons.
+
+_rc_parse_conf() {
+
+	local _n=`ls /etc/rc.d`
+	for _n; do
+		eval _do=\${${_n}_flags}
+		if [ X"${_do}" != X"NO" ]; then
+			/etc/rc.d/${_n} start
+	done
+}
+
+# return if we only want internal functions
+[ -n "${FUNCS_ONLY}" ] && return
+
+rc_start() {
+	${rcexec} "${daemon} ${daemon_flags} ${_bg}"
+}
+
+rc_status() {
+	pgrep -q -xf "${pexp}"
+}
+
+rc_restart() {
+	pkill -HUP -xf "${pexp}"
+}
+
+rc_stop() {
+	pkill -xf "${pexp}"
+}
+
+rc_cmd() {
+	local _bg _n
+
+	[ "$(id -u)" -eq 0 ] || \
+		_rc_err "$0: need root privileges"
+
+	[ X"${rc_bg}" = X"YES" ] && _bg="&"
+	[ -n "${_RC_DEBUG}" ] || _n="-n"
+
+	_rc_do _rc_read_runfile
+
+	case "$1" in
+	start)
+		if [ X"${daemon_flags}" = X"NO" ]; then
+			_rc_err "$0: need -f to force $1 since ${_name}_flags=NO"
+		fi
+		[ -z "${INRC}" ] && _rc_do rc_status && exit 0
+		echo $_n "${INRC:+ }${_name}"
+		while true; do  # no real loop, only needed to break
+			if type rc_pre >/dev/null; then
+				_rc_do rc_pre || break
+			fi
+			# XXX only checks the status of the return code,
+			# and _not_ that the daemon is actually running
+			_rc_do rc_start || break
+			if [ -n "${_bg}" ]; then
+				sleep 1
+				_rc_do _rc_wait start || break
+			fi
+			_rc_do _rc_write_runfile
+			_rc_exit ok
+		done
+		# handle failure
+		type rc_post >/dev/null && _rc_do rc_post
+		_rc_do _rc_rm_runfile
+		_rc_exit failed
+		;;
+	status)
+		echo $_n "${INRC:+ }${_name}"
+		_rc_do rc_status && _rc_exit ok
+		_rc_exit failed
+		;;
+	stop)
+		_rc_do rc_status || exit 0
+		echo $_n "${INRC:+ }${_name}"
+		_rc_do rc_stop || _rc_exit failed
+		_rc_do _rc_wait stop || _rc_exit failed
+		if type rc_post >/dev/null; then \
+			_rc_do rc_post || _rc_exit failed
+		fi
+		_rc_do _rc_rm_runfile
+		_rc_exit ok
+		;;
+	restart)
+		$0 ${_RC_DEBUG} ${_RC_FORCE} stop &&
+			$0 ${_RC_DEBUG} ${_RC_FORCE} start
+		;;
+	*)
+		_rc_usage
+		;;
+	esac
+}
+
+[ -n "${daemon}" ] || _rc_err "$0: daemon is not set"
+
+unset _RC_DEBUG _RC_FORCE
+while getopts "df" c; do
+	case "$c" in
+		d) _RC_DEBUG=-d;;
+		f) _RC_FORCE=-f;;
+		*) _rc_usage;;
+	esac
+done
+shift $((OPTIND-1))
+
+_name=$(basename $0)
+_RC_RUNDIR=/var/run/rc.d
+_RC_RUNFILE=${_RC_RUNDIR}/${_name}
+
+. /etc/rc.conf
+
+eval _rcflags=\${${_name}_flags}
+eval _rcuser=\${${_name}_user}
+eval _rctimeout=\${${_name}_timeout}
+
+getcap -f /etc/login.conf ${_name} 1>/dev/null 2>&1 && \
+	daemon_class=${_name} || daemon_class=daemon
+[ -z "${daemon_user}" ] && daemon_user=root
+[ -z "${daemon_timeout}" ] && daemon_timeout=30
+
+# use flags from the rc.d script if daemon is not enabled
+[ -n "${_RC_FORCE}" -o "$1" != "start" ] && [ X"${_rcflags}" = X"NO" ] && \
+	unset _rcflags
+
+[ -n "${_rcflags}" ] && daemon_flags=${_rcflags}
+[ -n "${_rcuser}" ] && daemon_user=${_rcuser}
+[ -n "${_rctimeout}" ] && daemon_timeout=${_rctimeout}
+
+if [ -n "${_RC_DEBUG}" ]; then
+	echo -n "${_name}_flags "
+	[ -n "${_rcflags}" ] || echo -n "empty, using default "
+	echo ">${daemon_flags}<"
+fi
+
+readonly daemon_class
+unset _rcflags _rcuser _rctimeout
+pexp="${daemon}${daemon_flags:+ ${daemon_flags}}"
+rcexec="su -l -c ${daemon_class} -s /bin/sh ${daemon_user} -c"
+
+
+
