@@ -38,7 +38,6 @@ __FBSDID("$FreeBSD: head/sys/security/audit/audit_syscalls.c 297694 2016-04-08 0
 #include <sys/sysproto.h>
 #include <sys/systm.h>
 #include <sys/vnode.h>
-#include <sys/jail.h>
 
 #include <bsm/audit.h>
 #include <bsm/audit_kevents.h>
@@ -66,8 +65,6 @@ sys_audit(struct thread *td, struct audit_args *uap)
 	void * rec;
 	struct kaudit_record *ar;
 
-	if (jailed(td->td_ucred))
-		return (ENOSYS);
 	error = priv_check(td, PRIV_AUDIT_SUBMIT);
 	if (error)
 		return (error);
@@ -161,8 +158,6 @@ sys_auditon(struct thread *td, struct auditon_args *uap)
 	union auditon_udata udata;
 	struct proc *tp;
 
-	if (jailed(td->td_ucred))
-		return (ENOSYS);
 	AUDIT_ARG_CMD(uap->cmd);
 
 #ifdef MAC
@@ -564,8 +559,6 @@ sys_getauid(struct thread *td, struct getauid_args *uap)
 {
 	int error;
 
-	if (jailed(td->td_ucred))
-		return (ENOSYS);
 	error = priv_check(td, PRIV_AUDIT_GETAUDIT);
 	if (error)
 		return (error);
@@ -581,8 +574,6 @@ sys_setauid(struct thread *td, struct setauid_args *uap)
 	au_id_t id;
 	int error;
 
-	if (jailed(td->td_ucred))
-		return (ENOSYS);
 	error = copyin(uap->auid, &id, sizeof(id));
 	if (error)
 		return (error);
@@ -622,8 +613,7 @@ sys_getaudit(struct thread *td, struct getaudit_args *uap)
 	int error;
 
 	cred = td->td_ucred;
-	if (jailed(cred))
-		return (ENOSYS);
+
 	error = priv_check(td, PRIV_AUDIT_GETAUDIT);
 	if (error)
 		return (error);
@@ -646,8 +636,6 @@ sys_setaudit(struct thread *td, struct setaudit_args *uap)
 	struct auditinfo ai;
 	int error;
 
-	if (jailed(td->td_ucred))
-		return (ENOSYS);
 	error = copyin(uap->auditinfo, &ai, sizeof(ai));
 	if (error)
 		return (error);
@@ -687,8 +675,6 @@ sys_getaudit_addr(struct thread *td, struct getaudit_addr_args *uap)
 {
 	int error;
 
-	if (jailed(td->td_ucred))
-		return (ENOSYS);
 	if (uap->length < sizeof(*uap->auditinfo_addr))
 		return (EOVERFLOW);
 	error = priv_check(td, PRIV_AUDIT_GETAUDIT);
@@ -706,8 +692,6 @@ sys_setaudit_addr(struct thread *td, struct setaudit_addr_args *uap)
 	struct auditinfo_addr aia;
 	int error;
 
-	if (jailed(td->td_ucred))
-		return (ENOSYS);
 	error = copyin(uap->auditinfo_addr, &aia, sizeof(aia));
 	if (error)
 		return (error);
@@ -751,8 +735,6 @@ sys_auditctl(struct thread *td, struct auditctl_args *uap)
 	int error = 0;
 	int flags;
 
-	if (jailed(td->td_ucred))
-		return (ENOSYS);
 	error = priv_check(td, PRIV_AUDIT_CONTROL);
 	if (error)
 		return (error);
