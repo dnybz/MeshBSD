@@ -3326,13 +3326,11 @@ pmc_syscall_handler(struct thread *td, void *syscall_args)
 			error = ENXIO;
 			break;
 		}
-
 /*
  * Refuse an allocation for a system-wide PMC if this 
  * process lacks super-user credentials and the sysctl 
  * tunable 'security.bsd.unprivileged_syspmcs' is zero.
  */
-
 		if (PMC_IS_SYSTEM_MODE(mode)) {
 			if (!pmc_unprivileged_syspmcs) {
 				error = priv_check(curthread,
