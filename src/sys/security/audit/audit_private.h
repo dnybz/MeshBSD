@@ -232,7 +232,6 @@ struct audit_record {
 	struct sockaddr_storage ar_arg_sockaddr;
 	cap_rights_t		ar_arg_rights;
 	uint32_t		ar_arg_fcntl_rights;
-	char			ar_jailname[MAXHOSTNAMELEN];
 };
 
 /*
