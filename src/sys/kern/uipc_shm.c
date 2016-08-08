@@ -23,7 +23,31 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-
+/*
+ * Copyright (c) 2016 Henning Matyschok
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
 /*
  * Support for shared swap-backed anonymous memory objects via
  * shm_open(2) and shm_unlink(2).  While most of the implementation is
@@ -688,8 +712,7 @@ kern_shm_open(struct thread *td, const char *userpath, int flags, mode_t mode,
 	struct shmfd *shmfd;
 	struct file *fp;
 	char *path;
-	const char *pr_path;
-	size_t pr_pathlen;
+	size_t pathlen;
 	Fnv32_t fnv;
 	mode_t cmode;
 	int fd, error;
@@ -726,13 +749,12 @@ kern_shm_open(struct thread *td, const char *userpath, int flags, mode_t mode,
 		shmfd = shm_alloc(td->td_ucred, cmode);
 	} else {
 		path = malloc(MAXPATHLEN, M_SHMFD, M_WAITOK);
-		pr_path = td->td_ucred->cr_prison->pr_path;
-
-		/* Construct a full pathname for jailed callers. */
-		pr_pathlen = strcmp(pr_path, "/") == 0 ? 0
-		    : strlcpy(path, pr_path, MAXPATHLEN);
-		error = copyinstr(userpath, path + pr_pathlen,
-		    MAXPATHLEN - pr_pathlen, NULL);
+/* 
+ * Construct a full pathname.
+ */
+		pathlen = strlcpy(path, "/", MAXPATHLEN);
+		error = copyinstr(userpath, path + pathlen,
+		    MAXPATHLEN - pathlen, NULL);
 #ifdef KTRACE
 		if (error == 0 && KTRPOINT(curthread, KTR_NAMEI))
 			ktrnamei(path);
@@ -832,16 +854,13 @@ int
 sys_shm_unlink(struct thread *td, struct shm_unlink_args *uap)
 {
 	char *path;
-	const char *pr_path;
-	size_t pr_pathlen;
+	size_t pathlen;
 	Fnv32_t fnv;
 	int error;
 
 	path = malloc(MAXPATHLEN, M_TEMP, M_WAITOK);
-	pr_path = td->td_ucred->cr_prison->pr_path;
-	pr_pathlen = strcmp(pr_path, "/") == 0 ? 0
-	    : strlcpy(path, pr_path, MAXPATHLEN);
-	error = copyinstr(uap->path, path + pr_pathlen, MAXPATHLEN - pr_pathlen,
+	pathlen = strlcpy(path, "/", MAXPATHLEN);
+	error = copyinstr(uap->path, path + pathlen, MAXPATHLEN - pathlen,
 	    NULL);
 	if (error) {
 		free(path, M_TEMP);
@@ -1075,9 +1094,7 @@ shm_unmap(struct file *fp, void *mem, size_t size)
 static int
 shm_fill_kinfo(struct file *fp, struct kinfo_file *kif, struct filedesc *fdp)
 {
-	const char *path, *pr_path;
 	struct shmfd *shmfd;
-	size_t pr_pathlen;
 
 	kif->kf_type = KF_TYPE_SHM;
 	shmfd = fp->f_data;
@@ -1088,18 +1105,9 @@ shm_fill_kinfo(struct file *fp, struct kinfo_file *kif, struct filedesc *fdp)
 	kif->kf_un.kf_file.kf_file_size = shmfd->shm_size;
 	if (shmfd->shm_path != NULL) {
 		sx_slock(&shm_dict_lock);
-		if (shmfd->shm_path != NULL) {
-			path = shmfd->shm_path;
-			pr_path = curthread->td_ucred->cr_prison->pr_path;
-			if (strcmp(pr_path, "/") != 0) {
-				/* Return the jail-rooted pathname. */
-				pr_pathlen = strlen(pr_path);
-				if (strncmp(path, pr_path, pr_pathlen) == 0 &&
-				    path[pr_pathlen] == '/')
-					path += pr_pathlen;
-			}
-			strlcpy(kif->kf_path, path, sizeof(kif->kf_path));
-		}
+		if (shmfd->shm_path != NULL) 
+			strlcpy(kif->kf_path, shmfd->shm_path, sizeof(kif->kf_path));
+		
 		sx_sunlock(&shm_dict_lock);
 	}
 	return (0);
