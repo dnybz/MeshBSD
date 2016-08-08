@@ -520,4 +520,4 @@ u5E2GRq1FgrjmjTS8r+/zZfV31iFkIdc5gC9ipwBsA7H6Bx8lPP5M0l1MXS/wAWU
 -----END PGP PUBLIC KEY BLOCK-----
 </code></pre>
 
-
+[![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=hmatyschok&url=https://github.com/hmatyschok/MeshBSD&title=MeshBSD&language=&tags=github&category=software) Please feel free to support me anytime.
