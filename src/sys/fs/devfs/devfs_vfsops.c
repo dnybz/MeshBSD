@@ -70,7 +70,7 @@ devfs_mount(struct mount *mp)
 	struct devfs_mount *fmp;
 	struct vnode *rvp;
 	struct thread *td = curthread;
-	int injail, rsnum;
+	int rsnum;
 
 	if (devfs_unr == NULL)
 		devfs_unr = new_unrhdr(0, INT_MAX, NULL);
@@ -81,7 +81,6 @@ devfs_mount(struct mount *mp)
 		return (EOPNOTSUPP);
 
 	rsnum = 0;
-	injail = jailed(td->td_ucred);
 
 	if (mp->mnt_optnew != NULL) {
 		if (vfs_filteropt(mp->mnt_optnew, devfs_opts))
@@ -102,10 +101,6 @@ devfs_mount(struct mount *mp)
 		    rsnum != td->td_ucred->cr_prison->pr_devfs_rsnum)
 			return (EPERM);
 	}
-
-	/* jails enforce their ruleset */
-	if (injail)
-		rsnum = td->td_ucred->cr_prison->pr_devfs_rsnum;
 
 	if (mp->mnt_flag & MNT_UPDATE) {
 		if (rsnum != 0) {

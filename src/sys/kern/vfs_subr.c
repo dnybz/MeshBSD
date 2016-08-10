@@ -679,13 +679,6 @@ vfs_suser(struct mount *mp, struct thread *td)
 	int error;
 
 	/*
-	 * If the thread is jailed, but this is not a jail-friendly file
-	 * system, deny immediately.
-	 */
-	if (!(mp->mnt_vfc->vfc_flags & VFCF_JAIL) && jailed(td->td_ucred))
-		return (EPERM);
-
-	/*
 	 * If file system supports delegated administration, we don't check
 	 * for the PRIV_VFS_MOUNT_OWNER privilege - it will be better verified
 	 * by the file system itself.
@@ -3545,8 +3538,7 @@ DB_SHOW_COMMAND(mount, db_show_mount)
 
 	db_printf("    mnt_cred = { uid=%u ruid=%u",
 	    (u_int)mp->mnt_cred->cr_uid, (u_int)mp->mnt_cred->cr_ruid);
-	if (jailed(mp->mnt_cred))
-		db_printf(", jail=%d", mp->mnt_cred->cr_prison->pr_id);
+
 	db_printf(" }\n");
 	db_printf("    mnt_ref = %d\n", mp->mnt_ref);
 	db_printf("    mnt_gen = %d\n", mp->mnt_gen);

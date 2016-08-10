@@ -40,7 +40,6 @@ __FBSDID("$FreeBSD: head/sys/kern/vfs_mount.c 299913 2016-05-16 07:23:24Z avg $"
 #include <sys/param.h>
 #include <sys/conf.h>
 #include <sys/fcntl.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/libkern.h>
 #include <sys/malloc.h>
@@ -1043,7 +1042,7 @@ vfs_domount(
 	if (strlen(fstype) >= MFSNAMELEN || strlen(fspath) >= MNAMELEN)
 		return (ENAMETOOLONG);
 
-	if (jailed(td->td_ucred) || usermount == 0) {
+	if (usermount == 0) {
 		if ((error = priv_check(td, PRIV_VFS_MOUNT)) != 0)
 			return (error);
 	}
@@ -1079,8 +1078,6 @@ vfs_domount(
 			vfsp = vfs_byname_kld(fstype, td, &error);
 		if (vfsp == NULL)
 			return (ENODEV);
-		if (jailed(td->td_ucred) && !(vfsp->vfc_flags & VFCF_JAIL))
-			return (EPERM);
 	}
 
 	/*
@@ -1131,7 +1128,7 @@ sys_unmount(struct thread *td, struct unmount_args *uap)
 	int error, id0, id1;
 
 	AUDIT_ARG_VALUE(uap->flags);
-	if (jailed(td->td_ucred) || usermount == 0) {
+	if (usermount == 0) {
 		error = priv_check(td, PRIV_VFS_UNMOUNT);
 		if (error)
 			return (error);
