@@ -839,38 +839,6 @@ domains_set:
 	return (set);
 }
 
-/*
- * Create a cpuset, which would be cpuset_create() but
- * mark the new 'set' as root.
- *
- * We are not going to reparent the td to it.  Use cpuset_setproc_update_set()
- * for that.
- *
- * In case of no error, returns the set in *setp locked with a reference.
- */
-int
-cpuset_create_root(struct prison *pr, struct cpuset **setp)
-{
-	struct cpuset *set;
-	int error;
-
-	KASSERT(pr != NULL, ("[%s:%d] invalid pr", __func__, __LINE__));
-	KASSERT(setp != NULL, ("[%s:%d] invalid setp", __func__, __LINE__));
-
-	error = cpuset_create(setp, pr->pr_cpuset, &pr->pr_cpuset->cs_mask);
-	if (error)
-		return (error);
-
-	KASSERT(*setp != NULL, ("[%s:%d] cpuset_create returned invalid data",
-	    __func__, __LINE__));
-
-	/* Mark the set as root. */
-	set = *setp;
-	set->cs_flags |= CPU_SET_ROOT;
-
-	return (0);
-}
-
 int
 cpuset_setproc_update_set(struct proc *p, struct cpuset *set)
 {
