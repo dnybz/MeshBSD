@@ -3063,14 +3063,13 @@ pwd_chdir(struct thread *td, struct vnode *vp)
 }
 
 /*
- * Scan all active processes and prisons to see if any of them have a current
+ * Scan all active processes to see if any of them have a current
  * or root directory of `olddp'. If so, replace them with the new mount point.
  */
 void
 mountcheckdirs(struct vnode *olddp, struct vnode *newdp)
 {
 	struct filedesc *fdp;
-	struct prison *pr;
 	struct proc *p;
 	int nrele;
 
@@ -3109,24 +3108,7 @@ mountcheckdirs(struct vnode *olddp, struct vnode *newdp)
 		rootvnode = newdp;
 		nrele++;
 	}
-	mtx_lock(&prison0.pr_mtx);
-	if (prison0.pr_root == olddp) {
-		vref(newdp);
-		prison0.pr_root = newdp;
-		nrele++;
-	}
-	mtx_unlock(&prison0.pr_mtx);
-	sx_slock(&allprison_lock);
-	TAILQ_FOREACH(pr, &allprison, pr_list) {
-		mtx_lock(&pr->pr_mtx);
-		if (pr->pr_root == olddp) {
-			vref(newdp);
-			pr->pr_root = newdp;
-			nrele++;
-		}
-		mtx_unlock(&pr->pr_mtx);
-	}
-	sx_sunlock(&allprison_lock);
+
 	while (nrele--)
 		vrele(olddp);
 }
