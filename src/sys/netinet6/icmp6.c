@@ -70,7 +70,6 @@ __FBSDID("$FreeBSD: head/sys/netinet6/icmp6.c 299829 2016-05-15 03:22:13Z markj 
 
 #include <sys/param.h>
 #include <sys/domain.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/lock.h>
 #include <sys/malloc.h>
