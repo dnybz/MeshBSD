@@ -270,15 +270,6 @@ ugidfw_rulecheck(struct mac_bsdextended_rule *rule,
 			return (0);
 	}
 
-	if (rule->mbr_subject.mbs_flags & MBS_PRISON_DEFINED) {
-		match =
-		    (cred->cr_prison->pr_id == rule->mbr_subject.mbs_prison);
-		if (rule->mbr_subject.mbs_neg & MBS_PRISON_DEFINED)
-			match = !match;
-		if (!match)
-			return (0);
-	}
-
 	/*
 	 * Is there an object match?
 	 */
