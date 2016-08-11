@@ -1040,7 +1040,6 @@ racct_proc_ucred_changed(struct proc *p, struct ucred *oldcred,
 {
 	struct uidinfo *olduip, *newuip;
 	struct loginclass *oldlc, *newlc;
-	struct prison *oldpr, *newpr, *pr;
 
 	if (!racct_enable)
 		return;
@@ -1051,8 +1050,6 @@ racct_proc_ucred_changed(struct proc *p, struct ucred *oldcred,
 	olduip = oldcred->cr_ruidinfo;
 	newlc = newcred->cr_loginclass;
 	oldlc = oldcred->cr_loginclass;
-	newpr = newcred->cr_prison;
-	oldpr = oldcred->cr_prison;
 
 	RACCT_LOCK();
 	if (newuip != olduip) {
@@ -1062,14 +1059,6 @@ racct_proc_ucred_changed(struct proc *p, struct ucred *oldcred,
 	if (newlc != oldlc) {
 		racct_sub_racct(oldlc->lc_racct, p->p_racct);
 		racct_add_racct(newlc->lc_racct, p->p_racct);
-	}
-	if (newpr != oldpr) {
-		for (pr = oldpr; pr != NULL; pr = pr->pr_parent)
-			racct_sub_racct(pr->pr_prison_racct->prr_racct,
-			    p->p_racct);
-		for (pr = newpr; pr != NULL; pr = pr->pr_parent)
-			racct_add_racct(pr->pr_prison_racct->prr_racct,
-			    p->p_racct);
 	}
 	RACCT_UNLOCK();
 
