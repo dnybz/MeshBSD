@@ -70,7 +70,6 @@ struct nameidata {
 	 */
 	struct  vnode *ni_startdir;	/* starting directory */
 	struct	vnode *ni_rootdir;	/* logical root directory */
-	struct	vnode *ni_topdir;	/* logical top directory */
 	int	ni_dirfd;		/* starting directory for *at functions */
 	int	ni_strictrelative;	/* relative lookup only; no '..' */
 	/*

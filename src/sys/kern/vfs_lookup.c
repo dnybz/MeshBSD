@@ -234,7 +234,6 @@ namei(struct nameidata *ndp)
 	FILEDESC_SLOCK(fdp);
 	ndp->ni_rootdir = fdp->fd_rdir;
 	VREF(ndp->ni_rootdir);
-	ndp->ni_topdir = fdp->fd_jdir;
 
 	/*
 	 * If we are auditing the kernel pathname, save the user pathname.
@@ -653,7 +652,6 @@ dirloop:
 		}
 		for (;;) {
 			if (dp == ndp->ni_rootdir || 
-			    dp == ndp->ni_topdir || 
 			    dp == rootvnode ||
 			    pr != NULL ||
 			    ((dp->v_vflag & VV_ROOT) != 0 &&
