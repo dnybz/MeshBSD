@@ -37,7 +37,6 @@ __FBSDID("$FreeBSD: head/sys/netinet6/in6_ifattach.c 297192 2016-03-22 15:43:47Z
 #include <sys/malloc.h>
 #include <sys/socket.h>
 #include <sys/sockio.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/lock.h>
 #include <sys/proc.h>
