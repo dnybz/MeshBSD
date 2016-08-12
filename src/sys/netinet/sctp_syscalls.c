@@ -52,7 +52,6 @@ __FBSDID("$FreeBSD: head/sys/netinet/sctp_syscalls.c 298066 2016-04-15 15:46:41Z
 #include <sys/fcntl.h>
 #include <sys/file.h>
 #include <sys/filio.h>
-#include <sys/jail.h>
 #include <sys/mount.h>
 #include <sys/mbuf.h>
 #include <sys/protosw.h>

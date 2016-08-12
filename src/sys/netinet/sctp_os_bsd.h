@@ -54,7 +54,6 @@ __FBSDID("$FreeBSD: head/sys/netinet/sctp_os_bsd.h 297663 2016-04-07 09:34:41Z r
 #include <sys/protosw.h>
 #include <sys/socket.h>
 #include <sys/socketvar.h>
-#include <sys/jail.h>
 #include <sys/sysctl.h>
 #include <sys/resourcevar.h>
 #include <sys/uio.h>

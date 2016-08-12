@@ -38,7 +38,6 @@ __FBSDID("$FreeBSD: head/sys/netinet/raw_ip.c 298066 2016-04-15 15:46:41Z pfg $"
 #include "opt_ipsec.h"
 
 #include <sys/param.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/eventhandler.h>
 #include <sys/lock.h>
@@ -498,14 +497,12 @@ rip_output(struct mbuf *m, struct socket *so, ...)
  * IMPORTANT NOTE regarding access control: Traditionally, raw sockets could
  * only be created by a privileged process, and as such, socket option
  * operations to manage system properties on any raw socket were allowed to
- * take place without explicit additional access control checks.  However,
- * raw sockets can now also be created in jail(), and therefore explicit
- * checks are now required.  Likewise, raw sockets can be used by a process
- * after it gives up privilege, so some caution is required.  For options
- * passed down to the IP layer via ip_ctloutput(), checks are assumed to be
- * performed in ip_ctloutput() and therefore no check occurs here.
- * Unilaterally checking priv_check() here breaks normal IP socket option
- * operations on raw sockets.
+ * take place without explicit additional access control checks.  Likewise,
+ * raw sockets can be used by a process after it gives up privilege, so some  
+ * caution is required.  For options passed down to the IP layer via
+ * ip_ctloutput(), checks are assumed to be performed in ip_ctloutput() and  
+ * therefore no check occurs here. Unilaterally checking priv_check() here 
+ * breaks normal IP socket option operations on raw sockets.
  *
  * When adding new socket options here, make sure to add access control
  * checks here as necessary.
