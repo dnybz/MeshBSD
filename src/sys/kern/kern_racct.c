@@ -612,14 +612,10 @@ racct_add_force(struct proc *p, int resource, uint64_t amount)
 static void
 racct_add_cred_locked(struct ucred *cred, int resource, uint64_t amount)
 {
-	struct prison *pr;
 
 	ASSERT_RACCT_ENABLED();
 
 	racct_adjust_resource(cred->cr_ruidinfo->ui_racct, resource, amount);
-	for (pr = cred->cr_prison; pr != NULL; pr = pr->pr_parent)
-		racct_adjust_resource(pr->pr_prison_racct->prr_racct, resource,
-		    amount);
 	racct_adjust_resource(cred->cr_loginclass->lc_racct, resource, amount);
 }
 
@@ -866,14 +862,10 @@ racct_sub(struct proc *p, int resource, uint64_t amount)
 static void
 racct_sub_cred_locked(struct ucred *cred, int resource, uint64_t amount)
 {
-	struct prison *pr;
 
 	ASSERT_RACCT_ENABLED();
 
 	racct_adjust_resource(cred->cr_ruidinfo->ui_racct, resource, -amount);
-	for (pr = cred->cr_prison; pr != NULL; pr = pr->pr_parent)
-		racct_adjust_resource(pr->pr_prison_racct->prr_racct, resource,
-		    -amount);
 	racct_adjust_resource(cred->cr_loginclass->lc_racct, resource, -amount);
 }
 
@@ -1201,8 +1193,6 @@ racct_decay(void)
 	    racct_decay_post, NULL, NULL);
 	loginclass_racct_foreach(racct_decay_callback, racct_decay_pre,
 	    racct_decay_post, NULL, NULL);
-	prison_racct_foreach(racct_decay_callback, racct_decay_pre,
-	    racct_decay_post, NULL, NULL);
 }
 
 static void
@@ -1322,10 +1312,6 @@ racct_init(void)
 
 	racct_zone = uma_zcreate("racct", sizeof(struct racct),
 	    NULL, NULL, NULL, NULL, UMA_ALIGN_PTR, 0);
-	/*
-	 * XXX: Move this somewhere.
-	 */
-	prison0.pr_prison_racct = prison_racct_find("0");
 }
 SYSINIT(racct, SI_SUB_RACCT, SI_ORDER_FIRST, racct_init, NULL);
 
