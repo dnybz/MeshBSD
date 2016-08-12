@@ -193,7 +193,6 @@ struct kinfo_proc {
 	int	ki_flag2;		/* P2_* flags */
 	int	ki_fibnum;		/* Default FIB number */
 	u_int	ki_cr_flags;		/* Credential flags */
-	int	ki_jid;			/* Process jail ID */
 	int	ki_numthreads;		/* XXXKSE number of threads in total */
 	lwpid_t	ki_tid;			/* XXXKSE thread id */
 	struct	priority ki_pri;	/* process priority */
@@ -273,10 +272,9 @@ struct user {
 
 #define	KF_FD_TYPE_CWD	-1	/* Current working directory */
 #define	KF_FD_TYPE_ROOT	-2	/* Root directory */
-#define	KF_FD_TYPE_JAIL	-3	/* Jail directory */
-#define	KF_FD_TYPE_TRACE	-4	/* Ktrace vnode */
-#define	KF_FD_TYPE_TEXT	-5	/* Text vnode */
-#define	KF_FD_TYPE_CTTY	-6	/* Controlling terminal */
+#define	KF_FD_TYPE_TRACE	-3	/* Ktrace vnode */
+#define	KF_FD_TYPE_TEXT	-4	/* Text vnode */
+#define	KF_FD_TYPE_CTTY	-5	/* Controlling terminal */
 
 #define	KF_FLAG_READ		0x00000001
 #define	KF_FLAG_WRITE		0x00000002

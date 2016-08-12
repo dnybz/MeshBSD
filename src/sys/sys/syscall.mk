@@ -212,7 +212,6 @@ MIASM =  \
 	sched_rr_get_interval.o \
 	utrace.o \
 	kldsym.o \
-	jail.o \
 	nnpfs_syscall.o \
 	sigprocmask.o \
 	sigsuspend.o \
@@ -289,7 +288,6 @@ MIASM =  \
 	thr_exit.o \
 	thr_self.o \
 	thr_kill.o \
-	jail_attach.o \
 	extattr_list_fd.o \
 	extattr_list_file.o \
 	extattr_list_link.o \
@@ -354,9 +352,6 @@ MIASM =  \
 	unlinkat.o \
 	posix_openpt.o \
 	gssd_syscall.o \
-	jail_get.o \
-	jail_set.o \
-	jail_remove.o \
 	closefrom.o \
 	__semctl.o \
 	msgctl.o \

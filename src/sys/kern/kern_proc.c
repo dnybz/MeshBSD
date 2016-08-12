@@ -1276,7 +1276,6 @@ freebsd32_kinfo_proc_out(const struct kinfo_proc *ki, struct kinfo_proc32 *ki32)
 	CP(*ki, *ki32, ki_flag2);
 	CP(*ki, *ki32, ki_fibnum);
 	CP(*ki, *ki32, ki_cr_flags);
-	CP(*ki, *ki32, ki_jid);
 	CP(*ki, *ki32, ki_numthreads);
 	CP(*ki, *ki32, ki_tid);
 	CP(*ki, *ki32, ki_pri);

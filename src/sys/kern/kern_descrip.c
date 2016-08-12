@@ -1861,9 +1861,6 @@ fdinit(struct filedesc *fdp, bool prepfiles)
 	newfdp->fd_rdir = fdp->fd_rdir;
 	if (newfdp->fd_rdir)
 		VREF(newfdp->fd_rdir);
-	newfdp->fd_jdir = fdp->fd_jdir;
-	if (newfdp->fd_jdir)
-		VREF(newfdp->fd_jdir);
 
 	if (!prepfiles) {
 		FILEDESC_SUNLOCK(fdp);
@@ -2158,7 +2155,7 @@ fdescfree(struct thread *td)
 {
 	struct proc *p;
 	struct filedesc *fdp;
-	struct vnode *cdir, *jdir, *rdir;
+	struct vnode *cdir, *rdir;
 
 	p = td->td_proc;
 	fdp = p->p_fd;
@@ -2187,16 +2184,13 @@ fdescfree(struct thread *td)
 	fdp->fd_cdir = NULL;
 	rdir = fdp->fd_rdir;
 	fdp->fd_rdir = NULL;
-	jdir = fdp->fd_jdir;
-	fdp->fd_jdir = NULL;
+
 	FILEDESC_XUNLOCK(fdp);
 
 	if (cdir != NULL)
 		vrele(cdir);
 	if (rdir != NULL)
 		vrele(rdir);
-	if (jdir != NULL)
-		vrele(jdir);
 
 	fdescfree_fds(td, fdp, 1);
 }
@@ -2209,8 +2203,6 @@ fdescfree_remapped(struct filedesc *fdp)
 		vrele(fdp->fd_cdir);
 	if (fdp->fd_rdir != NULL)
 		vrele(fdp->fd_rdir);
-	if (fdp->fd_jdir != NULL)
-		vrele(fdp->fd_jdir);
 
 	fdescfree_fds(curthread, fdp, 0);
 }
@@ -3037,10 +3029,7 @@ pwd_chroot(struct thread *td, struct vnode *vp)
 	oldvp = fdp->fd_rdir;
 	VREF(vp);
 	fdp->fd_rdir = vp;
-	if (fdp->fd_jdir == NULL) {
-		VREF(vp);
-		fdp->fd_jdir = vp;
-	}
+
 	FILEDESC_XUNLOCK(fdp);
 	vrele(oldvp);
 	return (0);
@@ -3094,11 +3083,7 @@ mountcheckdirs(struct vnode *olddp, struct vnode *newdp)
 			fdp->fd_rdir = newdp;
 			nrele++;
 		}
-		if (fdp->fd_jdir == olddp) {
-			vref(newdp);
-			fdp->fd_jdir = newdp;
-			nrele++;
-		}
+
 		FILEDESC_XUNLOCK(fdp);
 		fddrop(fdp);
 	}
@@ -3471,11 +3456,7 @@ kern_proc_filedesc_out(struct proc *p,  struct sbuf *sb, ssize_t maxlen,
 		vref(fdp->fd_rdir);
 		export_vnode_to_sb(fdp->fd_rdir, KF_FD_TYPE_ROOT, FREAD, efbuf);
 	}
-	/* jail directory */
-	if (fdp->fd_jdir != NULL) {
-		vref(fdp->fd_jdir);
-		export_vnode_to_sb(fdp->fd_jdir, KF_FD_TYPE_JAIL, FREAD, efbuf);
-	}
+
 	for (i = 0; fdp->fd_refcnt > 0 && i <= fdp->fd_lastfile; i++) {
 		if ((fp = fdp->fd_ofiles[i].fde_file) == NULL)
 			continue;
@@ -3602,9 +3583,7 @@ sysctl_kern_proc_ofiledesc(SYSCTL_HANDLER_ARGS)
 	if (fdp->fd_rdir != NULL)
 		export_vnode_for_osysctl(fdp->fd_rdir, KF_FD_TYPE_ROOT, kif,
 		    okif, fdp, req);
-	if (fdp->fd_jdir != NULL)
-		export_vnode_for_osysctl(fdp->fd_jdir, KF_FD_TYPE_JAIL, kif,
-		    okif, fdp, req);
+
 	for (i = 0; fdp->fd_refcnt > 0 && i <= fdp->fd_lastfile; i++) {
 		if ((fp = fdp->fd_ofiles[i].fde_file) == NULL)
 			continue;

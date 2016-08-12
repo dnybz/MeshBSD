@@ -305,7 +305,6 @@ struct kinfo_proc32 {
 	int	ki_flag2;
 	int	ki_fibnum;
 	u_int	ki_cr_flags;
-	int	ki_jid;
 	int	ki_numthreads;
 	lwpid_t	ki_tid;
 	struct	priority ki_pri;

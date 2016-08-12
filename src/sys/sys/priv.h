@@ -44,10 +44,6 @@
  * modules.  Particular numeric privilege assignments are part of the
  * loadable kernel module ABI, and should not be changed across minor
  * releases.
- *
- * When adding a new privilege, remember to determine if it's appropriate
- * for use in jail, and update the privilege switch in prison_priv_check()
- * in kern_jail.c as necessary.
  */
 
 /*
@@ -424,8 +420,7 @@
  * Define a set of valid privilege numbers that can be used by loadable
  * modules that don't yet have privilege reservations.  Ideally, these should
  * not be used, since their meaning is opaque to any policies that are aware
- * of specific privileges, such as jail, and as such may be arbitrarily
- * denied.
+ * of specific privileges and as such may be arbitrarily denied.
  */
 #define	PRIV_MODULE0		600
 #define	PRIV_MODULE1		601
@@ -505,8 +500,7 @@
  * Privilege check interfaces, modeled after historic suser() interfaces, but
  * with the addition of a specific privilege name.  No flags are currently
  * defined for the API.  Historically, flags specified using the real uid
- * instead of the effective uid, and whether or not the check should be
- * allowed in jail.
+ * instead of the effective uid.
  */
 struct thread;
 struct ucred;
