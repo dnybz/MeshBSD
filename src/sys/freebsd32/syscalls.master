@@ -607,7 +607,7 @@
 				    off_t *sbytes, int flags); }
 337	AUE_NULL	NOPROTO	{ int kldsym(int fileid, int cmd, \
 				    void *data); }
-338	AUE_JAIL	STD	{ int freebsd32_jail(struct jail32 *jail); }
+338	AUE_NULL	UNIMPL	nosys
 339	AUE_NULL	UNIMPL	pioctl
 340	AUE_SIGPROCMASK	NOPROTO	{ int sigprocmask(int how, \
 				    const sigset_t *set, sigset_t *oset); }
@@ -778,7 +778,7 @@
 433	AUE_NULL	NOPROTO	{ int thr_kill(long id, int sig); }
 434	AUE_NULL	UNIMPL	nosys
 435	AUE_NULL	UNIMPL	nosys
-436	AUE_NULL	NOPROTO	{ int jail_attach(int jid); }
+436	AUE_NULL	UNIMPL	nosys
 437	AUE_EXTATTR_LIST_FD	NOPROTO	{ ssize_t extattr_list_fd(int fd, \
 				    int attrnamespace, void *data, \
 				    size_t nbytes); }
@@ -958,11 +958,9 @@
 504	AUE_POSIX_OPENPT	NOPROTO	{ int posix_openpt(int flags); }
 ; 505 is initialised by the kgssapi code, if present.
 505	AUE_NULL	UNIMPL	gssd_syscall
-506	AUE_NULL	STD	{ int freebsd32_jail_get(struct iovec32 *iovp, \
-				    unsigned int iovcnt, int flags); }
-507	AUE_NULL	STD	{ int freebsd32_jail_set(struct iovec32 *iovp, \
-				    unsigned int iovcnt, int flags); }
-508	AUE_NULL	NOPROTO	{ int jail_remove(int jid); }
+506	AUE_NULL	UNIMPL	nosys
+507	AUE_NULL	UNIMPL	nosys
+508	AUE_NULL	UNIMPL	nosys
 509	AUE_CLOSEFROM	NOPROTO	{ int closefrom(int lowfd); }
 510	AUE_SEMCTL	NOSTD { int freebsd32_semctl(int semid, int semnum, \
 				    int cmd, union semun32 *arg); }
