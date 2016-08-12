@@ -595,7 +595,7 @@
 				    int flags); }
 337	AUE_NULL	STD	{ int kldsym(int fileid, int cmd, \
 				    void *data); }
-338	AUE_JAIL	STD	{ int jail(struct jail *jail); }
+338	AUE_NULL	UNIMPL	nosys
 339	AUE_NULL	NOSTD|NOTSTATIC	{ int nnpfs_syscall(int operation, \
 				    char *a_pathP, int a_opcode, \
 				    void *a_paramsP, int a_followSymlinks); }
@@ -775,7 +775,7 @@
 433	AUE_NULL	STD	{ int thr_kill(long id, int sig); }
 434	AUE_NULL	UNIMPL	nosys
 435	AUE_NULL	UNIMPL	nosys
-436	AUE_NULL	STD	{ int jail_attach(int jid); }
+436	AUE_NULL	UNIMPL	nosys
 437	AUE_EXTATTR_LIST_FD	STD	{ ssize_t extattr_list_fd(int fd, \
 				    int attrnamespace, void *data, \
 				    size_t nbytes); }
@@ -904,11 +904,9 @@
 504	AUE_POSIX_OPENPT	STD	{ int posix_openpt(int flags); }
 ; 505 is initialised by the kgssapi code, if present.
 505	AUE_NULL	NOSTD	{ int gssd_syscall(char *path); }
-506	AUE_NULL	STD	{ int jail_get(struct iovec *iovp, \
-				    unsigned int iovcnt, int flags); }
-507	AUE_NULL	STD	{ int jail_set(struct iovec *iovp, \
-				    unsigned int iovcnt, int flags); }
-508	AUE_NULL	STD	{ int jail_remove(int jid); }
+506	AUE_NULL	UNIMPL	nosys
+507	AUE_NULL	UNIMPL	nosys
+508	AUE_NULL	UNIMPL	nosys
 509	AUE_CLOSEFROM	STD	{ int closefrom(int lowfd); }
 510	AUE_SEMCTL	NOSTD	{ int __semctl(int semid, int semnum, \
 				    int cmd, union semun *arg); }
