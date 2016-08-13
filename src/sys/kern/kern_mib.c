@@ -332,13 +332,30 @@ SYSCTL_INT(_regression, OID_AUTO, securelevel_nonmonotonic, CTLFLAG_RW,
 static int
 sysctl_kern_securelvl(SYSCTL_HANDLER_ARGS)
 {
-	int level;
-	/*
-	 * Perform a lockless read since the securelevel is an integer.
-	 */
-
-	level = req->td->td_ucred->cr_securelevel;
-	return (sysctl_handle_int(oidp, &level, 0, req));
+    struct ucrd *cred;	
+    int level, error;
+/*
+ * Perform a lockless read since the securelevel is an integer.
+ */
+    cred = req->td->td_ucred;
+    level = cred->cr_securelevel;
+    error = sysctl_handle_int(oidp, &level, 0, req)	
+    if (error || !req->newptr)
+		goto out;
+/* 
+ * Permit update only if the new securelevel exceeds the old. 
+ */
+	if (!regression_securelevel_nonmonotonic &&
+	    level < cr->cr_securelevel) {
+		error = EPERM;
+        goto out;
+	}
+/*
+ * Update securelevel.
+ */
+	cr->cr_securelevel = level;
+out:
+    return (error);
 }
 
 SYSCTL_PROC(_kern, KERN_SECURELVL, securelevel,
