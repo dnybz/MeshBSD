@@ -43,7 +43,6 @@
 #include <sys/exec.h>
 #include <sys/lock.h>
 #include <sys/mutex.h>
-#include <sys/jail.h>
 #include <sys/malloc.h>
 #include <sys/mutex.h>
 #include <sys/sx.h>
