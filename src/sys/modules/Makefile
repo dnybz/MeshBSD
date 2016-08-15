@@ -88,8 +88,6 @@ SUBDIR=	\
 	${_ct} \
 	${_ctau} \
 	ctl \
-	${_cxgb} \
-	${_cxgbe} \
 	dc \
 	dcons \
 	dcons_crom \
@@ -401,15 +399,6 @@ SUBDIR=	\
 _autofs=	autofs
 .endif
 
-.if ${MK_CDDL} != "no" || defined(ALL_MODULES)
-.if (${MACHINE_CPUARCH} != "arm" || ${MACHINE_ARCH:Marmv6*} != "") && \
-	${MACHINE_CPUARCH} != "mips" && \
-	${MACHINE_CPUARCH} != "sparc64"
-SUBDIR+=	dtrace
-.endif
-SUBDIR+=	opensolaris
-.endif
-
 .if ${MK_CRYPT} != "no" || defined(ALL_MODULES)
 .if exists(${.CURDIR}/../opencrypto)
 _crypto=	crypto
@@ -442,10 +431,6 @@ _if_stf=	if_stf
 _if_me=		if_me
 _ipdivert=	ipdivert
 _ipfw=		ipfw
-.endif
-
-.if ${MK_IPFILTER} != "no" || defined(ALL_MODULES)
-_ipfilter=	ipfilter
 .endif
 
 .if ${MK_ISCSI} != "no" || defined(ALL_MODULES)
@@ -485,30 +470,11 @@ _ti=		ti
 _txp=		txp
 .endif
 
-.if ${MK_SOURCELESS_UCODE} != "no" && ${MACHINE_CPUARCH} != "arm" && \
-	${MACHINE_ARCH:C/mips(el)?/mips/} != "mips" && \
-	${MACHINE_ARCH} != "powerpc"
-_cxgbe=		cxgbe
-.endif
-
-.if ${MK_ZFS} != "no" || defined(ALL_MODULES)
-SUBDIR+=	zfs
-.endif
-
-.if ${MACHINE_CPUARCH} != "aarch64" && ${MACHINE_CPUARCH} != "arm" && \
-	${MACHINE_CPUARCH} != "mips" && ${MACHINE_CPUARCH} != "powerpc"
-_syscons=	syscons
-_vpo=		vpo
-.endif
-
 .if ${MACHINE_CPUARCH} != "mips"
 # no BUS_SPACE_UNSPECIFIED
 # No barrier instruction support (specific to this driver)
 _sym=		sym
 # intr_disable() is a macro, causes problems
-.if ${MK_SOURCELESS_UCODE} != "no"
-_cxgb=		cxgb
-.endif
 .endif
 
 .if ${MACHINE_CPUARCH} == "aarch64"
@@ -516,243 +482,13 @@ _em=		em
 _igb=		igb
 .endif
 
-.if ${MACHINE_CPUARCH} == "i386" || ${MACHINE_CPUARCH} == "amd64"
-_agp=		agp
-_an=		an
-_aout=		aout
-_bktr=		bktr
-_bxe=		bxe
-_cardbus=	cardbus
-_cbb=		cbb
-_cpuctl=	cpuctl
-_cpufreq=	cpufreq
-_cs=		cs
-_dpms=		dpms
-_drm=		drm
-_drm2=		drm2
-_ed=		ed
-_em=		em
-_ep=		ep
-_et=		et
-_exca=		exca
-_fe=		fe
-_filemon=	filemon
-.if ${MK_OFED} != "no" || defined(ALL_MODULES)
-_ibcore=        ibcore
-.endif
-_if_ndis=	if_ndis
-_igb=		igb
-_io=		io
-.if ${MK_OFED} != "no" || defined(ALL_MODULES)
-_ipoib=         ipoib
-.endif
-_ix=		ix
-_ixv=		ixv
-_linprocfs=	linprocfs
-_linsysfs=	linsysfs
-_linux=		linux
-_nctgpio=	nctgpio
-_ndis=		ndis
-_pccard=	pccard
-.if ${MK_OFED} != "no" || defined(ALL_MODULES)
-_rdma=		rdma
-.endif
-_safe=		safe
-_scsi_low=	scsi_low
-_si=		si
-_speaker=	speaker
-_splash=	splash
-_sppp=		sppp
-_vmware=	vmware
-_vxge=  	vxge
-_wbwd=		wbwd
-_wi=		wi
-_xe=		xe
-.if ${MACHINE} != "pc98"
-_aac=		aac
-_aacraid=	aacraid
-_acpi=		acpi
-.if ${MK_CRYPT} != "no" || defined(ALL_MODULES)
-_aesni=		aesni
-.endif
-_amdsbwd=	amdsbwd
-_amdtemp=	amdtemp
-_arcmsr=	arcmsr
-_asmc=		asmc
-_ciss=		ciss
-_cmx=		cmx
-_coretemp=	coretemp
-.if ${MK_SOURCELESS_HOST} != "no"
-_hpt27xx=	hpt27xx
-.endif
-_hptiop=	hptiop
-.if ${MK_SOURCELESS_HOST} != "no"
-_hptmv=		hptmv
-_hptnr=		hptnr
-_hptrr=		hptrr
-.endif
-_hyperv=	hyperv
-_ichwd=		ichwd
-_ida=		ida
-_iir=		iir
-_ipmi=		ipmi
-_ips=		ips
-_isci=		isci
-_ipw=		ipw
-_iwi=		iwi
-_iwm=		iwm
-_iwn=		iwn
-_ixgb=		ixgb
-.if ${MK_SOURCELESS_UCODE} != "no"
-_ipwfw=		ipwfw
-_iwifw=		iwifw
-_iwmfw=		iwmfw
-_iwnfw=		iwnfw
-.endif
-.if ${MK_OFED} != "no" || defined(ALL_MODULES)
-_mlx4=		mlx4
-_mlx4ib=	mlx4ib
-_mlxen=		mlxen
-.endif
-_mlx5=		mlx5
-.if (${MK_INET_SUPPORT} != "no" && ${MK_INET6_SUPPORT} != "no") || \
-	defined(ALL_MODULES)
-_mlx5en=	mlx5en
-.endif
-_mly=		mly
-.if ${MK_OFED} != "no" || defined(ALL_MODULES)
-_mthca=		mthca
-.endif
-_nfe=		nfe
-_nvd=		nvd
-_nvme=		nvme
-_nvram=		nvram
-_nxge=		nxge
-.if ${MK_CRYPT} != "no" || defined(ALL_MODULES)
-_padlock=	padlock
-_padlock_rng=	padlock_rng
-_rdrand_rng=	rdrand_rng
-.endif
-_s3=		s3
-_tpm=		tpm
-_twa=		twa
-_vesa=		vesa
-_viawd=		viawd
-_virtio=	virtio
-_wpi=		wpi
-.if ${MK_SOURCELESS_UCODE} != "no"
-_wpifw=		wpifw
-.endif
-_x86bios=	x86bios
-.endif
-.endif
-
-.if ${MACHINE_CPUARCH} == "amd64"
-_ioat=		ioat
-_ixl=		ixl
-_ixlv=		ixlv
-_linux64=	linux64
-_linux_common=	linux_common
-_ntb=		ntb
-_pms=		pms
-_qlxge=		qlxge
-_qlxgb=		qlxgb
-_qlxgbe=	qlxgbe
-_sfxge=		sfxge
-
-.if ${MK_BHYVE} != "no" || defined(ALL_MODULES)
-_vmm=		vmm
-.endif
-.endif
-
-.if ${MACHINE_CPUARCH} == "i386"
-# XXX some of these can move to the general case when de-i386'ed
-# XXX some of these can move now, but are untested on other architectures.
-_3dfx=		3dfx
-_3dfx_linux=	3dfx_linux
-_aic=		aic
-_apm=		apm
-_arcnet=	arcnet
-.if ${MK_SOURCELESS_UCODE} != "no"
-_ce=		ce
-.endif
-_coff=		coff
-.if ${MK_SOURCELESS_UCODE} != "no"
-_cp=		cp
-.endif
-_elink=		elink
-_glxiic=	glxiic
-_glxsb=		glxsb
-#_ibcs2=		ibcs2
-_ie=		ie
-_mse=		mse
-_ncr=		ncr
-_ncv=		ncv
-_nsp=		nsp
-_pcfclock=	pcfclock
-_pst=		pst
-_sbni=		sbni
-_streams=	streams
-_stg=		stg
-_svr4=		svr4
-_wds=		wds
-.if ${MACHINE} == "i386"
-.if ${MK_EISA} != "no"
-_ahb=		ahb
-.endif
-_bios=		bios
-_cm=		cm
-.if ${MK_SOURCELESS_UCODE} != "no"
-_ctau=		ctau
-.endif
-_dpt=		dpt
-_ex=		ex
-_wl=		wl
-.elif ${MACHINE} == "pc98"
-_canbepm=	canbepm
-_canbus=	canbus
-_ct=		ct
-_pmc=		pmc
-_snc=		snc
-.endif
-.endif
 
 .if ${MACHINE_CPUARCH} == "arm"
 _cfi=		cfi
 _cpsw=		cpsw
 .endif
 
-.if ${MACHINE_CPUARCH} == "powerpc"
-_agp=		agp
-_an=		an
-_bm=		bm
-_cardbus=	cardbus
-_cbb=		cbb
-_cfi=		cfi
-_cpufreq=	cpufreq
-_drm=		drm
-_exca=		exca
-_nvram=		powermac_nvram
-_pccard=	pccard
-_wi=		wi
-.endif
 
-.if ${MACHINE_ARCH} == "powerpc64"
-_drm2=		drm2
-.endif
-
-.if ${MACHINE_CPUARCH} == "sparc64"
-_auxio=		auxio
-_em=		em
-_epic=		epic
-_igb=		igb
-.endif
-
-.if ${MACHINE_CPUARCH} == "aarch64" || ${MACHINE_CPUARCH} == "amd64"
-_cloudabi64=	cloudabi64
-.endif
-
-.endif
 
 SUBDIR+=${MODULES_EXTRA}
 

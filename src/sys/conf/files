@@ -999,104 +999,6 @@ dev/cpufreq/ichss.c		optional cpufreq
 dev/cs/if_cs.c			optional cs
 dev/cs/if_cs_isa.c		optional cs isa
 dev/cs/if_cs_pccard.c		optional cs pccard
-dev/cxgb/cxgb_main.c		optional cxgb pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgb"
-dev/cxgb/cxgb_sge.c		optional cxgb pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgb"
-dev/cxgb/common/cxgb_mc5.c	optional cxgb pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgb"
-dev/cxgb/common/cxgb_vsc7323.c	optional cxgb pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgb"
-dev/cxgb/common/cxgb_vsc8211.c	optional cxgb pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgb"
-dev/cxgb/common/cxgb_ael1002.c	optional cxgb pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgb"
-dev/cxgb/common/cxgb_aq100x.c	optional cxgb pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgb"
-dev/cxgb/common/cxgb_mv88e1xxx.c	optional cxgb pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgb"
-dev/cxgb/common/cxgb_xgmac.c	optional cxgb pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgb"
-dev/cxgb/common/cxgb_t3_hw.c	optional cxgb pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgb"
-dev/cxgb/common/cxgb_tn1010.c	optional cxgb pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgb"
-dev/cxgb/sys/uipc_mvec.c	optional cxgb pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgb"
-dev/cxgb/cxgb_t3fw.c		optional cxgb cxgb_t3fw \
-	compile-with "${NORMAL_C} -I$S/dev/cxgb"
-dev/cxgbe/t4_mp_ring.c		optional cxgbe pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgbe"
-dev/cxgbe/t4_main.c		optional cxgbe pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgbe"
-dev/cxgbe/t4_netmap.c		optional cxgbe pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgbe"
-dev/cxgbe/t4_sge.c		optional cxgbe pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgbe"
-dev/cxgbe/t4_l2t.c		optional cxgbe pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgbe"
-dev/cxgbe/t4_tracer.c		optional cxgbe pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgbe"
-dev/cxgbe/common/t4_hw.c	optional cxgbe pci \
-	compile-with "${NORMAL_C} -I$S/dev/cxgbe"
-t4fw_cfg.c		optional cxgbe					\
-	compile-with	"${AWK} -f $S/tools/fw_stub.awk t4fw_cfg.fw:t4fw_cfg t4fw_cfg_uwire.fw:t4fw_cfg_uwire t4fw.fw:t4fw -mt4fw_cfg -c${.TARGET}" \
-	no-implicit-rule before-depend local				\
-	clean		"t4fw_cfg.c"
-t4fw_cfg.fwo		optional cxgbe					\
-	dependency	"t4fw_cfg.fw"					\
-	compile-with	"${NORMAL_FWO}"					\
-	no-implicit-rule						\
-	clean		"t4fw_cfg.fwo"
-t4fw_cfg.fw		optional cxgbe					\
-	dependency	"$S/dev/cxgbe/firmware/t4fw_cfg.txt"		\
-	compile-with	"${CP} ${.ALLSRC} ${.TARGET}"			\
-	no-obj no-implicit-rule						\
-	clean		"t4fw_cfg.fw"
-t4fw_cfg_uwire.fwo	optional cxgbe					\
-	dependency	"t4fw_cfg_uwire.fw"				\
-	compile-with	"${NORMAL_FWO}"					\
-	no-implicit-rule						\
-	clean		"t4fw_cfg_uwire.fwo"
-t4fw_cfg_uwire.fw	optional cxgbe					\
-	dependency	"$S/dev/cxgbe/firmware/t4fw_cfg_uwire.txt"	\
-	compile-with	"${CP} ${.ALLSRC} ${.TARGET}"			\
-	no-obj no-implicit-rule						\
-	clean		"t4fw_cfg_uwire.fw"
-t4fw.fwo		optional cxgbe					\
-	dependency	"t4fw.fw"					\
-	compile-with	"${NORMAL_FWO}"					\
-	no-implicit-rule						\
-	clean		"t4fw.fwo"
-t4fw.fw			optional cxgbe					\
-	dependency	"$S/dev/cxgbe/firmware/t4fw-1.15.37.0.bin.uu"	\
-	compile-with	"${NORMAL_FW}"					\
-	no-obj no-implicit-rule						\
-	clean		"t4fw.fw"
-t5fw_cfg.c		optional cxgbe					\
-	compile-with	"${AWK} -f $S/tools/fw_stub.awk t5fw_cfg.fw:t5fw_cfg t5fw.fw:t5fw -mt5fw_cfg -c${.TARGET}" \
-	no-implicit-rule before-depend local				\
-	clean		"t5fw_cfg.c"
-t5fw_cfg.fwo		optional cxgbe					\
-	dependency	"t5fw_cfg.fw"					\
-	compile-with	"${NORMAL_FWO}"					\
-	no-implicit-rule						\
-	clean		"t5fw_cfg.fwo"
-t5fw_cfg.fw		optional cxgbe					\
-	dependency	"$S/dev/cxgbe/firmware/t5fw_cfg.txt"		\
-	compile-with	"${CP} ${.ALLSRC} ${.TARGET}"			\
-	no-obj no-implicit-rule						\
-	clean		"t5fw_cfg.fw"
-t5fw.fwo		optional cxgbe					\
-	dependency	"t5fw.fw"					\
-	compile-with	"${NORMAL_FWO}"					\
-	no-implicit-rule						\
-	clean		"t5fw.fwo"
-t5fw.fw			optional cxgbe					\
-	dependency	"$S/dev/cxgbe/firmware/t5fw-1.15.37.0.bin.uu"	\
-	compile-with	"${NORMAL_FW}"					\
-	no-obj no-implicit-rule						\
-	clean		"t5fw.fw"
 dev/cy/cy.c			optional cy
 dev/cy/cy_isa.c			optional cy isa
 dev/cy/cy_pci.c			optional cy pci
@@ -1907,15 +1809,6 @@ dev/nand/nfc_if.m		optional nand
 dev/ncr/ncr.c			optional ncr pci
 dev/ncv/ncr53c500.c		optional ncv
 dev/ncv/ncr53c500_pccard.c	optional ncv pccard
-dev/netmap/netmap.c		optional netmap
-dev/netmap/netmap_freebsd.c	optional netmap
-dev/netmap/netmap_generic.c	optional netmap
-dev/netmap/netmap_mbq.c		optional netmap
-dev/netmap/netmap_mem2.c	optional netmap
-dev/netmap/netmap_monitor.c	optional netmap
-dev/netmap/netmap_offloadings.c	optional netmap
-dev/netmap/netmap_pipe.c	optional netmap
-dev/netmap/netmap_vale.c	optional netmap
 # compile-with "${NORMAL_C} -Wconversion -Wextra"
 dev/nfsmb/nfsmb.c		optional nfsmb pci
 dev/nge/if_nge.c		optional nge
