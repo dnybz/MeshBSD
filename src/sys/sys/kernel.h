@@ -74,9 +74,14 @@
 #ifdef _KERNEL
 
 /* for intrhook below */
+
 #include <sys/queue.h>
 
-/* Global variables for the kernel. */
+#include <sys/param.h>
+
+/* 
+ * Global variables for the kernel. 
+ */
 
 extern unsigned long hostid;
 extern char hostname[MAXHOSTNAMELEN];
