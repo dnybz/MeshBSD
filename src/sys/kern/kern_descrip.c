@@ -51,7 +51,6 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_descrip.c 299227 2016-05-08 03:26:12Z mjg
 #include <sys/file.h>
 #include <sys/filedesc.h>
 #include <sys/filio.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/limits.h>
 #include <sys/lock.h>

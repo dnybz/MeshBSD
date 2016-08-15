@@ -43,7 +43,6 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_proc.c 298173 2016-04-17 23:22:32Z markj 
 #include <sys/elf.h>
 #include <sys/eventhandler.h>
 #include <sys/exec.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/limits.h>
 #include <sys/lock.h>

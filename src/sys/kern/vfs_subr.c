@@ -57,7 +57,6 @@ __FBSDID("$FreeBSD: head/sys/kern/vfs_subr.c 299916 2016-05-16 07:31:11Z avg $")
 #include <sys/extattr.h>
 #include <sys/file.h>
 #include <sys/fcntl.h>
-#include <sys/jail.h>
 #include <sys/kdb.h>
 #include <sys/kernel.h>
 #include <sys/kthread.h>

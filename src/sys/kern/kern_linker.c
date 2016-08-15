@@ -47,7 +47,6 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_linker.c 298819 2016-04-29 22:15:33Z pfg 
 #include <sys/linker.h>
 #include <sys/eventhandler.h>
 #include <sys/fcntl.h>
-#include <sys/jail.h>
 #include <sys/libkern.h>
 #include <sys/namei.h>
 #include <sys/vnode.h>

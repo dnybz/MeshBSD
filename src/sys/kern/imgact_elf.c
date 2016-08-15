@@ -42,7 +42,6 @@ __FBSDID("$FreeBSD: head/sys/kern/imgact_elf.c 298433 2016-04-21 19:57:40Z pfg $
 #include <sys/gzio.h>
 #include <sys/imgact.h>
 #include <sys/imgact_elf.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/lock.h>
 #include <sys/malloc.h>
