@@ -234,4 +234,4 @@ static struct vfsops devfs_vfsops = {
 	.vfs_unmount =		devfs_unmount,
 };
 
-VFS_SET(devfs_vfsops, devfs, VFCF_SYNTHETIC | VFCF_JAIL);
+VFS_SET(devfs_vfsops, devfs, VFCF_SYNTHETIC);

@@ -303,7 +303,7 @@ static struct vfsops name##_vfsops = {					\
 	.vfs_uninit =		_##name##_uninit,			\
 	.vfs_unmount =		pfs_unmount,				\
 };									\
-VFS_SET(name##_vfsops, name, VFCF_SYNTHETIC | (jflag ? VFCF_JAIL : 0));	\
+VFS_SET(name##_vfsops, name, VFCF_SYNTHETIC);	\
 MODULE_VERSION(name, version);						\
 MODULE_DEPEND(name, pseudofs, 1, 1, 1);
 

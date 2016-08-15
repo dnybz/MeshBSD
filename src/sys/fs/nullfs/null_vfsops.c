@@ -450,4 +450,4 @@ static struct vfsops null_vfsops = {
 	.vfs_unlink_lowervp =	nullfs_unlink_lowervp,
 };
 
-VFS_SET(null_vfsops, nullfs, VFCF_LOOPBACK | VFCF_JAIL);
+VFS_SET(null_vfsops, nullfs, VFCF_LOOPBACK);

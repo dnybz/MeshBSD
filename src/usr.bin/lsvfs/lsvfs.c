@@ -32,7 +32,6 @@ static struct flaglist {
 	{ .flag = VFCF_SYNTHETIC, .str = "synthetic", },
 	{ .flag = VFCF_LOOPBACK, .str = "loopback", },
 	{ .flag = VFCF_UNICODE, .str = "unicode", },
-	{ .flag = VFCF_JAIL, .str = "jail", },
 	{ .flag = VFCF_DELEGADMIN, .str = "delegated-administration", },
 };
 

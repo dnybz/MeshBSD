@@ -480,4 +480,4 @@ struct vfsops tmpfs_vfsops = {
 	.vfs_sync =			tmpfs_sync,
 	.vfs_susp_clean =		tmpfs_susp_clean,
 };
-VFS_SET(tmpfs_vfsops, tmpfs, VFCF_JAIL);
+VFS_SET(tmpfs_vfsops, tmpfs, 0);
