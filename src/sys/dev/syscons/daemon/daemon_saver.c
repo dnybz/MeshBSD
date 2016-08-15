@@ -355,20 +355,20 @@ daemon_init(video_adapter_t *adp)
 
 	mtx_lock(&prison0.pr_mtx);
 	for (;;) {
-		hostlen = strlen(prison0.pr_hostname);
+		hostlen = strlen(hostname);
 		mtx_unlock(&prison0.pr_mtx);
 	
 		messagelen = hostlen + 3 + strlen(ostype) + 1 +
 		    strlen(osrelease);
 		message = malloc(messagelen + 1, M_DEVBUF, M_WAITOK);
 		mtx_lock(&prison0.pr_mtx);
-		if (hostlen < strlen(prison0.pr_hostname)) {
+		if (hostlen < strlen(hostname)) {
 			free(message, M_DEVBUF);
 			continue;
 		}
 		break;
 	}
-	sprintf(message, "%s - %s %s", prison0.pr_hostname, ostype, osrelease);
+	sprintf(message, "%s - %s %s", hostname, ostype, osrelease);
 	mtx_unlock(&prison0.pr_mtx);
 	blanked = 0;
 	switch (adp->va_mode) {

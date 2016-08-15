@@ -505,10 +505,8 @@ nfs_mountroot(struct mount *mp)
 	 * set hostname here and then let the "/etc/rc.xxx" files
 	 * mount the right /var based upon its preset value.
 	 */
-	mtx_lock(&prison0.pr_mtx);
-	strlcpy(prison0.pr_hostname, nd->my_hostnam,
-	    sizeof(prison0.pr_hostname));
-	mtx_unlock(&prison0.pr_mtx);
+	strlcpy(hostname, nd->my_hostnam,
+	    sizeof(hostname));
 	inittodr(ntohl(nd->root_time));
 	return (0);
 }
