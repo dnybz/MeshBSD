@@ -117,7 +117,6 @@ SUBDIR=	\
 	fdescfs \
 	${_fe} \
 	${_filemon} \
-	firewire \
 	firmware \
 	fuse \
 	${_fxp} \
@@ -201,12 +200,6 @@ SUBDIR=	\
 	libiconv \
 	libmbpool \
 	libmchain \
-	${_linprocfs} \
-	${_linsysfs} \
-	${_linux} \
-	${_linux_common} \
-	${_linux64} \
-	linuxkpi \
 	lmc \
 	lpt \
 	mac_biba \

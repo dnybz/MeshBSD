@@ -1300,17 +1300,6 @@ dev/fdt/simplebus.c		optional fdt
 dev/fe/if_fe.c			optional fe
 dev/fe/if_fe_pccard.c		optional fe pccard
 dev/filemon/filemon.c		optional filemon
-dev/firewire/firewire.c		optional firewire
-dev/firewire/fwcrom.c		optional firewire
-dev/firewire/fwdev.c		optional firewire
-dev/firewire/fwdma.c		optional firewire
-dev/firewire/fwmem.c		optional firewire
-dev/firewire/fwohci.c		optional firewire
-dev/firewire/fwohci_pci.c	optional firewire pci
-dev/firewire/if_fwe.c		optional fwe
-dev/firewire/if_fwip.c		optional fwip
-dev/firewire/sbp.c		optional sbp
-dev/firewire/sbp_targ.c		optional sbp_targ
 dev/flash/at45d.c		optional at45d
 dev/flash/mx25l.c		optional mx25l
 dev/fxp/if_fxp.c		optional fxp
