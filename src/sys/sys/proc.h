@@ -685,7 +685,7 @@ struct proc {
 #define	P_SIGEVENT	0x200000 /* Process pending signals changed. */
 #define	P_SINGLE_BOUNDARY 0x400000 /* Threads should suspend at user boundary. */
 #define	P_HWPMC		0x800000 /* Process is using HWPMCs */
-#define	P_JAILED	0x1000000 /* Process is in jail. */
+/* #define	P_XXX	0x1000000  XXX. */
 #define	P_TOTAL_STOP	0x2000000 /* Stopped in stop_all_proc. */
 #define	P_INEXEC	0x4000000 /* Process is in execve(). */
 #define	P_STATCHILD	0x8000000 /* Child process stopped or exited. */

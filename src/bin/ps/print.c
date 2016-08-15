@@ -274,8 +274,6 @@ state(KINFO *k, VARENT *ve __unused)
 		*cp++ = 's';
 	if ((flag & P_CONTROLT) && k->ki_p->ki_pgid == k->ki_p->ki_tpgid)
 		*cp++ = '+';
-	if (flag & P_JAILED)
-		*cp++ = 'J';
 	*cp = '\0';
 	return (buf);
 }
