@@ -84,6 +84,8 @@
  */
 
 extern int securelevel;
+extern int osreldate;
+
 extern unsigned long hostid;
 extern char hostname[];
 extern char domainname[];	

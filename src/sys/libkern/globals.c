@@ -31,6 +31,7 @@
  */
 
 int     securelevel = -1;
+int     osreldate;
 
 unsigned long   hostid;
 
