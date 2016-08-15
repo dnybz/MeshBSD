@@ -1429,13 +1429,6 @@ dev/iscsi_initiator/isc_sm.c	optional iscsi_initiator scbus
 dev/iscsi_initiator/isc_subr.c	optional iscsi_initiator scbus
 dev/ismt/ismt.c			optional ismt
 dev/isl/isl.c			optional isl smbus
-dev/isp/isp.c			optional isp
-dev/isp/isp_freebsd.c		optional isp
-dev/isp/isp_library.c		optional isp
-dev/isp/isp_pci.c		optional isp pci
-dev/isp/isp_sbus.c		optional isp sbus
-dev/isp/isp_target.c		optional isp
-dev/ispfw/ispfw.c		optional ispfw
 dev/iwi/if_iwi.c		optional iwi
 iwibssfw.c			optional iwibssfw | iwifw		\
 	compile-with	"${AWK} -f $S/tools/fw_stub.awk iwi_bss.fw:iwi_bss:300 -lintel_iwi -miwi_bss -c${.TARGET}" \
@@ -2928,14 +2921,6 @@ isa/isa_common.c		optional isa
 isa/isahint.c			optional isa
 isa/pnp.c			optional isa isapnp
 isa/pnpparse.c			optional isa isapnp
-fs/cd9660/cd9660_bmap.c	optional cd9660
-fs/cd9660/cd9660_lookup.c	optional cd9660
-fs/cd9660/cd9660_node.c	optional cd9660
-fs/cd9660/cd9660_rrip.c	optional cd9660
-fs/cd9660/cd9660_util.c	optional cd9660
-fs/cd9660/cd9660_vfsops.c	optional cd9660
-fs/cd9660/cd9660_vnops.c	optional cd9660
-fs/cd9660/cd9660_iconv.c	optional cd9660_iconv
 kern/bus_if.m			standard
 kern/clock_if.m			standard
 kern/cpufreq_if.m		standard

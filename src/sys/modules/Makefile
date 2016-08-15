@@ -69,8 +69,6 @@ SUBDIR=	\
 	cas \
 	${_cbb} \
 	cc \
-	cd9660 \
-	cd9660_iconv \
 	${_ce} \
 	${_cfi} \
 	${_ciss} \
@@ -173,8 +171,6 @@ SUBDIR=	\
 	${_ipw} \
 	${_ipwfw} \
 	${_isci} \
-	isp \
-	${_ispfw} \
 	${_iwi} \
 	${_iwifw} \
 	${_iwm} \
