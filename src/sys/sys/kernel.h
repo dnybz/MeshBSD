@@ -54,6 +54,12 @@
 
 /* Global variables for the kernel. */
 
+extern unsigned long hostid;
+extern char hostname[MAXHOSTNAMELEN];
+extern char domainname[MAXHOSTNAMELEN];	
+extern char hostuuid[HOSTUUIDLEN];
+extern char osrelease[OSRELEASELEN];
+
 /* 1.1 */
 extern char kernelname[MAXPATHLEN];
 

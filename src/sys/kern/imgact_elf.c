@@ -1092,8 +1092,7 @@ __elfN(freebsd_fixup)(register_t **stack_base, struct image_params *imgp)
 #endif
 	if (imgp->execpathp != 0)
 		AUXARGS_ENTRY(pos, AT_EXECPATH, imgp->execpathp);
-	AUXARGS_ENTRY(pos, AT_OSRELDATE,
-	    imgp->proc->p_ucred->cr_prison->pr_osreldate);
+	AUXARGS_ENTRY(pos, AT_OSRELDATE, osreldate);
 	if (imgp->canary != 0) {
 		AUXARGS_ENTRY(pos, AT_CANARY, imgp->canary);
 		AUXARGS_ENTRY(pos, AT_CANARYLEN, imgp->canarylen);
