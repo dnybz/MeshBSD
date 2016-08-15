@@ -30,9 +30,11 @@
  * Global variables for the kernel. 
  */
 
+int     securelevel = -1;
+
 unsigned long   hostid;
 
 char    hostname[MAXHOSTNAMELEN];
 char    domainname[MAXHOSTNAMELEN];	
-char    hostuuid[HOSTUUIDLEN];
+char    hostuuid[HOSTUUIDLEN] = DEFAULT_HOSTUUID;
 char    osrelease[OSRELEASELEN];
