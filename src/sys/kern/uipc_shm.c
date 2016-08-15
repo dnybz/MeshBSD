@@ -81,7 +81,6 @@ __FBSDID("$FreeBSD: head/sys/kern/uipc_shm.c 298649 2016-04-26 15:38:17Z pfg $")
 #include <sys/kernel.h>
 #include <sys/uio.h>
 #include <sys/signal.h>
-#include <sys/jail.h>
 #include <sys/ktrace.h>
 #include <sys/lock.h>
 #include <sys/malloc.h>

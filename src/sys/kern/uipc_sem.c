@@ -68,7 +68,6 @@ __FBSDID("$FreeBSD: head/sys/kern/uipc_sem.c 297976 2016-04-14 17:07:26Z jamie $
 #include <sys/file.h>
 #include <sys/filedesc.h>
 #include <sys/fnv_hash.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/ksem.h>
 #include <sys/lock.h>

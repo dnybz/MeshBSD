@@ -42,7 +42,6 @@ __FBSDID("$FreeBSD: head/sys/net/vnet.c 300001 2016-05-17 00:32:36Z bz $");
 #include <sys/param.h>
 #include <sys/kdb.h>
 #include <sys/kernel.h>
-#include <sys/jail.h>
 #include <sys/sdt.h>
 #include <sys/systm.h>
 #include <sys/sysctl.h>

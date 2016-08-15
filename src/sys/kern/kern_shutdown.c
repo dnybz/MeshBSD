@@ -51,7 +51,6 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_shutdown.c 298076 2016-04-15 17:45:12Z ce
 #include <sys/cons.h>
 #include <sys/eventhandler.h>
 #include <sys/filedesc.h>
-#include <sys/jail.h>
 #include <sys/kdb.h>
 #include <sys/kernel.h>
 #include <sys/kerneldump.h>

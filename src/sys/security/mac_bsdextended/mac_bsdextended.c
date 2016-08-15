@@ -50,7 +50,6 @@
 #include <sys/param.h>
 #include <sys/acl.h>
 #include <sys/kernel.h>
-#include <sys/jail.h>
 #include <sys/lock.h>
 #include <sys/malloc.h>
 #include <sys/module.h>

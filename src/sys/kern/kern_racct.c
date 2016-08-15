@@ -38,7 +38,6 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_racct.c 298414 2016-04-21 16:22:52Z trasz
 #include <sys/buf.h>
 #include <sys/systm.h>
 #include <sys/eventhandler.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/kthread.h>
 #include <sys/lock.h>

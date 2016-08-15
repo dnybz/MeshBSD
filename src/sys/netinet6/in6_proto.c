@@ -76,7 +76,6 @@ __FBSDID("$FreeBSD: head/sys/netinet6/in6_proto.c 299827 2016-05-15 03:18:03Z ma
 #include <sys/socketvar.h>
 #include <sys/proc.h>
 #include <sys/protosw.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/malloc.h>
 #include <sys/domain.h>
