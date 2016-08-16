@@ -49,7 +49,6 @@
 #include <sys/fcntl.h>
 #include <sys/file.h>
 #include <sys/filedesc.h>
-#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/lockf.h>
 #include <sys/malloc.h>
