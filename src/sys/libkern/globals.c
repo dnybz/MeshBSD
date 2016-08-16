@@ -39,3 +39,4 @@ char    hostname[MAXHOSTNAMELEN];
 char    domainname[MAXHOSTNAMELEN];	
 char    hostuuid[HOSTUUIDLEN] = DEFAULT_HOSTUUID;
 char    osrelease[OSRELEASELEN];
+

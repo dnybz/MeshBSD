@@ -30,7 +30,7 @@
 
 /* Add a FreeBSD vendor copyright here */
 #define	COPYRIGHT_Vendor \
-	"MeshBSD, Copyright (c) 2016 Henning Matyschok.\n"
+	"MeshBSD created by Copyright (c) 2016 Henning Matyschok.\n"
 
 /* FreeBSD */
 #define COPYRIGHT_FreeBSD \

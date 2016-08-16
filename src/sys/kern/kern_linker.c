@@ -388,7 +388,7 @@ linker_load_file(const char *filename, linker_file_t *result)
 	int foundfile, error, modules;
 
 	/* Refuse to load modules if securelevel raised */
-	if (prison0.pr_securelevel > 0)
+	if (securelevel > 0)
 		return (EPERM);
 
 	sx_assert(&kld_sx, SA_XLOCKED);
@@ -604,7 +604,7 @@ linker_file_unload(linker_file_t file, int flags)
 	int error, i;
 
 	/* Refuse to unload modules if securelevel raised. */
-	if (prison0.pr_securelevel > 0)
+	if (securelevel > 0)
 		return (EPERM);
 
 	sx_assert(&kld_sx, SA_XLOCKED);

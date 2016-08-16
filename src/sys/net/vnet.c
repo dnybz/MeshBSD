@@ -327,7 +327,7 @@ vnet0_init(void *arg __unused)
 	 * otherwise CURVNET_SET() macros would scream about unnecessary
 	 * curvnet recursions.
 	 */
-	curvnet = prison0.pr_vnet = vnet0 = vnet_alloc();
+	curvnet = vnet0 = vnet_alloc();
 }
 SYSINIT(vnet0_init, SI_SUB_VNET, SI_ORDER_FIRST, vnet0_init, NULL);
 
