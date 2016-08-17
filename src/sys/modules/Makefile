@@ -488,8 +488,6 @@ _cfi=		cfi
 _cpsw=		cpsw
 .endif
 
-
-
 SUBDIR+=${MODULES_EXTRA}
 
 .for reject in ${WITHOUT_MODULES}
