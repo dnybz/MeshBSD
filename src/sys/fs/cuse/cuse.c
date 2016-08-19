@@ -69,6 +69,10 @@ MODULE_VERSION(cuse, 1);
 FEATURE(cuse, "Userspace character devices");
 #endif
 
+/*
+ * Backend used by cude(3) for Character Devices in Userspace.
+ */
+
 struct cuse_command;
 struct cuse_server;
 struct cuse_client;
@@ -135,6 +139,10 @@ struct cuse_client {
     ((pcc)->cflags & CUSE_CLI_IS_CLOSING)
 
 static MALLOC_DEFINE(M_CUSE, "cuse", "CUSE memory");
+
+/*
+ * Set contains CUSE server.
+ */
 
 static TAILQ_HEAD(, cuse_server) cuse_server_head;
 static struct mtx cuse_mtx;
@@ -365,6 +373,9 @@ cuse_str_filter(char *ptr)
 	}
 }
 
+/*
+ * Provide upcalls for exception handling.
+ */
 static int
 cuse_convert_error(int error)
 {

@@ -2808,12 +2808,19 @@ fs/ext2fs/ext2_lookup.c		optional ext2fs
 fs/ext2fs/ext2_subr.c		optional ext2fs
 fs/ext2fs/ext2_vfsops.c		optional ext2fs
 fs/ext2fs/ext2_vnops.c		optional ext2fs
+
+#
+# isa(4)
 #
 isa/isa_if.m			standard
 isa/isa_common.c		optional isa
 isa/isahint.c			optional isa
 isa/pnp.c			optional isa isapnp
 isa/pnpparse.c			optional isa isapnp
+
+#
+# kern(4)
+#
 kern/bus_if.m			standard
 kern/clock_if.m			standard
 kern/cpufreq_if.m		standard
@@ -3006,6 +3013,7 @@ kern/vfs_mountroot.c		standard
 kern/vfs_subr.c			standard
 kern/vfs_syscalls.c		standard
 kern/vfs_vnops.c		standard
+
 #
 # Kernel GSS-API
 #
@@ -3057,6 +3065,7 @@ kgssapi/krb5/kcrypto_des.c	optional kgssapi
 kgssapi/krb5/kcrypto_des3.c	optional kgssapi
 kgssapi/kgss_if.m		optional kgssapi
 kgssapi/gsstest.c		optional kgssapi_debug
+
 # These files in libkern/ are those needed by all architectures.  Some
 # of the files in libkern/ are only needed on some architectures, e.g.,
 # libkern/divdi3.c is needed by i386 but not alpha.  Also, some of these
