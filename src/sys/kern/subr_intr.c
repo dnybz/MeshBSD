@@ -35,7 +35,6 @@ __FBSDID("$FreeBSD: head/sys/kern/subr_intr.c 299928 2016-05-16 09:11:40Z andrew
  *        - to complete things for removable PICs
  */
 
-#include "opt_acpi.h"
 #include "opt_ddb.h"
 #include "opt_platform.h"
 

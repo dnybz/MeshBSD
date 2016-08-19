@@ -4,21 +4,7 @@
 # limitations in config: backslash-newline doesn't work in strings, and
 # dependency lines other than the first are silently ignored.
 #
-acpi_quirks.h			optional acpi				   \
-	dependency	"$S/tools/acpi_quirks2h.awk $S/dev/acpica/acpi_quirks" \
-	compile-with	"${AWK} -f $S/tools/acpi_quirks2h.awk $S/dev/acpica/acpi_quirks" \
-	no-obj no-implicit-rule before-depend				   \
-	clean		"acpi_quirks.h"
-bhnd_nvram_map.h		optional bhndbus | bhnd			   \
-	dependency	"$S/dev/bhnd/tools/nvram_map_gen.sh $S/dev/bhnd/tools/nvram_map_gen.awk $S/dev/bhnd/nvram/nvram_map" \
-	compile-with	"sh $S/dev/bhnd/tools/nvram_map_gen.sh $S/dev/bhnd/nvram/nvram_map -h" \
-	no-obj no-implicit-rule before-depend				   \
-	clean		"bhnd_nvram_map.h"
-bhnd_nvram_map_data.h		optional bhndbus | bhnd			   \
-	dependency	"$S/dev/bhnd/tools/nvram_map_gen.sh $S/dev/bhnd/tools/nvram_map_gen.awk $S/dev/bhnd/nvram/nvram_map" \
-	compile-with	"sh $S/dev/bhnd/tools/nvram_map_gen.sh $S/dev/bhnd/nvram/nvram_map -d" \
-	no-obj no-implicit-rule before-depend				   \
-	clean		"bhnd_nvram_map_data.h"
+
 #
 # The 'fdt_dtb_file' target covers an actual DTB file name, which is derived
 # from the specified source (DTS) file: <platform>.dts -> <platform>.dtb
@@ -121,199 +107,28 @@ cam/scsi/scsi_target.c		optional targ
 cam/scsi/smp_all.c		optional scbus
 fs/nfsclient/nfs_clkdtrace.c		optional dtnfscl nfscl   | dtraceall nfscl compile-with "${CDDL_C}"
 
+#
+# FreeBSD 3.2 compatibility.
+#
 freebsd32/freebsd32_capability.c	optional compat_freebsd32
 freebsd32/freebsd32_ioctl.c	optional compat_freebsd32
 freebsd32/freebsd32_misc.c	optional compat_freebsd32
 freebsd32/freebsd32_syscalls.c	optional compat_freebsd32
 freebsd32/freebsd32_sysent.c	optional compat_freebsd32
 
-
-contrib/dev/acpica/common/ahids.c			optional acpi acpi_debug
-contrib/dev/acpica/common/ahuuids.c			optional acpi acpi_debug
-contrib/dev/acpica/components/debugger/dbcmds.c		optional acpi acpi_debug
-contrib/dev/acpica/components/debugger/dbconvert.c	optional acpi acpi_debug
-contrib/dev/acpica/components/debugger/dbdisply.c	optional acpi acpi_debug
-contrib/dev/acpica/components/debugger/dbexec.c		optional acpi acpi_debug
-contrib/dev/acpica/components/debugger/dbhistry.c	optional acpi acpi_debug
-contrib/dev/acpica/components/debugger/dbinput.c	optional acpi acpi_debug
-contrib/dev/acpica/components/debugger/dbmethod.c	optional acpi acpi_debug
-contrib/dev/acpica/components/debugger/dbnames.c	optional acpi acpi_debug
-contrib/dev/acpica/components/debugger/dbobject.c	optional acpi acpi_debug
-contrib/dev/acpica/components/debugger/dbstats.c	optional acpi acpi_debug
-contrib/dev/acpica/components/debugger/dbtest.c		optional acpi acpi_debug
-contrib/dev/acpica/components/debugger/dbutils.c	optional acpi acpi_debug
-contrib/dev/acpica/components/debugger/dbxface.c	optional acpi acpi_debug
-contrib/dev/acpica/components/disassembler/dmbuffer.c	optional acpi acpi_debug
-contrib/dev/acpica/components/disassembler/dmcstyle.c	optional acpi acpi_debug
-contrib/dev/acpica/components/disassembler/dmdeferred.c	optional acpi acpi_debug
-contrib/dev/acpica/components/disassembler/dmnames.c	optional acpi acpi_debug
-contrib/dev/acpica/components/disassembler/dmopcode.c	optional acpi acpi_debug
-contrib/dev/acpica/components/disassembler/dmresrc.c	optional acpi acpi_debug
-contrib/dev/acpica/components/disassembler/dmresrcl.c	optional acpi acpi_debug
-contrib/dev/acpica/components/disassembler/dmresrcl2.c	optional acpi acpi_debug
-contrib/dev/acpica/components/disassembler/dmresrcs.c	optional acpi acpi_debug
-contrib/dev/acpica/components/disassembler/dmutils.c	optional acpi acpi_debug
-contrib/dev/acpica/components/disassembler/dmwalk.c	optional acpi acpi_debug
-contrib/dev/acpica/components/dispatcher/dsargs.c	optional acpi
-contrib/dev/acpica/components/dispatcher/dscontrol.c	optional acpi
-contrib/dev/acpica/components/dispatcher/dsdebug.c	optional acpi
-contrib/dev/acpica/components/dispatcher/dsfield.c	optional acpi
-contrib/dev/acpica/components/dispatcher/dsinit.c	optional acpi
-contrib/dev/acpica/components/dispatcher/dsmethod.c	optional acpi
-contrib/dev/acpica/components/dispatcher/dsmthdat.c	optional acpi
-contrib/dev/acpica/components/dispatcher/dsobject.c	optional acpi
-contrib/dev/acpica/components/dispatcher/dsopcode.c	optional acpi
-contrib/dev/acpica/components/dispatcher/dsutils.c	optional acpi
-contrib/dev/acpica/components/dispatcher/dswexec.c	optional acpi
-contrib/dev/acpica/components/dispatcher/dswload.c	optional acpi
-contrib/dev/acpica/components/dispatcher/dswload2.c	optional acpi
-contrib/dev/acpica/components/dispatcher/dswscope.c	optional acpi
-contrib/dev/acpica/components/dispatcher/dswstate.c	optional acpi
-contrib/dev/acpica/components/events/evevent.c		optional acpi
-contrib/dev/acpica/components/events/evglock.c		optional acpi
-contrib/dev/acpica/components/events/evgpe.c		optional acpi
-contrib/dev/acpica/components/events/evgpeblk.c		optional acpi
-contrib/dev/acpica/components/events/evgpeinit.c	optional acpi
-contrib/dev/acpica/components/events/evgpeutil.c	optional acpi
-contrib/dev/acpica/components/events/evhandler.c	optional acpi
-contrib/dev/acpica/components/events/evmisc.c		optional acpi
-contrib/dev/acpica/components/events/evregion.c		optional acpi
-contrib/dev/acpica/components/events/evrgnini.c		optional acpi
-contrib/dev/acpica/components/events/evsci.c		optional acpi
-contrib/dev/acpica/components/events/evxface.c		optional acpi
-contrib/dev/acpica/components/events/evxfevnt.c		optional acpi
-contrib/dev/acpica/components/events/evxfgpe.c		optional acpi
-contrib/dev/acpica/components/events/evxfregn.c		optional acpi
-contrib/dev/acpica/components/executer/exconcat.c	optional acpi
-contrib/dev/acpica/components/executer/exconfig.c	optional acpi
-contrib/dev/acpica/components/executer/exconvrt.c	optional acpi
-contrib/dev/acpica/components/executer/excreate.c	optional acpi
-contrib/dev/acpica/components/executer/exdebug.c	optional acpi
-contrib/dev/acpica/components/executer/exdump.c		optional acpi
-contrib/dev/acpica/components/executer/exfield.c	optional acpi
-contrib/dev/acpica/components/executer/exfldio.c	optional acpi
-contrib/dev/acpica/components/executer/exmisc.c		optional acpi
-contrib/dev/acpica/components/executer/exmutex.c	optional acpi
-contrib/dev/acpica/components/executer/exnames.c	optional acpi
-contrib/dev/acpica/components/executer/exoparg1.c	optional acpi
-contrib/dev/acpica/components/executer/exoparg2.c	optional acpi
-contrib/dev/acpica/components/executer/exoparg3.c	optional acpi
-contrib/dev/acpica/components/executer/exoparg6.c	optional acpi
-contrib/dev/acpica/components/executer/exprep.c		optional acpi
-contrib/dev/acpica/components/executer/exregion.c	optional acpi
-contrib/dev/acpica/components/executer/exresnte.c	optional acpi
-contrib/dev/acpica/components/executer/exresolv.c	optional acpi
-contrib/dev/acpica/components/executer/exresop.c	optional acpi
-contrib/dev/acpica/components/executer/exstore.c	optional acpi
-contrib/dev/acpica/components/executer/exstoren.c	optional acpi
-contrib/dev/acpica/components/executer/exstorob.c	optional acpi
-contrib/dev/acpica/components/executer/exsystem.c	optional acpi
-contrib/dev/acpica/components/executer/extrace.c	optional acpi
-contrib/dev/acpica/components/executer/exutils.c	optional acpi
-contrib/dev/acpica/components/hardware/hwacpi.c		optional acpi
-contrib/dev/acpica/components/hardware/hwesleep.c	optional acpi
-contrib/dev/acpica/components/hardware/hwgpe.c		optional acpi
-contrib/dev/acpica/components/hardware/hwpci.c		optional acpi
-contrib/dev/acpica/components/hardware/hwregs.c		optional acpi
-contrib/dev/acpica/components/hardware/hwsleep.c	optional acpi
-contrib/dev/acpica/components/hardware/hwtimer.c	optional acpi
-contrib/dev/acpica/components/hardware/hwvalid.c	optional acpi
-contrib/dev/acpica/components/hardware/hwxface.c	optional acpi
-contrib/dev/acpica/components/hardware/hwxfsleep.c	optional acpi
-contrib/dev/acpica/components/namespace/nsaccess.c	optional acpi
-contrib/dev/acpica/components/namespace/nsalloc.c	optional acpi
-contrib/dev/acpica/components/namespace/nsarguments.c	optional acpi
-contrib/dev/acpica/components/namespace/nsconvert.c	optional acpi
-contrib/dev/acpica/components/namespace/nsdump.c	optional acpi
-contrib/dev/acpica/components/namespace/nseval.c	optional acpi
-contrib/dev/acpica/components/namespace/nsinit.c	optional acpi
-contrib/dev/acpica/components/namespace/nsload.c	optional acpi
-contrib/dev/acpica/components/namespace/nsnames.c	optional acpi
-contrib/dev/acpica/components/namespace/nsobject.c	optional acpi
-contrib/dev/acpica/components/namespace/nsparse.c	optional acpi
-contrib/dev/acpica/components/namespace/nspredef.c	optional acpi
-contrib/dev/acpica/components/namespace/nsprepkg.c	optional acpi
-contrib/dev/acpica/components/namespace/nsrepair.c	optional acpi
-contrib/dev/acpica/components/namespace/nsrepair2.c	optional acpi
-contrib/dev/acpica/components/namespace/nssearch.c	optional acpi
-contrib/dev/acpica/components/namespace/nsutils.c	optional acpi
-contrib/dev/acpica/components/namespace/nswalk.c	optional acpi
-contrib/dev/acpica/components/namespace/nsxfeval.c	optional acpi
-contrib/dev/acpica/components/namespace/nsxfname.c	optional acpi
-contrib/dev/acpica/components/namespace/nsxfobj.c	optional acpi
-contrib/dev/acpica/components/parser/psargs.c		optional acpi
-contrib/dev/acpica/components/parser/psloop.c		optional acpi
-contrib/dev/acpica/components/parser/psobject.c		optional acpi
-contrib/dev/acpica/components/parser/psopcode.c		optional acpi
-contrib/dev/acpica/components/parser/psopinfo.c		optional acpi
-contrib/dev/acpica/components/parser/psparse.c		optional acpi
-contrib/dev/acpica/components/parser/psscope.c		optional acpi
-contrib/dev/acpica/components/parser/pstree.c		optional acpi
-contrib/dev/acpica/components/parser/psutils.c		optional acpi
-contrib/dev/acpica/components/parser/pswalk.c		optional acpi
-contrib/dev/acpica/components/parser/psxface.c		optional acpi
-contrib/dev/acpica/components/resources/rsaddr.c	optional acpi
-contrib/dev/acpica/components/resources/rscalc.c	optional acpi
-contrib/dev/acpica/components/resources/rscreate.c	optional acpi
-contrib/dev/acpica/components/resources/rsdump.c	optional acpi acpi_debug
-contrib/dev/acpica/components/resources/rsdumpinfo.c	optional acpi
-contrib/dev/acpica/components/resources/rsinfo.c	optional acpi
-contrib/dev/acpica/components/resources/rsio.c		optional acpi
-contrib/dev/acpica/components/resources/rsirq.c		optional acpi
-contrib/dev/acpica/components/resources/rslist.c	optional acpi
-contrib/dev/acpica/components/resources/rsmemory.c	optional acpi
-contrib/dev/acpica/components/resources/rsmisc.c	optional acpi
-contrib/dev/acpica/components/resources/rsserial.c	optional acpi
-contrib/dev/acpica/components/resources/rsutils.c	optional acpi
-contrib/dev/acpica/components/resources/rsxface.c	optional acpi
-contrib/dev/acpica/components/tables/tbdata.c		optional acpi
-contrib/dev/acpica/components/tables/tbfadt.c		optional acpi
-contrib/dev/acpica/components/tables/tbfind.c		optional acpi
-contrib/dev/acpica/components/tables/tbinstal.c		optional acpi
-contrib/dev/acpica/components/tables/tbprint.c		optional acpi
-contrib/dev/acpica/components/tables/tbutils.c		optional acpi
-contrib/dev/acpica/components/tables/tbxface.c		optional acpi
-contrib/dev/acpica/components/tables/tbxfload.c		optional acpi
-contrib/dev/acpica/components/tables/tbxfroot.c		optional acpi
-contrib/dev/acpica/components/utilities/utaddress.c	optional acpi
-contrib/dev/acpica/components/utilities/utalloc.c	optional acpi
-contrib/dev/acpica/components/utilities/utascii.c	optional acpi
-contrib/dev/acpica/components/utilities/utbuffer.c	optional acpi
-contrib/dev/acpica/components/utilities/utcache.c	optional acpi
-contrib/dev/acpica/components/utilities/utcopy.c	optional acpi
-contrib/dev/acpica/components/utilities/utdebug.c	optional acpi
-contrib/dev/acpica/components/utilities/utdecode.c	optional acpi
-contrib/dev/acpica/components/utilities/utdelete.c	optional acpi
-contrib/dev/acpica/components/utilities/uterror.c	optional acpi
-contrib/dev/acpica/components/utilities/uteval.c	optional acpi
-contrib/dev/acpica/components/utilities/utexcep.c	optional acpi
-contrib/dev/acpica/components/utilities/utglobal.c	optional acpi
-contrib/dev/acpica/components/utilities/uthex.c		optional acpi
-contrib/dev/acpica/components/utilities/utids.c		optional acpi
-contrib/dev/acpica/components/utilities/utinit.c	optional acpi
-contrib/dev/acpica/components/utilities/utlock.c	optional acpi
-contrib/dev/acpica/components/utilities/utmath.c	optional acpi
-contrib/dev/acpica/components/utilities/utmisc.c	optional acpi
-contrib/dev/acpica/components/utilities/utmutex.c	optional acpi
-contrib/dev/acpica/components/utilities/utnonansi.c	optional acpi
-contrib/dev/acpica/components/utilities/utobject.c	optional acpi
-contrib/dev/acpica/components/utilities/utosi.c		optional acpi
-contrib/dev/acpica/components/utilities/utownerid.c	optional acpi
-contrib/dev/acpica/components/utilities/utpredef.c	optional acpi
-contrib/dev/acpica/components/utilities/utresrc.c	optional acpi
-contrib/dev/acpica/components/utilities/utstate.c	optional acpi
-contrib/dev/acpica/components/utilities/utstring.c	optional acpi
-contrib/dev/acpica/components/utilities/utuuid.c	optional acpi acpi_debug
-contrib/dev/acpica/components/utilities/utxface.c	optional acpi
-contrib/dev/acpica/components/utilities/utxferror.c	optional acpi
-contrib/dev/acpica/components/utilities/utxfinit.c	optional acpi
-#contrib/dev/acpica/components/utilities/utxfmutex.c	optional acpi
+#
+# libfdt(4)
+#
 contrib/libfdt/fdt.c		optional fdt
 contrib/libfdt/fdt_ro.c		optional fdt
 contrib/libfdt/fdt_rw.c		optional fdt
 contrib/libfdt/fdt_strerror.c	optional fdt
 contrib/libfdt/fdt_sw.c		optional fdt
 contrib/libfdt/fdt_wip.c	optional fdt
+
+#
+# libnv(4)
+#
 contrib/libnv/dnvlist.c		standard
 contrib/libnv/nvlist.c		standard
 contrib/libnv/nvpair.c		standard
