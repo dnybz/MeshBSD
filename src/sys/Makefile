@@ -8,7 +8,7 @@ CSCOPEDIRS=	boot bsm cam freebsd32 conf contrib crypto ddb dev fs gdb \
 		rpc security sys ufs vm xdr ${CSCOPE_ARCHDIR}
 .if !defined(CSCOPE_ARCHDIR)
 .if defined(ALL_ARCH)
-CSCOPE_ARCHDIR = arm arm64 mips riscv
+CSCOPE_ARCHDIR = arm mips riscv
 .else
 CSCOPE_ARCHDIR = ${MACHINE}
 .if ${MACHINE} != ${MACHINE_CPUARCH}
