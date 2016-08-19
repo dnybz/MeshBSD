@@ -119,12 +119,12 @@ freebsd32/freebsd32_sysent.c	optional compat_freebsd32
 #
 # libfdt(4)
 #
-contrib/libfdt/fdt.c		optional fdt
-contrib/libfdt/fdt_ro.c		optional fdt
-contrib/libfdt/fdt_rw.c		optional fdt
-contrib/libfdt/fdt_strerror.c	optional fdt
-contrib/libfdt/fdt_sw.c		optional fdt
-contrib/libfdt/fdt_wip.c	optional fdt
+libfdt/fdt.c		optional fdt
+libfdt/fdt_ro.c		optional fdt
+libfdt/fdt_rw.c		optional fdt
+libfdt/fdt_strerror.c	optional fdt
+libfdt/fdt_sw.c		optional fdt
+libfdt/fdt_wip.c	optional fdt
 
 #
 # libnv(4)
@@ -132,50 +132,10 @@ contrib/libfdt/fdt_wip.c	optional fdt
 contrib/libnv/dnvlist.c		standard
 contrib/libnv/nvlist.c		standard
 contrib/libnv/nvpair.c		standard
-contrib/ngatm/netnatm/api/cc_conn.c optional ngatm_ccatm \
-	compile-with "${NORMAL_C_NOWERROR} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/api/cc_data.c optional ngatm_ccatm \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/api/cc_dump.c optional ngatm_ccatm \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/api/cc_port.c optional ngatm_ccatm \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/api/cc_sig.c optional ngatm_ccatm \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/api/cc_user.c optional ngatm_ccatm \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/api/unisap.c optional ngatm_ccatm \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/misc/straddr.c optional ngatm_atmbase \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/misc/unimsg_common.c optional ngatm_atmbase \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/msg/traffic.c optional ngatm_atmbase \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/msg/uni_ie.c optional ngatm_atmbase \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/msg/uni_msg.c optional ngatm_atmbase \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/saal/saal_sscfu.c	optional ngatm_sscfu \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/saal/saal_sscop.c	optional ngatm_sscop \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/sig/sig_call.c optional ngatm_uni \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/sig/sig_coord.c optional ngatm_uni \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/sig/sig_party.c optional ngatm_uni \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/sig/sig_print.c optional ngatm_uni \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/sig/sig_reset.c optional ngatm_uni \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/sig/sig_uni.c optional ngatm_uni \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/sig/sig_unimsgcpy.c optional ngatm_uni \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-contrib/ngatm/netnatm/sig/sig_verify.c optional ngatm_uni \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
+
+#
+# crypto(4)
+#
 crypto/blowfish/bf_ecb.c	optional ipsec
 crypto/blowfish/bf_skey.c	optional crypto | ipsec
 crypto/camellia/camellia.c	optional crypto | ipsec
@@ -194,6 +154,10 @@ crypto/sha2/sha256c.c		optional crypto | geom_bde | ipsec | random !random_loada
 crypto/sha2/sha512c.c		optional crypto | geom_bde | ipsec | zfs
 crypto/siphash/siphash.c	optional inet | inet6
 crypto/siphash/siphash_test.c	optional inet | inet6
+
+#
+# ddb(4)
+#
 ddb/db_access.c			optional ddb
 ddb/db_break.c			optional ddb
 ddb/db_capture.c		optional ddb
@@ -214,6 +178,10 @@ ddb/db_textdump.c		optional ddb
 ddb/db_variables.c		optional ddb
 ddb/db_watch.c			optional ddb
 ddb/db_write_cmd.c		optional ddb
+
+#
+# ...
+#
 dev/aac/aac.c			optional aac
 dev/aac/aac_cam.c		optional aacp aac
 dev/aac/aac_debug.c		optional aac

@@ -596,6 +596,8 @@ WITNESS_NO_VNODE	opt_witness.h
 WITNESS_SKIPSPIN	opt_witness.h
 WITNESS_COUNT		opt_witness.h
 
+.......
+
 # ISA support
 DEV_ISA			opt_isa.h
 ISAPNP			opt_isa.h
