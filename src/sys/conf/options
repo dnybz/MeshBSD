@@ -595,14 +595,6 @@ WITNESS_KDB		opt_witness.h
 WITNESS_NO_VNODE	opt_witness.h
 WITNESS_SKIPSPIN	opt_witness.h
 WITNESS_COUNT		opt_witness.h
-OPENSOLARIS_WITNESS	opt_global.h
-
-# options for ACPI support
-ACPI_DEBUG		opt_acpi.h
-ACPI_MAX_TASKS		opt_acpi.h
-ACPI_MAX_THREADS	opt_acpi.h
-ACPI_DMAR		opt_acpi.h
-DEV_ACPI		opt_acpi.h
 
 # ISA support
 DEV_ISA			opt_isa.h
