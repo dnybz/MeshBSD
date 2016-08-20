@@ -491,14 +491,6 @@ in6_selectsrc(uint32_t fibnum, struct sockaddr_in6 *dstsock,
 		IP6STAT_INC(ip6s_sources_none);
 		return (EADDRNOTAVAIL);
 	}
-
-	/*
-	 * At this point at least one of the addresses belonged to the jail
-	 * but it could still be, that we want to further restrict it, e.g.
-	 * theoratically IN6_IS_ADDR_LOOPBACK.
-	 * It must not be IN6_IS_ADDR_UNSPECIFIED anymore.
-	 * Use tmp to not change ::1 on lo0 to the primary jail address.
-	 */
 	tmp = ia->ia_addr.sin6_addr;	
 
 	if (ifpp)

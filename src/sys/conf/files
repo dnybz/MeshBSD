@@ -62,6 +62,10 @@ usbdevs_data.h			optional usb				   \
 	compile-with	"${AWK} -f $S/tools/usbdevs2h.awk $S/dev/usb/usbdevs -d" \
 	no-obj no-implicit-rule before-depend				   \
 	clean		"usbdevs_data.h"
+
+#
+# cam(4) layer.
+#
 cam/cam.c			optional scbus
 cam/cam_compat.c		optional scbus
 cam/cam_iosched.c		optional scbus
@@ -178,6 +182,21 @@ ddb/db_textdump.c		optional ddb
 ddb/db_variables.c		optional ddb
 ddb/db_watch.c			optional ddb
 ddb/db_write_cmd.c		optional ddb
+
+#
+# netmap(4) 
+
+dev/netmap/netmap.c		optional netmap
+dev/netmap/netmap_freebsd.c	optional netmap
+dev/netmap/netmap_generic.c	optional netmap
+dev/netmap/netmap_mbq.c		optional netmap
+dev/netmap/netmap_mem2.c	optional netmap
+dev/netmap/netmap_monitor.c	optional netmap
+dev/netmap/netmap_offloadings.c	optional netmap
+dev/netmap/netmap_pipe.c	optional netmap
+dev/netmap/netmap_vale.c	optional netmap
+#
+
 
 #
 # ...
@@ -736,13 +755,7 @@ dev/bhnd/siba/siba_bhndb.c		optional bhndbus | siba bhndb
 dev/bhnd/siba/siba_nexus.c		optional siba_nexus siba
 dev/bhnd/siba/siba_subr.c		optional bhndbus | siba
 #
-dev/bktr/bktr_audio.c		optional bktr pci
-dev/bktr/bktr_card.c		optional bktr pci
-dev/bktr/bktr_core.c		optional bktr pci
-dev/bktr/bktr_i2c.c		optional bktr pci smbus
-dev/bktr/bktr_os.c		optional bktr pci
-dev/bktr/bktr_tuner.c		optional bktr pci
-dev/bktr/msp34xx.c		optional bktr pci
+
 dev/buslogic/bt.c		optional bt
 dev/buslogic/bt_eisa.c		optional bt eisa
 dev/buslogic/bt_isa.c		optional bt isa

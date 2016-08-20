@@ -1326,10 +1326,6 @@ groupmember(gid_t gid, struct ucred *cred)
  * (securelevel >= level).  Note that the logic is inverted -- these
  * functions return EPERM on "success" and 0 on "failure".
  *
- * Due to care taken when setting the securelevel, we know that no jail will
- * be less secure that its parent (or the physical system), so it is sufficient
- * to test the current jail only.
- *
  * XXXRW: Possibly since this has to do with privilege, it should move to
  * kern_priv.c.
  */
