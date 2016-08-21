@@ -2653,7 +2653,6 @@ kern/kern_uuid.c		standard
 kern/kern_xxx.c			standard
 kern/link_elf.c			standard
 kern/linker_if.m		standard
-kern/md4c.c			optional netsmb
 kern/md5c.c			standard
 kern/p1003_1b.c			standard
 kern/posix4_mib.c		standard
@@ -3138,37 +3137,24 @@ netipsec/xform_esp.c		optional ipsec inet | ipsec inet6
 netipsec/xform_ipcomp.c		optional ipsec inet | ipsec inet6
 netipsec/xform_tcp.c		optional ipsec inet tcp_signature | \
 					 ipsec inet6 tcp_signature
-netpfil/ipfw/dn_heap.c		optional inet dummynet
-netpfil/ipfw/dn_sched_fifo.c	optional inet dummynet
-netpfil/ipfw/dn_sched_prio.c	optional inet dummynet
-netpfil/ipfw/dn_sched_qfq.c	optional inet dummynet
-netpfil/ipfw/dn_sched_rr.c	optional inet dummynet
-netpfil/ipfw/dn_sched_wf2q.c	optional inet dummynet
-netpfil/ipfw/ip_dummynet.c	optional inet dummynet
-netpfil/ipfw/ip_dn_io.c		optional inet dummynet
-netpfil/ipfw/ip_dn_glue.c	optional inet dummynet
-netpfil/ipfw/ip_fw2.c		optional inet ipfirewall
-netpfil/ipfw/ip_fw_dynamic.c	optional inet ipfirewall
-netpfil/ipfw/ip_fw_eaction.c	optional inet ipfirewall
-netpfil/ipfw/ip_fw_log.c	optional inet ipfirewall
-netpfil/ipfw/ip_fw_pfil.c	optional inet ipfirewall
-netpfil/ipfw/ip_fw_sockopt.c	optional inet ipfirewall
-netpfil/ipfw/ip_fw_table.c	optional inet ipfirewall
-netpfil/ipfw/ip_fw_table_algo.c	optional inet ipfirewall
-netpfil/ipfw/ip_fw_table_value.c	optional inet ipfirewall
-netpfil/ipfw/ip_fw_iface.c	optional inet ipfirewall
-netpfil/ipfw/ip_fw_nat.c	optional inet ipfirewall_nat
-netpfil/pf/if_pflog.c		optional pflog pf inet
-netpfil/pf/if_pfsync.c		optional pfsync pf inet
-netpfil/pf/pf.c			optional pf inet
-netpfil/pf/pf_if.c		optional pf inet
-netpfil/pf/pf_ioctl.c		optional pf inet
-netpfil/pf/pf_lb.c		optional pf inet
-netpfil/pf/pf_norm.c		optional pf inet
-netpfil/pf/pf_osfp.c		optional pf inet
-netpfil/pf/pf_ruleset.c		optional pf inet
-netpfil/pf/pf_table.c		optional pf inet
-netpfil/pf/in4_cksum.c		optional pf inet
+#
+# pf(4)
+#
+pf/if_pflog.c		optional pflog pf inet
+pf/if_pfsync.c		optional pfsync pf inet
+pf/pf.c			optional pf inet
+pf/pf_if.c		optional pf inet
+pf/pf_ioctl.c		optional pf inet
+pf/pf_lb.c		optional pf inet
+pf/pf_norm.c		optional pf inet
+pf/pf_osfp.c		optional pf inet
+pf/pf_ruleset.c		optional pf inet
+pf/pf_table.c		optional pf inet
+pf/in4_cksum.c		optional pf inet
+
+#
+# nfs(4)
+#
 nfs/bootp_subr.c		optional bootp nfscl
 nfs/krpc_subr.c			optional bootp nfscl
 nfs/nfs_diskless.c		optional nfscl nfs_root
