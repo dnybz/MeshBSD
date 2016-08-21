@@ -1455,11 +1455,10 @@ dev/mii/truephy.c		optional miibus | truephy
 dev/mii/ukphy.c			optional miibus | mii
 dev/mii/ukphy_subr.c		optional miibus | mii
 dev/mii/xmphy.c			optional miibus | xmphy
-dev/mk48txx/mk48txx.c		optional mk48txx
-dev/mlx/mlx.c			optional mlx
-dev/mlx/mlx_disk.c		optional mlx
-dev/mlx/mlx_pci.c		optional mlx pci
-dev/mly/mly.c			optional mly
+
+#
+# mmc(4)
+#
 dev/mmc/mmc.c			optional mmc
 dev/mmc/mmcbr_if.m		standard
 dev/mmc/mmcbus_if.m		standard
@@ -3169,61 +3168,9 @@ nlm/nlm_prot_svc.c		optional nfslockd | nfsd
 nlm/nlm_prot_xdr.c		optional nfslockd | nfsd
 nlm/sm_inter_xdr.c		optional nfslockd | nfsd
 
-dev/mlx5/mlx5_core/mlx5_alloc.c			optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_cmd.c			optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_cq.c			optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_eq.c			optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_flow_table.c		optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_fw.c			optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_health.c		optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_mad.c			optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_main.c			optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_mcg.c			optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_mr.c			optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_pagealloc.c		optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_pd.c			optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_port.c			optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_qp.c			optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_srq.c			optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_transobj.c		optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_uar.c			optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_vport.c			optional mlx5 pci	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_core/mlx5_wq.c			optional mlx5 pci	\
-	compile-with "${OFED_C}"
-
-dev/mlx5/mlx5_en/mlx5_en_ethtool.c		optional mlx5en pci inet inet6	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_en/mlx5_en_main.c			optional mlx5en pci inet inet6	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_en/mlx5_en_tx.c			optional mlx5en pci inet inet6	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_en/mlx5_en_flow_table.c		optional mlx5en pci inet inet6	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_en/mlx5_en_rx.c			optional mlx5en pci inet inet6	\
-	compile-with "${OFED_C}"
-dev/mlx5/mlx5_en/mlx5_en_txrx.c			optional mlx5en pci inet inet6	\
-	compile-with "${OFED_C}"
-
-# crypto support
+#
+# Crypto support.
+#
 opencrypto/cast.c		optional crypto | ipsec
 opencrypto/criov.c		optional crypto | ipsec
 opencrypto/crypto.c		optional crypto | ipsec
@@ -3236,6 +3183,10 @@ opencrypto/gfmult.c		optional crypto | ipsec
 opencrypto/rmd160.c		optional crypto | ipsec
 opencrypto/skipjack.c		optional crypto | ipsec
 opencrypto/xform.c		optional crypto | ipsec
+
+#
+# rpc(4) 
+#
 rpc/auth_none.c			optional krpc | nfslockd | nfscl | nfsd
 rpc/auth_unix.c			optional krpc | nfslockd | nfscl | nfsd
 rpc/authunix_prot.c		optional krpc | nfslockd | nfscl | nfsd
