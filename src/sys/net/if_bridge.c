@@ -62,7 +62,31 @@
  *
  * OpenBSD: if_bridge.c,v 1.60 2001/06/15 03:38:33 itojun Exp
  */
-
+/*
+ * Copyright (c) 2014, 2015, 2016 Henning Matyschok
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
 /*
  * Network interface bridge support.
  *
@@ -71,14 +95,16 @@
  *	- Currently only supports Ethernet-like interfaces (Ethernet,
  *	  802.11, VLANs on Ethernet, etc.)  Figure out a nice way
  *	  to bridge other types of interfaces (FDDI-FDDI, and maybe
- *	  consider heterogeneous bridges).
+ *	  consider heterogenous bridges).
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/net/if_bridge.c 298995 2016-05-03 18:05:43Z pfg $");
+__FBSDID("$FreeBSD: head/sys/net/if_bridge.c 284348 2015-06-13 19:39:21Z kp $");
 
 #include "opt_inet.h"
 #include "opt_inet6.h"
+
+#include "opt_pppoe_pfil.h"
 
 #include <sys/param.h>
 #include <sys/eventhandler.h>
@@ -411,6 +437,18 @@ SYSCTL_INT(_net_link_bridge, OID_AUTO, allow_llz_overlap,
     "Allow overlap of link-local scope "
     "zones of a bridge interface and the member interfaces");
 
+#ifdef PPPOE_PFIL
+/*
+ * XXX: vnet(9) integration pending.
+ */
+static int pfil_pppoe = 0;
+
+TUNABLE_INT("net.link.bridge.pfil_pppoe", &pfil_pppoe);
+SYSCTL_INT(_net_link_bridge, OID_AUTO, pfil_pppoe, CTLFLAG_RW,
+    &pfil_pppoe, 0, "Only pass PPPoE packets when pfil is enabled");
+#endif /* PPPOE_PFIL */
+
+
 struct bridge_control {
 	int	(*bc_func)(struct bridge_softc *, void *);
 	int	bc_argsize;
@@ -607,6 +645,9 @@ sysctl_pfil_ipfw(SYSCTL_HANDLER_ARGS)
 		 * layer2 type.
 		 */
 		if (V_pfil_ipfw) {
+#ifdef PPPOE_PFIL
+			pfil_pppoe = 0;
+#endif /* PPPOE_PFIL */
 			V_pfil_onlyip = 0;
 			V_pfil_bridge = 0;
 			V_pfil_member = 0;
@@ -1943,7 +1984,11 @@ static void
 bridge_dummynet(struct mbuf *m, struct ifnet *ifp)
 {
 	struct bridge_softc *sc;
-
+#ifdef PPPOE_PFIL
+	struct ether_header eh1;
+	struct m_tag_pppoe *mtp;
+	int dn_passed;
+#endif /* PPPOE_PFIL */	
 	sc = ifp->if_bridge;
 
 	/*
@@ -1966,6 +2011,52 @@ bridge_dummynet(struct mbuf *m, struct ifnet *ifp)
 		if (m == NULL)
 			return;
 	}
+#ifdef PPPOE_PFIL
+	dn_passed = 0;
+
+	if ((mtp = (struct m_tag_pppoe *)
+		m_tag_locate(m, MTAG_PPPOE, 
+			MTAG_PPPOE_PCI, NULL)) != NULL) {
+		
+		if (dn_passed != 0) {
+			m_freem(m);
+			return;
+		}
+		dn_passed = 1;
+/*
+ * Backup PCI and strip it off.
+ */	
+		m_copydata(m, 0, ETHER_HDR_LEN, (caddr_t) &eh1);
+		m_adj(m, ETHER_HDR_LEN);
+/*
+ * Prepend rfc-1661 PCI.
+ */	
+		M_PREPEND(m, sizeof(uint16_t), M_NOWAIT);
+		if (m == NULL)
+			return;
+		
+		bcopy(&mtp->mtp_pr, mtod(m, caddr_t), sizeof(uint16_t));
+/*
+ * Restore rfc-2516 PCI.
+ */	
+		M_PREPEND(m, sizeof(struct pppoe_hdr), M_NOWAIT);
+		if (m == NULL)
+			return;
+			
+		bcopy(&mtp->mtp_ph, mtod(m, caddr_t), 
+			sizeof(struct pppoe_hdr));
+/*
+ * Restore former Ethernet protocol id and prepend.
+ */	
+		eh1.ether_type = htons(ETHERTYPE_PPPOE);
+		M_PREPEND(m, ETHER_HDR_LEN, M_NOWAIT);
+		if (m == NULL)
+			return;
+			
+		bcopy(&eh1, mtod(m, caddr_t), ETHER_HDR_LEN);
+		m_tag_delete(m, &mtp->mtp_tag);
+	}
+#endif /* PPPOE_PFIL */	
 
 	bridge_enqueue(sc, ifp, m);
 }
@@ -2312,6 +2403,18 @@ bridge_input(struct ifnet *ifp, struct mbuf *m)
 		m_freem(m);
 		return (NULL);
 	}
+/*
+ * Push back any by if_vether(4) received frame
+ * for local processing. Those kind of interfaces
+ * are designed to operate as data sink.
+ *
+ * Forwarding by if_vether(4) received frames 
+ * with multi- / broadcast destination addresses
+ * may cause (so called) broadcast storms.
+ */
+	if (ifp->if_flags & IFF_VETHER) 
+		return (m);	
+  	
 	BRIDGE_LOCK(sc);
 	bif = bridge_lookup_member_if(sc, ifp);
 	if (bif == NULL) {
@@ -3082,6 +3185,9 @@ bridge_state_change(struct ifnet *ifp, int state)
 static int
 bridge_pfil(struct mbuf **mp, struct ifnet *bifp, struct ifnet *ifp, int dir)
 {
+#ifdef PPPOE_PFIL
+ 	struct m_tag_pppoe *mtp;
+#endif /* PPPOE_PFIL */
 	int snap, error, i, hlen;
 	struct ether_header *eh1, eh2;
 	struct ip *ip;
@@ -3141,7 +3247,15 @@ bridge_pfil(struct mbuf **mp, struct ifnet *bifp, struct ifnet *ifp, int dir)
 			if (V_pfil_ipfw_arp == 0)
 				return (0); /* Automatically pass */
 			break;
-
+#ifdef PPPOE_PFIL
+	case ETHERTYPE_PPPOEDISC:
+		return (0); /* Automatically pass */
+	case ETHERTYPE_PPPOE:
+	
+		if (pfil_pppoe == 0)
+			return (0);
+	
+#endif /* PPPOE_PFIL */
 		case ETHERTYPE_IP:
 #ifdef INET6
 		case ETHERTYPE_IPV6:
@@ -3176,7 +3290,52 @@ bridge_pfil(struct mbuf **mp, struct ifnet *bifp, struct ifnet *ifp, int dir)
 		m_copydata(*mp, 0, sizeof(struct llc), (caddr_t) &llc1);
 		m_adj(*mp, sizeof(struct llc));
 	}
-
+#ifdef PPPOE_PFIL
+/*
+ * Cache pci of sdu.
+ */
+	if (ether_type == ETHERTYPE_PPPOE) {
+/*
+ * Allocate MTAG_PPPOE containing rfc-2516 PCI. 
+ */
+		mtp = (struct m_tag_pppoe *)
+			m_tag_alloc(MTAG_PPPOE, MTAG_PPPOE_PCI, 
+						sizeof(struct m_tag_pppoe), M_NOWAIT);
+ 		if (mtp == NULL)
+ 			goto bad;	
+/*
+ * Backup and strip off rfc-2516 and rfc-1661 pci.
+ */	
+		m_copydata(*mp, 0, sizeof(struct pppoe_hdr), (caddr_t) &mtp->mtp_ph);
+		m_adj(*mp, sizeof(struct pppoe_hdr));
+		
+		m_copydata(*mp, 0, sizeof(uint16_t), (caddr_t) &mtp->mtp_pr);
+		m_adj(*mp, sizeof(uint16_t));
+/*
+ * Annotate mbuf(9).
+ */				
+ 		m_tag_prepend(*mp, &mtp->mtp_tag);		
+/*
+ * Relabel protocol id, as precondition for inspection.
+ */
+		switch (ntohs(mtp->mtp_pr)) {
+		case PPP_IP:
+			eh2.ether_type = htons(ETHERTYPE_IP);
+			break;
+#ifdef INET6
+		case PPP_IPV6:
+			eh2.ether_type = htons(ETHERTYPE_IPV6);
+#endif /* INET6 */
+			break;		
+		default:
+/*
+ * Bypass filtering, if sdu is not in AF_INET[6].
+ */		
+			error = 0;
+			goto out;
+		}			
+	}					
+#endif /* PPPOE_PFIL */	
 	/*
 	 * Check the IP header for alignment and errors
 	 */
@@ -3248,7 +3407,7 @@ bridge_pfil(struct mbuf **mp, struct ifnet *bifp, struct ifnet *ifp, int dir)
 		if (hlen < sizeof(struct ip))
 			goto bad;
 		if (hlen > (*mp)->m_len) {
-			if ((*mp = m_pullup(*mp, hlen)) == NULL)
+			if ((*mp = m_pullup(*mp, hlen)) == 0)
 				goto bad;
 			ip = mtod(*mp, struct ip *);
 			if (ip == NULL)
@@ -3297,6 +3456,33 @@ bridge_pfil(struct mbuf **mp, struct ifnet *bifp, struct ifnet *ifp, int dir)
 	/*
 	 * Finally, put everything back the way it was and return
 	 */
+#ifdef PPPOE_PFIL
+out: 
+/*
+ * Restore frame.
+ */	
+	switch (ether_type == ETHERTYPE_PPPOE) {
+/*
+ * Prepend rfc-1661 protocol id. 
+ */	
+		M_PREPEND(*mp, sizeof(uint16_t), M_NOWAIT);
+		if (*mp == NULL)
+			goto bad;
+
+		bcopy(&mtp->mtp_pr, mtod(*mp, caddr_t), sizeof(uint16_t));
+/*
+ * Prepend rfc-2516 pci. 
+ */			
+		M_PREPEND(*mp, sizeof(struct pppoe_hdr), M_NOWAIT);
+		if (*mp == NULL)
+			goto bad;
+		
+		bcopy(&mtp->mtp_ph, mtod(*mp, caddr_t), sizeof(struct pppoe_hdr));
+		eh2.ether_type = htons(ether_type);
+		m_tag_delete(*mp, &mtp->mtp_tag);
+	}
+#endif /* PPPOE_PFIL */	
+
 	if (snap) {
 		M_PREPEND(*mp, sizeof(struct llc), M_NOWAIT);
 		if (*mp == NULL)
@@ -3366,7 +3552,7 @@ bridge_ip_checkbasic(struct mbuf **mp)
 		goto bad;
 	}
 	if (hlen > m->m_len) {
-		if ((m = m_pullup(m, hlen)) == NULL) {
+		if ((m = m_pullup(m, hlen)) == 0) {
 			KMOD_IPSTAT_INC(ips_badhlen);
 			goto bad;
 		}
