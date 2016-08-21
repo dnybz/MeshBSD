@@ -38,6 +38,7 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_racct.c 298414 2016-04-21 16:22:52Z trasz
 #include <sys/buf.h>
 #include <sys/systm.h>
 #include <sys/eventhandler.h>
+#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/kthread.h>
 #include <sys/lock.h>
@@ -611,10 +612,14 @@ racct_add_force(struct proc *p, int resource, uint64_t amount)
 static void
 racct_add_cred_locked(struct ucred *cred, int resource, uint64_t amount)
 {
+	struct prison *pr;
 
 	ASSERT_RACCT_ENABLED();
 
 	racct_adjust_resource(cred->cr_ruidinfo->ui_racct, resource, amount);
+	for (pr = cred->cr_prison; pr != NULL; pr = pr->pr_parent)
+		racct_adjust_resource(pr->pr_prison_racct->prr_racct, resource,
+		    amount);
 	racct_adjust_resource(cred->cr_loginclass->lc_racct, resource, amount);
 }
 
@@ -861,10 +866,14 @@ racct_sub(struct proc *p, int resource, uint64_t amount)
 static void
 racct_sub_cred_locked(struct ucred *cred, int resource, uint64_t amount)
 {
+	struct prison *pr;
 
 	ASSERT_RACCT_ENABLED();
 
 	racct_adjust_resource(cred->cr_ruidinfo->ui_racct, resource, -amount);
+	for (pr = cred->cr_prison; pr != NULL; pr = pr->pr_parent)
+		racct_adjust_resource(pr->pr_prison_racct->prr_racct, resource,
+		    -amount);
 	racct_adjust_resource(cred->cr_loginclass->lc_racct, resource, -amount);
 }
 
@@ -1031,6 +1040,7 @@ racct_proc_ucred_changed(struct proc *p, struct ucred *oldcred,
 {
 	struct uidinfo *olduip, *newuip;
 	struct loginclass *oldlc, *newlc;
+	struct prison *oldpr, *newpr, *pr;
 
 	if (!racct_enable)
 		return;
@@ -1041,6 +1051,8 @@ racct_proc_ucred_changed(struct proc *p, struct ucred *oldcred,
 	olduip = oldcred->cr_ruidinfo;
 	newlc = newcred->cr_loginclass;
 	oldlc = oldcred->cr_loginclass;
+	newpr = newcred->cr_prison;
+	oldpr = oldcred->cr_prison;
 
 	RACCT_LOCK();
 	if (newuip != olduip) {
@@ -1050,6 +1062,14 @@ racct_proc_ucred_changed(struct proc *p, struct ucred *oldcred,
 	if (newlc != oldlc) {
 		racct_sub_racct(oldlc->lc_racct, p->p_racct);
 		racct_add_racct(newlc->lc_racct, p->p_racct);
+	}
+	if (newpr != oldpr) {
+		for (pr = oldpr; pr != NULL; pr = pr->pr_parent)
+			racct_sub_racct(pr->pr_prison_racct->prr_racct,
+			    p->p_racct);
+		for (pr = newpr; pr != NULL; pr = pr->pr_parent)
+			racct_add_racct(pr->pr_prison_racct->prr_racct,
+			    p->p_racct);
 	}
 	RACCT_UNLOCK();
 
@@ -1192,6 +1212,8 @@ racct_decay(void)
 	    racct_decay_post, NULL, NULL);
 	loginclass_racct_foreach(racct_decay_callback, racct_decay_pre,
 	    racct_decay_post, NULL, NULL);
+	prison_racct_foreach(racct_decay_callback, racct_decay_pre,
+	    racct_decay_post, NULL, NULL);
 }
 
 static void
@@ -1311,6 +1333,10 @@ racct_init(void)
 
 	racct_zone = uma_zcreate("racct", sizeof(struct racct),
 	    NULL, NULL, NULL, NULL, UMA_ALIGN_PTR, 0);
+	/*
+	 * XXX: Move this somewhere.
+	 */
+	prison0.pr_prison_racct = prison_racct_find("0");
 }
 SYSINIT(racct, SI_SUB_RACCT, SI_ORDER_FIRST, racct_init, NULL);
 

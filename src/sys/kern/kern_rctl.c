@@ -37,6 +37,7 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_rctl.c 298819 2016-04-29 22:15:33Z pfg $"
 #include <sys/malloc.h>
 #include <sys/queue.h>
 #include <sys/refcount.h>
+#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/limits.h>
 #include <sys/loginclass.h>
@@ -137,6 +138,7 @@ static struct dict subjectnames[] = {
 	{ "process", RCTL_SUBJECT_TYPE_PROCESS },
 	{ "user", RCTL_SUBJECT_TYPE_USER },
 	{ "loginclass", RCTL_SUBJECT_TYPE_LOGINCLASS },
+	{ "jail", RCTL_SUBJECT_TYPE_JAIL },
 	{ NULL, -1 }};
 
 static struct dict resourcenames[] = {
@@ -338,6 +340,8 @@ rctl_proc_rule_to_racct(const struct proc *p, const struct rctl_rule *rule)
 		return (cred->cr_ruidinfo->ui_racct);
 	case RCTL_SUBJECT_TYPE_LOGINCLASS:
 		return (cred->cr_loginclass->lc_racct);
+	case RCTL_SUBJECT_TYPE_JAIL:
+		return (cred->cr_prison->pr_prison_racct->prr_racct);
 	default:
 		panic("%s: unknown per %d", __func__, rule->rr_per);
 	}
@@ -363,7 +367,7 @@ rctl_available_resource(const struct proc *p, const struct rctl_rule *rule)
 }
 
 /*
- * Called every second for proc, uidinfo, loginclass.
+ * Called every second for proc, uidinfo, loginclass, and jail containers.
  * If the limit isn't exceeded, it decreases the usage amount to zero.
  * Otherwise, it decreases it by the value of the limit.  This way
  * resource consumption exceeding the limit "carries over" to the next
@@ -550,8 +554,9 @@ rctl_enforce(struct proc *p, int resource, uint64_t amount)
 			rctl_rule_to_sbuf(&sb, rule);
 			sbuf_finish(&sb);
 			printf("rctl: rule \"%s\" matched by pid %d "
-			    "(%s), uid %d\n", sbuf_data(&sb),
-			    p->p_pid, p->p_comm, p->p_ucred->cr_uid);
+			    "(%s), uid %d, jail %s\n", sbuf_data(&sb),
+			    p->p_pid, p->p_comm, p->p_ucred->cr_uid,
+			    p->p_ucred->cr_prison->pr_prison_racct->prr_name);
 			sbuf_delete(&sb);
 			free(buf, M_RCTL);
 			link->rrl_exceeded = 1;
@@ -575,8 +580,9 @@ rctl_enforce(struct proc *p, int resource, uint64_t amount)
 			sbuf_new(&sb, buf, RCTL_LOG_BUFSIZE, SBUF_FIXEDLEN);
 			sbuf_printf(&sb, "rule=");
 			rctl_rule_to_sbuf(&sb, rule);
-			sbuf_printf(&sb, " pid=%d ruid=%d",
-			    p->p_pid, p->p_ucred->cr_ruid);
+			sbuf_printf(&sb, " pid=%d ruid=%d jail=%s",
+			    p->p_pid, p->p_ucred->cr_ruid,
+			    p->p_ucred->cr_prison->pr_prison_racct->prr_name);
 			sbuf_finish(&sb);
 			devctl_notify_f("RCTL", "rule", "matched",
 			    sbuf_data(&sb), M_NOWAIT);
@@ -618,7 +624,8 @@ rctl_enforce(struct proc *p, int resource, uint64_t amount)
 			 * squared.  In other words, a process in a container
 			 * that is two times over the limit will be throttled
 			 * four times as much for hitting the same rule.  The
-			 * point is to penalize processes more is above the limit.
+			 * point is to penalize processes more if the container
+			 * itself (eg certain UID or jail) is above the limit.
 			 */
 			if (available < 0)
 				sleep_ratio = -available / rule->rr_amount;
@@ -773,6 +780,12 @@ rctl_rule_matches(const struct rctl_rule *rule, const struct rctl_rule *filter)
 			if (filter->rr_subject.rs_loginclass != NULL &&
 			    rule->rr_subject.rs_loginclass !=
 			    filter->rr_subject.rs_loginclass)
+				return (0);
+			break;
+		case RCTL_SUBJECT_TYPE_JAIL:
+			if (filter->rr_subject.rs_prison_racct != NULL &&
+			    rule->rr_subject.rs_prison_racct !=
+			    filter->rr_subject.rs_prison_racct)
 				return (0);
 			break;
 		default:
@@ -934,6 +947,10 @@ rctl_rule_acquire_subject(struct rctl_rule *rule)
 	case RCTL_SUBJECT_TYPE_UNDEFINED:
 	case RCTL_SUBJECT_TYPE_PROCESS:
 		break;
+	case RCTL_SUBJECT_TYPE_JAIL:
+		if (rule->rr_subject.rs_prison_racct != NULL)
+			prison_racct_hold(rule->rr_subject.rs_prison_racct);
+		break;
 	case RCTL_SUBJECT_TYPE_USER:
 		if (rule->rr_subject.rs_uip != NULL)
 			uihold(rule->rr_subject.rs_uip);
@@ -957,6 +974,10 @@ rctl_rule_release_subject(struct rctl_rule *rule)
 	switch (rule->rr_subject_type) {
 	case RCTL_SUBJECT_TYPE_UNDEFINED:
 	case RCTL_SUBJECT_TYPE_PROCESS:
+		break;
+	case RCTL_SUBJECT_TYPE_JAIL:
+		if (rule->rr_subject.rs_prison_racct != NULL)
+			prison_racct_free(rule->rr_subject.rs_prison_racct);
 		break;
 	case RCTL_SUBJECT_TYPE_USER:
 		if (rule->rr_subject.rs_uip != NULL)
@@ -986,6 +1007,7 @@ rctl_rule_alloc(int flags)
 	rule->rr_subject.rs_proc = NULL;
 	rule->rr_subject.rs_uip = NULL;
 	rule->rr_subject.rs_loginclass = NULL;
+	rule->rr_subject.rs_prison_racct = NULL;
 	rule->rr_per = RCTL_SUBJECT_TYPE_UNDEFINED;
 	rule->rr_resource = RACCT_UNDEFINED;
 	rule->rr_action = RCTL_ACTION_UNDEFINED;
@@ -1009,6 +1031,7 @@ rctl_rule_duplicate(const struct rctl_rule *rule, int flags)
 	copy->rr_subject.rs_proc = rule->rr_subject.rs_proc;
 	copy->rr_subject.rs_uip = rule->rr_subject.rs_uip;
 	copy->rr_subject.rs_loginclass = rule->rr_subject.rs_loginclass;
+	copy->rr_subject.rs_prison_racct = rule->rr_subject.rs_prison_racct;
 	copy->rr_per = rule->rr_per;
 	copy->rr_resource = rule->rr_resource;
 	copy->rr_action = rule->rr_action;
@@ -1088,6 +1111,10 @@ rctl_rule_fully_specified(const struct rctl_rule *rule)
 		if (rule->rr_subject.rs_loginclass == NULL)
 			return (0);
 		break;
+	case RCTL_SUBJECT_TYPE_JAIL:
+		if (rule->rr_subject.rs_prison_racct == NULL)
+			return (0);
+		break;
 	default:
 		panic("rctl_rule_fully_specified: unknown subject type %d",
 		    rule->rr_subject_type);
@@ -1136,6 +1163,7 @@ rctl_string_to_rule(char *rulestr, struct rctl_rule **rulep)
 		rule->rr_subject.rs_proc = NULL;
 		rule->rr_subject.rs_uip = NULL;
 		rule->rr_subject.rs_loginclass = NULL;
+		rule->rr_subject.rs_prison_racct = NULL;
 	} else {
 		switch (rule->rr_subject_type) {
 		case RCTL_SUBJECT_TYPE_UNDEFINED:
@@ -1163,6 +1191,14 @@ rctl_string_to_rule(char *rulestr, struct rctl_rule **rulep)
 			rule->rr_subject.rs_loginclass =
 			    loginclass_find(subject_idstr);
 			if (rule->rr_subject.rs_loginclass == NULL) {
+				error = ENAMETOOLONG;
+				goto out;
+			}
+			break;
+		case RCTL_SUBJECT_TYPE_JAIL:
+			rule->rr_subject.rs_prison_racct =
+			    prison_racct_find(subject_idstr);
+			if (rule->rr_subject.rs_prison_racct == NULL) {
 				error = ENAMETOOLONG;
 				goto out;
 			}
@@ -1231,8 +1267,11 @@ rctl_rule_add(struct rctl_rule *rule)
 	struct proc *p;
 	struct ucred *cred;
 	struct uidinfo *uip;
+	struct prison *pr;
+	struct prison_racct *prr;
 	struct loginclass *lc;
 	struct rctl_rule *rule2;
+	int match;
 
 	ASSERT_RACCT_ENABLED();
 	KASSERT(rctl_rule_fully_specified(rule), ("rule not fully specified"));
@@ -1301,6 +1340,12 @@ rctl_rule_add(struct rctl_rule *rule)
 		rctl_racct_add_rule(lc->lc_racct, rule);
 		break;
 
+	case RCTL_SUBJECT_TYPE_JAIL:
+		prr = rule->rr_subject.rs_prison_racct;
+		KASSERT(prr != NULL, ("rctl_rule_add: NULL pr"));
+		rctl_racct_add_rule(prr->prr_racct, rule);
+		break;
+
 	default:
 		panic("rctl_rule_add: unknown subject type %d",
 		    rule->rr_subject_type);
@@ -1321,6 +1366,17 @@ rctl_rule_add(struct rctl_rule *rule)
 			continue;
 		case RCTL_SUBJECT_TYPE_LOGINCLASS:
 			if (cred->cr_loginclass == rule->rr_subject.rs_loginclass)
+				break;
+			continue;
+		case RCTL_SUBJECT_TYPE_JAIL:
+			match = 0;
+			for (pr = cred->cr_prison; pr != NULL; pr = pr->pr_parent) {
+				if (pr->pr_prison_racct == rule->rr_subject.rs_prison_racct) {
+					match = 1;
+					break;
+				}
+			}
+			if (match)
 				break;
 			continue;
 		default:
@@ -1390,6 +1446,9 @@ rctl_rule_remove(struct rctl_rule *filter)
 	ui_racct_foreach(rctl_rule_remove_callback,
 	    rctl_rule_pre_callback, rctl_rule_post_callback,
 	    filter, (void *)&found);
+	prison_racct_foreach(rctl_rule_remove_callback,
+	    rctl_rule_pre_callback, rctl_rule_post_callback,
+	    filter, (void *)&found);
 
 	sx_assert(&allproc_lock, SA_LOCKED);
 	RACCT_LOCK();
@@ -1436,6 +1495,13 @@ rctl_rule_to_sbuf(struct sbuf *sb, const struct rctl_rule *rule)
 		else
 			sbuf_printf(sb, "%s:",
 			    rule->rr_subject.rs_loginclass->lc_name);
+		break;
+	case RCTL_SUBJECT_TYPE_JAIL:
+		if (rule->rr_subject.rs_prison_racct == NULL)
+			sbuf_printf(sb, ":");
+		else
+			sbuf_printf(sb, "%s:",
+			    rule->rr_subject.rs_prison_racct->prr_name);
 		break;
 	default:
 		panic("rctl_rule_to_sbuf: unknown subject type %d",
@@ -1540,6 +1606,7 @@ sys_rctl_get_racct(struct thread *td, struct rctl_get_racct_args *uap)
 	struct proc *p;
 	struct uidinfo *uip;
 	struct loginclass *lc;
+	struct prison_racct *prr;
 	char *inputstr;
 	int error;
 
@@ -1586,6 +1653,14 @@ sys_rctl_get_racct(struct thread *td, struct rctl_get_racct_args *uap)
 			goto out;
 		}
 		outputsbuf = rctl_racct_to_sbuf(lc->lc_racct, 1);
+		break;
+	case RCTL_SUBJECT_TYPE_JAIL:
+		prr = filter->rr_subject.rs_prison_racct;
+		if (prr == NULL) {
+			error = EINVAL;
+			goto out;
+		}
+		outputsbuf = rctl_racct_to_sbuf(prr->prr_racct, 1);
 		break;
 	default:
 		error = EINVAL;
@@ -1683,7 +1758,9 @@ sys_rctl_get_rules(struct thread *td, struct rctl_get_rules_args *uap)
 	ui_racct_foreach(rctl_get_rules_callback,
 	    rctl_rule_pre_callback, rctl_rule_post_callback,
 	    filter, sb);
-
+	prison_racct_foreach(rctl_get_rules_callback,
+	    rctl_rule_pre_callback, rctl_rule_post_callback,
+	    filter, sb);
 	if (sbuf_error(sb) == ENOMEM) {
 		error = ERANGE;
 		goto out;
@@ -1874,12 +1951,14 @@ rctl_proc_ucred_changed(struct proc *p, struct ucred *newcred)
 	struct rctl_rule_link *link, *newlink;
 	struct uidinfo *newuip;
 	struct loginclass *newlc;
+	struct prison_racct *newprr;
 	int rulecnt, i;
 
 	ASSERT_RACCT_ENABLED();
 
 	newuip = newcred->cr_ruidinfo;
 	newlc = newcred->cr_loginclass;
+	newprr = newcred->cr_prison->pr_prison_racct;
 	
 	LIST_INIT(&newrules);
 
@@ -1899,7 +1978,8 @@ again:
 		rulecnt++;
 	LIST_FOREACH(link, &newlc->lc_racct->r_rule_links, rrl_next)
 		rulecnt++;
-
+	LIST_FOREACH(link, &newprr->prr_racct->r_rule_links, rrl_next)
+		rulecnt++;
 	RACCT_UNLOCK();
 
 	/*
@@ -1943,6 +2023,16 @@ again:
 	}
 
 	LIST_FOREACH(link, &newlc->lc_racct->r_rule_links, rrl_next) {
+		if (newlink == NULL)
+			goto goaround;
+		rctl_rule_acquire(link->rrl_rule);
+		newlink->rrl_rule = link->rrl_rule;
+		newlink->rrl_exceeded = link->rrl_exceeded;
+		newlink = LIST_NEXT(newlink, rrl_next);
+		rulecnt--;
+	}
+
+	LIST_FOREACH(link, &newprr->prr_racct->r_rule_links, rrl_next) {
 		if (newlink == NULL)
 			goto goaround;
 		rctl_rule_acquire(link->rrl_rule);

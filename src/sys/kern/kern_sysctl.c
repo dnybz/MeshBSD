@@ -51,6 +51,7 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_sysctl.c 298819 2016-04-29 22:15:33Z pfg 
 #include <sys/malloc.h>
 #include <sys/priv.h>
 #include <sys/proc.h>
+#include <sys/jail.h>
 #include <sys/lock.h>
 #include <sys/mutex.h>
 #include <sys/rmlock.h>
@@ -1801,7 +1802,15 @@ sysctl_root(SYSCTL_HANDLER_ARGS)
 	if (req->newptr && !(oid->oid_kind & CTLFLAG_ANYBODY)) {
 		int priv;
 
-		priv = PRIV_SYSCTL_WRITE;
+		if (oid->oid_kind & CTLFLAG_PRISON)
+			priv = PRIV_SYSCTL_WRITEJAIL;
+#ifdef VIMAGE
+		else if ((oid->oid_kind & CTLFLAG_VNET) &&
+		     prison_owns_vnet(req->td->td_ucred))
+			priv = PRIV_SYSCTL_WRITEJAIL;
+#endif
+		else
+			priv = PRIV_SYSCTL_WRITE;
 		error = priv_check(req->td, priv);
 		if (error)
 			goto out;

@@ -56,8 +56,9 @@
 
 #define	MBS_UID_DEFINED	0x00000001	/* uid field should be matched */
 #define	MBS_GID_DEFINED	0x00000002	/* gid field should be matched */
+#define	MBS_PRISON_DEFINED 0x00000004	/* prison field should be matched */
 
-#define MBS_ALL_FLAGS (MBS_UID_DEFINED | MBS_GID_DEFINED)
+#define MBS_ALL_FLAGS (MBS_UID_DEFINED | MBS_GID_DEFINED | MBS_PRISON_DEFINED)
 
 struct mac_bsdextended_subject {
 	int	mbs_flags;
@@ -66,6 +67,7 @@ struct mac_bsdextended_subject {
 	uid_t	mbs_uid_max;
 	gid_t	mbs_gid_min;
 	gid_t	mbs_gid_max;
+	int	mbs_prison;
 };
 
 #define	MBO_UID_DEFINED	0x00000001	/* uid field should be matched */

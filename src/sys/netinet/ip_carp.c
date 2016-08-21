@@ -36,6 +36,7 @@ __FBSDID("$FreeBSD: head/sys/netinet/ip_carp.c 292402 2015-12-17 14:41:30Z smh $
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/bus.h>
+#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/limits.h>
 #include <sys/malloc.h>

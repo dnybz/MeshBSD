@@ -39,6 +39,7 @@ __FBSDID("$FreeBSD: head/sys/nfs/nfs_diskless.c 297086 2016-03-20 21:48:26Z ian 
 
 #include <sys/param.h>
 #include <sys/systm.h>
+#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/malloc.h>
 #include <sys/mount.h>

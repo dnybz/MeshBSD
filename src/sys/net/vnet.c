@@ -42,6 +42,7 @@ __FBSDID("$FreeBSD: head/sys/net/vnet.c 300001 2016-05-17 00:32:36Z bz $");
 #include <sys/param.h>
 #include <sys/kdb.h>
 #include <sys/kernel.h>
+#include <sys/jail.h>
 #include <sys/sdt.h>
 #include <sys/systm.h>
 #include <sys/sysctl.h>
@@ -327,7 +328,7 @@ vnet0_init(void *arg __unused)
 	 * otherwise CURVNET_SET() macros would scream about unnecessary
 	 * curvnet recursions.
 	 */
-	curvnet = vnet0 = vnet_alloc();
+	curvnet = prison0.pr_vnet = vnet0 = vnet_alloc();
 }
 SYSINIT(vnet0_init, SI_SUB_VNET, SI_ORDER_FIRST, vnet0_init, NULL);
 

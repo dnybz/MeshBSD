@@ -46,6 +46,7 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_fork.c 298819 2016-04-29 22:15:33Z pfg $"
 #include <sys/eventhandler.h>
 #include <sys/fcntl.h>
 #include <sys/filedesc.h>
+#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/kthread.h>
 #include <sys/sysctl.h>
@@ -413,6 +414,9 @@ do_fork(struct thread *td, struct fork_req *fr, struct proc *p2, struct thread *
 
 	bzero(&p2->p_startzero,
 	    __rangeof(struct proc, p_startzero, p_endzero));
+
+	/* Tell the prison that we exist. */
+	prison_proc_hold(p2->p_ucred->cr_prison);
 
 	PROC_UNLOCK(p2);
 

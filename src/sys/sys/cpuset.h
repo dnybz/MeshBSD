@@ -82,7 +82,8 @@
 #define	CPU_WHICH_PID		2	/* Specifies a process id. */
 #define	CPU_WHICH_CPUSET	3	/* Specifies a set id. */
 #define	CPU_WHICH_IRQ		4	/* Specifies an irq #. */
-#define	CPU_WHICH_DOMAIN	5	/* Specifies a NUMA domain id. */
+#define	CPU_WHICH_JAIL		5	/* Specifies a jail id. */
+#define	CPU_WHICH_DOMAIN	6	/* Specifies a NUMA domain id. */
 
 /*
  * Reserved cpuset identifiers.
@@ -119,6 +120,7 @@ struct cpuset {
 #define CPU_SET_RDONLY  0x0002  /* No modification allowed. */
 
 extern cpuset_t *cpuset_root;
+struct prison;
 struct proc;
 struct thread;
 
@@ -127,6 +129,7 @@ struct cpuset *cpuset_ref(struct cpuset *);
 void	cpuset_rel(struct cpuset *);
 int	cpuset_setthread(lwpid_t id, cpuset_t *);
 int	cpuset_setithread(lwpid_t id, int cpu);
+int	cpuset_create_root(struct prison *, struct cpuset **);
 int	cpuset_setproc_update_set(struct proc *, struct cpuset *);
 int	cpuset_which(cpuwhich_t, id_t, struct proc **,
 	    struct thread **, struct cpuset **);

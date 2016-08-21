@@ -44,6 +44,7 @@
 #include <sys/sx.h>
 #include <sys/vnode.h>
 #include <sys/limits.h>
+#include <sys/jail.h>
 
 #include <fs/devfs/devfs.h>
 
@@ -70,7 +71,7 @@ devfs_mount(struct mount *mp)
 	struct devfs_mount *fmp;
 	struct vnode *rvp;
 	struct thread *td = curthread;
-	int rsnum;
+	int injail, rsnum;
 
 	if (devfs_unr == NULL)
 		devfs_unr = new_unrhdr(0, INT_MAX, NULL);
@@ -80,7 +81,11 @@ devfs_mount(struct mount *mp)
 	if (mp->mnt_flag & MNT_ROOTFS)
 		return (EOPNOTSUPP);
 
+	if (!prison_allow(td->td_ucred, PR_ALLOW_MOUNT_DEVFS))
+		return (EPERM);
+
 	rsnum = 0;
+	injail = jailed(td->td_ucred);
 
 	if (mp->mnt_optnew != NULL) {
 		if (vfs_filteropt(mp->mnt_optnew, devfs_opts))
@@ -101,6 +106,10 @@ devfs_mount(struct mount *mp)
 		    rsnum != td->td_ucred->cr_prison->pr_devfs_rsnum)
 			return (EPERM);
 	}
+
+	/* jails enforce their ruleset */
+	if (injail)
+		rsnum = td->td_ucred->cr_prison->pr_devfs_rsnum;
 
 	if (mp->mnt_flag & MNT_UPDATE) {
 		if (rsnum != 0) {
@@ -234,4 +243,4 @@ static struct vfsops devfs_vfsops = {
 	.vfs_unmount =		devfs_unmount,
 };
 
-VFS_SET(devfs_vfsops, devfs, VFCF_SYNTHETIC);
+VFS_SET(devfs_vfsops, devfs, VFCF_SYNTHETIC | VFCF_JAIL);

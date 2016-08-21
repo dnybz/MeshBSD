@@ -70,6 +70,7 @@ __FBSDID("$FreeBSD: head/sys/netinet6/icmp6.c 299829 2016-05-15 03:22:13Z markj 
 
 #include <sys/param.h>
 #include <sys/domain.h>
+#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/lock.h>
 #include <sys/malloc.h>
@@ -658,6 +659,7 @@ icmp6_input(struct mbuf **mp, int *offp, int proto)
 			/* XXX meaningless if n == NULL */
 			noff = sizeof(struct ip6_hdr);
 		} else {
+			struct prison *pr;
 			u_char *p;
 			int maxhlen, hlen;
 
@@ -692,8 +694,9 @@ icmp6_input(struct mbuf **mp, int *offp, int proto)
 			}
 			maxhlen = M_TRAILINGSPACE(n) -
 			    (sizeof(*nip6) + sizeof(*nicmp6) + 4);
-
-			hlen = strlen(hostname);
+			pr = curthread->td_ucred->cr_prison;
+			mtx_lock(&pr->pr_mtx);
+			hlen = strlen(pr->pr_hostname);
 			if (maxhlen > hlen)
 				maxhlen = hlen;
 			/*
@@ -706,8 +709,8 @@ icmp6_input(struct mbuf **mp, int *offp, int proto)
 			p = (u_char *)(nicmp6 + 1);
 			bzero(p, 4);
 			/* meaningless TTL */
-			bcopy(hostname, p + 4, maxhlen);
-
+			bcopy(pr->pr_hostname, p + 4, maxhlen);
+			mtx_unlock(&pr->pr_mtx);
 			noff = sizeof(struct ip6_hdr);
 			n->m_pkthdr.len = n->m_len = sizeof(struct ip6_hdr) +
 				sizeof(struct icmp6_hdr) + 4 + maxhlen;
@@ -1234,6 +1237,7 @@ ni6_input(struct mbuf *m, int off)
 {
 	struct icmp6_nodeinfo *ni6, *nni6;
 	struct mbuf *n = NULL;
+	struct prison *pr;
 	u_int16_t qtype;
 	int subjlen;
 	int replylen = sizeof(struct ip6_hdr) + sizeof(struct icmp6_nodeinfo);
@@ -1374,19 +1378,22 @@ ni6_input(struct mbuf *m, int off)
 			goto bad;
 
 		case ICMP6_NI_SUBJ_FQDN:
-/*
- * Validate Subject name with gethostname(3).
- *
- * The behavior may need some debate, since:
- * - we are not sure if the node has FQDN as
- *   hostname (returned by gethostname(3)).
- * - the code does wildcard match for truncated names.
- *   however, we are not sure if we want to perform
- *   wildcard match, if gethostname(3) side has
- *   truncated hostname.
- */
-			n = ni6_nametodns(hostname,
-			    strlen(hostname), 0);
+			/*
+			 * Validate Subject name with gethostname(3).
+			 *
+			 * The behavior may need some debate, since:
+			 * - we are not sure if the node has FQDN as
+			 *   hostname (returned by gethostname(3)).
+			 * - the code does wildcard match for truncated names.
+			 *   however, we are not sure if we want to perform
+			 *   wildcard match, if gethostname(3) side has
+			 *   truncated hostname.
+			 */
+			pr = curthread->td_ucred->cr_prison;
+			mtx_lock(&pr->pr_mtx);
+			n = ni6_nametodns(pr->pr_hostname,
+			    strlen(pr->pr_hostname), 0);
+			mtx_unlock(&pr->pr_mtx);
 			if (!n || n->m_next || n->m_len == 0)
 				goto bad;
 			IP6_EXTHDR_GET(subj, char *, m,
@@ -1504,17 +1511,17 @@ ni6_input(struct mbuf *m, int off)
 		    sizeof(struct ip6_hdr) + sizeof(struct icmp6_nodeinfo));
 		nni6->ni_flags = 0; /* XXX: meaningless TTL */
 		fqdn->ni_fqdn_ttl = 0;	/* ditto. */
-/*
- * XXX do we really have FQDN in hostname?
-*/
-		n->m_next = ni6_nametodns(hostname,
-		    strlen(hostname), oldfqdn);
-
+		/*
+		 * XXX do we really have FQDN in hostname?
+		 */
+		pr = curthread->td_ucred->cr_prison;
+		mtx_lock(&pr->pr_mtx);
+		n->m_next = ni6_nametodns(pr->pr_hostname,
+		    strlen(pr->pr_hostname), oldfqdn);
+		mtx_unlock(&pr->pr_mtx);
 		if (n->m_next == NULL)
 			goto bad;
-/* 
- * XXX we assume that n->m_next is not a chain
- */
+		/* XXX we assume that n->m_next is not a chain */
 		if (n->m_next->m_next != NULL)
 			goto bad;
 		n->m_pkthdr.len += n->m_next->m_len;

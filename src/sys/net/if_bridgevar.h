@@ -69,32 +69,7 @@
  *
  * $FreeBSD: head/sys/net/if_bridgevar.h 173320 2007-11-04 08:32:27Z thompsa $
  */
-/*
- * Copyright (c) 2014, 2015, 2016 Henning Matyschok
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
- 
+
 /*
  * Data structure and control definitions for bridge interfaces.
  */
@@ -349,47 +324,5 @@ extern	struct mbuf *(*bridge_input_p)(struct ifnet *, struct mbuf *);
 extern	int (*bridge_output_p)(struct ifnet *, struct mbuf *,
 		struct sockaddr *, struct rtentry *);
 extern	void (*bridge_dn_p)(struct mbuf *, struct ifnet *);
-
-#ifdef PPPOE_PFIL
-/* 
- * Structure definition of rfc-2516 based PCI. 
- *
- * Codes to identify message types are from 
- * netgraph/ng_pppoe.h. 
- */
-struct pppoe_hdr {
-	u_int8_t	ph_ver:4;
-	u_int8_t	ph_type:4;
-	u_int8_t	ph_code;
-	u_int16_t	ph_sid;
-	u_int16_t	ph_length;
-}__packed;
-#define PADI_CODE	0x09
-#define PADO_CODE	0x07
-#define PADR_CODE	0x19
-#define PADS_CODE	0x65
-#define PADT_CODE	0xa7
-
-/*
- * Protocol field values are from net/ppp_defs.h
- */
-#ifdef INET
-#define PPP_IP		0x21	/* Internet Protocol */
-#endif /* INET */
-#ifdef INET6
-#define PPP_IPV6	0x57	/* Internet Protocol version 6 */
-#endif /* INET6 */
-
-/*
- * Holds copy of rfc-2516 PCI where IPv[46] PDU is mapped.  
- */
-struct m_tag_pppoe {
-	struct m_tag	mtp_tag;
-	struct pppoe_hdr	mtp_ph;
-	uint16_t 		mtp_pr;
-};
-#define	MTAG_PPPOE		1402876965
-#define	MTAG_PPPOE_PCI	0 
-#endif /* PPPOE_PFIL */
 
 #endif /* _KERNEL */

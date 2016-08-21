@@ -51,6 +51,7 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_descrip.c 299227 2016-05-08 03:26:12Z mjg
 #include <sys/file.h>
 #include <sys/filedesc.h>
 #include <sys/filio.h>
+#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/limits.h>
 #include <sys/lock.h>
@@ -1860,6 +1861,9 @@ fdinit(struct filedesc *fdp, bool prepfiles)
 	newfdp->fd_rdir = fdp->fd_rdir;
 	if (newfdp->fd_rdir)
 		VREF(newfdp->fd_rdir);
+	newfdp->fd_jdir = fdp->fd_jdir;
+	if (newfdp->fd_jdir)
+		VREF(newfdp->fd_jdir);
 
 	if (!prepfiles) {
 		FILEDESC_SUNLOCK(fdp);
@@ -2154,7 +2158,7 @@ fdescfree(struct thread *td)
 {
 	struct proc *p;
 	struct filedesc *fdp;
-	struct vnode *cdir, *rdir;
+	struct vnode *cdir, *jdir, *rdir;
 
 	p = td->td_proc;
 	fdp = p->p_fd;
@@ -2183,13 +2187,16 @@ fdescfree(struct thread *td)
 	fdp->fd_cdir = NULL;
 	rdir = fdp->fd_rdir;
 	fdp->fd_rdir = NULL;
-
+	jdir = fdp->fd_jdir;
+	fdp->fd_jdir = NULL;
 	FILEDESC_XUNLOCK(fdp);
 
 	if (cdir != NULL)
 		vrele(cdir);
 	if (rdir != NULL)
 		vrele(rdir);
+	if (jdir != NULL)
+		vrele(jdir);
 
 	fdescfree_fds(td, fdp, 1);
 }
@@ -2202,6 +2209,8 @@ fdescfree_remapped(struct filedesc *fdp)
 		vrele(fdp->fd_cdir);
 	if (fdp->fd_rdir != NULL)
 		vrele(fdp->fd_rdir);
+	if (fdp->fd_jdir != NULL)
+		vrele(fdp->fd_jdir);
 
 	fdescfree_fds(curthread, fdp, 0);
 }
@@ -3028,7 +3037,10 @@ pwd_chroot(struct thread *td, struct vnode *vp)
 	oldvp = fdp->fd_rdir;
 	VREF(vp);
 	fdp->fd_rdir = vp;
-
+	if (fdp->fd_jdir == NULL) {
+		VREF(vp);
+		fdp->fd_jdir = vp;
+	}
 	FILEDESC_XUNLOCK(fdp);
 	vrele(oldvp);
 	return (0);
@@ -3051,13 +3063,14 @@ pwd_chdir(struct thread *td, struct vnode *vp)
 }
 
 /*
- * Scan all active processes to see if any of them have a current
+ * Scan all active processes and prisons to see if any of them have a current
  * or root directory of `olddp'. If so, replace them with the new mount point.
  */
 void
 mountcheckdirs(struct vnode *olddp, struct vnode *newdp)
 {
 	struct filedesc *fdp;
+	struct prison *pr;
 	struct proc *p;
 	int nrele;
 
@@ -3082,7 +3095,11 @@ mountcheckdirs(struct vnode *olddp, struct vnode *newdp)
 			fdp->fd_rdir = newdp;
 			nrele++;
 		}
-
+		if (fdp->fd_jdir == olddp) {
+			vref(newdp);
+			fdp->fd_jdir = newdp;
+			nrele++;
+		}
 		FILEDESC_XUNLOCK(fdp);
 		fddrop(fdp);
 	}
@@ -3092,7 +3109,24 @@ mountcheckdirs(struct vnode *olddp, struct vnode *newdp)
 		rootvnode = newdp;
 		nrele++;
 	}
-
+	mtx_lock(&prison0.pr_mtx);
+	if (prison0.pr_root == olddp) {
+		vref(newdp);
+		prison0.pr_root = newdp;
+		nrele++;
+	}
+	mtx_unlock(&prison0.pr_mtx);
+	sx_slock(&allprison_lock);
+	TAILQ_FOREACH(pr, &allprison, pr_list) {
+		mtx_lock(&pr->pr_mtx);
+		if (pr->pr_root == olddp) {
+			vref(newdp);
+			pr->pr_root = newdp;
+			nrele++;
+		}
+		mtx_unlock(&pr->pr_mtx);
+	}
+	sx_sunlock(&allprison_lock);
 	while (nrele--)
 		vrele(olddp);
 }
@@ -3455,7 +3489,11 @@ kern_proc_filedesc_out(struct proc *p,  struct sbuf *sb, ssize_t maxlen,
 		vref(fdp->fd_rdir);
 		export_vnode_to_sb(fdp->fd_rdir, KF_FD_TYPE_ROOT, FREAD, efbuf);
 	}
-
+	/* jail directory */
+	if (fdp->fd_jdir != NULL) {
+		vref(fdp->fd_jdir);
+		export_vnode_to_sb(fdp->fd_jdir, KF_FD_TYPE_JAIL, FREAD, efbuf);
+	}
 	for (i = 0; fdp->fd_refcnt > 0 && i <= fdp->fd_lastfile; i++) {
 		if ((fp = fdp->fd_ofiles[i].fde_file) == NULL)
 			continue;
@@ -3582,7 +3620,9 @@ sysctl_kern_proc_ofiledesc(SYSCTL_HANDLER_ARGS)
 	if (fdp->fd_rdir != NULL)
 		export_vnode_for_osysctl(fdp->fd_rdir, KF_FD_TYPE_ROOT, kif,
 		    okif, fdp, req);
-
+	if (fdp->fd_jdir != NULL)
+		export_vnode_for_osysctl(fdp->fd_jdir, KF_FD_TYPE_JAIL, kif,
+		    okif, fdp, req);
 	for (i = 0; fdp->fd_refcnt > 0 && i <= fdp->fd_lastfile; i++) {
 		if ((fp = fdp->fd_ofiles[i].fde_file) == NULL)
 			continue;

@@ -78,6 +78,7 @@ struct filedesc {
 	struct	fdescenttbl *fd_files;	/* open files table */
 	struct	vnode *fd_cdir;		/* current directory */
 	struct	vnode *fd_rdir;		/* root directory */
+	struct	vnode *fd_jdir;		/* jail root directory */
 	NDSLOTTYPE *fd_map;		/* bitmap of free fds */
 	int	fd_lastfile;		/* high-water mark of fd_ofiles */
 	int	fd_freefile;		/* approx. next free file */
@@ -213,7 +214,7 @@ fd_modified(struct filedesc *fdp, int fd, seq_t seq)
 	return (!seq_consistent(fd_seq(fdp->fd_files, fd), seq));
 }
 
-/* cdir/rdir manipulation functions. */
+/* cdir/rdir/jdir manipulation functions. */
 void	pwd_chdir(struct thread *td, struct vnode *vp);
 int	pwd_chroot(struct thread *td, struct vnode *vp);
 void	pwd_ensure_dirs(void);

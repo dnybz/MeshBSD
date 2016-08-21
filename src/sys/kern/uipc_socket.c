@@ -136,6 +136,7 @@ __FBSDID("$FreeBSD: head/sys/kern/uipc_socket.c 298819 2016-04-29 22:15:33Z pfg 
 #include <sys/sysctl.h>
 #include <sys/taskqueue.h>
 #include <sys/uio.h>
+#include <sys/jail.h>
 #include <sys/syslog.h>
 #include <netinet/in.h>
 
@@ -494,6 +495,9 @@ socreate(int dom, struct socket **aso, int type, int proto,
 	}
 	if (prp->pr_usrreqs->pru_attach == NULL ||
 	    prp->pr_usrreqs->pru_attach == pru_attach_notsupp)
+		return (EPROTONOSUPPORT);
+
+	if (prison_check_af(cred, prp->pr_domain->dom_family) != 0)
 		return (EPROTONOSUPPORT);
 
 	if (prp->pr_type != type)

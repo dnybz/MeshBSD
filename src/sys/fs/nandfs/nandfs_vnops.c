@@ -715,7 +715,8 @@ nandfs_chmod(struct vnode *vp, int mode, struct ucred *cred, struct thread *td)
 	/*
 	 * Privileged processes may set the sticky bit on non-directories,
 	 * as well as set the setgid bit on a file with a group that the
-	 * process is not a member of.
+	 * process is not a member of. Both of these are allowed in
+	 * jail(8).
 	 */
 	if (vp->v_type != VDIR && (mode & S_ISTXT)) {
 		if (priv_check_cred(cred, PRIV_VFS_STICKYFILE, 0))
@@ -828,8 +829,12 @@ nandfs_setattr(struct vop_setattr_args *ap)
 		/*
 		 * Unprivileged processes are not permitted to unset system
 		 * flags, or modify flags if any system flags are set.
-		 * Privileged processes may not modify system flags
+		 * Privileged non-jail processes may not modify system flags
 		 * if securelevel > 0 and any existing system flags are set.
+		 * Privileged jail processes behave like privileged non-jail
+		 * processes if the security.jail.chflags_allowed sysctl is
+		 * is non-zero; otherwise, they behave like unprivileged
+		 * processes.
 		 */
 
 		flags = inode->i_flags;

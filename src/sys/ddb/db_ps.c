@@ -34,6 +34,7 @@ __FBSDID("$FreeBSD: head/sys/ddb/db_ps.c 298043 2016-04-15 09:13:01Z kib $");
 
 #include <sys/param.h>
 #include <sys/cons.h>
+#include <sys/jail.h>
 #include <sys/kdb.h>
 #include <sys/kernel.h>
 #include <sys/proc.h>
@@ -189,7 +190,8 @@ db_ps(db_expr_t addr, bool hasaddr, db_expr_t count, char *modif)
 		/* Cheated here and didn't compare pgid's. */
 		if (p->p_flag & P_CONTROLT)
 			strlcat(state, "+", sizeof(state));
-
+		if (cred != NULL && jailed(cred))
+			strlcat(state, "J", sizeof(state));
 		db_printf(" %-6.6s ", state);
 		if (p->p_flag & P_HADTHREADS) {
 #ifdef __LP64__

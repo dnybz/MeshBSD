@@ -45,6 +45,7 @@ __FBSDID("$FreeBSD: head/sys/fs/nfsclient/nfs_clvfsops.c 299848 2016-05-15 08:34
 #include <sys/bio.h>
 #include <sys/buf.h>
 #include <sys/clock.h>
+#include <sys/jail.h>
 #include <sys/limits.h>
 #include <sys/lock.h>
 #include <sys/malloc.h>
@@ -504,8 +505,10 @@ nfs_mountroot(struct mount *mp)
 	 * set hostname here and then let the "/etc/rc.xxx" files
 	 * mount the right /var based upon its preset value.
 	 */
-	strlcpy(hostname, nd->my_hostnam,
-	    sizeof(hostname));
+	mtx_lock(&prison0.pr_mtx);
+	strlcpy(prison0.pr_hostname, nd->my_hostnam,
+	    sizeof(prison0.pr_hostname));
+	mtx_unlock(&prison0.pr_mtx);
 	inittodr(ntohl(nd->root_time));
 	return (0);
 }

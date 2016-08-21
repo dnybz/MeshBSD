@@ -53,6 +53,7 @@ __FBSDID("$FreeBSD: head/sys/kern/init_main.c 298433 2016-04-21 19:57:40Z pfg $"
 #include <sys/exec.h>
 #include <sys/file.h>
 #include <sys/filedesc.h>
+#include <sys/jail.h>
 #include <sys/ktr.h>
 #include <sys/lock.h>
 #include <sys/loginclass.h>
@@ -502,7 +503,7 @@ proc0_init(void *dummy __unused)
 	vm_domain_policy_set(&td->td_vm_dom_policy, VM_POLICY_NONE, -1);
 	vm_domain_policy_init(&p->p_vm_dom_policy);
 	vm_domain_policy_set(&p->p_vm_dom_policy, VM_POLICY_NONE, -1);
-
+	prison0_init();
 	p->p_peers = 0;
 	p->p_leader = p;
 	p->p_reaper = p;
@@ -520,7 +521,7 @@ proc0_init(void *dummy __unused)
 	newcred->cr_ngroups = 1;	/* group 0 */
 	newcred->cr_uidinfo = uifind(0);
 	newcred->cr_ruidinfo = uifind(0);
-	newcred->cr_securelevel = securelevel;
+	newcred->cr_prison = &prison0;
 	newcred->cr_loginclass = loginclass_find("default");
 	proc_set_cred_init(p, newcred);
 #ifdef AUDIT
@@ -678,7 +679,7 @@ static char init_path[MAXPATHLEN] =
 #ifdef	INIT_PATH
     __XSTRING(INIT_PATH);
 #else
-    "/sbin/init";
+    "/sbin/init:/sbin/oinit:/sbin/init.bak:/rescue/init";
 #endif
 SYSCTL_STRING(_kern, OID_AUTO, init_path, CTLFLAG_RD, init_path, 0,
 	"Path used to search the init process");

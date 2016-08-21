@@ -50,6 +50,7 @@ __FBSDID("$FreeBSD: head/sys/netpfil/pf/pf_ioctl.c 298995 2016-05-03 18:05:43Z p
 #include <sys/fcntl.h>
 #include <sys/filio.h>
 #include <sys/interrupt.h>
+#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/kthread.h>
 #include <sys/lock.h>

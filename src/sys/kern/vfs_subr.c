@@ -57,6 +57,7 @@ __FBSDID("$FreeBSD: head/sys/kern/vfs_subr.c 299916 2016-05-16 07:31:11Z avg $")
 #include <sys/extattr.h>
 #include <sys/file.h>
 #include <sys/fcntl.h>
+#include <sys/jail.h>
 #include <sys/kdb.h>
 #include <sys/kernel.h>
 #include <sys/kthread.h>
@@ -676,6 +677,20 @@ int
 vfs_suser(struct mount *mp, struct thread *td)
 {
 	int error;
+
+	/*
+	 * If the thread is jailed, but this is not a jail-friendly file
+	 * system, deny immediately.
+	 */
+	if (!(mp->mnt_vfc->vfc_flags & VFCF_JAIL) && jailed(td->td_ucred))
+		return (EPERM);
+
+	/*
+	 * If the file system was mounted outside the jail of the calling
+	 * thread, deny immediately.
+	 */
+	if (prison_check(td->td_ucred, mp->mnt_cred) != 0)
+		return (EPERM);
 
 	/*
 	 * If file system supports delegated administration, we don't check
@@ -3537,7 +3552,8 @@ DB_SHOW_COMMAND(mount, db_show_mount)
 
 	db_printf("    mnt_cred = { uid=%u ruid=%u",
 	    (u_int)mp->mnt_cred->cr_uid, (u_int)mp->mnt_cred->cr_ruid);
-
+	if (jailed(mp->mnt_cred))
+		db_printf(", jail=%d", mp->mnt_cred->cr_prison->pr_id);
 	db_printf(" }\n");
 	db_printf("    mnt_ref = %d\n", mp->mnt_ref);
 	db_printf("    mnt_gen = %d\n", mp->mnt_gen);

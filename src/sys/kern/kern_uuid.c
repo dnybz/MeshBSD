@@ -36,6 +36,7 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_uuid.c 261858 2014-02-13 22:24:36Z brueff
 #include <sys/socket.h>
 #include <sys/sysproto.h>
 #include <sys/systm.h>
+#include <sys/jail.h>
 #include <sys/uuid.h>
 
 #include <net/if.h>

@@ -49,6 +49,7 @@ __FBSDID("$FreeBSD: head/sys/net/bpf.c 298433 2016-04-21 19:57:40Z pfg $");
 #include <sys/systm.h>
 #include <sys/conf.h>
 #include <sys/fcntl.h>
+#include <sys/jail.h>
 #include <sys/malloc.h>
 #include <sys/mbuf.h>
 #include <sys/time.h>

@@ -49,6 +49,7 @@ __FBSDID("$FreeBSD: head/sys/fs/nfsclient/nfs_clvnops.c 299413 2016-05-11 06:35:
 #include <sys/mount.h>
 #include <sys/bio.h>
 #include <sys/buf.h>
+#include <sys/jail.h>
 #include <sys/malloc.h>
 #include <sys/mbuf.h>
 #include <sys/namei.h>

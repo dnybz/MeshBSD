@@ -70,6 +70,7 @@ struct rctl_rule {
 		struct proc		*rs_proc;
 		struct uidinfo		*rs_uip;
 		struct loginclass	*rs_loginclass;
+		struct prison_racct	*rs_prison_racct;
 	} rr_subject;
 	int		rr_per;
 	int		rr_resource;
@@ -86,7 +87,8 @@ struct rctl_rule {
 #define	RCTL_SUBJECT_TYPE_PROCESS	0x0000
 #define	RCTL_SUBJECT_TYPE_USER		0x0001
 #define	RCTL_SUBJECT_TYPE_LOGINCLASS	0x0003
-#define	RCTL_SUBJECT_TYPE_MAX		RCTL_SUBJECT_TYPE_LOGINCLASS
+#define	RCTL_SUBJECT_TYPE_JAIL		0x0004
+#define	RCTL_SUBJECT_TYPE_MAX		RCTL_SUBJECT_TYPE_JAIL
 
 /*
  * Allowed values for rr_action field.

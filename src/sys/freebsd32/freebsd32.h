@@ -199,6 +199,24 @@ struct ostat32 {
 	__uint32_t st_gen;
 };
 
+struct jail32_v0 {
+	u_int32_t	version;
+	uint32_t	path;
+	uint32_t	hostname;
+	u_int32_t	ip_number;
+};
+
+struct jail32 {
+	uint32_t	version;
+	uint32_t	path;
+	uint32_t	hostname;
+	uint32_t	jailname;
+	uint32_t	ip4s;
+	uint32_t	ip6s;
+	uint32_t	ip4;
+	uint32_t	ip6;
+};
+
 struct sigaction32 {
 	u_int32_t	sa_u;
 	int		sa_flags;
@@ -305,6 +323,7 @@ struct kinfo_proc32 {
 	int	ki_flag2;
 	int	ki_fibnum;
 	u_int	ki_cr_flags;
+	int	ki_jid;
 	int	ki_numthreads;
 	lwpid_t	ki_tid;
 	struct	priority ki_pri;

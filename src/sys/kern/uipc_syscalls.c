@@ -49,6 +49,7 @@ __FBSDID("$FreeBSD: head/sys/kern/uipc_syscalls.c 300090 2016-05-17 22:28:53Z gl
 #include <sys/filedesc.h>
 #include <sys/proc.h>
 #include <sys/filio.h>
+#include <sys/jail.h>
 #include <sys/mbuf.h>
 #include <sys/protosw.h>
 #include <sys/rwlock.h>

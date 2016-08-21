@@ -50,6 +50,7 @@
 #include <sys/param.h>
 #include <sys/acl.h>
 #include <sys/kernel.h>
+#include <sys/jail.h>
 #include <sys/lock.h>
 #include <sys/malloc.h>
 #include <sys/module.h>
@@ -264,6 +265,15 @@ ugidfw_rulecheck(struct mac_bsdextended_rule *rule,
 			}
 		}
 		if (rule->mbr_subject.mbs_neg & MBS_GID_DEFINED)
+			match = !match;
+		if (!match)
+			return (0);
+	}
+
+	if (rule->mbr_subject.mbs_flags & MBS_PRISON_DEFINED) {
+		match =
+		    (cred->cr_prison->pr_id == rule->mbr_subject.mbs_prison);
+		if (rule->mbr_subject.mbs_neg & MBS_PRISON_DEFINED)
 			match = !match;
 		if (!match)
 			return (0);

@@ -900,7 +900,10 @@ sctp_does_stcb_own_this_addr(struct sctp_tcb *stcb, struct sockaddr *to)
 						    IN4_ISPRIVATE_ADDRESS(&sin->sin_addr)) {
 							continue;
 						}
-						
+						if (prison_check_ip4(stcb->sctp_ep->ip_inp.inp.inp_cred,
+						    &sin->sin_addr) != 0) {
+							continue;
+						}
 						if (sin->sin_addr.s_addr == rsin->sin_addr.s_addr) {
 							SCTP_IPI_ADDR_RUNLOCK();
 							return (1);
@@ -916,7 +919,10 @@ sctp_does_stcb_own_this_addr(struct sctp_tcb *stcb, struct sockaddr *to)
 
 						sin6 = &sctp_ifa->address.sin6;
 						rsin6 = (struct sockaddr_in6 *)to;
-
+						if (prison_check_ip6(stcb->sctp_ep->ip_inp.inp.inp_cred,
+						    &sin6->sin6_addr) != 0) {
+							continue;
+						}
 						if (IN6_IS_ADDR_LINKLOCAL(&sin6->sin6_addr)) {
 							if (local_scope == 0)
 								continue;
@@ -1071,7 +1077,11 @@ sctp_tcb_special_locate(struct sctp_inpcb **inp_p, struct sockaddr *from,
 				struct sockaddr_in *sin;
 
 				sin = (struct sockaddr_in *)to;
-
+				if (prison_check_ip4(inp->ip_inp.inp.inp_cred,
+				    &sin->sin_addr) != 0) {
+					SCTP_INP_RUNLOCK(inp);
+					continue;
+				}
 				break;
 			}
 #endif
@@ -1081,7 +1091,11 @@ sctp_tcb_special_locate(struct sctp_inpcb **inp_p, struct sockaddr *from,
 				struct sockaddr_in6 *sin6;
 
 				sin6 = (struct sockaddr_in6 *)to;
-
+				if (prison_check_ip6(inp->ip_inp.inp.inp_cred,
+				    &sin6->sin6_addr) != 0) {
+					SCTP_INP_RUNLOCK(inp);
+					continue;
+				}
 				break;
 			}
 #endif
@@ -1666,6 +1680,11 @@ sctp_endpoint_probe(struct sockaddr *nam, struct sctppcbhead *head,
 					SCTP_INP_RUNLOCK(inp);
 					continue;
 				}
+				if (prison_check_ip4(inp->ip_inp.inp.inp_cred,
+				    &sin->sin_addr) != 0) {
+					SCTP_INP_RUNLOCK(inp);
+					continue;
+				}
 				break;
 #endif
 #ifdef INET6
@@ -1675,6 +1694,11 @@ sctp_endpoint_probe(struct sockaddr *nam, struct sctppcbhead *head,
 				 * bound V6
 				 */
 				if ((inp->sctp_flags & SCTP_PCB_FLAGS_BOUND_V6) == 0) {
+					SCTP_INP_RUNLOCK(inp);
+					continue;
+				}
+				if (prison_check_ip6(inp->ip_inp.inp.inp_cred,
+				    &sin6->sin6_addr) != 0) {
 					SCTP_INP_RUNLOCK(inp);
 					continue;
 				}
@@ -2855,7 +2879,15 @@ sctp_inpcb_bind(struct socket *so, struct sockaddr *addr,
 				}
 				sin = (struct sockaddr_in *)addr;
 				lport = sin->sin_port;
-				
+				/*
+				 * For LOOPBACK the prison_local_ip4() call
+				 * will transmute the ip address to the
+				 * proper value.
+				 */
+				if (p && (error = prison_local_ip4(p->td_ucred, &sin->sin_addr)) != 0) {
+					SCTP_LTRACE_ERR_RET(inp, NULL, NULL, SCTP_FROM_SCTP_PCB, error);
+					return (error);
+				}
 				if (sin->sin_addr.s_addr != INADDR_ANY) {
 					bindall = 0;
 				}
@@ -2878,7 +2910,16 @@ sctp_inpcb_bind(struct socket *so, struct sockaddr *addr,
 					return (EINVAL);
 				}
 				lport = sin6->sin6_port;
-
+				/*
+				 * For LOOPBACK the prison_local_ip6() call
+				 * will transmute the ipv6 address to the
+				 * proper value.
+				 */
+				if (p && (error = prison_local_ip6(p->td_ucred, &sin6->sin6_addr,
+				    (SCTP_IPV6_V6ONLY(inp) != 0))) != 0) {
+					SCTP_LTRACE_ERR_RET(inp, NULL, NULL, SCTP_FROM_SCTP_PCB, error);
+					return (error);
+				}
 				if (!IN6_IS_ADDR_UNSPECIFIED(&sin6->sin6_addr)) {
 					bindall = 0;
 					/* KAME hack: embed scopeid */

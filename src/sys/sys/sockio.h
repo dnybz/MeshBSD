@@ -108,7 +108,7 @@
 #define	SIOCGPRIVATE_0	_IOWR('i', 80, struct ifreq)	/* device private 0 */
 #define	SIOCGPRIVATE_1	_IOWR('i', 81, struct ifreq)	/* device private 1 */
 
-#define	SIOCSIFVNET	_IOWR('i', 90, struct ifreq)	/* move IF vnet */
+#define	SIOCSIFVNET	_IOWR('i', 90, struct ifreq)	/* move IF jail/vnet */
 #define	SIOCSIFRVNET	_IOWR('i', 91, struct ifreq)	/* reclaim vnet IF */
 
 #define	SIOCGIFFIB	_IOWR('i', 92, struct ifreq)	/* get IF fib */

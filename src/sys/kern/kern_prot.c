@@ -36,31 +36,6 @@
  *
  *	@(#)kern_prot.c	8.6 (Berkeley) 1/21/94
  */
-/*
- * Copyright (c) 2016 Henning Matyschok
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
- * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,
- * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- */
 
 /*
  * System calls related to processes and protection
@@ -87,6 +62,7 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_prot.c 298819 2016-04-29 22:15:33Z pfg $"
 #include <sys/priv.h>
 #include <sys/proc.h>
 #include <sys/sysproto.h>
+#include <sys/jail.h>
 #include <sys/pioctl.h>
 #include <sys/racct.h>
 #include <sys/resourcevar.h>
@@ -1326,6 +1302,10 @@ groupmember(gid_t gid, struct ucred *cred)
  * (securelevel >= level).  Note that the logic is inverted -- these
  * functions return EPERM on "success" and 0 on "failure".
  *
+ * Due to care taken when setting the securelevel, we know that no jail will
+ * be less secure that its parent (or the physical system), so it is sufficient
+ * to test the current jail only.
+ *
  * XXXRW: Possibly since this has to do with privilege, it should move to
  * kern_priv.c.
  */
@@ -1333,14 +1313,14 @@ int
 securelevel_gt(struct ucred *cr, int level)
 {
 
-	return (cr->cr_securelevel > level ? EPERM : 0);
+	return (cr->cr_prison->pr_securelevel > level ? EPERM : 0);
 }
 
 int
 securelevel_ge(struct ucred *cr, int level)
 {
 
-	return (cr->cr_securelevel >= level ? EPERM : 0);
+	return (cr->cr_prison->pr_securelevel >= level ? EPERM : 0);
 }
 
 /*
@@ -1423,9 +1403,10 @@ cr_seeothergids(struct ucred *u1, struct ucred *u2)
 int
 cr_cansee(struct ucred *u1, struct ucred *u2)
 {
-
 	int error;
 
+	if ((error = prison_check(u1, u2)))
+		return (error);
 #ifdef MAC
 	if ((error = mac_cred_check_visible(u1, u2)))
 		return (error);
@@ -1484,7 +1465,9 @@ cr_cansignal(struct ucred *cred, struct proc *proc, int signum)
 	 * Jail semantics limit the scope of signalling to proc in the
 	 * same jail as cred, if cred is in jail.
 	 */
-
+	error = prison_check(cred, proc->p_ucred);
+	if (error)
+		return (error);
 #ifdef MAC
 	if ((error = mac_proc_check_signal(cred, proc, signum)))
 		return (error);
@@ -1600,7 +1583,8 @@ p_cansched(struct thread *td, struct proc *p)
 	PROC_LOCK_ASSERT(p, MA_OWNED);
 	if (td->td_proc == p)
 		return (0);
-
+	if ((error = prison_check(td->td_ucred, p->p_ucred)))
+		return (error);
 #ifdef MAC
 	if ((error = mac_proc_check_sched(td->td_ucred, p)))
 		return (error);
@@ -1656,6 +1640,8 @@ p_candebug(struct thread *td, struct proc *p)
 	}
 	if (td->td_proc == p)
 		return (0);
+	if ((error = prison_check(td->td_ucred, p->p_ucred)))
+		return (error);
 #ifdef MAC
 	if ((error = mac_proc_check_debug(td->td_ucred, p)))
 		return (error);
@@ -1744,9 +1730,12 @@ p_candebug(struct thread *td, struct proc *p)
 int
 cr_canseesocket(struct ucred *cred, struct socket *so)
 {
-#ifdef MAC	
-    int error;
+	int error;
 
+	error = prison_check(cred, so->so_cred);
+	if (error)
+		return (ENOENT);
+#ifdef MAC
 	error = mac_socket_check_visible(cred, so);
 	if (error)
 		return (error);
@@ -1767,9 +1756,12 @@ cr_canseesocket(struct ucred *cred, struct socket *so)
 int
 cr_canseeinpcb(struct ucred *cred, struct inpcb *inp)
 {
-    #ifdef MAC
 	int error;
 
+	error = prison_check(cred, inp->inp_cred);
+	if (error)
+		return (ENOENT);
+#ifdef MAC
 	INP_LOCK_ASSERT(inp);
 	error = mac_inpcb_check_visible(cred, inp);
 	if (error)
@@ -1796,12 +1788,12 @@ cr_canseeinpcb(struct ucred *cred, struct inpcb *inp)
 int
 p_canwait(struct thread *td, struct proc *p)
 {
-#ifdef MAC	
-    int error;
-#endif
+	int error;
+
 	KASSERT(td == curthread, ("%s: td not curthread", __func__));
 	PROC_LOCK_ASSERT(p, MA_OWNED);
-
+	if ((error = prison_check(td->td_ucred, p->p_ucred)))
+		return (error);
 #ifdef MAC
 	if ((error = mac_proc_check_wait(td->td_ucred, p)))
 		return (error);
@@ -1867,7 +1859,11 @@ crfree(struct ucred *cr)
 			uifree(cr->cr_uidinfo);
 		if (cr->cr_ruidinfo != NULL)
 			uifree(cr->cr_ruidinfo);
-		
+		/*
+		 * Free a prison, if any.
+		 */
+		if (cr->cr_prison != NULL)
+			prison_free(cr->cr_prison);
 		if (cr->cr_loginclass != NULL)
 			loginclass_free(cr->cr_loginclass);
 #ifdef AUDIT
@@ -1896,6 +1892,7 @@ crcopy(struct ucred *dest, struct ucred *src)
 	crsetgroups(dest, src->cr_ngroups, src->cr_groups);
 	uihold(dest->cr_uidinfo);
 	uihold(dest->cr_ruidinfo);
+	prison_hold(dest->cr_prison);
 	loginclass_hold(dest->cr_loginclass);
 #ifdef AUDIT
 	audit_cred_copy(src, dest);

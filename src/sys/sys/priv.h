@@ -44,6 +44,10 @@
  * modules.  Particular numeric privilege assignments are part of the
  * loadable kernel module ABI, and should not be changed across minor
  * releases.
+ *
+ * When adding a new privilege, remember to determine if it's appropriate
+ * for use in jail, and update the privilege switch in prison_priv_check()
+ * in kern_jail.c as necessary.
  */
 
 /*
@@ -123,6 +127,13 @@
 #define	PRIV_FIRMWARE_LOAD	100	/* Can load firmware. */
 
 /*
+ * Jail privileges.
+ */
+#define	PRIV_JAIL_ATTACH	110	/* Attach to a jail. */
+#define	PRIV_JAIL_SET		111	/* Set jail parameters. */
+#define	PRIV_JAIL_REMOVE	112	/* Remove a jail. */
+
+/*
  * Kernel environment privileges.
  */
 #define	PRIV_KENV_SET		120	/* Set kernel env. variables. */
@@ -196,6 +207,7 @@
  */
 #define	PRIV_SYSCTL_DEBUG	240	/* Can invoke sysctl.debug. */
 #define	PRIV_SYSCTL_WRITE	241	/* Can write sysctls. */
+#define	PRIV_SYSCTL_WRITEJAIL	242	/* Can write sysctls, jail permitted. */
 
 /*
  * TTY privileges.
@@ -215,6 +227,15 @@
 #define	PRIV_UFS_QUOTAOFF	271	/* quotaoff(). */
 #define	PRIV_UFS_QUOTAON	272	/* quotaon(). */
 #define	PRIV_UFS_SETUSE		273	/* setuse(). */
+
+/*
+ * ZFS-specific privileges.
+ */
+#define	PRIV_ZFS_POOL_CONFIG	280	/* Can configure ZFS pools. */
+#define	PRIV_ZFS_INJECT		281	/* Can inject faults in the ZFS fault
+					   injection framework. */
+#define	PRIV_ZFS_JAIL		282	/* Can attach/detach ZFS file systems
+					   to/from jails. */
 
 /*
  * NFS-specific privileges.
@@ -420,7 +441,8 @@
  * Define a set of valid privilege numbers that can be used by loadable
  * modules that don't yet have privilege reservations.  Ideally, these should
  * not be used, since their meaning is opaque to any policies that are aware
- * of specific privileges and as such may be arbitrarily denied.
+ * of specific privileges, such as jail, and as such may be arbitrarily
+ * denied.
  */
 #define	PRIV_MODULE0		600
 #define	PRIV_MODULE1		601
@@ -500,7 +522,8 @@
  * Privilege check interfaces, modeled after historic suser() interfaces, but
  * with the addition of a specific privilege name.  No flags are currently
  * defined for the API.  Historically, flags specified using the real uid
- * instead of the effective uid.
+ * instead of the effective uid, and whether or not the check should be
+ * allowed in jail.
  */
 struct thread;
 struct ucred;

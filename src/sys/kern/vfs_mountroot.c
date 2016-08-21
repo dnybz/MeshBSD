@@ -44,6 +44,7 @@ __FBSDID("$FreeBSD: head/sys/kern/vfs_mountroot.c 299523 2016-05-12 07:38:10Z tr
 #include <sys/conf.h>
 #include <sys/cons.h>
 #include <sys/fcntl.h>
+#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/malloc.h>
 #include <sys/mdioctl.h>
@@ -1042,6 +1043,12 @@ vfs_mountroot(void)
 	}
 	mtx_unlock(&mountlist_mtx);
 	inittodr(timebase);
+
+	/* Keep prison0's root in sync with the global rootvnode. */
+	mtx_lock(&prison0.pr_mtx);
+	prison0.pr_root = rootvnode;
+	vref(prison0.pr_root);
+	mtx_unlock(&prison0.pr_mtx);
 
 	mtx_lock(&root_holds_mtx);
 	atomic_store_rel_int(&root_mount_complete, 1);

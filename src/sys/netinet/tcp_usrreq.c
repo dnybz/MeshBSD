@@ -58,6 +58,7 @@ __FBSDID("$FreeBSD: head/sys/netinet/tcp_usrreq.c 298673 2016-04-26 23:02:18Z ce
 #include <sys/socketvar.h>
 #include <sys/protosw.h>
 #include <sys/proc.h>
+#include <sys/jail.h>
 
 #ifdef DDB
 #include <ddb/ddb.h>
@@ -495,6 +496,8 @@ tcp_usr_connect(struct socket *so, struct sockaddr *nam, struct thread *td)
 	if (sinp->sin_family == AF_INET
 	    && IN_MULTICAST(ntohl(sinp->sin_addr.s_addr)))
 		return (EAFNOSUPPORT);
+	if ((error = prison_remote_ip4(td->td_ucred, &sinp->sin_addr)) != 0)
+		return (error);
 
 	TCPDEBUG0;
 	inp = sotoinpcb(so);
@@ -579,7 +582,9 @@ tcp6_usr_connect(struct socket *so, struct sockaddr *nam, struct thread *td)
 		in6_sin6_2_sin(&sin, sin6p);
 		inp->inp_vflag |= INP_IPV4;
 		inp->inp_vflag &= ~INP_IPV6;
-		
+		if ((error = prison_remote_ip4(td->td_ucred,
+		    &sin.sin_addr)) != 0)
+			goto out;
 		if ((error = tcp_connect(tp, (struct sockaddr *)&sin, td)) != 0)
 			goto out;
 #ifdef TCP_OFFLOAD
@@ -595,7 +600,8 @@ tcp6_usr_connect(struct socket *so, struct sockaddr *nam, struct thread *td)
 	inp->inp_vflag &= ~INP_IPV4;
 	inp->inp_vflag |= INP_IPV6;
 	inp->inp_inc.inc_flags |= INC_ISIPV6;
-
+	if ((error = prison_remote_ip6(td->td_ucred, &sin6p->sin6_addr)) != 0)
+		goto out;
 	if ((error = tcp6_connect(tp, nam, td)) != 0)
 		goto out;
 #ifdef TCP_OFFLOAD

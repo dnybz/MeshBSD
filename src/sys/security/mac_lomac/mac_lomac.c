@@ -1704,6 +1704,11 @@ lomac_priv_check(struct ucred *cred, int priv)
 	case PRIV_DEBUG_UNPRIV:
 
 	/*
+	 * Allow manipulating jails.
+	 */
+	case PRIV_JAIL_ATTACH:
+
+	/*
 	 * Allow privilege with respect to the Partition policy, but not the
 	 * Privs policy.
 	 */
@@ -1748,6 +1753,12 @@ lomac_priv_check(struct ucred *cred, int priv)
 	 */
 	case PRIV_SIGNAL_DIFFCRED:
 	case PRIV_SIGNAL_SUGID:
+
+	/*
+	 * Allow access to only limited sysctls from lower integrity levels;
+	 * piggy-back on the Jail definition.
+	 */
+	case PRIV_SYSCTL_WRITEJAIL:
 
 	/*
 	 * Allow TTY-based privileges, subject to general device access using

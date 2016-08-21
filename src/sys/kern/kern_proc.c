@@ -43,6 +43,7 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_proc.c 298173 2016-04-17 23:22:32Z markj 
 #include <sys/elf.h>
 #include <sys/eventhandler.h>
 #include <sys/exec.h>
+#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/limits.h>
 #include <sys/lock.h>
@@ -909,7 +910,13 @@ fill_kinfo_proc_only(struct proc *p, struct kinfo_proc *kp)
 		    kp->ki_ngroups * sizeof(gid_t));
 		kp->ki_rgid = cred->cr_rgid;
 		kp->ki_svgid = cred->cr_svgid;
-
+		/* If jailed(cred), emulate the old P_JAILED flag. */
+		if (jailed(cred)) {
+			kp->ki_flag |= P_JAILED;
+			/* If inside the jail, use 0 as a jail ID. */
+			if (cred->cr_prison != curthread->td_ucred->cr_prison)
+				kp->ki_jid = cred->cr_prison->pr_id;
+		}
 		strlcpy(kp->ki_loginclass, cred->cr_loginclass->lc_name,
 		    sizeof(kp->ki_loginclass));
 	}
@@ -1275,6 +1282,7 @@ freebsd32_kinfo_proc_out(const struct kinfo_proc *ki, struct kinfo_proc32 *ki32)
 	CP(*ki, *ki32, ki_flag2);
 	CP(*ki, *ki32, ki_fibnum);
 	CP(*ki, *ki32, ki_cr_flags);
+	CP(*ki, *ki32, ki_jid);
 	CP(*ki, *ki32, ki_numthreads);
 	CP(*ki, *ki32, ki_tid);
 	CP(*ki, *ki32, ki_pri);

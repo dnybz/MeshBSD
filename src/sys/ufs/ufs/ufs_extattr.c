@@ -713,7 +713,8 @@ ufs_extattrctl(struct mount *mp, int cmd, struct vnode *filename_vp,
 	int error;
 
 	/*
-	 * Processes with privilege.
+	 * Processes with privilege, but in jail, are not allowed to
+	 * configure extended attributes.
 	 */
 	error = priv_check(td, PRIV_UFS_EXTATTRCTL);
 	if (error) {

@@ -72,7 +72,7 @@ struct syncache {
 	void		*sc_todctx;		/* TOE driver context */
 #endif
 	struct label	*sc_label;		/* MAC label reference */
-	struct ucred	*sc_cred;		/* cred cache */
+	struct ucred	*sc_cred;		/* cred cache for jail checks */
 #ifdef TCP_RFC7413
 	void		*sc_tfo_cookie;		/* for TCP Fast Open response */
 #endif

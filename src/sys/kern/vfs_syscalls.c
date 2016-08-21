@@ -69,6 +69,7 @@ __FBSDID("$FreeBSD: head/sys/kern/vfs_syscalls.c 296572 2016-03-09 19:05:11Z jhb
 #include <sys/priv.h>
 #include <sys/proc.h>
 #include <sys/dirent.h>
+#include <sys/jail.h>
 #include <sys/syscallsubr.h>
 #include <sys/sysctl.h>
 #ifdef KTRACE
@@ -309,6 +310,7 @@ kern_statfs(struct thread *td, char *path, enum uio_seg pathseg,
 	if (priv_check(td, PRIV_VFS_GENERATION)) {
 		bcopy(sp, &sb, sizeof(sb));
 		sb.f_fsid.val[0] = sb.f_fsid.val[1] = 0;
+		prison_enforce_statfs(td->td_ucred, mp, &sb);
 		sp = &sb;
 	}
 	*buf = *sp;
@@ -393,6 +395,7 @@ kern_fstatfs(struct thread *td, int fd, struct statfs *buf)
 	if (priv_check(td, PRIV_VFS_GENERATION)) {
 		bcopy(sp, &sb, sizeof(sb));
 		sb.f_fsid.val[0] = sb.f_fsid.val[1] = 0;
+		prison_enforce_statfs(td->td_ucred, mp, &sb);
 		sp = &sb;
 	}
 	*buf = *sp;
@@ -467,7 +470,10 @@ kern_getfsstat(struct thread *td, struct statfs **buf, size_t bufsize,
 	count = 0;
 	mtx_lock(&mountlist_mtx);
 	for (mp = TAILQ_FIRST(&mountlist); mp != NULL; mp = nmp) {
-
+		if (prison_canseemount(td->td_ucred, mp) != 0) {
+			nmp = TAILQ_NEXT(mp, mnt_list);
+			continue;
+		}
 #ifdef MAC
 		if (mac_mount_check_stat(td->td_ucred, mp) != 0) {
 			nmp = TAILQ_NEXT(mp, mnt_list);
@@ -503,6 +509,7 @@ kern_getfsstat(struct thread *td, struct statfs **buf, size_t bufsize,
 			if (priv_check(td, PRIV_VFS_GENERATION)) {
 				bcopy(sp, &sb, sizeof(sb));
 				sb.f_fsid.val[0] = sb.f_fsid.val[1] = 0;
+				prison_enforce_statfs(td->td_ucred, mp, &sb);
 				sp = &sb;
 			}
 			if (bufseg == UIO_SYSSPACE)
@@ -4415,7 +4422,9 @@ kern_fhstatfs(struct thread *td, fhandle_t fh, struct statfs *buf)
 		return (error);
 	}
 	vput(vp);
-
+	error = prison_canseemount(td->td_ucred, mp);
+	if (error != 0)
+		goto out;
 #ifdef MAC
 	error = mac_mount_check_stat(td->td_ucred, mp);
 	if (error != 0)

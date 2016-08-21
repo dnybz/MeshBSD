@@ -45,6 +45,7 @@ __FBSDID("$FreeBSD: head/sys/kern/vfs_lookup.c 298819 2016-04-29 22:15:33Z pfg $
 #include <sys/kernel.h>
 #include <sys/capsicum.h>
 #include <sys/fcntl.h>
+#include <sys/jail.h>
 #include <sys/lock.h>
 #include <sys/mutex.h>
 #include <sys/namei.h>
@@ -234,6 +235,7 @@ namei(struct nameidata *ndp)
 	FILEDESC_SLOCK(fdp);
 	ndp->ni_rootdir = fdp->fd_rdir;
 	VREF(ndp->ni_rootdir);
+	ndp->ni_topdir = fdp->fd_jdir;
 
 	/*
 	 * If we are auditing the kernel pathname, save the user pathname.
@@ -487,6 +489,7 @@ lookup(struct nameidata *ndp)
 	struct vnode *dp = NULL;	/* the directory we are searching */
 	struct vnode *tdp;		/* saved dp */
 	struct mount *mp;		/* mount table entry */
+	struct prison *pr;
 	int docache;			/* == 0 do not cache last component */
 	int wantparent;			/* 1 => wantparent or lockparent flag */
 	int rdonly;			/* lookup read-only flag bit */
@@ -635,6 +638,8 @@ dirloop:
 	 *    filesystem, then replace it with the
 	 *    vnode which was mounted on so we take the
 	 *    .. in the other filesystem.
+	 * 4. If the vnode is the top directory of
+	 *    the jail or chroot, don't let them out.
 	 */
 	if (cnp->cn_flags & ISDOTDOT) {
 		if (ndp->ni_strictrelative != 0) {
@@ -651,7 +656,12 @@ dirloop:
 			goto bad;
 		}
 		for (;;) {
+			for (pr = cnp->cn_cred->cr_prison; pr != NULL;
+			     pr = pr->pr_parent)
+				if (dp == pr->pr_root)
+					break;
 			if (dp == ndp->ni_rootdir || 
+			    dp == ndp->ni_topdir || 
 			    dp == rootvnode ||
 			    pr != NULL ||
 			    ((dp->v_vflag & VV_ROOT) != 0 &&

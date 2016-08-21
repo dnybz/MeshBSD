@@ -46,6 +46,7 @@ __FBSDID("$FreeBSD: head/sys/netinet/tcp_subr.c 300096 2016-05-17 23:14:17Z gleb
 #include <sys/kernel.h>
 #include <sys/khelp.h>
 #include <sys/sysctl.h>
+#include <sys/jail.h>
 #include <sys/malloc.h>
 #include <sys/refcount.h>
 #include <sys/mbuf.h>
@@ -1807,7 +1808,7 @@ tcp_getcred(SYSCTL_HANDLER_ARGS)
 }
 
 SYSCTL_PROC(_net_inet_tcp, OID_AUTO, getcred,
-    CTLTYPE_OPAQUE|CTLFLAG_RW, 0, 0,
+    CTLTYPE_OPAQUE|CTLFLAG_RW|CTLFLAG_PRISON, 0, 0,
     tcp_getcred, "S,xucred", "Get the xucred of a TCP connection");
 #endif /* INET */
 
@@ -1871,7 +1872,7 @@ tcp6_getcred(SYSCTL_HANDLER_ARGS)
 }
 
 SYSCTL_PROC(_net_inet6_tcp6, OID_AUTO, getcred,
-    CTLTYPE_OPAQUE|CTLFLAG_RW, 0, 0,
+    CTLTYPE_OPAQUE|CTLFLAG_RW|CTLFLAG_PRISON, 0, 0,
     tcp6_getcred, "S,xucred", "Get the xucred of a TCP6 connection");
 #endif /* INET6 */
 

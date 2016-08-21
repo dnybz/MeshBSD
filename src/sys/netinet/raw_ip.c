@@ -38,6 +38,7 @@ __FBSDID("$FreeBSD: head/sys/netinet/raw_ip.c 298066 2016-04-15 15:46:41Z pfg $"
 #include "opt_ipsec.h"
 
 #include <sys/param.h>
+#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/eventhandler.h>
 #include <sys/lock.h>
@@ -306,7 +307,14 @@ rip_input(struct mbuf **mp, int *offp, int proto)
 			continue;
 		if (inp->inp_faddr.s_addr != ip->ip_src.s_addr)
 			continue;
-		
+		if (jailed_without_vnet(inp->inp_cred)) {
+			/*
+			 * XXX: If faddr was bound to multicast group,
+			 * jailed raw socket will drop datagram.
+			 */
+			if (prison_check_ip4(inp->inp_cred, &ip->ip_dst) != 0)
+				continue;
+		}
 		if (last != NULL) {
 			struct mbuf *n;
 
@@ -333,7 +341,16 @@ rip_input(struct mbuf **mp, int *offp, int proto)
 		if (!in_nullhost(inp->inp_faddr) &&
 		    !in_hosteq(inp->inp_faddr, ip->ip_src))
 			continue;
-		
+		if (jailed_without_vnet(inp->inp_cred)) {
+			/*
+			 * Allow raw socket in jail to receive multicast;
+			 * assume process had PRIV_NETINET_RAW at attach,
+			 * and fall through into normal filter path if so.
+			 */
+			if (!IN_MULTICAST(ntohl(ip->ip_dst.s_addr)) &&
+			    prison_check_ip4(inp->inp_cred, &ip->ip_dst) != 0)
+				continue;
+		}
 		/*
 		 * If this raw socket has multicast state, and we
 		 * have received a multicast, check if this socket
@@ -444,6 +461,25 @@ rip_output(struct mbuf *m, struct socket *so, ...)
 		ip->ip_len = htons(m->m_pkthdr.len);
 		ip->ip_src = inp->inp_laddr;
 		ip->ip_dst.s_addr = dst;
+		if (jailed(inp->inp_cred)) {
+			/*
+			 * prison_local_ip4() would be good enough but would
+			 * let a source of INADDR_ANY pass, which we do not
+			 * want to see from jails.
+			 */
+			if (ip->ip_src.s_addr == INADDR_ANY) {
+				error = in_pcbladdr(inp, &ip->ip_dst, &ip->ip_src,
+				    inp->inp_cred);
+			} else {
+				error = prison_local_ip4(inp->inp_cred,
+				    &ip->ip_src);
+			}
+			if (error != 0) {
+				INP_RUNLOCK(inp);
+				m_freem(m);
+				return (error);
+			}
+		}
 		ip->ip_ttl = inp->inp_ip_ttl;
 	} else {
 		if (m->m_pkthdr.len > IP_MAXPACKET) {
@@ -452,6 +488,12 @@ rip_output(struct mbuf *m, struct socket *so, ...)
 		}
 		INP_RLOCK(inp);
 		ip = mtod(m, struct ip *);
+		error = prison_check_ip4(inp->inp_cred, &ip->ip_src);
+		if (error != 0) {
+			INP_RUNLOCK(inp);
+			m_freem(m);
+			return (error);
+		}
 
 		/*
 		 * Don't allow both user specified and setsockopt options,
@@ -497,12 +539,14 @@ rip_output(struct mbuf *m, struct socket *so, ...)
  * IMPORTANT NOTE regarding access control: Traditionally, raw sockets could
  * only be created by a privileged process, and as such, socket option
  * operations to manage system properties on any raw socket were allowed to
- * take place without explicit additional access control checks.  Likewise,
- * raw sockets can be used by a process after it gives up privilege, so some  
- * caution is required.  For options passed down to the IP layer via
- * ip_ctloutput(), checks are assumed to be performed in ip_ctloutput() and  
- * therefore no check occurs here. Unilaterally checking priv_check() here 
- * breaks normal IP socket option operations on raw sockets.
+ * take place without explicit additional access control checks.  However,
+ * raw sockets can now also be created in jail(), and therefore explicit
+ * checks are now required.  Likewise, raw sockets can be used by a process
+ * after it gives up privilege, so some caution is required.  For options
+ * passed down to the IP layer via ip_ctloutput(), checks are assumed to be
+ * performed in ip_ctloutput() and therefore no check occurs here.
+ * Unilaterally checking priv_check() here breaks normal IP socket option
+ * operations on raw sockets.
  *
  * When adding new socket options here, make sure to add access control
  * checks here as necessary.
@@ -867,6 +911,10 @@ rip_bind(struct socket *so, struct sockaddr *nam, struct thread *td)
 
 	if (nam->sa_len != sizeof(*addr))
 		return (EINVAL);
+
+	error = prison_check_ip4(td->td_ucred, &addr->sin_addr);
+	if (error != 0)
+		return (error);
 
 	inp = sotoinpcb(so);
 	KASSERT(inp != NULL, ("rip_bind: inp == NULL"));

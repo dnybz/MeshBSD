@@ -143,7 +143,7 @@ extern int racct_enable;
 
 /*
  * The 'racct' structure defines resource consumption for a particular
- * subject.
+ * subject, such as process or jail.
  *
  * This structure must be filled with zeroes initially.
  */

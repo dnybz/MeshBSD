@@ -59,6 +59,7 @@ __FBSDID("$FreeBSD: head/sys/dev/altera/atse/if_atse.c 298955 2016-05-03 03:41:2
 #include <sys/kernel.h>
 #include <sys/bus.h>
 #include <sys/endian.h>
+#include <sys/jail.h>
 #include <sys/lock.h>
 #include <sys/module.h>
 #include <sys/mutex.h>
@@ -641,7 +642,7 @@ atse_ethernet_option_bits_read(device_t dev)
 static int
 atse_get_eth_address(struct atse_softc *sc)
 {
-	unsigned long _hostid;
+	unsigned long hostid;
 	uint32_t val4;
 	int unit;
 
@@ -735,17 +736,17 @@ get_random:
 	/*
 	 * Fall back to random code we also use on bridge(4).
 	 */
-	_hostid = hostid;
-	if (_hostid == 0) {
+	getcredhostid(curthread->td_ucred, &hostid);
+	if (hostid == 0) {
 		arc4rand(sc->atse_eth_addr, ETHER_ADDR_LEN, 1);
 		sc->atse_eth_addr[0] &= ~1;/* clear multicast bit */
 		sc->atse_eth_addr[0] |= 2; /* set the LAA bit */
 	} else {
 		sc->atse_eth_addr[0] = 0x2;
-		sc->atse_eth_addr[1] = (_hostid >> 24)	& 0xff;
-		sc->atse_eth_addr[2] = (_hostid >> 16)	& 0xff;
-		sc->atse_eth_addr[3] = (_hostid >> 8 )	& 0xff;
-		sc->atse_eth_addr[4] = _hostid		& 0xff;
+		sc->atse_eth_addr[1] = (hostid >> 24)	& 0xff;
+		sc->atse_eth_addr[2] = (hostid >> 16)	& 0xff;
+		sc->atse_eth_addr[3] = (hostid >> 8 )	& 0xff;
+		sc->atse_eth_addr[4] = hostid		& 0xff;
 		sc->atse_eth_addr[5] = sc->atse_unit	& 0xff;
 	}
 

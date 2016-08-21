@@ -738,7 +738,7 @@ nfscl_getcl(struct mount *mp, struct ucred *cred, NFSPROC_T *p,
 
 	nmp = VFSTONFS(mp);
 	if (cred != NULL) {
-		bcopy(hostuuid, uuid, sizeof uuid);
+		getcredhostuuid(cred, uuid, sizeof uuid);
 		idlen = strlen(uuid);
 		if (idlen > 0)
 			idlen += sizeof (u_int64_t);

@@ -86,6 +86,7 @@ __FBSDID("$FreeBSD: head/sys/netinet6/in6_pcb.c 297225 2016-03-24 07:54:56Z gnn 
 #include <sys/time.h>
 #include <sys/priv.h>
 #include <sys/proc.h>
+#include <sys/jail.h>
 
 #include <vm/uma.h>
 
@@ -131,7 +132,9 @@ in6_pcbbind(register struct inpcb *inp, struct sockaddr *nam,
 	if ((so->so_options & (SO_REUSEADDR|SO_REUSEPORT)) == 0)
 		lookupflags = INPLOOKUP_WILDCARD;
 	if (nam == NULL) {
-		return (EINVAL);
+		if ((error = prison_local_ip6(cred, &inp->in6p_laddr,
+		    ((inp->inp_flags & IN6P_IPV6_V6ONLY) != 0))) != 0)
+			return (error);
 	} else {
 		sin6 = (struct sockaddr_in6 *)nam;
 		if (nam->sa_len != sizeof(*sin6))
@@ -144,6 +147,10 @@ in6_pcbbind(register struct inpcb *inp, struct sockaddr *nam,
 
 		if ((error = sa6_embedscope(sin6, V_ip6_use_defzone)) != 0)
 			return(error);
+
+		if ((error = prison_local_ip6(cred, &sin6->sin6_addr,
+		    ((inp->inp_flags & IN6P_IPV6_V6ONLY) != 0))) != 0)
+			return (error);
 
 		lport = sin6->sin6_port;
 		if (IN6_IS_ADDR_MULTICAST(&sin6->sin6_addr)) {
@@ -347,6 +354,8 @@ in6_pcbladdr(register struct inpcb *inp, struct sockaddr *nam,
 		if (IN6_IS_ADDR_UNSPECIFIED(&sin6->sin6_addr))
 			sin6->sin6_addr = in6addr_loopback;
 	}
+	if ((error = prison_remote_ip6(inp->inp_cred, &sin6->sin6_addr)) != 0)
+		return (error);
 
 	error = in6_selectsrc_socket(sin6, inp->in6p_outputopts,
 	    inp, inp->inp_cred, scope_ambiguous, &in6a, NULL);
@@ -702,7 +711,10 @@ in6_pcblookup_local(struct inpcbinfo *pcbinfo, struct in6_addr *laddr,
 			    IN6_ARE_ADDR_EQUAL(&inp->in6p_laddr, laddr) &&
 			    inp->inp_lport == lport) {
 				/* Found. */
-				return (inp);
+				if (cred == NULL ||
+				    prison_equal_ip6(cred->cr_prison,
+					inp->inp_cred->cr_prison))
+					return (inp);
 			}
 		}
 		/*
@@ -732,7 +744,10 @@ in6_pcblookup_local(struct inpcbinfo *pcbinfo, struct in6_addr *laddr,
 			 */
 			LIST_FOREACH(inp, &phd->phd_pcblist, inp_portlist) {
 				wildcard = 0;
-				
+				if (cred != NULL &&
+				    !prison_equal_ip6(cred->cr_prison,
+					inp->inp_cred->cr_prison))
+					continue;
 				/* XXX inp locking */
 				if ((inp->inp_vflag & INP_IPV6) == 0)
 					continue;
@@ -867,7 +882,8 @@ in6_pcblookup_group(struct inpcbinfo *pcbinfo, struct inpcbgroup *pcbgroup,
 			 * the inp here, without any checks.
 			 * Well unless both bound with SO_REUSEPORT?
 			 */
-
+			if (prison_flag(inp->inp_cred, PR_IP6))
+				goto found;
 			if (tmpinp == NULL)
 				tmpinp = inp;
 		}
@@ -882,12 +898,16 @@ in6_pcblookup_group(struct inpcbinfo *pcbinfo, struct inpcbgroup *pcbgroup,
 	 */
 	if ((lookupflags & INPLOOKUP_WILDCARD) != 0) {
 		struct inpcb *local_wild = NULL, *local_exact = NULL;
+		struct inpcb *jail_wild = NULL;
+		int injail;
 
-/*
- * Order of socket selection - we always prefer jails.
- *      1. non-wild.
- *      2. wild.
- */
+		/*
+		 * Order of socket selection - we always prefer jails.
+		 *      1. jailed, non-wild.
+		 *      2. jailed, wild.
+		 *      3. non-jailed, non-wild.
+		 *      4. non-jailed, wild.
+		 */
 		head = &pcbgroup->ipg_hashbase[
 		    INP_PCBHASH(INADDR_ANY, lport, 0, pcbgroup->ipg_hashmask)];
 		LIST_FOREACH(inp, head, inp_pcbgrouphash) {
@@ -900,17 +920,34 @@ in6_pcblookup_group(struct inpcbinfo *pcbinfo, struct inpcbgroup *pcbgroup,
 				continue;
 			}
 
-			if (local_exact != NULL)
-				continue;
+			injail = prison_flag(inp->inp_cred, PR_IP6);
+			if (injail) {
+				if (prison_check_ip6(inp->inp_cred,
+				    laddr) != 0)
+					continue;
+			} else {
+				if (local_exact != NULL)
+					continue;
+			}
 
 			if (IN6_ARE_ADDR_EQUAL(&inp->in6p_laddr, laddr)) {
-				local_exact = inp;
+				if (injail)
+					goto found;
+				else
+					local_exact = inp;
 			} else if (IN6_IS_ADDR_UNSPECIFIED(&inp->in6p_laddr)) {
-				local_wild = inp;
+				if (injail)
+					jail_wild = inp;
+				else
+					local_wild = inp;
 			}
 		} /* LIST_FOREACH */
 
-		inp = local_exact;
+		inp = jail_wild;
+		if (inp == NULL)
+			inp = jail_wild;
+		if (inp == NULL)
+			inp = local_exact;
 		if (inp == NULL)
 			inp = local_wild;
 		if (inp != NULL)
@@ -922,12 +959,16 @@ in6_pcblookup_group(struct inpcbinfo *pcbinfo, struct inpcbgroup *pcbgroup,
 	 */
 	if ((lookupflags & INPLOOKUP_WILDCARD) != 0) {
 		struct inpcb *local_wild = NULL, *local_exact = NULL;
+		struct inpcb *jail_wild = NULL;
+		int injail;
 
-/*
- * Order of socket selection - we always prefer jails.
- *      1. non-wild.
- *      2. wild.
- */
+		/*
+		 * Order of socket selection - we always prefer jails.
+		 *      1. jailed, non-wild.
+		 *      2. jailed, wild.
+		 *      3. non-jailed, non-wild.
+		 *      4. non-jailed, wild.
+		 */
 		head = &pcbinfo->ipi_wildbase[INP_PCBHASH(
 		    INP6_PCBHASHKEY(&in6addr_any), lport, 0,
 		    pcbinfo->ipi_wildmask)];
@@ -941,17 +982,34 @@ in6_pcblookup_group(struct inpcbinfo *pcbinfo, struct inpcbgroup *pcbgroup,
 				continue;
 			}
 
-			if (local_exact != NULL)
-				continue;
+			injail = prison_flag(inp->inp_cred, PR_IP6);
+			if (injail) {
+				if (prison_check_ip6(inp->inp_cred,
+				    laddr) != 0)
+					continue;
+			} else {
+				if (local_exact != NULL)
+					continue;
+			}
 
 			if (IN6_ARE_ADDR_EQUAL(&inp->in6p_laddr, laddr)) {
-				local_exact = inp;
+				if (injail)
+					goto found;
+				else
+					local_exact = inp;
 			} else if (IN6_IS_ADDR_UNSPECIFIED(&inp->in6p_laddr)) {
-				local_wild = inp;
+				if (injail)
+					jail_wild = inp;
+				else
+					local_wild = inp;
 			}
 		} /* LIST_FOREACH */
 
-		inp = local_exact;
+		inp = jail_wild;
+		if (inp == NULL)
+			inp = jail_wild;
+		if (inp == NULL)
+			inp = local_exact;
 		if (inp == NULL)
 			inp = local_wild;
 		if (inp != NULL)
@@ -1013,7 +1071,8 @@ in6_pcblookup_hash_locked(struct inpcbinfo *pcbinfo, struct in6_addr *faddr,
 			 * the inp here, without any checks.
 			 * Well unless both bound with SO_REUSEPORT?
 			 */
-
+			if (prison_flag(inp->inp_cred, PR_IP6))
+				return (inp);
 			if (tmpinp == NULL)
 				tmpinp = inp;
 		}
@@ -1026,12 +1085,16 @@ in6_pcblookup_hash_locked(struct inpcbinfo *pcbinfo, struct in6_addr *faddr,
 	 */
 	if ((lookupflags & INPLOOKUP_WILDCARD) != 0) {
 		struct inpcb *local_wild = NULL, *local_exact = NULL;
+		struct inpcb *jail_wild = NULL;
+		int injail;
 
-/*
- * Order of socket selection - we always prefer jails.
- *      1. non-wild.
- *      2. wild.
- */
+		/*
+		 * Order of socket selection - we always prefer jails.
+		 *      1. jailed, non-wild.
+		 *      2. jailed, wild.
+		 *      3. non-jailed, non-wild.
+		 *      4. non-jailed, wild.
+		 */
 		head = &pcbinfo->ipi_hashbase[INP_PCBHASH(
 		    INP6_PCBHASHKEY(&in6addr_any), lport, 0,
 		    pcbinfo->ipi_hashmask)];
@@ -1045,16 +1108,31 @@ in6_pcblookup_hash_locked(struct inpcbinfo *pcbinfo, struct in6_addr *faddr,
 				continue;
 			}
 
-			if (local_exact != NULL)
-				continue;
+			injail = prison_flag(inp->inp_cred, PR_IP6);
+			if (injail) {
+				if (prison_check_ip6(inp->inp_cred,
+				    laddr) != 0)
+					continue;
+			} else {
+				if (local_exact != NULL)
+					continue;
+			}
 
 			if (IN6_ARE_ADDR_EQUAL(&inp->in6p_laddr, laddr)) {
-				local_exact = inp;
+				if (injail)
+					return (inp);
+				else
+					local_exact = inp;
 			} else if (IN6_IS_ADDR_UNSPECIFIED(&inp->in6p_laddr)) {
-				local_wild = inp;
+				if (injail)
+					jail_wild = inp;
+				else
+					local_wild = inp;
 			}
 		} /* LIST_FOREACH */
 
+		if (jail_wild != NULL)
+			return (jail_wild);
 		if (local_exact != NULL)
 			return (local_exact);
 		if (local_wild != NULL)

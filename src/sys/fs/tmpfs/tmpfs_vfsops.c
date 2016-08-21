@@ -48,6 +48,7 @@ __FBSDID("$FreeBSD: head/sys/fs/tmpfs/tmpfs_vfsops.c 285182 2015-07-05 22:37:33Z
 #include <sys/lock.h>
 #include <sys/mutex.h>
 #include <sys/proc.h>
+#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/rwlock.h>
 #include <sys/stat.h>
@@ -147,6 +148,9 @@ tmpfs_mount(struct mount *mp)
 	mode_t root_mode;
 
 	struct vattr va;
+
+	if (!prison_allow(td->td_ucred, PR_ALLOW_MOUNT_TMPFS))
+		return (EPERM);
 
 	if (vfs_filteropt(mp->mnt_optnew, tmpfs_opts))
 		return (EINVAL);
@@ -480,4 +484,4 @@ struct vfsops tmpfs_vfsops = {
 	.vfs_sync =			tmpfs_sync,
 	.vfs_susp_clean =		tmpfs_susp_clean,
 };
-VFS_SET(tmpfs_vfsops, tmpfs, 0);
+VFS_SET(tmpfs_vfsops, tmpfs, VFCF_JAIL);

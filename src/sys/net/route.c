@@ -704,7 +704,9 @@ rtioctl_fib(u_long req, caddr_t data, u_int fibnum)
 
 	/*
 	 * If more ioctl commands are added here, make sure the proper
-	 * super-user checks are being performed.
+	 * super-user checks are being performed because it is possible for
+	 * prison-root to make it this far if raw sockets have been enabled
+	 * in jails.
 	 */
 #ifdef INET
 	/* Multicast goop, grrr... */

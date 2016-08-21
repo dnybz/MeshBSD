@@ -31,6 +31,7 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_numa.c 285387 2015-07-11 15:21:37Z adrian
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/sysproto.h>
+#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/lock.h>
 #include <sys/malloc.h>

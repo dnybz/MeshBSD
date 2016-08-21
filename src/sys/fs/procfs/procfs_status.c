@@ -43,6 +43,7 @@
 #include <sys/exec.h>
 #include <sys/lock.h>
 #include <sys/mutex.h>
+#include <sys/jail.h>
 #include <sys/malloc.h>
 #include <sys/mutex.h>
 #include <sys/sx.h>
@@ -152,8 +153,14 @@ procfs_doprocstatus(PFS_FILL_ARGS)
 		sbuf_printf(sb, ",%lu", (u_long)cr->cr_groups[i]);
 	}
 
-	sbuf_printf(sb, " -");
-
+	if (jailed(cr)) {
+		mtx_lock(&cr->cr_prison->pr_mtx);
+		sbuf_printf(sb, " %s",
+		    prison_name(td->td_ucred->cr_prison, cr->cr_prison));
+		mtx_unlock(&cr->cr_prison->pr_mtx);
+	} else {
+		sbuf_printf(sb, " -");
+	}
 	PROC_UNLOCK(p);
 	sbuf_printf(sb, "\n");
 

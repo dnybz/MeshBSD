@@ -240,9 +240,9 @@ _DP_proc=	cxxrt
 _DP_proc=	supcplusplus
 .endif
 .endif
-#.if ${MK_CDDL} != "no"
-#_DP_proc+=	ctf
-#.endif
+.if ${MK_CDDL} != "no"
+_DP_proc+=	ctf
+.endif
 _DP_proc+=	elf rtld_db util
 _DP_mp=	crypto
 _DP_memstat=	kvm

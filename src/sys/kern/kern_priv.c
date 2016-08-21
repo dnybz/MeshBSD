@@ -32,6 +32,7 @@
 __FBSDID("$FreeBSD: head/sys/kern/kern_priv.c 267992 2014-06-28 03:56:17Z hselasky $");
 
 #include <sys/param.h>
+#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/priv.h>
 #include <sys/proc.h>
@@ -84,6 +85,14 @@ priv_check_cred(struct ucred *cred, int priv, int flags)
 	if (error)
 		goto out;
 #endif
+
+	/*
+	 * Jail policy will restrict certain privileges that may otherwise be
+	 * be granted.
+	 */
+	error = prison_priv_check(cred, priv);
+	if (error)
+		goto out;
 
 	if (unprivileged_mlock) {
 		/*

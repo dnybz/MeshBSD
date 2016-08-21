@@ -39,6 +39,7 @@ __FBSDID("$FreeBSD: head/sys/ufs/ffs/ffs_suspend.c 283735 2015-05-29 13:24:17Z k
 #include <sys/mount.h>
 #include <sys/vnode.h>
 #include <sys/conf.h>
+#include <sys/jail.h>
 #include <sys/sx.h>
 
 #include <security/mac/mac_framework.h>
@@ -264,6 +265,14 @@ ffs_susp_ioctl(struct cdev *dev, u_long cmd, caddr_t addr, int flags,
 	struct mount *mp;
 	fsid_t *fsidp;
 	int error;
+
+	/*
+	 * No suspend inside the jail.  Allowing it would require making
+	 * sure that e.g. the devfs ruleset for that jail permits access
+	 * to the devvp.
+	 */
+	if (jailed(td->td_ucred))
+		return (EPERM);
 
 	sx_xlock(&ffs_susp_lock);
 

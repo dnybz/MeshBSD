@@ -34,6 +34,7 @@ __FBSDID("$FreeBSD: head/sys/dev/hwpmc/hwpmc_mod.c 299746 2016-05-14 18:22:52Z j
 
 #include <sys/param.h>
 #include <sys/eventhandler.h>
+#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/kthread.h>
 #include <sys/limits.h>
@@ -3326,12 +3327,19 @@ pmc_syscall_handler(struct thread *td, void *syscall_args)
 			error = ENXIO;
 			break;
 		}
-/*
- * Refuse an allocation for a system-wide PMC if this 
- * process lacks super-user credentials and the sysctl 
- * tunable 'security.bsd.unprivileged_syspmcs' is zero.
- */
+
+		/*
+		 * Refuse an allocation for a system-wide PMC if this
+		 * process has been jailed, or if this process lacks
+		 * super-user credentials and the sysctl tunable
+		 * 'security.bsd.unprivileged_syspmcs' is zero.
+		 */
+
 		if (PMC_IS_SYSTEM_MODE(mode)) {
+			if (jailed(curthread->td_ucred)) {
+				error = EPERM;
+				break;
+			}
 			if (!pmc_unprivileged_syspmcs) {
 				error = priv_check(curthread,
 				    PRIV_PMC_SYSTEM);

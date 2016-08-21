@@ -42,6 +42,7 @@ __FBSDID("$FreeBSD: head/sys/kern/vfs_export.c 298069 2016-04-15 16:10:11Z pfg $
 
 #include <sys/param.h>
 #include <sys/dirent.h>
+#include <sys/jail.h>
 #include <sys/kernel.h>
 #include <sys/lock.h>
 #include <sys/malloc.h>
@@ -132,6 +133,8 @@ vfs_hang_addrlist(struct mount *mp, struct netexport *nep,
 		np->netc_anon->cr_uid = argp->ex_anon.cr_uid;
 		crsetgroups(np->netc_anon, argp->ex_anon.cr_ngroups,
 		    argp->ex_anon.cr_groups);
+		np->netc_anon->cr_prison = &prison0;
+		prison_hold(np->netc_anon->cr_prison);
 		np->netc_numsecflavors = argp->ex_numsecflavors;
 		bcopy(argp->ex_secflavors, np->netc_secflavors,
 		    sizeof(np->netc_secflavors));
@@ -209,6 +212,8 @@ vfs_hang_addrlist(struct mount *mp, struct netexport *nep,
 	np->netc_anon->cr_uid = argp->ex_anon.cr_uid;
 	crsetgroups(np->netc_anon, argp->ex_anon.cr_ngroups,
 	    argp->ex_anon.cr_groups);
+	np->netc_anon->cr_prison = &prison0;
+	prison_hold(np->netc_anon->cr_prison);
 	np->netc_numsecflavors = argp->ex_numsecflavors;
 	bcopy(argp->ex_secflavors, np->netc_secflavors,
 	    sizeof(np->netc_secflavors));
