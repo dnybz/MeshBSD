@@ -633,12 +633,6 @@ options 	IPSEC			#IP security (requires device crypto)
 #
 options		IPSEC_NAT_T		#NAT-T support, UDP encap of ESP
 
-#
-# SMB/CIFS requester
-# NETSMB enables support for SMB protocol, it requires LIBMCHAIN and LIBICONV
-# options.
-options 	NETSMB			#SMB/CIFS requester
-
 # mchain library. It can be either loaded as KLD or compiled into kernel
 options 	LIBMCHAIN
 

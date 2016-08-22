@@ -144,8 +144,8 @@ crypto/blowfish/bf_ecb.c	optional ipsec
 crypto/blowfish/bf_skey.c	optional crypto | ipsec
 crypto/camellia/camellia.c	optional crypto | ipsec
 crypto/camellia/camellia-api.c	optional crypto | ipsec
-crypto/des/des_ecb.c		optional crypto | ipsec | netsmb
-crypto/des/des_setkey.c		optional crypto | ipsec | netsmb
+crypto/des/des_ecb.c		optional crypto | ipsec
+crypto/des/des_setkey.c		optional crypto | ipsec
 crypto/rc4/rc4.c		optional netgraph_mppc_encryption | kgssapi
 crypto/rijndael/rijndael-alg-fst.c optional crypto | geom_bde | \
 					 ipsec | random !random_loadable | wlan_ccmp
@@ -878,16 +878,12 @@ dev/ed/if_ed_pci.c		optional ed pci
 dev/eisa/eisa_if.m		standard
 dev/eisa/eisaconf.c		optional eisa
 
-dev/et/if_et.c			optional et
-dev/en/if_en_pci.c		optional en pci
-dev/en/midway.c			optional en
-dev/ep/if_ep.c			optional ep
-dev/ep/if_ep_eisa.c		optional ep eisa
-dev/ep/if_ep_isa.c		optional ep isa
-dev/ep/if_ep_mca.c		optional ep mca
-dev/ep/if_ep_pccard.c		optional ep pccard
-dev/esp/esp_pci.c		optional esp pci
-dev/esp/ncr53c9x.c		optional esp
+
+
+
+#
+# etherswitch(4)
+#
 dev/etherswitch/arswitch/arswitch.c		optional arswitch
 dev/etherswitch/arswitch/arswitch_reg.c		optional arswitch
 dev/etherswitch/arswitch/arswitch_phy.c		optional arswitch
@@ -908,10 +904,10 @@ dev/etherswitch/ip17x/ip17x_vlans.c	optional ip17x
 dev/etherswitch/miiproxy.c		optional miiproxy
 dev/etherswitch/rtl8366/rtl8366rb.c	optional rtl8366rb
 dev/etherswitch/ukswitch/ukswitch.c	optional ukswitch
-dev/ex/if_ex.c			optional ex
-dev/ex/if_ex_isa.c		optional ex isa
-dev/ex/if_ex_pccard.c		optional ex pccard
-dev/exca/exca.c			optional cbb
+
+#
+# extres(4)
+#
 dev/extres/clk/clk.c		optional ext_resources clk
 dev/extres/clk/clkdev_if.m	optional ext_resources clk
 dev/extres/clk/clknode_if.m	optional ext_resources clk
@@ -929,10 +925,6 @@ dev/extres/regulator/regnode_if.m	optional ext_resources regulator
 dev/extres/regulator/regulator.c	optional ext_resources regulator
 dev/extres/regulator/regulator_bus.c	optional ext_resources regulator fdt
 dev/extres/regulator/regulator_fixed.c	optional ext_resources regulator
-
-
-
-
 
 #
 # fb(4)
