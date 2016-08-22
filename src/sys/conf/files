@@ -929,7 +929,10 @@ dev/extres/regulator/regnode_if.m	optional ext_resources regulator
 dev/extres/regulator/regulator.c	optional ext_resources regulator
 dev/extres/regulator/regulator_bus.c	optional ext_resources regulator fdt
 dev/extres/regulator/regulator_fixed.c	optional ext_resources regulator
-dev/fatm/if_fatm.c		optional fatm pci
+
+
+
+
 
 #
 # fb(4)
