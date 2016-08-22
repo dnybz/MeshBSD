@@ -930,10 +930,13 @@ dev/extres/regulator/regulator.c	optional ext_resources regulator
 dev/extres/regulator/regulator_bus.c	optional ext_resources regulator fdt
 dev/extres/regulator/regulator_fixed.c	optional ext_resources regulator
 dev/fatm/if_fatm.c		optional fatm pci
+
+#
+# fb(4)
+#
 dev/fb/fbd.c			optional fbd | vt
 dev/fb/fb_if.m			standard
 dev/fb/splash.c			optional sc splash
-
 
 #
 # fdt(4)
