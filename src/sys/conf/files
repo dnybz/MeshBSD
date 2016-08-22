@@ -1420,6 +1420,10 @@ dev/mfi/mfi_syspd.c		optional mfi
 dev/mfi/mfi_tbolt.c		optional mfi
 dev/mfi/mfi_linux.c		optional mfi compat_linux
 dev/mfi/mfi_cam.c		optional mfip scbus
+
+#
+# mmi(4)
+#
 dev/mii/acphy.c			optional miibus | acphy
 dev/mii/amphy.c			optional miibus | amphy
 dev/mii/atphy.c			optional miibus | atphy
