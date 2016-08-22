@@ -112,7 +112,7 @@ cam/scsi/smp_all.c		optional scbus
 fs/nfsclient/nfs_clkdtrace.c		optional dtnfscl nfscl   | dtraceall nfscl compile-with "${CDDL_C}"
 
 #
-# FreeBSD 3.2 compatibility.
+# FreeBSD 32bit compatibility.
 #
 freebsd32/freebsd32_capability.c	optional compat_freebsd32
 freebsd32/freebsd32_ioctl.c	optional compat_freebsd32
@@ -1956,6 +1956,12 @@ dev/xen/privcmd/privcmd.c	optional xenhvm
 dev/xen/debug/debug.c		optional xenhvm
 dev/xl/if_xl.c			optional xl pci
 dev/xl/xlphy.c			optional xl pci
+
+#
+# Suppoerted filesystems.
+#
+#  XXX: Btw, cleanup on mount(8) util follows.
+#
 fs/autofs/autofs.c		optional autofs
 fs/autofs/autofs_vfsops.c	optional autofs
 fs/autofs/autofs_vnops.c	optional autofs
@@ -2038,9 +2044,17 @@ fs/tmpfs/tmpfs_vnops.c		optional tmpfs
 fs/tmpfs/tmpfs_fifoops.c 	optional tmpfs
 fs/tmpfs/tmpfs_vfsops.c 	optional tmpfs
 fs/tmpfs/tmpfs_subr.c 		optional tmpfs
+
+#
+# gdb(4)
+#
 gdb/gdb_cons.c			optional gdb
 gdb/gdb_main.c			optional gdb
 gdb/gdb_packet.c		optional gdb
+
+#
+# geom(4) 
+#
 geom/bde/g_bde.c		optional geom_bde
 geom/bde/g_bde_crypt.c		optional geom_bde
 geom/bde/g_bde_lock.c		optional geom_bde
@@ -2167,18 +2181,7 @@ geom/virstor/binstream.c	optional geom_virstor
 geom/virstor/g_virstor.c	optional geom_virstor
 geom/virstor/g_virstor_md.c	optional geom_virstor
 geom/zero/g_zero.c		optional geom_zero
-fs/ext2fs/ext2_alloc.c		optional ext2fs
-fs/ext2fs/ext2_balloc.c		optional ext2fs
-fs/ext2fs/ext2_bmap.c		optional ext2fs
-fs/ext2fs/ext2_extents.c	optional ext2fs
-fs/ext2fs/ext2_inode.c		optional ext2fs
-fs/ext2fs/ext2_inode_cnv.c	optional ext2fs
-fs/ext2fs/ext2_hash.c		optional ext2fs
-fs/ext2fs/ext2_htree.c		optional ext2fs
-fs/ext2fs/ext2_lookup.c		optional ext2fs
-fs/ext2fs/ext2_subr.c		optional ext2fs
-fs/ext2fs/ext2_vfsops.c		optional ext2fs
-fs/ext2fs/ext2_vnops.c		optional ext2fs
+
 
 #
 # isa(4)
@@ -2437,6 +2440,9 @@ kgssapi/krb5/kcrypto_des3.c	optional kgssapi
 kgssapi/kgss_if.m		optional kgssapi
 kgssapi/gsstest.c		optional kgssapi_debug
 
+#
+# libkern(4)
+#
 # These files in libkern/ are those needed by all architectures.  Some
 # of the files in libkern/ are only needed on some architectures, e.g.,
 # libkern/divdi3.c is needed by i386 but not alpha.  Also, some of these
@@ -2498,6 +2504,9 @@ libkern/timingsafe_bcmp.c	standard
 libkern/zlib.c			optional crypto | geom_uzip | ipsec | \
 					 mxge | netgraph_deflate | \
 					 ddb_ctf | gzio
+#
+# Interface-layer 
+#
 net/altq/altq_cbq.c		optional altq
 net/altq/altq_cdnr.c		optional altq
 net/altq/altq_codel.c		optional altq
@@ -2562,6 +2571,10 @@ net/slcompress.c		optional netgraph_vjc | sppp | \
 					 netgraph_sppp
 net/toeplitz.c			optional inet rss | inet6 rss
 net/vnet.c			optional vimage
+
+#
+# net80211(4)
+#
 net80211/ieee80211.c		optional wlan
 net80211/ieee80211_acl.c	optional wlan wlan_acl
 net80211/ieee80211_action.c	optional wlan
@@ -2608,17 +2621,10 @@ net80211/ieee80211_tdma.c	optional wlan ieee80211_support_tdma
 net80211/ieee80211_wds.c	optional wlan
 net80211/ieee80211_xauth.c	optional wlan wlan_xauth
 net80211/ieee80211_alq.c	optional wlan ieee80211_alq
-netgraph/atm/ccatm/ng_ccatm.c	optional ngatm_ccatm \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-netgraph/atm/ng_atm.c		optional ngatm_atm
-netgraph/atm/ngatmbase.c	optional ngatm_atmbase \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-netgraph/atm/sscfu/ng_sscfu.c	optional ngatm_sscfu \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-netgraph/atm/sscop/ng_sscop.c optional ngatm_sscop \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
-netgraph/atm/uni/ng_uni.c	optional ngatm_uni \
-	compile-with "${NORMAL_C} -I$S/contrib/ngatm"
+
+#
+# netgraph(4)
+#
 netgraph/bluetooth/common/ng_bluetooth.c optional netgraph_bluetooth
 netgraph/bluetooth/drivers/bt3c/ng_bt3c_pccard.c optional netgraph_bluetooth_bt3c
 netgraph/bluetooth/drivers/h4/ng_h4.c optional netgraph_bluetooth_h4
@@ -2649,6 +2655,10 @@ netgraph/ng_ether.c		optional netgraph_ether
 netgraph/ng_pppoe.c		optional netgraph_pppoe
 netgraph/ng_socket.c		optional netgraph_socket
 netgraph/ng_tty.c		optional netgraph_tty
+
+#
+# netinet(6)
+#
 netinet/accf_data.c		optional accept_filter_data inet
 netinet/accf_dns.c		optional accept_filter_dns inet
 netinet/accf_http.c		optional accept_filter_http inet
@@ -2798,7 +2808,7 @@ nlm/nlm_prot_xdr.c		optional nfslockd | nfsd
 nlm/sm_inter_xdr.c		optional nfslockd | nfsd
 
 #
-# Crypto support.
+# crypto(4) support.
 #
 opencrypto/cast.c		optional crypto | ipsec
 opencrypto/criov.c		optional crypto | ipsec
@@ -2841,6 +2851,10 @@ rpc/rpcsec_gss/rpcsec_gss_conf.c optional krpc kgssapi | nfslockd kgssapi | nfsc
 rpc/rpcsec_gss/rpcsec_gss_misc.c optional krpc kgssapi | nfslockd kgssapi | nfscl kgssapi | nfsd kgssapi
 rpc/rpcsec_gss/rpcsec_gss_prot.c optional krpc kgssapi | nfslockd kgssapi | nfscl kgssapi | nfsd kgssapi
 rpc/rpcsec_gss/svc_rpcsec_gss.c	optional krpc kgssapi | nfslockd kgssapi | nfscl kgssapi | nfsd kgssapi
+
+#
+# mac(4)
+#
 security/audit/audit.c		optional audit
 security/audit/audit_arg.c	optional audit
 security/audit/audit_bsm.c	optional audit
@@ -2886,7 +2900,15 @@ security/mac_portacl/mac_portacl.c optional mac_portacl
 security/mac_seeotheruids/mac_seeotheruids.c optional mac_seeotheruids
 security/mac_stub/mac_stub.c	optional mac_stub
 security/mac_test/mac_test.c	optional mac_test
+
+#
+# teken(4)
+#
 teken/teken.c			optional sc | vt
+
+#
+# ufs(4)
+#
 ufs/ffs/ffs_alloc.c		optional ffs
 ufs/ffs/ffs_balloc.c		optional ffs
 ufs/ffs/ffs_inode.c		optional ffs
@@ -2908,6 +2930,10 @@ ufs/ufs/ufs_lookup.c		optional ffs
 ufs/ufs/ufs_quota.c		optional ffs
 ufs/ufs/ufs_vfsops.c		optional ffs
 ufs/ufs/ufs_vnops.c		optional ffs
+
+#
+# vm(4)
+#
 vm/default_pager.c		standard
 vm/device_pager.c		standard
 vm/phys_pager.c			standard
@@ -2935,14 +2961,10 @@ vm/vm_domain.c			standard
 vm/vm_unix.c			standard
 vm/vm_zeroidle.c		standard
 vm/vnode_pager.c		standard
-xen/features.c			optional xenhvm
-xen/xenbus/xenbus_if.m		optional xenhvm
-xen/xenbus/xenbus.c		optional xenhvm
-xen/xenbus/xenbusb_if.m		optional xenhvm
-xen/xenbus/xenbusb.c		optional xenhvm
-xen/xenbus/xenbusb_front.c	optional xenhvm
-xen/xenbus/xenbusb_back.c	optional xenhvm
-xen/xenmem/xenmem_if.m		optional xenhvm
+
+#
+# xdr(4)
+#
 xdr/xdr.c			optional krpc | nfslockd | nfscl | nfsd
 xdr/xdr_array.c			optional krpc | nfslockd | nfscl | nfsd
 xdr/xdr_mbuf.c			optional krpc | nfslockd | nfscl | nfsd
@@ -2951,6 +2973,6 @@ xdr/xdr_reference.c		optional krpc | nfslockd | nfscl | nfsd
 xdr/xdr_sizeof.c		optional krpc | nfslockd | nfscl | nfsd
 
 #
-# MeshBSD
+# if_vether(4)
 #
 net/if_vether.c			optional if_vether

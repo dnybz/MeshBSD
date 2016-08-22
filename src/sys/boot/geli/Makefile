@@ -11,13 +11,6 @@ INTERNALLIB=
 MK_PROFILE=	no
 NO_PIC=
 
-.if ${MACHINE_CPUARCH} == "i386" || ${MACHINE_CPUARCH} == "amd64"
-CFLAGS+=        -march=i386
-.endif
-.if ${MACHINE_ARCH} == "amd64" || ${MACHINE_ARCH} == "powerpc64"
-CFLAGS+=        -m32
-.endif
-
 WARNS?=		0
 
 # string functions from libc
