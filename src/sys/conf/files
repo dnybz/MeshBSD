@@ -1407,19 +1407,23 @@ dev/mc146818/mc146818.c		optional mc146818
 dev/mca/mca_bus.c		optional mca
 dev/mcd/mcd.c			optional mcd isa nowerror
 dev/mcd/mcd_isa.c		optional mcd isa nowerror
+
+#
+# md(4)
+#
 dev/md/md.c			optional md
+
+#
+# mdio(4)
+#
 dev/mdio/mdio_if.m		optional miiproxy | mdio
 dev/mdio/mdio.c			optional miiproxy | mdio
+
+#
+# mem(4)
+#
 dev/mem/memdev.c		optional mem
 dev/mem/memutil.c		optional mem
-dev/mfi/mfi.c			optional mfi
-dev/mfi/mfi_debug.c		optional mfi
-dev/mfi/mfi_pci.c		optional mfi pci
-dev/mfi/mfi_disk.c		optional mfi
-dev/mfi/mfi_syspd.c		optional mfi
-dev/mfi/mfi_tbolt.c		optional mfi
-dev/mfi/mfi_linux.c		optional mfi compat_linux
-dev/mfi/mfi_cam.c		optional mfip scbus
 
 #
 # mmi(4)
