@@ -1390,72 +1390,16 @@ dev/pst/pst-iop.c		optional pst
 dev/pst/pst-pci.c		optional pst pci
 dev/pst/pst-raid.c		optional pst
 dev/pty/pty.c			optional pty
+
+
+#
+# puc(4)
+#
 dev/puc/puc.c			optional puc
 dev/puc/puc_cfg.c		optional puc
 dev/puc/puc_pccard.c		optional puc pccard
 dev/puc/puc_pci.c		optional puc pci
 dev/puc/pucdata.c		optional puc pci
-dev/quicc/quicc_core.c		optional quicc
-dev/ral/rt2560.c		optional ral
-dev/ral/rt2661.c		optional ral
-dev/ral/rt2860.c		optional ral
-dev/ral/if_ral_pci.c		optional ral pci
-rt2561fw.c			optional rt2561fw | ralfw		\
-	compile-with	"${AWK} -f $S/tools/fw_stub.awk rt2561.fw:rt2561fw -mrt2561 -c${.TARGET}" \
-	no-implicit-rule before-depend local				\
-	clean		"rt2561fw.c"
-rt2561fw.fwo			optional rt2561fw | ralfw		\
-	dependency	"rt2561.fw"					\
-	compile-with	"${NORMAL_FWO}"					\
-	no-implicit-rule						\
-	clean		"rt2561fw.fwo"
-rt2561.fw			optional rt2561fw | ralfw		\
-	dependency	"$S/contrib/dev/ral/rt2561.fw.uu"		\
-	compile-with	"${NORMAL_FW}"					\
-	no-obj no-implicit-rule						\
-	clean		"rt2561.fw"
-rt2561sfw.c			optional rt2561sfw | ralfw		\
-	compile-with	"${AWK} -f $S/tools/fw_stub.awk rt2561s.fw:rt2561sfw -mrt2561s -c${.TARGET}" \
-	no-implicit-rule before-depend local				\
-	clean		"rt2561sfw.c"
-rt2561sfw.fwo			optional rt2561sfw | ralfw		\
-	dependency	"rt2561s.fw"					\
-	compile-with	"${NORMAL_FWO}"					\
-	no-implicit-rule						\
-	clean		"rt2561sfw.fwo"
-rt2561s.fw			optional rt2561sfw | ralfw		\
-	dependency	"$S/contrib/dev/ral/rt2561s.fw.uu"		\
-	compile-with	"${NORMAL_FW}"					\
-	no-obj no-implicit-rule						\
-	clean		"rt2561s.fw"
-rt2661fw.c			optional rt2661fw | ralfw		\
-	compile-with	"${AWK} -f $S/tools/fw_stub.awk rt2661.fw:rt2661fw -mrt2661 -c${.TARGET}" \
-	no-implicit-rule before-depend local				\
-	clean		"rt2661fw.c"
-rt2661fw.fwo			optional rt2661fw | ralfw		\
-	dependency	"rt2661.fw"					\
-	compile-with	"${NORMAL_FWO}"					\
-	no-implicit-rule						\
-	clean		"rt2661fw.fwo"
-rt2661.fw			optional rt2661fw | ralfw		\
-	dependency	"$S/contrib/dev/ral/rt2661.fw.uu"		\
-	compile-with	"${NORMAL_FW}"					\
-	no-obj no-implicit-rule						\
-	clean		"rt2661.fw"
-rt2860fw.c			optional rt2860fw | ralfw		\
-	compile-with	"${AWK} -f $S/tools/fw_stub.awk rt2860.fw:rt2860fw -mrt2860 -c${.TARGET}" \
-	no-implicit-rule before-depend local				\
-	clean		"rt2860fw.c"
-rt2860fw.fwo			optional rt2860fw | ralfw		\
-	dependency	"rt2860.fw"					\
-	compile-with	"${NORMAL_FWO}"					\
-	no-implicit-rule						\
-	clean		"rt2860fw.fwo"
-rt2860.fw			optional rt2860fw | ralfw		\
-	dependency	"$S/contrib/dev/ral/rt2860.fw.uu"		\
-	compile-with	"${NORMAL_FW}"					\
-	no-obj no-implicit-rule						\
-	clean		"rt2860.fw"
 
 #
 # random(4)
