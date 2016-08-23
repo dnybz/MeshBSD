@@ -768,13 +768,18 @@ dev/bwi/if_bwi.c		optional bwi
 dev/bwi/if_bwi_pci.c		optional bwi pci
 
 dev/cas/if_cas.c		optional cas
+
+
+
+
+#
+# cfi(4)
+#
 dev/cfi/cfi_bus_fdt.c		optional cfi fdt
 dev/cfi/cfi_bus_nexus.c		optional cfi
 dev/cfi/cfi_core.c		optional cfi
 dev/cfi/cfi_dev.c		optional cfi
 dev/cfi/cfi_disk.c		optional cfid
-dev/ciss/ciss.c			optional ciss
-dev/cm/smc90cx6.c		optional cm
 
 #
 # cmx(4)
