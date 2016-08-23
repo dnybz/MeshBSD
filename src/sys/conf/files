@@ -1465,6 +1465,10 @@ dev/random/fortuna.c		optional random !random_yarrow !random_loadable
 dev/random/hash.c		optional random random_yarrow | \
 					 random !random_yarrow !random_loadable
 dev/rc/rc.c			optional rc
+
+#
+# rccgpio(4)
+#
 dev/rccgpio/rccgpio.c		optional rccgpio gpio
 
 #
