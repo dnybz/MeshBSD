@@ -1467,8 +1467,12 @@ dev/random/hash.c		optional random random_yarrow | \
 dev/rc/rc.c			optional rc
 dev/rccgpio/rccgpio.c		optional rccgpio gpio
 dev/re/if_re.c			optional re
-dev/rl/if_rl.c			optional rl pci
 
+
+#
+# rl(4)
+#
+dev/rl/if_rl.c			optional rl pci
 
 #
 # rndtest(4)
