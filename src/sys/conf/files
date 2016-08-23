@@ -1221,6 +1221,10 @@ dev/ofw/ofw_subr.c		optional fdt
 dev/ofw/ofwbus.c		optional fdt
 dev/ofw/openfirm.c		optional fdt
 dev/ofw/openfirmio.c		optional fdt
+
+#
+# ow(4) - 1-wire-bus
+#
 dev/ow/ow.c			optional ow				\
 	dependency	"owll_if.h"					\
 	dependency	"own_if.h"
@@ -1228,14 +1232,6 @@ dev/ow/owll_if.m		optional ow
 dev/ow/own_if.m			optional ow
 dev/ow/ow_temp.c		optional ow_temp
 dev/ow/owc_gpiobus.c		optional owc gpio
-dev/patm/if_patm.c		optional patm pci
-dev/patm/if_patm_attach.c	optional patm pci
-dev/patm/if_patm_intr.c		optional patm pci
-dev/patm/if_patm_ioctl.c	optional patm pci
-dev/patm/if_patm_rtables.c	optional patm pci
-dev/patm/if_patm_rx.c		optional patm pci
-dev/patm/if_patm_tx.c		optional patm pci
-dev/pbio/pbio.c			optional pbio isa
 
 #
 # pccard(4)
