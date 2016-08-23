@@ -1502,13 +1502,21 @@ dev/siba/siba_pcib.c		optional siba_s5 pci !bhnd !bhndbus
 dev/siis/siis.c			optional siis pci
 dev/sis/if_sis.c		optional sis pci
 dev/sk/if_sk.c			optional sk pci
+
+
+#
+# smbus(4)
+#
 dev/smbus/smb.c			optional smb
 dev/smbus/smbconf.c		optional smbus
 dev/smbus/smbus.c		optional smbus
 dev/smbus/smbus_if.m		optional smbus
+
+#
+# smc(4)
+#
 dev/smc/if_smc.c		optional smc
 dev/smc/if_smc_fdt.c		optional smc fdt
-
 
 #
 # snp(4)
