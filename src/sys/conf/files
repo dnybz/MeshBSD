@@ -1853,15 +1853,18 @@ dev/usb/video/udl.c			optional udl
 #
 # USB END
 #
+
+#
+# videomode(4)
+#
 dev/videomode/videomode.c		optional videomode
 dev/videomode/edid.c			optional videomode
 dev/videomode/pickmode.c		optional videomode
 dev/videomode/vesagtf.c			optional videomode
-dev/utopia/idtphy.c		optional utopia
-dev/utopia/suni.c		optional utopia
-dev/utopia/utopia.c		optional utopia
-dev/vge/if_vge.c		optional vge
-dev/viapm/viapm.c		optional viapm pci
+
+#
+# virtio(4)
+#
 dev/virtio/virtio.c			optional	virtio
 dev/virtio/virtqueue.c			optional	virtio
 dev/virtio/virtio_bus_if.m		optional	virtio
@@ -1875,10 +1878,11 @@ dev/virtio/balloon/virtio_balloon.c	optional	virtio_balloon
 dev/virtio/scsi/virtio_scsi.c		optional	virtio_scsi
 dev/virtio/random/virtio_random.c	optional	virtio_random
 dev/virtio/console/virtio_console.c	optional	virtio_console
+
+#
+# vkbd(4)
+#
 dev/vkbd/vkbd.c			optional vkbd
-dev/vr/if_vr.c			optional vr pci
-
-
 
 #
 # vt(4)
