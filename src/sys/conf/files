@@ -1205,13 +1205,15 @@ dev/nxge/xgehal/xgehal-mgmt.c	optional nxge \
 dev/nmdm/nmdm.c			optional nmdm
 dev/nsp/nsp.c			optional nsp
 dev/nsp/nsp_pccard.c		optional nsp pccard
+
+#
+# null(4)
+#
 dev/null/null.c			standard
-dev/oce/oce_hw.c		optional oce pci
-dev/oce/oce_if.c		optional oce pci
-dev/oce/oce_mbox.c		optional oce pci
-dev/oce/oce_queue.c		optional oce pci
-dev/oce/oce_sysctl.c		optional oce pci
-dev/oce/oce_util.c		optional oce pci
+
+#
+# ofw(4)
+#
 dev/ofw/ofw_bus_if.m		optional fdt
 dev/ofw/ofw_bus_subr.c		optional fdt
 dev/ofw/ofw_fdt.c		optional fdt
