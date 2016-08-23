@@ -1604,8 +1604,18 @@ dev/stg/tmc18c30_pci.c		optional stg pci
 dev/stg/tmc18c30_subr.c		optional stg
 dev/stge/if_stge.c		optional stge
 dev/streams/streams.c		optional streams
+
+
+
+#
+# sym(4)
+#
 dev/sym/sym_hipd.c		optional sym				\
 	dependency	"$S/dev/sym/sym_{conf,defs}.h"
+
+#
+# syscons(4)
+#
 dev/syscons/blank/blank_saver.c	optional blank_saver
 dev/syscons/daemon/daemon_saver.c optional daemon_saver
 dev/syscons/dragon/dragon_saver.c optional dragon_saver
@@ -1624,32 +1634,6 @@ dev/syscons/star/star_saver.c	optional star_saver
 dev/syscons/syscons.c		optional sc
 dev/syscons/sysmouse.c		optional sc
 dev/syscons/warp/warp_saver.c	optional warp_saver
-dev/tdfx/tdfx_linux.c		optional tdfx_linux tdfx compat_linux
-dev/tdfx/tdfx_pci.c		optional tdfx pci
-dev/ti/if_ti.c			optional ti pci
-dev/tl/if_tl.c			optional tl pci
-dev/trm/trm.c			optional trm
-dev/twa/tw_cl_init.c		optional twa \
-	compile-with "${NORMAL_C} -I$S/dev/twa"
-dev/twa/tw_cl_intr.c		optional twa \
-	compile-with "${NORMAL_C} -I$S/dev/twa"
-dev/twa/tw_cl_io.c		optional twa \
-	compile-with "${NORMAL_C} -I$S/dev/twa"
-dev/twa/tw_cl_misc.c		optional twa \
-	compile-with "${NORMAL_C} -I$S/dev/twa"
-dev/twa/tw_osl_cam.c		optional twa \
-	compile-with "${NORMAL_C} -I$S/dev/twa"
-dev/twa/tw_osl_freebsd.c	optional twa \
-	compile-with "${NORMAL_C} -I$S/dev/twa"
-dev/twe/twe.c			optional twe
-dev/twe/twe_freebsd.c		optional twe
-dev/tws/tws.c			optional tws
-dev/tws/tws_cam.c		optional tws
-dev/tws/tws_hdm.c		optional tws
-dev/tws/tws_services.c		optional tws
-dev/tws/tws_user.c		optional tws
-dev/tx/if_tx.c			optional tx
-dev/txp/if_txp.c		optional txp
 
 #
 # uart(4)
