@@ -1236,17 +1236,16 @@ dev/patm/if_patm_rtables.c	optional patm pci
 dev/patm/if_patm_rx.c		optional patm pci
 dev/patm/if_patm_tx.c		optional patm pci
 dev/pbio/pbio.c			optional pbio isa
+
+#
+# pccard(4)
+#
 dev/pccard/card_if.m		standard
 dev/pccard/pccard.c		optional pccard
 dev/pccard/pccard_cis.c		optional pccard
 dev/pccard/pccard_cis_quirks.c	optional pccard
 dev/pccard/pccard_device.c	optional pccard
 dev/pccard/power_if.m		standard
-dev/pccbb/pccbb.c		optional cbb
-dev/pccbb/pccbb_isa.c		optional cbb isa
-dev/pccbb/pccbb_pci.c		optional cbb pci
-dev/pcf/pcf.c			optional pcf
-
 
 #
 # pci(4)
