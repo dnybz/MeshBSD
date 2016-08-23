@@ -724,6 +724,13 @@ dev/ath/ath_dfs/null/dfs_null.c	optional ath \
 dev/bce/if_bce.c			optional bce
 dev/bfe/if_bfe.c			optional bfe
 dev/bge/if_bge.c			optional bge
+
+
+
+
+#
+# bhnd(4)
+#
 dev/bhnd/bhnd.c				optional bhndbus | bhnd
 dev/bhnd/bhnd_subr.c			optional bhndbus | bhnd
 dev/bhnd/bhnd_bus_if.m			optional bhndbus | bhnd
@@ -754,23 +761,6 @@ dev/bhnd/siba/siba.c			optional bhndbus | siba
 dev/bhnd/siba/siba_bhndb.c		optional bhndbus | siba bhndb
 dev/bhnd/siba/siba_nexus.c		optional siba_nexus siba
 dev/bhnd/siba/siba_subr.c		optional bhndbus | siba
-#
-
-dev/buslogic/bt.c		optional bt
-dev/buslogic/bt_eisa.c		optional bt eisa
-dev/buslogic/bt_isa.c		optional bt isa
-dev/buslogic/bt_mca.c		optional bt mca
-dev/buslogic/bt_pci.c		optional bt pci
-dev/bwi/bwimac.c		optional bwi
-dev/bwi/bwiphy.c		optional bwi
-dev/bwi/bwirf.c			optional bwi
-dev/bwi/if_bwi.c		optional bwi
-dev/bwi/if_bwi_pci.c		optional bwi pci
-
-dev/cas/if_cas.c		optional cas
-
-
-
 
 #
 # cfi(4)
