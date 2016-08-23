@@ -1466,8 +1466,11 @@ dev/random/hash.c		optional random random_yarrow | \
 					 random !random_yarrow !random_loadable
 dev/rc/rc.c			optional rc
 dev/rccgpio/rccgpio.c		optional rccgpio gpio
-dev/re/if_re.c			optional re
 
+#
+# re(4)
+#
+dev/re/if_re.c			optional re
 
 #
 # rl(4)
