@@ -255,25 +255,13 @@ dev/acpica/acpi_throttle.c	optional acpi
 dev/acpica/acpi_timer.c		optional acpi
 dev/acpica/acpi_video.c		optional acpi_video acpi
 dev/acpica/acpi_dock.c		optional acpi_dock acpi
-dev/adlink/adlink.c		optional adlink
-dev/advansys/adv_eisa.c		optional adv eisa
-dev/advansys/adv_pci.c		optional adv pci
-dev/advansys/advansys.c		optional adv
-dev/advansys/advlib.c		optional adv
-dev/advansys/advmcode.c		optional adv
-dev/advansys/adw_pci.c		optional adw pci
-dev/advansys/adwcam.c		optional adw
-dev/advansys/adwlib.c		optional adw
-dev/advansys/adwmcode.c		optional adw
-dev/ae/if_ae.c			optional ae pci
-dev/age/if_age.c		optional age pci
-dev/agp/agp.c			optional agp pci
-dev/agp/agp_if.m		optional agp pci
-dev/aha/aha.c			optional aha
-dev/aha/aha_isa.c		optional aha isa
-dev/aha/aha_mca.c		optional aha mca
-dev/ahb/ahb.c			optional ahb eisa
 
+
+
+#
+# adlink(4)
+#
+dev/adlink/adlink.c		optional adlink
 
 #
 # ahci(4)
