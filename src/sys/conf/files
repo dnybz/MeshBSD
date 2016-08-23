@@ -1877,6 +1877,12 @@ dev/virtio/random/virtio_random.c	optional	virtio_random
 dev/virtio/console/virtio_console.c	optional	virtio_console
 dev/vkbd/vkbd.c			optional vkbd
 dev/vr/if_vr.c			optional vr pci
+
+
+
+#
+# vt(4)
+#
 dev/vt/colors/vt_termcolors.c	optional vt
 dev/vt/font/vt_font_default.c	optional vt
 dev/vt/font/vt_mouse_cursor.c	optional vt
@@ -1891,28 +1897,6 @@ dev/vt/vt_core.c		optional vt
 dev/vt/vt_cpulogos.c		optional vt splash
 dev/vt/vt_font.c		optional vt
 dev/vt/vt_sysmouse.c		optional vt
-dev/vte/if_vte.c		optional vte pci
-dev/vx/if_vx.c			optional vx
-dev/vx/if_vx_eisa.c		optional vx eisa
-dev/vx/if_vx_pci.c		optional vx pci
-dev/vxge/vxge.c				optional vxge
-dev/vxge/vxgehal/vxgehal-ifmsg.c	optional vxge
-dev/vxge/vxgehal/vxgehal-mrpcim.c	optional vxge
-dev/vxge/vxgehal/vxge-queue.c		optional vxge
-dev/vxge/vxgehal/vxgehal-ring.c		optional vxge
-dev/vxge/vxgehal/vxgehal-swapper.c	optional vxge
-dev/vxge/vxgehal/vxgehal-mgmt.c		optional vxge
-dev/vxge/vxgehal/vxgehal-srpcim.c	optional vxge
-dev/vxge/vxgehal/vxgehal-config.c	optional vxge
-dev/vxge/vxgehal/vxgehal-blockpool.c	optional vxge
-dev/vxge/vxgehal/vxgehal-doorbells.c	optional vxge
-dev/vxge/vxgehal/vxgehal-mgmtaux.c	optional vxge
-dev/vxge/vxgehal/vxgehal-device.c	optional vxge
-dev/vxge/vxgehal/vxgehal-mm.c		optional vxge
-dev/vxge/vxgehal/vxgehal-driver.c	optional vxge
-dev/vxge/vxgehal/vxgehal-virtualpath.c	optional vxge
-dev/vxge/vxgehal/vxgehal-channel.c	optional vxge
-dev/vxge/vxgehal/vxgehal-fifo.c		optional vxge
 
 #
 # watchdog(4)
