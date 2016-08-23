@@ -5,6 +5,8 @@
 # dependency lines other than the first are silently ignored.
 #
 
+
+
 #
 # The 'fdt_dtb_file' target covers an actual DTB file name, which is derived
 # from the specified source (DTS) file: <platform>.dts -> <platform>.dtb
