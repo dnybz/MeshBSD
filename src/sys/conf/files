@@ -1202,9 +1202,11 @@ dev/nxge/xgehal/xgehal-stats.c	optional nxge \
 dev/nxge/xgehal/xgehal-config.c	optional nxge
 dev/nxge/xgehal/xgehal-mgmt.c	optional nxge \
 	compile-with "${NORMAL_C} ${NO_WSELF_ASSIGN}"
+
+#
+# nmdm(4)
+#
 dev/nmdm/nmdm.c			optional nmdm
-dev/nsp/nsp.c			optional nsp
-dev/nsp/nsp_pccard.c		optional nsp pccard
 
 #
 # null(4)
