@@ -1913,49 +1913,11 @@ dev/vxge/vxgehal/vxgehal-driver.c	optional vxge
 dev/vxge/vxgehal/vxgehal-virtualpath.c	optional vxge
 dev/vxge/vxgehal/vxgehal-channel.c	optional vxge
 dev/vxge/vxgehal/vxgehal-fifo.c		optional vxge
+
+#
+# watchdog(4)
+#
 dev/watchdog/watchdog.c		standard
-dev/wb/if_wb.c			optional wb pci
-dev/wds/wd7000.c		optional wds isa
-dev/wi/if_wi.c			optional wi
-dev/wi/if_wi_pccard.c		optional wi pccard
-dev/wi/if_wi_pci.c		optional wi pci
-dev/wl/if_wl.c			optional wl isa
-dev/wpi/if_wpi.c		optional wpi pci
-wpifw.c			optional wpifw					\
-	compile-with	"${AWK} -f $S/tools/fw_stub.awk wpi.fw:wpifw:153229 -mwpi -c${.TARGET}" \
-	no-implicit-rule before-depend local				\
-	clean		"wpifw.c"
-wpifw.fwo			optional wpifw				\
-	dependency	"wpi.fw"					\
-	compile-with	"${NORMAL_FWO}"					\
-	no-implicit-rule						\
-	clean		"wpifw.fwo"
-wpi.fw			optional wpifw					\
-	dependency	"$S/contrib/dev/wpi/iwlwifi-3945-15.32.2.9.fw.uu"	\
-	compile-with	"${NORMAL_FW}"					\
-	no-obj no-implicit-rule						\
-	clean		"wpi.fw"
-dev/xe/if_xe.c			optional xe
-dev/xe/if_xe_pccard.c		optional xe pccard
-dev/xen/balloon/balloon.c	optional xenhvm
-dev/xen/blkfront/blkfront.c	optional xenhvm
-dev/xen/blkback/blkback.c	optional xenhvm
-dev/xen/console/xen_console.c	optional xenhvm
-dev/xen/control/control.c	optional xenhvm
-dev/xen/grant_table/grant_table.c	optional xenhvm
-dev/xen/netback/netback.c	optional xenhvm
-dev/xen/netfront/netfront.c	optional xenhvm
-dev/xen/xenpci/xenpci.c		optional xenpci
-dev/xen/timer/timer.c		optional xenhvm
-dev/xen/pvcpu/pvcpu.c		optional xenhvm
-dev/xen/xenstore/xenstore.c	optional xenhvm
-dev/xen/xenstore/xenstore_dev.c	optional xenhvm
-dev/xen/xenstore/xenstored_dev.c	optional xenhvm
-dev/xen/evtchn/evtchn_dev.c	optional xenhvm
-dev/xen/privcmd/privcmd.c	optional xenhvm
-dev/xen/debug/debug.c		optional xenhvm
-dev/xl/if_xl.c			optional xl pci
-dev/xl/xlphy.c			optional xl pci
 
 #
 # Suppoerted filesystems.
