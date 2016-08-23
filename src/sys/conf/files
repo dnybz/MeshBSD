@@ -1389,8 +1389,11 @@ dev/proto/proto_core.c		optional proto
 dev/pst/pst-iop.c		optional pst
 dev/pst/pst-pci.c		optional pst pci
 dev/pst/pst-raid.c		optional pst
-dev/pty/pty.c			optional pty
 
+#
+# pty(4)
+#
+dev/pty/pty.c			optional pty
 
 #
 # puc(4)
