@@ -273,30 +273,18 @@ dev/aha/aha.c			optional aha
 dev/aha/aha_isa.c		optional aha isa
 dev/aha/aha_mca.c		optional aha mca
 dev/ahb/ahb.c			optional ahb eisa
+
+
+#
+# ahci(4)
+#
 dev/ahci/ahci.c			optional ahci
 dev/ahci/ahciem.c		optional ahci
 dev/ahci/ahci_pci.c		optional ahci pci
-dev/aic/aic.c			optional aic
-dev/aic/aic_pccard.c		optional aic pccard
-dev/aic7xxx/ahc_eisa.c		optional ahc eisa
-dev/aic7xxx/ahc_isa.c		optional ahc isa
-dev/aic7xxx/ahc_pci.c		optional ahc pci \
-	compile-with "${NORMAL_C} ${NO_WCONSTANT_CONVERSION}"
-dev/aic7xxx/ahd_pci.c		optional ahd pci \
-	compile-with "${NORMAL_C} ${NO_WCONSTANT_CONVERSION}"
-dev/aic7xxx/aic7770.c		optional ahc
-dev/aic7xxx/aic79xx.c		optional ahd pci
-dev/aic7xxx/aic79xx_osm.c	optional ahd pci
-dev/aic7xxx/aic79xx_pci.c	optional ahd pci
-dev/aic7xxx/aic79xx_reg_print.c	optional ahd pci ahd_reg_pretty_print
-dev/aic7xxx/aic7xxx.c		optional ahc
-dev/aic7xxx/aic7xxx_93cx6.c	optional ahc
-dev/aic7xxx/aic7xxx_osm.c	optional ahc
-dev/aic7xxx/aic7xxx_pci.c	optional ahc pci
-dev/aic7xxx/aic7xxx_reg_print.c	optional ahc ahc_reg_pretty_print
-dev/alc/if_alc.c		optional alc pci
-dev/ale/if_ale.c		optional ale pci
-dev/alpm/alpm.c			optional alpm pci
+
+#
+# altera(4)
+#
 dev/altera/avgen/altera_avgen.c		optional altera_avgen
 dev/altera/avgen/altera_avgen_fdt.c	optional altera_avgen fdt
 dev/altera/avgen/altera_avgen_nexus.c	optional altera_avgen
@@ -307,17 +295,6 @@ dev/altera/sdcard/altera_sdcard_fdt.c	optional altera_sdcard fdt
 dev/altera/sdcard/altera_sdcard_nexus.c	optional altera_sdcard
 dev/altera/pio/pio.c		optional altera_pio
 dev/altera/pio/pio_if.m		optional altera_pio
-dev/amdpm/amdpm.c		optional amdpm pci | nfpm pci
-dev/amdsmb/amdsmb.c		optional amdsmb pci
-dev/amr/amr.c			optional amr
-dev/amr/amr_cam.c		optional amrp amr
-dev/amr/amr_disk.c		optional amr
-dev/amr/amr_linux.c		optional amr compat_linux
-dev/amr/amr_pci.c		optional amr pci
-dev/an/if_an.c			optional an
-dev/an/if_an_isa.c		optional an isa
-dev/an/if_an_pccard.c		optional an pccard
-dev/an/if_an_pci.c		optional an pci
 
 #
 # ata(4)
