@@ -1650,6 +1650,10 @@ dev/tws/tws_services.c		optional tws
 dev/tws/tws_user.c		optional tws
 dev/tx/if_tx.c			optional tx
 dev/txp/if_txp.c		optional txp
+
+#
+# uart(4)
+#
 dev/uart/uart_bus_acpi.c	optional uart acpi
 dev/uart/uart_bus_ebus.c	optional uart ebus
 dev/uart/uart_bus_fdt.c		optional uart fdt
@@ -1672,6 +1676,10 @@ dev/uart/uart_if.m		optional uart
 dev/uart/uart_subr.c		optional uart
 dev/uart/uart_tty.c		optional uart
 dev/ubsec/ubsec.c		optional ubsec
+
+#
+# usb(4)
+#
 #
 # USB controller drivers
 #
@@ -1850,9 +1858,6 @@ dev/usb/template/usb_template_midi.c	optional usb_template
 # USB video drivers
 #
 dev/usb/video/udl.c			optional udl
-#
-# USB END
-#
 
 #
 # videomode(4)
