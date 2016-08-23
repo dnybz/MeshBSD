@@ -1592,20 +1592,19 @@ dev/sound/midi/mpu_if.m		optional sound
 dev/sound/midi/mpufoi_if.m	optional sound
 dev/sound/midi/sequencer.c	optional sound
 dev/sound/midi/synth_if.m	optional sound
+
+#
+# spibus(4)
+#
 dev/spibus/ofw_spibus.c		optional fdt spibus
 dev/spibus/spibus.c		optional spibus				\
 	dependency	"spibus_if.h"
 dev/spibus/spibus_if.m		optional spibus
-dev/ste/if_ste.c		optional ste pci
-dev/stg/tmc18c30.c		optional stg
-dev/stg/tmc18c30_isa.c		optional stg isa
-dev/stg/tmc18c30_pccard.c	optional stg pccard
-dev/stg/tmc18c30_pci.c		optional stg pci
-dev/stg/tmc18c30_subr.c		optional stg
-dev/stge/if_stge.c		optional stge
+
+#
+# streams(4)
+#
 dev/streams/streams.c		optional streams
-
-
 
 #
 # sym(4)
