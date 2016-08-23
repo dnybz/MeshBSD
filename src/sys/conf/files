@@ -1092,76 +1092,13 @@ dev/mmc/mmc.c			optional mmc
 dev/mmc/mmcbr_if.m		standard
 dev/mmc/mmcbus_if.m		standard
 dev/mmc/mmcsd.c			optional mmcsd
-dev/mn/if_mn.c			optional mn pci
-dev/mpr/mpr.c			optional mpr
-dev/mpr/mpr_config.c		optional mpr
-# XXX Work around clang warning, until maintainer approves fix.
-dev/mpr/mpr_mapping.c		optional mpr \
-	compile-with "${NORMAL_C} ${NO_WSOMETIMES_UNINITIALIZED}"
-dev/mpr/mpr_pci.c		optional mpr pci
-dev/mpr/mpr_sas.c		optional mpr \
-	compile-with "${NORMAL_C} ${NO_WUNNEEDED_INTERNAL_DECL}"
-dev/mpr/mpr_sas_lsi.c		optional mpr
-dev/mpr/mpr_table.c		optional mpr
-dev/mpr/mpr_user.c		optional mpr
-dev/mps/mps.c			optional mps
-dev/mps/mps_config.c		optional mps
-# XXX Work around clang warning, until maintainer approves fix.
-dev/mps/mps_mapping.c		optional mps \
-	compile-with "${NORMAL_C} ${NO_WSOMETIMES_UNINITIALIZED}"
-dev/mps/mps_pci.c		optional mps pci
-dev/mps/mps_sas.c		optional mps \
-	compile-with "${NORMAL_C} ${NO_WUNNEEDED_INTERNAL_DECL}"
-dev/mps/mps_sas_lsi.c		optional mps
-dev/mps/mps_table.c		optional mps
-dev/mps/mps_user.c		optional mps
-dev/mpt/mpt.c			optional mpt
-dev/mpt/mpt_cam.c		optional mpt
-dev/mpt/mpt_debug.c		optional mpt
-dev/mpt/mpt_pci.c		optional mpt pci
-dev/mpt/mpt_raid.c		optional mpt
-dev/mpt/mpt_user.c		optional mpt
-dev/mrsas/mrsas.c		optional mrsas
-dev/mrsas/mrsas_cam.c		optional mrsas
-dev/mrsas/mrsas_ioctl.c		optional mrsas
-dev/mrsas/mrsas_fp.c		optional mrsas
-dev/msk/if_msk.c		optional msk
+
+#
+# mvs(4)
+#
 dev/mvs/mvs.c			optional mvs
 dev/mvs/mvs_if.m		optional mvs
 dev/mvs/mvs_pci.c		optional mvs pci
-dev/mwl/if_mwl.c		optional mwl
-dev/mwl/if_mwl_pci.c		optional mwl pci
-dev/mwl/mwlhal.c		optional mwl
-mwlfw.c				optional mwlfw				\
-	compile-with	"${AWK} -f $S/tools/fw_stub.awk mw88W8363.fw:mw88W8363fw mwlboot.fw:mwlboot -mmwl -c${.TARGET}" \
-	no-implicit-rule before-depend local				\
-	clean		"mwlfw.c"
-mw88W8363.fwo		optional mwlfw					\
-	dependency	"mw88W8363.fw"					\
-	compile-with	"${NORMAL_FWO}"					\
-	no-implicit-rule						\
-	clean		"mw88W8363.fwo"
-mw88W8363.fw		optional mwlfw					\
-	dependency	"$S/contrib/dev/mwl/mw88W8363.fw.uu"		\
-	compile-with	"${NORMAL_FW}"					\
-	no-obj no-implicit-rule						\
-	clean		"mw88W8363.fw"
-mwlboot.fwo		optional mwlfw					\
-	dependency	"mwlboot.fw"					\
-	compile-with	"${NORMAL_FWO}"					\
-	no-implicit-rule						\
-	clean		"mwlboot.fwo"
-mwlboot.fw		optional mwlfw					\
-	dependency	"$S/contrib/dev/mwl/mwlboot.fw.uu"		\
-	compile-with	"${NORMAL_FW}"					\
-	no-obj no-implicit-rule						\
-	clean		"mwlboot.fw"
-dev/mxge/if_mxge.c		optional mxge pci
-dev/mxge/mxge_eth_z8e.c		optional mxge pci
-dev/mxge/mxge_ethp_z8e.c	optional mxge pci
-dev/mxge/mxge_rss_eth_z8e.c	optional mxge pci
-dev/mxge/mxge_rss_ethp_z8e.c	optional mxge pci
-dev/my/if_my.c			optional my
 
 #
 # nand(4)
