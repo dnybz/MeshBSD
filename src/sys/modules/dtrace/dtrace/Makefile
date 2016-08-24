@@ -13,17 +13,10 @@ ARCHDIR=	${MACHINE_CPUARCH}
 KMOD=		dtrace
 SRCS=		dtrace.c \
 		dtrace_asm.S \
-		dtrace_subr.c
-
-.if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386"
-.PATH: ${SYSDIR}/cddl/dev/dtrace/x86
-SRCS+=		dis_tables.c \
-		instr_size.c
-CFLAGS+=	-I${SYSDIR}/cddl/contrib/opensolaris/uts/intel \
-		-I${SYSDIR}/cddl/dev/dtrace/x86
-.endif
-
-SRCS+=		bus_if.h device_if.h vnode_if.h
+		dtrace_subr.c \
+		bus_if.h \
+		device_if.h \
+		vnode_if.h
 
 # Needed for dtrace_asm.S
 SRCS+=		assym.s
@@ -33,10 +26,6 @@ SRCS+=		opt_compat.h opt_kstack_pages.h opt_nfs.h opt_hwpmc_hooks.h
 
 #This is needed for dtrace.c
 SRCS += 	opensolaris_taskq.c
-
-.if ${MACHINE_CPUARCH} == "i386"
-SRCS+=		opt_apic.h
-.endif
 
 CFLAGS+=	-I${SYSDIR}/cddl/compat/opensolaris \
 		-I${SYSDIR}/cddl/dev/dtrace \
