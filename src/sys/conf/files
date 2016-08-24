@@ -5,6 +5,10 @@
 # dependency lines other than the first are silently ignored.
 #
 
+XXX: Cleanup on components does not 
+XXX: maps to subset of supported arch
+XXX: foloows as soon as possible.
+
 #
 # dtrace(4) et al.
 #
