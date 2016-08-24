@@ -5,7 +5,15 @@
 # dependency lines other than the first are silently ignored.
 #
 
-
+#
+# dtrace(4) et al.
+#
+cddl/dtmalloc/dtmalloc.c		optional dtmalloc        | dtraceall compile-with "${CDDL_C}"
+cddl/profile/profile.c		optional dtrace_profile  | dtraceall compile-with "${CDDL_C}"
+cddl/sdt/sdt.c			optional dtrace_sdt      | dtraceall compile-with "${CDDL_C}"
+cddl/fbt/fbt.c			optional dtrace_fbt      | dtraceall compile-with "${FBT_C}"
+cddl/systrace/systrace.c		optional dtrace_systrace | dtraceall compile-with "${CDDL_C}"
+cddl/prototype.c			optional dtrace_prototype | dtraceall compile-with "${CDDL_C}"
 
 #
 # The 'fdt_dtb_file' target covers an actual DTB file name, which is derived
