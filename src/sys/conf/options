@@ -30,23 +30,6 @@
 # If filename is missing, the default is
 # opt_<name-of-option-in-lower-case>.h
 
-AAC_DEBUG		opt_aac.h
-AACRAID_DEBUG		opt_aacraid.h
-AHC_ALLOW_MEMIO		opt_aic7xxx.h
-AHC_TMODE_ENABLE	opt_aic7xxx.h
-AHC_DUMP_EEPROM		opt_aic7xxx.h
-AHC_DEBUG		opt_aic7xxx.h
-AHC_DEBUG_OPTS		opt_aic7xxx.h
-AHC_REG_PRETTY_PRINT	opt_aic7xxx.h
-AHD_DEBUG		opt_aic79xx.h
-AHD_DEBUG_OPTS		opt_aic79xx.h
-AHD_TMODE_ENABLE	opt_aic79xx.h	
-AHD_REG_PRETTY_PRINT	opt_aic79xx.h
-ADW_ALLOW_MEMIO		opt_adw.h
-
-TWA_DEBUG		opt_twa.h
-TWA_FLASH_FIRMWARE	opt_twa.h
-
 # Debugging options.
 ALT_BREAK_TO_DEBUGGER	opt_kdb.h
 BREAK_TO_DEBUGGER	opt_kdb.h
@@ -179,8 +162,6 @@ MBUF_PACKET_ZONE_DISABLE	opt_global.h
 PANIC_REBOOT_WAIT_TIME	opt_panic.h
 PCI_HP		opt_pci.h
 PCI_IOV		opt_global.h
-PPC_DEBUG	opt_ppc.h
-PPC_PROBE_CHIPSET	opt_ppc.h
 PPS_SYNC	opt_ntp.h
 PREEMPTION	opt_sched.h
 QUOTA
@@ -216,8 +197,6 @@ SW_WATCHDOG	opt_watchdog.h
 TURNSTILE_PROFILING
 UMTX_PROFILING
 VERBOSE_SYSINIT
-WLCACHE		opt_wavelan.h
-WLDEBUG		opt_wavelan.h
 
 # POSIX kernel options
 P1003_1B_MQUEUE			opt_posix.h
@@ -356,18 +335,6 @@ SYM_SETUP_PCI_PARITY	opt_sym.h	#-PCI parity checking
 SYM_SETUP_MAX_LUN	opt_sym.h	#-Number of LUNs supported
 					# default:8, range:[1..64]
 
-# Options used only in dev/ncr/*
-SCSI_NCR_DEBUG		opt_ncr.h
-SCSI_NCR_MAX_SYNC	opt_ncr.h
-SCSI_NCR_MAX_WIDE	opt_ncr.h
-SCSI_NCR_MYADDR		opt_ncr.h
-
-# Options used only in dev/isp/*
-ISP_TARGET_MODE		opt_isp.h
-ISP_FW_CRASH_DUMP	opt_isp.h
-ISP_DEFAULT_ROLES	opt_isp.h
-ISP_INTERNAL_TARGET	opt_isp.h
-
 # Options used only in dev/iscsi
 ISCSI_INITIATOR_DEBUG	opt_iscsi_initiator.h
 
@@ -465,23 +432,13 @@ NETGRAPH_PPPOE		opt_netgraph.h
 NETGRAPH_SOCKET		opt_netgraph.h
 NETGRAPH_TTY		opt_netgraph.h
 
-# DRM options
-DRM_DEBUG		opt_drm.h
-
-# DPT driver debug flags
-DPT_MEASURE_PERFORMANCE	opt_dpt.h
-DPT_RESET_HBA		opt_dpt.h
-
 # Misc debug flags.  Most of these should probably be replaced with
 # 'DEBUG', and then let people recompile just the interesting modules
 # with 'make CC="cc -DDEBUG"'.
 CLUSTERDEBUG		opt_debug_cluster.h
-DEBUG_1284		opt_ppb_1284.h
-VP0_DEBUG		opt_vpo.h
 LPT_DEBUG		opt_lpt.h
 PLIP_DEBUG		opt_plip.h
 LOCKF_DEBUG		opt_debug_lockf.h
-SI_DEBUG		opt_debug_si.h
 IFMEDIA_DEBUG		opt_ifmedia.h
 
 # Fb options
