@@ -7,6 +7,6 @@ FILES+=	system.random
 FILES+=	system.sysctl
 
 NO_OBJ=
-FILESDIR= /etc/casper
+FILESDIR= /etc/c/casper
 
 .include <bsd.prog.mk>

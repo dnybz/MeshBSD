@@ -5,21 +5,21 @@
 #
 
 # auth
-#auth		sufficient	pam_opie.so		no_warn no_fake_prompts
-#auth		requisite	pam_opieaccess.so	no_warn allow_local
+auth		sufficient	pam_opie.so		no_warn no_fake_prompts
+auth		requisite	pam_opieaccess.so	no_warn allow_local
 #auth		sufficient	pam_krb5.so		no_warn try_first_pass
 #auth		sufficient	pam_ssh.so		no_warn try_first_pass
-auth		required	pam_unix.so		no_warn try_first_pass debug
+auth		required	pam_unix.so		no_warn try_first_pass
 
 # account
-account		required	pam_nologin.so	debug
+account		required	pam_nologin.so
 #account	required	pam_krb5.so
-account		required	pam_login_access.so	debug
-account		required	pam_unix.so		debug
+account		required	pam_login_access.so
+account		required	pam_unix.so
 
 # session
 #session	optional	pam_ssh.so		want_agent
-session		required	pam_permit.so	debug
+session		required	pam_permit.so
 
 # password
-password	required	pam_permit.so	debug
+password	required	pam_permit.so
