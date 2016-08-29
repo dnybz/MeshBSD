@@ -712,12 +712,6 @@ dev/cmx/cmx_pccard.c		optional cmx pccard
 dev/cyapa/cyapa.c		optional cyapa smbus
 
 #
-# eisa(4)
-#
-dev/eisa/eisa_if.m		standard
-dev/eisa/eisaconf.c		optional eisa
-
-#
 # etherswitch(4)
 #
 dev/etherswitch/arswitch/arswitch.c		optional arswitch
@@ -843,7 +837,7 @@ dev/iicbus/s35390a.c		optional s35390a
 #
 # kbd(4)
 #
-dev/kbd/kbd.c			optional atkbd | pckbd | sc | ukbd | vt
+dev/kbd/kbd.c			optional pckbd | sc | ukbd | vt
 
 #
 # kbdmux(4)
