@@ -542,7 +542,7 @@ WITNESS_NO_VNODE	opt_witness.h
 WITNESS_SKIPSPIN	opt_witness.h
 WITNESS_COUNT		opt_witness.h
 
-# ISA support
+# ISA support - dependency for malta board
 DEV_ISA			opt_isa.h
 ISAPNP			opt_isa.h
 
@@ -558,15 +558,6 @@ DEV_PFSYNC		opt_pf.h
 DEV_RANDOM		opt_global.h
 DEV_SPLASH		opt_splash.h
 DEV_VLAN		opt_vlan.h
-
-# EISA support
-DEV_EISA		opt_eisa.h
-EISA_SLOTS		opt_eisa.h
-
-# ed driver
-ED_HPP			opt_ed.h
-ED_3C503		opt_ed.h
-ED_SIC			opt_ed.h
 
 # bce driver
 BCE_DEBUG		opt_bce.h
