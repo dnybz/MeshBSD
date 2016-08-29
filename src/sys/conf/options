@@ -436,18 +436,11 @@ NETGRAPH_TTY		opt_netgraph.h
 # 'DEBUG', and then let people recompile just the interesting modules
 # with 'make CC="cc -DDEBUG"'.
 CLUSTERDEBUG		opt_debug_cluster.h
-LPT_DEBUG		opt_lpt.h
-PLIP_DEBUG		opt_plip.h
-LOCKF_DEBUG		opt_debug_lockf.h
 IFMEDIA_DEBUG		opt_ifmedia.h
 
 # Fb options
 FB_DEBUG		opt_fb.h
 FB_INSTALL_CDEV		opt_fb.h
-
-# ppbus related options
-PERIPH_1284		opt_ppb_1284.h
-DONTPROBE_1284		opt_ppb_1284.h
 
 # These cause changes all over the kernel
 BLKDEV_IOSIZE		opt_global.h
@@ -536,8 +529,6 @@ INIT_PATH
 ROOTDEVNAME
 
 FDC_DEBUG		opt_fdc.h
-PCFCLOCK_VERBOSE	opt_pcfclock.h
-PCFCLOCK_MAX_RETRIES	opt_pcfclock.h
 
 KTR			opt_global.h
 KTR_ALQ			opt_ktr.h

@@ -2561,52 +2561,6 @@ device		ds1374
 device		ds1672
 device		s35390a
 
-# Parallel-Port Bus
-#
-# Parallel port bus support is provided by the `ppbus' device.
-# Multiple devices may be attached to the parallel port, devices
-# are automatically probed and attached when found.
-#
-# Supported devices:
-# vpo	Iomega Zip Drive
-#	Requires SCSI disk support ('scbus' and 'da'), best
-#	performance is achieved with ports in EPP 1.9 mode.
-# lpt	Parallel Printer
-# plip	Parallel network interface
-# ppi	General-purpose I/O ("Geek Port") + IEEE1284 I/O
-# pps	Pulse per second Timing Interface
-# lpbb	Philips official parallel port I2C bit-banging interface
-# pcfclock Parallel port clock driver.
-#
-# Supported interfaces:
-# ppc	ISA-bus parallel port interfaces.
-#
-
-options 	PPC_PROBE_CHIPSET # Enable chipset specific detection
-				  # (see flags in ppc(4))
-options 	DEBUG_1284	# IEEE1284 signaling protocol debug
-options 	PERIPH_1284	# Makes your computer act as an IEEE1284
-				# compliant peripheral
-options 	DONTPROBE_1284	# Avoid boot detection of PnP parallel devices
-options 	VP0_DEBUG	# ZIP/ZIP+ debug
-options 	LPT_DEBUG	# Printer driver debug
-options 	PPC_DEBUG	# Parallel chipset level debug
-options 	PLIP_DEBUG	# Parallel network IP interface debug
-options 	PCFCLOCK_VERBOSE         # Verbose pcfclock driver
-options 	PCFCLOCK_MAX_RETRIES=5   # Maximum read tries (default 10)
-
-device		ppc
-hint.ppc.0.at="isa"
-hint.ppc.0.irq="7"
-device		ppbus
-device		vpo
-device		lpt
-device		plip
-device		ppi
-device		pps
-device		lpbb
-device		pcfclock
-
 #
 # Etherswitch framework and drivers
 #
@@ -2978,9 +2932,6 @@ options 	CAM_DEBUG_DELAY
 options 	CLUSTERDEBUG
 
 options 	DEBUG
-
-# Kernel filelock debugging.
-options 	LOCKF_DEBUG
 
 # System V compatible message queues
 # Please note that the values provided here are used to test kernel
