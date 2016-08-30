@@ -1,26 +1,23 @@
 MeshBSD (under construction)
 ----------------------------
 
-Extensions on FreeBSD 11-RELEASE operating system for embedded systems.
-
-<pre><code>
-  This project is at an early stage! 
-  
-  Please, be patient, there is recent work 
-  in progress to reach the goal to provide
-  an operating system for embedded systems 
-  based on FreeBSD 11-RELEASE. 
-</code></pre>
-
 After I've read 
 
 <pre><code>
   https://www.kernel.org/doc/Documentation/stable_api_nonsense.txt
 </code></pre>
  
-I was disgusted and I've decided to provide a set 
-of components to build an operating system based on
-compoments from FreeBSD and OpenBSD operating system. 
+I was disgusted and I've decided to build an operating 
+system for embedded systems and mobile station based 
+on FreeBSD operating system and components adopted
+and ported from OpenBSD and NetBSD.
+
+<pre><code>
+  This project is at an early stage! 
+  
+  Please, be patient, there is recent work 
+  in progress. 
+</code></pre>
 
 This operation is divided into three major stages:
 --------------------------------------------------
@@ -485,6 +482,7 @@ Additional information about contacting
 =======================================
       
 If someone wants to contact me by electronic mail, please use encryption.
+
 
 <pre><code>
 -----BEGIN PGP PUBLIC KEY BLOCK-----
