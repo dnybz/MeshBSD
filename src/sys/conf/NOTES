@@ -2088,29 +2088,8 @@ device		sdhci
 #
 # Supported SMB interfaces:
 # iicsmb	I2C to SMB bridge with any iicbus interface
-# bktr		brooktree848 I2C hardware interface
-# intpm		Intel PIIX4 (82371AB, 82443MX) Power Management Unit
-# alpm		Acer Aladdin-IV/V/Pro2 Power Management Unit
-# ichsmb	Intel ICH SMBus controller chips (82801AA, 82801AB, 82801BA)
-# viapm		VIA VT82C586B/596B/686A and VT8233 Power Management Unit
-# amdpm		AMD 756 Power Management Unit
-# amdsmb	AMD 8111 SMBus 2.0 Controller
-# nfpm		NVIDIA nForce Power Management Unit
-# nfsmb		NVIDIA nForce2/3/4 MCP SMBus 2.0 Controller
-# ismt		Intel SMBus 2.0 controller chips (on Atom S1200, C2000)
 #
 device		smbus		# Bus support, required for smb below.
-
-device		intpm
-device		alpm
-device		ichsmb
-device		viapm
-device		amdpm
-device		amdsmb
-device		nfpm
-device		nfsmb
-device		ismt
-
 device		smb
 
 #
