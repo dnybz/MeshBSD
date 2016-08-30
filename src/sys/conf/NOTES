@@ -2396,14 +2396,6 @@ device		cryptodev	# /dev/crypto for access to h/w
 
 device		rndtest		# FIPS 140-2 entropy tester
 
-device		hifn		# Hifn 7951, 7781, etc.
-options 	HIFN_DEBUG	# enable debugging support: hw.hifn.debug
-options 	HIFN_RNDTEST	# enable rndtest support
-
-device		ubsec		# Broadcom 5501, 5601, 58xx
-options 	UBSEC_DEBUG	# enable debugging support: hw.ubsec.debug
-options 	UBSEC_RNDTEST	# enable rndtest support
-
 #####################################################################
 
 
@@ -2411,7 +2403,7 @@ options 	UBSEC_RNDTEST	# enable rndtest support
 # Embedded system options:
 #
 # An embedded system might want to run something other than init.
-options 	INIT_PATH=/sbin/init:/rescue/init
+options 	INIT_PATH=/sbin/init
 
 # Debug options
 options 	BUS_DEBUG	# enable newbus debugging
