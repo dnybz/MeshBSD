@@ -100,7 +100,6 @@ void	(*vlan_input_p)(struct ifnet *, struct mbuf *);
 struct mbuf *(*bridge_input_p)(struct ifnet *, struct mbuf *); 
 int	(*bridge_output_p)(struct ifnet *, struct mbuf *, 
 		struct sockaddr *, struct rtentry *);
-void	(*bridge_dn_p)(struct mbuf *, struct ifnet *);
 
 /* if_lagg(4) support */
 struct mbuf *(*lagg_input_p)(struct ifnet *, struct mbuf *); 
