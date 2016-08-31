@@ -94,7 +94,6 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
- 
 /*
  * Data structure and control definitions for bridge interfaces.
  */
@@ -348,7 +347,6 @@ struct ifbpstpconf {
 extern	struct mbuf *(*bridge_input_p)(struct ifnet *, struct mbuf *);
 extern	int (*bridge_output_p)(struct ifnet *, struct mbuf *,
 		struct sockaddr *, struct rtentry *);
-extern	void (*bridge_dn_p)(struct mbuf *, struct ifnet *);
 
 #ifdef PPPOE_PFIL
 /* 
