@@ -57,9 +57,9 @@ Well, there are some pending operational tasks
 
     those are still increasing the complexity.
 
- #3 Porting if_pppoe(4) from NetBSD for kernel ppp(4).
+ #4 Porting if_pppoe(4) from NetBSD for kernel ppp(4).
 
- #4 The integration of common or generic llc(4) domain
+ #5 The integration of common or generic llc(4) domain
     on top of Ethernet MAC layer. 
 </code></pre>
 
