@@ -3,7 +3,7 @@
 
 .include <src.opts.mk>
 
-SUBDIR+= 	addr2line
+SUBDIR= 	addr2line
 SUBDIR+= 	alias
 SUBDIR+= 	ar
 SUBDIR+= 	at

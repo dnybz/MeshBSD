@@ -3,7 +3,7 @@
 
 .include <src.opts.mk>
 
-SUBDIR+= 	adjkerntz
+SUBDIR= 	adjkerntz
 SUBDIR+= 	badsect
 SUBDIR+= 	camcontrol
 SUBDIR+= 	clri

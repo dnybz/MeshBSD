@@ -7,7 +7,7 @@
 # XXX: powerd(8) will be replaced by powerd++(8)
 #
 
-SUBDIR+= 	ac
+SUBDIR= 	ac
 SUBDIR+= 	adduser
 SUBDIR+= 	amd
 SUBDIR+= 	ancontrol

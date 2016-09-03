@@ -3,14 +3,13 @@
 
 .include <src.opts.mk>
 
-SUBDIR+= 	cat
+SUBDIR= 	cat
 SUBDIR+= 	cfg_load
 SUBDIR+= 	cfg_safe
 SUBDIR+= 	chflags
 SUBDIR+= 	chio
 SUBDIR+= 	chmod
 SUBDIR+= 	cp
-SUBDIR+= 	csh
 SUBDIR+= 	date
 SUBDIR+= 	dd
 SUBDIR+= 	df
