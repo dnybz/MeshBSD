@@ -14,7 +14,6 @@ SUBDIR+=	tftpd
 SUBDIR+= 	tftp-proxy
 SUBDIR+= 	ulog-helper 
 
-
 .if !defined(NO_PIC) && !defined(NO_RTLD)
 _rtld-elf=	rtld-elf
 .endif

@@ -26,7 +26,6 @@ SUBDIR+= 	ln
 SUBDIR+= 	ls
 SUBDIR+= 	mkdir
 SUBDIR+= 	mv
-SUBDIR+= 	pax
 SUBDIR+= 	pkill
 SUBDIR+= 	ps
 SUBDIR+= 	pwait
