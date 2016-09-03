@@ -33,6 +33,38 @@ This operation is divided into three major stages:
     subset on e. g. X.org based GUI.
 </code></pre>
 
+Well, there are some pending operational tasks
+
+<pre><code>
+ #1 Complete integration of LibreSSL and tls(3)
+    into code-base. This means replacement of
+    OpenSSL.
+
+ #2 Complete integration of httpd(8).
+
+ #3 Integration of OpenSMTPd(8) as replacement for 
+    sendmail(8), but I'll not integrate the portable
+    version, because of its dependencies:
+
+     * autoconf (http://www.gnu.org/software/autoconf/)
+     * automake (http://www.gnu.org/software/automake/)
+     * bison (http://www.gnu.org/software/bison/)
+       or byacc (http://invisible-island.net/byacc/byacc.html)
+     * libevent (http://libevent.org/)
+     * libtool (http://www.gnu.org/software/libtool/)
+     * openssl (http://www.openssl.org/)
+     * libasr (https://opensmtpd.org/archives/libasr-1.0.2.tar.gz)  
+
+    those are still increasing the complexity.
+
+ #3 Porting if_pppoe(4) from NetBSD for kernel ppp(4).
+
+ #4 The integration of common or generic llc(4) domain
+    on top of Ethernet MAC layer. 
+</code></pre>
+
+whom I am working on it.
+
 [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=hmatyschok&url=https://github.com/hmatyschok/MeshBSD&title=MeshBSD&language=&tags=github&category=software) Please feel free to support me anytime.
 
 TL-WR1043NDv2 (experimental)

@@ -29,7 +29,12 @@ SUBDIR+= 	flowctl
 SUBDIR+= 	ftp-proxy
 SUBDIR+= 	fwcontrol
 SUBDIR+= 	gpioctl
-SUBDIR+= 	httpd
+#
+# XXX: LibreSSL and tls(3) are missing dependencies, but
+# XXX: integration of those components are present task.
+#
+#SUBDIR+= 	httpd
+#
 SUBDIR+= 	i2c
 SUBDIR+= 	inetd
 SUBDIR+= 	ip6addrctl
