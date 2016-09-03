@@ -3,36 +3,47 @@
 
 .include <src.opts.mk>
 
-SUBDIR= cat \
-	chflags \
-	chmod \
-	cp \
-	date \
-	dd \
-	df \
-	echo \
-	ed \
-	expr \
-	hostname \
-	kenv \
-	kill \
-	ln \
-	ls \
-	mkdir \
-	mv \
-	pkill \
-	ps \
-	pwait \
-	pwd \
-	realpath \
-	rm \
-	rmdir \
-	sh \
-	sleep \
-	stty \
-	sync \
-	test \
-	uuidgen
+SUBDIR+= 	cat
+SUBDIR+= 	cfg_load
+SUBDIR+= 	cfg_safe
+SUBDIR+= 	chflags
+SUBDIR+= 	chio
+SUBDIR+= 	chmod
+SUBDIR+= 	cp
+SUBDIR+= 	csh
+SUBDIR+= 	date
+SUBDIR+= 	dd
+SUBDIR+= 	df
+SUBDIR+= 	domainname
+SUBDIR+= 	echo
+SUBDIR+= 	ed
+SUBDIR+= 	expr
+SUBDIR+= 	getfacl
+SUBDIR+= 	hostname
+SUBDIR+= 	kenv
+SUBDIR+= 	kill
+SUBDIR+= 	ln
+SUBDIR+= 	ls
+SUBDIR+= 	mkdir
+SUBDIR+= 	mv
+SUBDIR+= 	pax
+SUBDIR+= 	pkill
+SUBDIR+= 	ps
+SUBDIR+= 	pwait
+SUBDIR+= 	pwd
+SUBDIR+= 	rcp
+SUBDIR+= 	realpath
+SUBDIR+= 	rm
+SUBDIR+= 	rmail
+SUBDIR+= 	rmdir
+SUBDIR+= 	setfacl
+SUBDIR+= 	sh
+SUBDIR+= 	sleep
+SUBDIR+= 	stty
+SUBDIR+= 	sync
+SUBDIR+= 	test
+SUBDIR+= 	tests
+SUBDIR+= 	uuidgen
 
 SUBDIR.${MK_TESTS}+=	tests
 

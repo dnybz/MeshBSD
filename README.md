@@ -479,7 +479,7 @@ Some additional information:
 </code></pre>
 
 Additional information about contacting
-=======================================
+---------------------------------------
       
 If someone wants to contact me by electronic mail, please use encryption.
 

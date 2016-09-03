@@ -3,60 +3,75 @@
 
 .include <src.opts.mk>
 
-SUBDIR= adjkerntz \
-	camcontrol \
-	comcontrol \
-	conscontrol \
-	devd \
-	devfs \
-	dhclient \
-	dmesg \
-	dump \
-	etherswitchcfg \
-	fsck \
-	fsck_ffs \
-	fsck_msdosfs \
-	gbde \
-	geom \
-	ggate \
-	ifconfig \
-	ipfw \
-	init \
-	kldconfig \
-	kldload \
-	kldstat \
-	kldunload \
-	ldconfig \
-	md5 \
-	mdconfig \
-	mdmfs \
-	mknod \
-	mksnap_ffs \
-	mount \
-	mount_msdosfs \
-	mount_nfs \
-	mount_nullfs \
-	natd \
-	nandfs \
-	newfs \
-	newfs_msdos \
-	newfs_nandfs \
-	pfctl \
-	ping \
-	ping6 \
-	pflogd \
-	quotacheck \
-	reboot \
-	restore \
-	route \
-	routed \
-	rtsol \
-	setkey \
-	shutdown \
-	swapon \
-	sysctl \
-	tests \
-	umount
+SUBDIR+= 	adjkerntz
+SUBDIR+= 	badsect
+SUBDIR+= 	camcontrol
+SUBDIR+= 	clri
+SUBDIR+= 	comcontrol
+SUBDIR+= 	conscontrol
+SUBDIR+= 	ddb
+SUBDIR+= 	devd
+SUBDIR+= 	devfs
+SUBDIR+= 	dhclient
+SUBDIR+= 	dmesg
+SUBDIR+= 	dump
+SUBDIR+= 	dumpfs
+SUBDIR+= 	dumpon
+SUBDIR+= 	etherswitchcfg
+SUBDIR+= 	ffsinfo
+SUBDIR+= 	fsck
+SUBDIR+= 	fsck_ffs
+SUBDIR+= 	fsck_msdosfs
+SUBDIR+= 	fsdb
+SUBDIR+= 	fsirand
+SUBDIR+= 	gbde
+SUBDIR+= 	geom
+SUBDIR+= 	ggate
+SUBDIR+= 	growfs
+SUBDIR+= 	gvinum
+SUBDIR+= 	ifconfig
+SUBDIR+= 	init
+SUBDIR+= 	kldconfig
+SUBDIR+= 	kldload
+SUBDIR+= 	kldstat
+SUBDIR+= 	kldunload
+SUBDIR+= 	ldconfig
+SUBDIR+= 	md5
+SUBDIR+= 	mdconfig
+SUBDIR+= 	mdmfs
+SUBDIR+= 	mknod
+SUBDIR+= 	mksnap_ffs
+SUBDIR+= 	mount
+SUBDIR+= 	mount_msdosfs
+SUBDIR+= 	mount_nfs
+SUBDIR+= 	mount_nullfs
+SUBDIR+= 	nandfs
+SUBDIR+= 	newfs
+SUBDIR+= 	newfs_msdos
+SUBDIR+= 	newfs_nandfs
+SUBDIR+= 	nfsiod
+SUBDIR+= 	nos-tun
+SUBDIR+= 	pfctl
+SUBDIR+= 	pflogd
+SUBDIR+= 	ping
+SUBDIR+= 	ping6
+SUBDIR+= 	quotacheck
+SUBDIR+= 	rcorder
+SUBDIR+= 	reboot
+SUBDIR+= 	recoverdisk
+SUBDIR+= 	restore
+SUBDIR+= 	route
+SUBDIR+= 	routed
+SUBDIR+= 	rtsol
+SUBDIR+= 	savecore
+SUBDIR+= 	setkey
+SUBDIR+= 	shutdown
+SUBDIR+= 	spppcontrol
+SUBDIR+= 	swapon
+SUBDIR+= 	sysctl
+SUBDIR+= 	tests
+SUBDIR+= 	tunefs
+SUBDIR+= 	umount
 
 SUBDIR.${MK_TESTS}+=	tests
 
