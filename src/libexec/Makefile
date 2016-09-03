@@ -3,34 +3,21 @@
 
 .include <src.opts.mk>
 
-SUBDIR=	${_atf} \
-	${_atrun} \
-	${_casper} \
-	${_dma} \
-	getty \
-	${_mail.local} \
-	${_pppoed} \
-	${_rtld-elf} \
-	${_tests} \
-	${_tftp-proxy} \
-	ulog-helper 
-
-
-_atrun=		atrun
-_casper=	
-
+SUBDIR+= 	${_atf} 
+SUBDIR+= 	atrun
 SUBDIR+=	ftpd
+SUBDIR+= 	getty
+SUBDIR+= 	pppoed
+SUBDIR+= 	${_rtld-elf}
+SUBDIR+= 	${_tests}
+SUBDIR+=	tftpd
+SUBDIR+= 	tftp-proxy
+SUBDIR+= 	ulog-helper 
 
-_dma=		dma
-_pppoed=	pppoed
-_tftp-proxy=	tftp-proxy
 
 .if !defined(NO_PIC) && !defined(NO_RTLD)
 _rtld-elf=	rtld-elf
 .endif
-
-
-SUBDIR+=	tftpd
 
 .if ${MK_TESTS} != "no"
 _atf=		atf
@@ -38,5 +25,4 @@ _tests=		tests
 .endif
 
 .include <bsd.arch.inc.mk>
-
 .include <bsd.subdir.mk>
