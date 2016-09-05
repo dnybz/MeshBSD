@@ -25,11 +25,8 @@ RTLD_ARCH=	${MACHINE_ARCH}
 RTLD_ARCH=	${MACHINE_CPUARCH}
 .endif
 CFLAGS+=	-I${.CURDIR}/${RTLD_ARCH} -I${.CURDIR}
-.if ${MACHINE_ARCH} == "powerpc64"
-LDFLAGS+=	-nostdlib -e _rtld_start
-.else
 LDFLAGS+=	-nostdlib -e .rtld_start
-.endif
+
 WARNS?=		2
 INSTALLFLAGS=	-C -b
 PRECIOUSPROG=
@@ -38,15 +35,10 @@ SYMLINKS=	${BINDIR}/${PROG} ${LIBEXECDIR}/${PROG}
 MLINKS=		rtld.1 ld-elf.so.1.1 \
 		rtld.1 ld.so.1
 
-.if ${MACHINE_CPUARCH} == "sparc64"
-CFLAGS+=	-fPIC
-.else
 CFLAGS+=	-fpic
-.endif
+
 CFLAGS+=	-DPIC $(DEBUG)
-.if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386"
-CFLAGS+=	-fvisibility=hidden
-.endif
+
 LDFLAGS+=	-shared -Wl,-Bsymbolic
 LIBADD=		c_pic
 .if ${MK_TOOLCHAIN} == "no"
