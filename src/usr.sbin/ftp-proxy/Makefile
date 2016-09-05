@@ -1,7 +1,5 @@
 # $FreeBSD: head/usr.sbin/ftp-proxy/Makefile 275054 2014-11-25 16:57:27Z bapt $
 
-.PATH:	${.CURDIR}/../../contrib/pf/ftp-proxy
-
 PROG=	ftp-proxy
 MAN=	ftp-proxy.8
 

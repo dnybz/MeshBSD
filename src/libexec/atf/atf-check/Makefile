@@ -28,7 +28,7 @@
 .include <src.opts.mk>
 .include <bsd.init.mk>
 
-ATF=		${.CURDIR:H:H:H}/atf
+ATF=		${.CURDIR:H:H:H}/lib/atf/src
 .PATH:		${ATF}/atf-sh
 
 PROG_CXX=	atf-check
