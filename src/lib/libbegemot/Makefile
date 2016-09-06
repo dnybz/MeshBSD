@@ -1,9 +1,6 @@
 # $FreeBSD: head/lib/libbegemot/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
-LIBBEGEMOT_DIR=${.CURDIR}/../../contrib/libbegemot
-
 PACKAGE=lib${LIB}
-.PATH: ${LIBBEGEMOT_DIR}
 
 LIB=	begemot
 SHLIB_MAJOR= 4
