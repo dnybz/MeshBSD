@@ -66,6 +66,13 @@ SUBDIR+= 	wpa
 SUBDIR+= 	zic
 SUBDIR+= 	zzz
 
+.if ${MK_AUDIT} != "no" 
+SUBDIR+= 	audit
+SUBDIR+= 	auditd
+SUBDIR+= 	auditdistd
+SUBDIR+= 	auditreduce
+.endif
+
 .if ${MK_BLUETOOTH} != "no"
 SUBDIR+= 	bluetooth
 .endif
