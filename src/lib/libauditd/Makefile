@@ -3,7 +3,7 @@
 #
 
 PACKAGE=lib${LIB}
-OPENBSMDIR=		${.CURDIR}/../../contrib/openbsm
+OPENBSMDIR=		${.CURDIR}/../../external/openbsm
 _LIBAUDITDDIR=		${OPENBSMDIR}/libauditd
 _LIBBSMDIR=		${OPENBSMDIR}/libbsm
 

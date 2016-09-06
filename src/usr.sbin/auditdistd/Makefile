@@ -2,7 +2,7 @@
 # $FreeBSD: head/usr.sbin/auditdistd/Makefile 275054 2014-11-25 16:57:27Z bapt $
 #
 
-OPENBSMDIR=${.CURDIR}/../../contrib/openbsm
+OPENBSMDIR=${.CURDIR}/../../external/openbsm
 .PATH: ${OPENBSMDIR}/bin/auditdistd
 
 # Addition of auditdistd because otherwise generated parse.c can't find
