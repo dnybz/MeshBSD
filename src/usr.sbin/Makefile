@@ -11,10 +11,7 @@ SUBDIR= 	ac
 SUBDIR+= 	adduser
 SUBDIR+= 	amd
 SUBDIR+= 	ancontrol
-SUBDIR+= 	arp
-SUBDIR+= 	authpf
 SUBDIR+= 	autofs
-SUBDIR+= 	bluetooth
 SUBDIR+= 	chown
 SUBDIR+= 	chroot
 SUBDIR+= 	config
@@ -23,11 +20,7 @@ SUBDIR+= 	crunch
 SUBDIR+= 	daemon
 SUBDIR+= 	devctl
 SUBDIR+= 	devinfo
-SUBDIR+= 	dhcpd
 SUBDIR+= 	eeprom
-SUBDIR+= 	flowctl
-SUBDIR+= 	ftp-proxy
-SUBDIR+= 	fwcontrol
 SUBDIR+= 	gpioctl
 #
 # XXX: LibreSSL and tls(3) are missing dependencies, but
@@ -36,57 +29,28 @@ SUBDIR+= 	gpioctl
 #SUBDIR+= 	httpd
 #
 SUBDIR+= 	i2c
-SUBDIR+= 	inetd
-SUBDIR+= 	ip6addrctl
 SUBDIR+= 	kbdcontrol
 SUBDIR+= 	kldxref
 SUBDIR+= 	lastlogin
 SUBDIR+= 	lpr
 SUBDIR+= 	lptcontrol
-SUBDIR+= 	mailstats
-SUBDIR+= 	mailwrapper
 SUBDIR+= 	makefs
 SUBDIR+= 	mixer
-SUBDIR+= 	mld6query
 SUBDIR+= 	mtest
-SUBDIR+= 	ndp
 SUBDIR+= 	newsyslog
-SUBDIR+= 	ngctl
-SUBDIR+= 	nghook
 SUBDIR+= 	nmtree
 SUBDIR+= 	nologin
-SUBDIR+= 	nscd
-SUBDIR+= 	ntp
 SUBDIR+= 	pciconf
 SUBDIR+= 	periodic
-SUBDIR+= 	phttpget
 SUBDIR+= 	powerd
-SUBDIR+= 	ppp
-SUBDIR+= 	pppctl
 SUBDIR+= 	pstat
 SUBDIR+= 	pw
 SUBDIR+= 	pwd_mkdb
-SUBDIR+= 	rarpd
-SUBDIR+= 	rip6query
-SUBDIR+= 	route6d
-SUBDIR+= 	rpc.umntall
-SUBDIR+= 	rrenumd
-SUBDIR+= 	rtadvctl
-SUBDIR+= 	rtadvd
-SUBDIR+= 	rtprio
-SUBDIR+= 	rtsold
-SUBDIR+= 	sendmail
-SUBDIR+= 	services_mkdb
-SUBDIR+= 	setfib
 SUBDIR+= 	setfmac
 SUBDIR+= 	setpmac
 SUBDIR+= 	snapinfo
 SUBDIR+= 	syslogd
-SUBDIR+= 	tcpdrop
-SUBDIR+= 	tests
 SUBDIR+= 	timed
-SUBDIR+= 	traceroute
-SUBDIR+= 	traceroute6
 SUBDIR+= 	tzsetup
 SUBDIR+= 	uathload
 SUBDIR+= 	ugidfw
@@ -101,6 +65,59 @@ SUBDIR+= 	wlandebug
 SUBDIR+= 	wpa
 SUBDIR+= 	zic
 SUBDIR+= 	zzz
+
+.if ${MK_BLUETOOTH} != "no"
+SUBDIR+= 	bluetooth
+.endif
+
+.if ${MK_INET_SUPPORT} != "no"
+SUBDIR+= 	arp
+SUBDIR+= 	rarpd
+SUBDIR+= 	traceroute
+.endif
+
+.if ${MK_INET6_SUPPORT} != "no"
+SUBDIR+= 	ip6addrctl
+SUBDIR+= 	mld6query
+SUBDIR+= 	ndp
+SUBDIR+= 	rip6query
+SUBDIR+= 	route6d
+SUBDIR+= 	traceroute6
+.endif
+
+.if ${MK_INET_SUPPORT} != "no" || \
+    ${MK_INET6_SUPPORT} != "no"
+SUBDIR+= 	dhcpd
+SUBDIR+= 	flowctl
+SUBDIR+= 	ftp-proxy
+SUBDIR+= 	fwcontrol
+SUBDIR+= 	inetd
+SUBDIR+= 	mailstats
+SUBDIR+= 	mailwrapper
+SUBDIR+= 	nscd
+SUBDIR+= 	ntp
+SUBDIR+= 	phttpget
+SUBDIR+= 	ppp
+SUBDIR+= 	pppctl
+SUBDIR+= 	rpc.umntall
+SUBDIR+= 	rrenumd
+SUBDIR+= 	rtadvctl
+SUBDIR+= 	rtadvd
+SUBDIR+= 	rtprio
+SUBDIR+= 	rtsold
+SUBDIR+= 	setfib
+SUBDIR+= 	services_mkdb
+SUBDIR+= 	tcpdrop
+.endif
+
+.if ${MK_NETGRAPH} != "no"
+SUBDIR+= 	ngctl
+SUBDIR+= 	nghook
+.endif
+
+.if ${MK_PF} != "no"
+SUBDIR+= 	authpf
+.endif
 
 SUBDIR.${MK_TESTS}+=	tests
 

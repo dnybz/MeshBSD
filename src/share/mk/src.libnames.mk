@@ -394,15 +394,6 @@ LIBREADLINE?=	${LIBREADLINEDIR}/libreadline.a
 LIBOPENBSDDIR=	${OBJTOP}/lib/libopenbsd
 LIBOPENBSD?=	${LIBOPENBSDDIR}/libopenbsd.a
 
-LIBSMDIR=	${OBJTOP}/lib/libsm
-LIBSM?=		${LIBSMDIR}/libsm.a
-
-LIBSMDBDIR=	${OBJTOP}/lib/libsmdb
-LIBSMDB?=	${LIBSMDBDIR}/libsmdb.a
-
-LIBSMUTILDIR=	${OBJTOP}/lib/libsmutil
-LIBSMUTIL?=	${LIBSMDBDIR}/libsmutil.a
-
 LIBNETBSDDIR?=	${OBJTOP}/lib/libnetbsd
 LIBNETBSD?=	${LIBNETBSDDIR}/libnetbsd.a
 

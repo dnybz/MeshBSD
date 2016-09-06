@@ -40,7 +40,6 @@ SUBDIR+= 	sleep
 SUBDIR+= 	stty
 SUBDIR+= 	sync
 SUBDIR+= 	test
-SUBDIR+= 	tests
 SUBDIR+= 	uuidgen
 
 SUBDIR.${MK_TESTS}+=	tests

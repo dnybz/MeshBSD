@@ -45,16 +45,10 @@ SUBDIR+= 	mount
 SUBDIR+= 	mount_msdosfs
 SUBDIR+= 	mount_nfs
 SUBDIR+= 	mount_nullfs
-SUBDIR+= 	nandfs
 SUBDIR+= 	newfs
 SUBDIR+= 	newfs_msdos
-SUBDIR+= 	newfs_nandfs
 SUBDIR+= 	nfsiod
 SUBDIR+= 	nos-tun
-SUBDIR+= 	pfctl
-SUBDIR+= 	pflogd
-SUBDIR+= 	ping
-SUBDIR+= 	ping6
 SUBDIR+= 	quotacheck
 SUBDIR+= 	rcorder
 SUBDIR+= 	reboot
@@ -69,9 +63,26 @@ SUBDIR+= 	shutdown
 SUBDIR+= 	spppcontrol
 SUBDIR+= 	swapon
 SUBDIR+= 	sysctl
-SUBDIR+= 	tests
 SUBDIR+= 	tunefs
 SUBDIR+= 	umount
+
+.if ${MK_INET_SUPPORT} != "no"
+SUBDIR+= 	ping
+.endif
+
+.if ${MK_INET6_SUPPORT} != "no"
+SUBDIR+= 	ping6
+.endif
+
+.if ${MK_NAND} != "no"
+SUBDIR+= 	nandfs
+SUBDIR+= 	newfs_nandfs
+.endif
+
+.if ${MK_PF} != "no"
+SUBDIR+= 	pfctl
+SUBDIR+= 	pflogd
+.endif
 
 SUBDIR.${MK_TESTS}+=	tests
 
