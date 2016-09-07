@@ -106,7 +106,11 @@ SUBDIR+= 	ntp
 SUBDIR+= 	phttpget
 SUBDIR+= 	ppp
 SUBDIR+= 	pppctl
+SUBDIR+= 	rpc.lockd
+SUBDIR+= 	rpc.statd
 SUBDIR+= 	rpc.umntall
+SUBDIR+= 	rpc.umntall
+SUBDIR+= 	rpcbind
 SUBDIR+= 	rrenumd
 SUBDIR+= 	rtadvctl
 SUBDIR+= 	rtadvd
@@ -115,6 +119,18 @@ SUBDIR+= 	rtsold
 SUBDIR+= 	setfib
 SUBDIR+= 	services_mkdb
 SUBDIR+= 	tcpdrop
+if ${MK_NIS} != "no"}
+SUBDIR+= 	rpc.yppasswdd
+SUBDIR+= 	rpc.ypupdated
+SUBDIR+= 	rpc.ypxfrd
+SUBDIR+= 	yp_mkdb
+SUBDIR+= 	ypbind
+SUBDIR+= 	ypldap
+SUBDIR+= 	yppoll
+SUBDIR+= 	yppush
+SUBDIR+= 	ypserv
+SUBDIR+= 	ypset
+.endif
 .endif
 
 .if ${MK_NETGRAPH} != "no"

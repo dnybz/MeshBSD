@@ -145,6 +145,11 @@ SUBDIR+= 	sockstat
 SUBDIR+= 	ssh-copy-id
 SUBDIR+= 	tftp
 SUBDIR+= 	whois
+if ${MK_NIS} != "no"}
+SUBDIR+= 	ypcat
+SUBDIR+= 	ypmatch
+SUBDIR+= 	ypwhich
+.endif
 .endif
 
 SUBDIR.${MK_TESTS}+=	tests
