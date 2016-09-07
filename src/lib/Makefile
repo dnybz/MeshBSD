@@ -254,8 +254,6 @@ SUBDIR+=libssh
 .endif
 .endif
 
-
-
 .if ${MK_PMC} != "no"
 _libpmc=	libpmc
 .endif
