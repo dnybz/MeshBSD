@@ -139,6 +139,7 @@ SUBDIR+= 	nc
 SUBDIR+= 	netstat
 SUBDIR+= 	rlogin
 SUBDIR+= 	rpcgen
+SUBDIR+= 	rpcinfo
 SUBDIR+= 	rsh
 SUBDIR+= 	sockstat
 SUBDIR+= 	ssh-copy-id
