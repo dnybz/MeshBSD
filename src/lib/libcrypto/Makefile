@@ -1,5 +1,10 @@
 # $FreeBSD: head/secure/lib/libcrypto/Makefile 299462 2016-05-11 16:45:58Z jkim $
 
+#
+# XXX: OpenSSL shall replaced by LibreSSL
+#
+
+
 SHLIBDIR?=	/lib
 SUBDIR=		engines
 
