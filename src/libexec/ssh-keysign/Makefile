@@ -2,7 +2,7 @@
 
 .include <src.opts.mk>
 
-SSHDIR= 	${.CURDIR}/../../crypto/openssh
+SSHDIR= 	${.CURDIR}/../../external/openssh
 
 PROG=	ssh-keysign
 SRCS=	ssh-keysign.c readconf.c

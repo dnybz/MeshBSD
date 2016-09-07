@@ -2,7 +2,7 @@
 
 .include <src.opts.mk>
 
-SSHDIR= 	${.CURDIR}/../../crypto/openssh
+SSHDIR= 	${.CURDIR}/../../external/openssh
 
 PROG=	ssh-pkcs11-helper
 SRCS=	ssh-pkcs11.c ssh-pkcs11-helper.c

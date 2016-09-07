@@ -2,7 +2,7 @@
 
 .include <src.opts.mk>
 
-SSHDIR= 	${.CURDIR}/../../crypto/openssh
+SSHDIR= 	${.CURDIR}/../../external/openssh
 
 PROG=   sftp-server
 SRCS=   sftp-server.c sftp-common.c sftp-server-main.c
