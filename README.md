@@ -13,10 +13,7 @@ on FreeBSD operating system and components adopted
 and ported from OpenBSD and NetBSD.
 
 <pre><code>
-  This project is at an early stage! 
-  
-  Please, be patient, there is recent work 
-  in progress. 
+    This project is at an early stage!
 </code></pre>
 
 This operation is divided into three major stages:
@@ -44,22 +41,21 @@ Well, there are some pending operational tasks
 
  #3 Integration of OpenSMTPd(8) as replacement for 
     sendmail(8), but I'll not integrate the portable
-    version, because of its dependencies:
+    version, because of some dependencies (!) like:
 
      * autoconf (http://www.gnu.org/software/autoconf/)
      * automake (http://www.gnu.org/software/automake/)
      * bison (http://www.gnu.org/software/bison/)
        or byacc (http://invisible-island.net/byacc/byacc.html)
-     * libevent (http://libevent.org/)
      * libtool (http://www.gnu.org/software/libtool/)
      * openssl (http://www.openssl.org/)
-     * libasr (https://opensmtpd.org/archives/libasr-1.0.2.tar.gz)  
+     * ...
 
-    those are still increasing the complexity.
+    are still increasing the complexity.
 
  #4 Porting if_pppoe(4) from NetBSD for kernel ppp(4).
 
- #5 The integration of common or generic llc(4) domain
+ #5 Integration of common or generic llc(4) domain
     on top of Ethernet MAC layer. 
 </code></pre>
 

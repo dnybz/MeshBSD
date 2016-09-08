@@ -33,7 +33,6 @@ SUBDIR+= 	kbdcontrol
 SUBDIR+= 	kldxref
 SUBDIR+= 	lastlogin
 SUBDIR+= 	lpr
-SUBDIR+= 	lptcontrol
 SUBDIR+= 	makefs
 SUBDIR+= 	mixer
 SUBDIR+= 	mtest

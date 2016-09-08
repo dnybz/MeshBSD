@@ -12,7 +12,7 @@ SUBDIR=	\
 
 BIN1=	rc
 
-MTREE=	BSD.debug.dist BSD.include.dist BSD.root.dist BSD.usr.dist BSD.var.dist
+MTREE=	BSD.include.dist BSD.root.dist BSD.usr.dist BSD.var.dist
 .if ${MK_LIB32} != "no"
 MTREE+=	BSD.lib32.dist
 .endif

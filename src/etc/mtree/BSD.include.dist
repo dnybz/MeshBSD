@@ -98,16 +98,6 @@
     crypto
     ..
     dev
-        acpica
-        ..
-        agp
-        ..
-        an
-        ..
-        bktr
-        ..
-        ciss
-        ..
         filemon
         ..
         firewire
@@ -120,17 +110,7 @@
         ..
         io
         ..
-        lmc
-        ..
-        mfi
-        ..
-        mpt
-            mpilib
-            ..
-        ..
         nand
-        ..
-        nvme
         ..
         ofw
         ..
@@ -138,21 +118,11 @@
         ..
         pci
         ..
-        powermac_nvram
-        ..
-        ppbus
-        ..
         smbus
-        ..
-        speaker
         ..
         usb
         ..
-        utopia
-        ..
         vkbd
-        ..
-        wi
         ..
     ..
     edit
@@ -175,12 +145,6 @@
         nullfs
         ..
         procfs
-        ..
-        smbfs
-        ..
-        udf
-        ..
-        unionfs
         ..
     ..
     gcc
@@ -225,35 +189,17 @@
     ..
     gssapi
     ..
-    infiniband
-        complib 
-        ..
-        iba
-        ..
-        opensm
-        ..
-        vendor
-        ..
-    ..
-    isofs
-        cd9660
-        ..
-    ..
     kadm5
     ..
     krb5
     ..
     lib80211
     ..
-    libmilter
-    ..
     libxo
     ..
     lzma
     ..
     machine
-        pc
-        ..
     ..
     net
         altq
@@ -262,8 +208,6 @@
     net80211
     ..
     netgraph
-        atm
-        ..
         bluetooth
             include
             ..
@@ -279,21 +223,9 @@
     ..
     netipsec
     ..
-    netnatm
-        api
-        ..
-        msg
-        ..
-        saal
-        ..
-        sig
-        ..
-    ..
     netpfil
         pf
         ..
-    ..
-    netsmb
     ..
     nfs
     ..
