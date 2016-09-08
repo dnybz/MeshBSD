@@ -29,10 +29,8 @@ SUBDIR+= 	pkill
 SUBDIR+= 	ps
 SUBDIR+= 	pwait
 SUBDIR+= 	pwd
-SUBDIR+= 	rcp
 SUBDIR+= 	realpath
 SUBDIR+= 	rm
-SUBDIR+= 	rmail
 SUBDIR+= 	rmdir
 SUBDIR+= 	setfacl
 SUBDIR+= 	sh
@@ -41,6 +39,12 @@ SUBDIR+= 	stty
 SUBDIR+= 	sync
 SUBDIR+= 	test
 SUBDIR+= 	uuidgen
+
+.if ${MK_INET_SUPPORT} != "no" || \
+    ${MK_INET6_SUPPORT} != "no"
+SUBDIR+= 	rcp
+SUBDIR+= 	rmail
+.endif
 
 SUBDIR.${MK_TESTS}+=	tests
 
