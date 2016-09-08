@@ -56,77 +56,9 @@
         ..
     ..
     libexec
-        bsdconfig
-            020.docsinstall
-                include
-                ..
-            ..
-            030.packages
-                include
-                ..
-            ..
-            040.password
-                include
-                ..
-            ..
-            050.diskmgmt
-                include
-                ..
-            ..
-            070.usermgmt
-                include
-                ..
-            ..
-            080.console
-                include
-                ..
-            ..
-            090.timezone
-                include
-                ..
-            ..
-            110.mouse
-                include
-                ..
-            ..
-            120.networking
-                include
-                ..
-            ..
-            130.security
-                include
-                ..
-            ..
-            140.startup
-                include
-                ..
-            ..
-            150.ttys
-                include
-                ..
-            ..
-            dot
-                include
-                ..
-            ..
-            include
-            ..
-            includes
-                include
-                ..
-            ..
-        ..
-        bsdinstall
-        ..
-        hyperv
-        ..
         lpr
             ru
             ..
-        ..
-        sendmail
-        ..
-        sm.bin
         ..
     ..
     local
@@ -137,22 +69,6 @@
     ..
     share
         atf
-        ..
-        bsdconfig
-            media
-            ..
-            networking
-            ..
-            packages
-            ..
-            password
-            ..
-            startup
-            ..
-            timezone
-            ..
-            usermgmt
-            ..
         ..
         calendar
             de_AT.ISO_8859-15
@@ -178,254 +94,8 @@
         ..
         dict
         ..
-        doc
-            IPv6
-            ..
-            atf
-            ..
-            atm
-            ..
-            legal
-            ..
-            llvm
-                clang
-                ..
-            ..
-            ncurses
-            ..
-            ntp
-                drivers
-                    icons
-                    ..
-                    scripts
-                    ..
-                ..
-                hints
-                ..
-                icons
-                ..
-                pic
-                ..
-                scripts
-                ..
-            ..
-            papers
-            ..
-            pjdfstest
-            ..
-            psd
-                01.cacm
-                ..
-                02.implement
-                ..
-                03.iosys
-                ..
-                04.uprog
-                ..
-                05.sysman
-                ..
-                06.Clang
-                ..
-                12.make
-                ..
-                13.rcs
-                ..
-                15.yacc
-                ..
-                16.lex
-                ..
-                17.m4
-                ..
-                18.gprof
-                ..
-                20.ipctut
-                ..
-                21.ipc
-                ..
-                22.rpcgen
-                ..
-                23.rpc
-                ..
-                24.xdr
-                ..
-                25.xdrrfc
-                ..
-                26.rpcrfc
-                ..
-                27.nfsrfc
-                ..
-            ..
-            smm
-                01.setup
-                ..
-                02.config
-                ..
-                03.fsck
-                ..
-                04.quotas
-                ..
-                05.fastfs
-                ..
-                06.nfs
-                ..
-                07.lpd
-                ..
-                08.sendmailop
-                ..
-                11.timedop
-                ..
-                12.timed
-                ..
-                18.net
-                ..
-            ..
-            usd
-                04.csh
-                ..
-                05.dc
-                ..
-                06.bc
-                ..
-                07.mail
-                ..
-                10.exref
-                ..
-                11.edit
-                ..
-                12.vi
-                ..
-                13.viref
-                ..
-                18.msdiffs
-                ..
-                19.memacros
-                ..
-                20.meref
-                ..
-                21.troff
-                ..
-                22.trofftut
-                ..
-            ..
-        ..
         dtrace
             toolkit
-            ..
-        ..
-        examples
-            BSD_daemon
-            ..
-            FreeBSD_version
-            ..
-            IPv6
-            ..
-            bhyve
-            ..
-            bootforth
-            ..
-            bsdconfig
-            ..
-            csh
-            ..
-            diskless
-            ..
-            dma
-            ..
-            drivers
-            ..
-            etc
-                defaults
-                ..
-            ..
-            find_interface
-            ..
-            hast
-            ..
-            hostapd
-            ..
-            ibcs2
-            ..
-            indent
-            ..
-            ipfilter
-            ..
-            ipfw
-            ..
-            jails
-            ..
-            kld
-                cdev
-                    module
-                    ..
-                    test
-                    ..
-                ..
-                dyn_sysctl
-                ..
-                firmware
-                    fwconsumer
-                    ..
-                    fwimage
-                    ..
-                ..
-                khelp
-                ..
-                syscall
-                    module
-                    ..
-                    test
-                    ..
-                ..
-            ..
-            libusb20
-            ..
-            libvgl
-            ..
-            mdoc
-            ..
-            netgraph
-            ..
-            pc-sysinstall
-            ..
-            perfmon
-            ..
-            pf
-            ..
-            ppi
-            ..
-            ppp
-            ..
-            printing
-            ..
-            scsi_target
-            ..
-            ses
-                getencstat
-                ..
-                sesd
-                ..
-                setencstat
-                ..
-                setobjstat
-                ..
-                srcs
-                ..
-            ..
-            smbfs
-                print
-                ..
-            ..
-            sunrpc
-                dir
-                ..
-                msg
-                ..
-                sort
-                ..
-            ..
-            tcsh
-            ..
-            uefisign
             ..
         ..
         firmware
@@ -506,15 +176,7 @@
                 ..
             ..
         ..
-        info
-        ..
         keys
-            pkg
-                revoked
-                ..
-                trusted
-                ..
-            ..
         ..
         locale
             af_ZA.ISO8859-1
@@ -925,15 +587,7 @@
             cat3
             ..
             cat4
-                amd64
-                ..
-                arm
-                ..
-                i386
-                ..
-                powerpc
-                ..
-                sparc64
+               	arm
                 ..
             ..
             cat5
@@ -943,14 +597,6 @@
             cat7
             ..
             cat8
-                amd64
-                ..
-                i386
-                ..
-                powerpc
-                ..
-                sparc64
-                ..
             ..
             cat9
             ..
@@ -962,15 +608,7 @@
                 cat3
                 ..
                 cat4
-                    amd64
-                    ..
-                    arm
-                    ..
-                    i386
-                    ..
-                    powerpc
-                    ..
-                    sparc64
+                   	arm
                     ..
                 ..
                 cat5
@@ -980,14 +618,6 @@
                 cat7
                 ..
                 cat8
-                    amd64
-                    ..
-                    i386
-                    ..
-                    powerpc
-                    ..
-                    sparc64
-                    ..
                 ..
                 cat9
                 ..
@@ -1000,16 +630,8 @@
                 cat3
                 ..
                 cat4
-                    amd64
-                    ..
                     arm
-                    ..
-                    i386
-                    ..
-                    powerpc
-                    ..
-                    sparc64
-                    ..
+                    .. 
                 ..
                 cat5
                 ..
@@ -1018,14 +640,6 @@
                 cat7
                 ..
                 cat8
-                    amd64
-                    ..
-                    i386
-                    ..
-                    powerpc
-                    ..
-                    sparc64
-                    ..
                 ..
                 cat9
                 ..
@@ -1076,15 +690,7 @@
             man3
             ..
             man4
-                amd64
-                ..
                 arm
-                ..
-                i386
-                ..
-                powerpc
-                ..
-                sparc64
                 ..
             ..
             man5
@@ -1094,14 +700,6 @@
             man7
             ..
             man8
-                amd64
-                ..
-                i386
-                ..
-                powerpc
-                ..
-                sparc64
-                ..
             ..
             man9
             ..
@@ -1430,23 +1028,7 @@
                 ..
             ..
         ..
-        pc-sysinstall
-            backend
-            ..
-            backend-partmanager
-            ..
-            backend-query
-            ..
-            conf
-                license
-                ..
-            ..
-            doc
-            ..
-        ..
         security
-        ..
-        sendmail
         ..
         skel
         ..
