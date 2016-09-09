@@ -9,7 +9,6 @@ SUBDIR+= 	ar
 SUBDIR+= 	at
 SUBDIR+= 	awk
 SUBDIR+= 	basename
-SUBDIR+= 	bluetooth
 SUBDIR+= 	bmake
 SUBDIR+= 	bzip2
 SUBDIR+= 	cap_mkdb
@@ -25,7 +24,6 @@ SUBDIR+= 	elfcopy
 SUBDIR+= 	env
 SUBDIR+= 	expand
 SUBDIR+= 	false
-
 SUBDIR+= 	find
 SUBDIR+= 	fold
 SUBDIR+= 	fortune
@@ -131,6 +129,10 @@ SUBDIR+= 	xzdec
 SUBDIR+= 	yacc
 SUBDIR+= 	yes
 
+.if ${MK_BLUETOOTH} != "no"
+SUBDIR+= 	bluetooth
+.endif
+
 .if ${MK_INET_SUPPORT} != "no" || \
     ${MK_INET6_SUPPORT} != "no"
 SUBDIR+= 	fetch
@@ -143,7 +145,9 @@ SUBDIR+= 	rpcinfo
 SUBDIR+= 	rsh
 SUBDIR+= 	sockstat
 SUBDIR+= 	ssh-copy-id
+.if ${MK_TFTP} != "no"
 SUBDIR+= 	tftp
+.endif
 SUBDIR+= 	whois
 if ${MK_NIS} != "no"}
 SUBDIR+= 	ypcat

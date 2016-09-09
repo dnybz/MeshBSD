@@ -107,7 +107,6 @@ SUBDIR=	${SUBDIR_ORDERED} \
 	libufs \
 	libugidfw \
 	libulog \
-	${_libunbound} \
 	${_libusbhid} \
 	${_libusb} \
 	libutil \
@@ -150,7 +149,6 @@ SUBDIR_DEPEND_libsmb= libkiconv
 SUBDIR_DEPEND_libstdc++:= msun
 SUBDIR_DEPEND_libtacplus= libmd
 SUBDIR_DEPEND_libulog= libmd
-SUBDIR_DEPEND_libunbound= ${_libldns}
 SUBDIR_DEPEND_liblzma= ${_libthr}
 
 # NB: keep these sorted by MK_* knobs
@@ -271,10 +269,6 @@ _atf=		atf
 .endif
 .if ${MK_TESTS} != "no"
 _tests=		tests
-.endif
-
-.if ${MK_UNBOUND} != "no"
-_libunbound=	libunbound
 .endif
 
 .if ${MK_USB} != "no"

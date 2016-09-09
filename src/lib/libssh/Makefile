@@ -2,6 +2,8 @@
 
 .include <src.opts.mk>
 
+SSHDIR=		${.CURDIR}/../../../crypto/openssh
+
 LIB=	ssh
 PRIVATELIB=	true
 SHLIB_MAJOR=	5
@@ -37,7 +39,7 @@ SRCS+=	bcrypt_pbkdf.c blowfish.c bsd-misc.c explicit_bzero.c fmt_scaled.c \
 .if ${MK_LDNS} == "no"
 SRCS+=	getrrsetbyname.c
 .else
-LDNSDIR=	${.CURDIR}/../../../contrib/ldns
+LDNSDIR=	${.CURDIR}/../../../external/ldns
 CFLAGS+=	-DHAVE_LDNS=1 -I${LDNSDIR}
 SRCS+=	getrrsetbyname-ldns.c
 LIBADD+=	ldns
@@ -49,6 +51,8 @@ SRCS+=	 ssh_namespace.h
 NO_LINT=
 
 LIBADD+=	crypto crypt z
+
+WARNS?=		0
 
 .include <bsd.lib.mk>
 
