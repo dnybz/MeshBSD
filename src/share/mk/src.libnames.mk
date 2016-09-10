@@ -179,7 +179,7 @@ _LIBRARIES=	\
 # 2nd+ order consumers.  Auto-generating this would be better.
 _DP_80211=	sbuf bsdxml
 _DP_archive=	z bz2 lzma bsdxml
-.if ${MK_OPENSSL} != "no"
+.if ${MK_LIBRESSL} != "no"
 _DP_archive+=	crypto
 .else
 _DP_archive+=	md
@@ -191,7 +191,7 @@ _DP_ssh=	crypto crypt z
 _DP_ssh+=	ldns
 .endif
 _DP_edit=	ncursesw
-.if ${MK_OPENSSL} != "no"
+.if ${MK_LIBRESSL} != "no"
 _DP_bsnmp=	crypto
 .endif
 _DP_geom=	bsdxml sbuf
@@ -208,7 +208,7 @@ _DP_opie=	md
 _DP_usb=	pthread
 _DP_unbound=	ssl crypto pthread
 _DP_rt=	pthread
-.if ${MK_OPENSSL} == "no"
+.if ${MK_LIBRESSL} == "no"
 _DP_radius=	md
 .else
 _DP_radius=	crypto
@@ -227,7 +227,7 @@ _DP_memstat=	kvm
 _DP_magic=	z
 _DP_mt=		sbuf bsdxml
 _DP_ldns=	crypto
-.if ${MK_OPENSSL} != "no"
+.if ${MK_LIBRESSL} != "no"
 _DP_fetch=	ssl crypto
 .else
 _DP_fetch=	md

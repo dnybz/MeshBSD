@@ -3,7 +3,7 @@
 
 .include <src.opts.mk>
 
-BYACC_SRC=	${.CURDIR}/../../contrib/byacc
+BYACC_SRC=	${.CURDIR}/../../tools/byacc
 .PATH: ${BYACC_SRC}
 
 PROG=	yacc
@@ -20,9 +20,5 @@ CFLAGS+=	-DYYPATCH=${YYPATCH}
 
 LINKS=	${BINDIR}/yacc ${BINDIR}/byacc
 MLINKS=	yacc.1 byacc.1
-
-.if ${MK_TESTS} != "no"
-SUBDIR+= tests
-.endif
 
 .include <bsd.prog.mk>

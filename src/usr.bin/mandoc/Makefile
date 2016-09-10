@@ -85,7 +85,7 @@ WARNS?=	2
 CFLAGS+= -DHAVE_CONFIG_H \
 	 -D_WITH_GETLINE \
 	 -I${.CURDIR}/../../lib/libopenbsd/ \
-	 -I${.CURDIR}/../../contrib/sqlite3
+	 -I${.CURDIR}/../../tools/sqlite3
 LIBADD=	openbsd sqlite3 z
 
 .include <bsd.prog.mk>

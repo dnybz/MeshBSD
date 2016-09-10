@@ -8,14 +8,10 @@ PROGNAME=	install
 SRCS=		xinstall.c getid.c
 MAN=		install.1
 
-.PATH:		${.CURDIR}/../../contrib/mtree
-CFLAGS+=	-I${.CURDIR}/../../contrib/mtree
+.PATH:		${.CURDIR}/../../tools/mtree
+CFLAGS+=	-I${.CURDIR}/../../tools/mtree
 CFLAGS+=	-I${.CURDIR}/../../lib/libnetbsd
 
 LIBADD=	md
-
-.if ${MK_TESTS} != "no"
-SUBDIR+=	tests
-.endif
 
 .include <bsd.prog.mk>

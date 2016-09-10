@@ -227,11 +227,7 @@ _libproc=	libproc
 _librtld_db=	librtld_db
 .endif
 
-#
-# XXX: shall renamed as MK_LIBRESSL
-#
-
-.if ${MK_OPENSSL} != "no"
+.if ${MK_LIBRESSL} != "no"
 _libmp=		libmp
 SUBDIR+=libcrypto libssl
 .if ${MK_OPENSSH} != "no"
@@ -247,11 +243,7 @@ _libpmc=	libpmc
 _libradius=	libradius
 .endif
 
-.if ${MK_TELNET} != "no"
-_libtelnet=	libtelnet
-.endif
-
-.if ${MK_TESTS_SUPPORT} != "no"
+.if ${MK_ATF} != "no"
 _atf=		atf
 .endif
 

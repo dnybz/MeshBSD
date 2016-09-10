@@ -22,7 +22,7 @@ SUBDIR+=sftp-server ssh-keysign ssh-pkcs11-helper
 _rtld-elf=	rtld-elf
 .endif
 
-.if ${MK_TESTS_SUPPORT} != "no"
+.if ${MK_ATF} != "no"
 _atf=		atf
 .endif
 
