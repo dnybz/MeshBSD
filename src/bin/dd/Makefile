@@ -38,8 +38,4 @@ test: ${PROG} gen
 
 	@rm -f gen 1M_zeroes* obs_zeroes
 
-.if ${MK_TESTS} != "no"
-SUBDIR+=	tests
-.endif
-
 .include <bsd.prog.mk>

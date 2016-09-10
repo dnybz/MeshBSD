@@ -15,7 +15,6 @@ __<src.libnames.mk>__:
 _PRIVATELIBS=	\
 		atf_c \
 		atf_cxx \
-		bsdstat \
 		event \
 		heimipcc \
 		heimipcs \
@@ -174,25 +173,7 @@ _LIBRARIES=	\
 		z \
 		zfs_core \
 		zfs \
-		zpool \
-
-.if ${MK_OFED} != "no"
-_LIBRARIES+= \
-		cxgb4 \
-		ibcm \
-		ibcommon \
-		ibmad \
-		ibsdp \
-		ibumad \
-		ibverbs \
-		mlx4 \
-		mthca \
-		opensm \
-		osmcomp \
-		osmvendor \
-		rdmacm \
-
-.endif
+		zpool 
 
 # Each library's LIBADD needs to be duplicated here for static linkage of
 # 2nd+ order consumers.  Auto-generating this would be better.
@@ -309,18 +290,6 @@ _DP_zfs=	md pthread umem util uutil m nvpair avl bsdxml geom nvpair z \
 		zfs_core
 _DP_zfs_core=	nvpair
 _DP_zpool=	md pthread z nvpair avl umem
-.if ${MK_OFED} != "no"
-_DP_cxgb4=	ibverbs pthread
-_DP_ibcm=	ibverbs
-_DP_ibmad=	ibcommon ibumad
-_DP_ibumad=	ibcommon
-_DP_mlx4=	ibverbs pthread
-_DP_mthca=	ibverbs pthread
-_DP_opensm=	pthread
-_DP_osmcomp=	pthread
-_DP_osmvendor=	ibumad opensm osmcomp pthread
-_DP_rdmacm=	ibverbs
-.endif
 
 # Define special cases
 LDADD_supcplusplus=	-lsupc++

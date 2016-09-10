@@ -46,8 +46,6 @@ SUBDIR+= 	rcp
 SUBDIR+= 	rmail
 .endif
 
-SUBDIR.${MK_TESTS}+=	tests
-
 .include <bsd.arch.inc.mk>
 
 SUBDIR:=	${SUBDIR:O}

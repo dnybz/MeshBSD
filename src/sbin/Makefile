@@ -47,8 +47,6 @@ SUBDIR+= 	mount_nfs
 SUBDIR+= 	mount_nullfs
 SUBDIR+= 	newfs
 SUBDIR+= 	newfs_msdos
-SUBDIR+= 	nfsiod
-SUBDIR+= 	nos-tun
 SUBDIR+= 	quotacheck
 SUBDIR+= 	rcorder
 SUBDIR+= 	reboot
@@ -67,11 +65,17 @@ SUBDIR+= 	tunefs
 SUBDIR+= 	umount
 
 .if ${MK_INET_SUPPORT} != "no"
+SUBDIR+= 	nos-tun
 SUBDIR+= 	ping
 .endif
 
 .if ${MK_INET6_SUPPORT} != "no"
 SUBDIR+= 	ping6
+.endif
+
+.if ${MK_INET_SUPPORT} != "no" || \
+    ${MK_INET6_SUPPORT} != "no"
+	SUBDIR+= 	nfsiod
 .endif
 
 .if ${MK_NAND} != "no"
@@ -83,8 +87,6 @@ SUBDIR+= 	newfs_nandfs
 SUBDIR+= 	pfctl
 SUBDIR+= 	pflogd
 .endif
-
-SUBDIR.${MK_TESTS}+=	tests
 
 .include <bsd.arch.inc.mk>
 

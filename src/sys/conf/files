@@ -2306,17 +2306,17 @@ netipsec/xform_tcp.c		optional ipsec inet tcp_signature | \
 #
 # pf(4)
 #
-pf/if_pflog.c		optional pflog pf inet
-pf/if_pfsync.c		optional pfsync pf inet
-pf/pf.c			optional pf inet
-pf/pf_if.c		optional pf inet
-pf/pf_ioctl.c		optional pf inet
-pf/pf_lb.c		optional pf inet
-pf/pf_norm.c		optional pf inet
-pf/pf_osfp.c		optional pf inet
-pf/pf_ruleset.c		optional pf inet
-pf/pf_table.c		optional pf inet
-pf/in4_cksum.c		optional pf inet
+netpfil/pf/if_pflog.c		optional pflog pf inet
+netpfil/pf/if_pfsync.c		optional pfsync pf inet
+netpfil/pf/pf.c			optional pf inet
+netpfil/pf/pf_if.c		optional pf inet
+netpfil/pf/pf_ioctl.c		optional pf inet
+netpfil/pf/pf_lb.c		optional pf inet
+netpfil/pf/pf_norm.c		optional pf inet
+netpfil/pf/pf_osfp.c		optional pf inet
+netpfil/pf/pf_ruleset.c		optional pf inet
+netpfil/pf/pf_table.c		optional pf inet
+netpfil/pf/in4_cksum.c		optional pf inet
 
 #
 # nfs(4)

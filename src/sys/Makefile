@@ -3,7 +3,7 @@
 # Directories to include in cscope name file and TAGS.
 CSCOPEDIRS=	boot bsm cam freebsd32 conf contrib crypto ddb dev fs gdb \
 		geom gnu isa kern libkern modules net net80211 \
-		netgraph netinet netinet6 netipsec pf \
+		netgraph netinet netinet6 netipsec netpfil \
 		nfs nfsclient nfsserver nlm opencrypto \
 		rpc security sys ufs vm xdr ${CSCOPE_ARCHDIR}
 .if !defined(CSCOPE_ARCHDIR)

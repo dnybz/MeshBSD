@@ -34,7 +34,6 @@ SUBDIR=	${SUBDIR_ORDERED} \
 	libblocksruntime \
 	${_libbluetooth} \
 	${_libbsnmp} \
-	libbsdstat \
 	libbsm \
 	libbz2 \
 	libcalendar \
@@ -166,10 +165,6 @@ _libbsnmp=	libbsnmp
 _libcasper=	libcasper
 .endif
 
-.if ${MK_CLANG} != "no" && !defined(COMPAT_32BIT) && !defined(COMPAT_SOFTFP)
-_clang=		clang
-.endif
-
 .if ${MK_CUSE} != "no"
 _cuse=		libcuse
 .endif
@@ -202,14 +197,6 @@ _libcom_err= libcom_err
 
 .if ${MK_LDNS} != "no"
 _libldns=	libldns
-.endif
-
-# The libraries under libclang_rt can only be built by clang, and only make
-# sense to build when clang is enabled at all.  Furthermore, they can only be
-# built for certain architectures.
-.if ${MK_CLANG} != "no" && ${COMPILER_TYPE} == "clang" && \
-    ((${MACHINE_CPUARCH} == "arm" && ${MACHINE_ARCH} != "armeb"))
-_libclang_rt=	libclang_rt
 .endif
 
 .if ${MK_LIBCPLUSPLUS} != "no"
@@ -266,9 +253,6 @@ _libtelnet=	libtelnet
 
 .if ${MK_TESTS_SUPPORT} != "no"
 _atf=		atf
-.endif
-.if ${MK_TESTS} != "no"
-_tests=		tests
 .endif
 
 .if ${MK_USB} != "no"

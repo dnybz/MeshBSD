@@ -1,0 +1,34 @@
+#
+# This builds a variety of "base" tools, 
+# useful for an embedded system.
+#
+
+###################################################################
+# Programs from stock /bin
+#  
+CRUNCH_PROGS_bin+=	sh
+
+CRUNCH_ALIAS_sh= -sh
+CRUNCH_SUPPRESS_LINK_-sh=	1
+CRUNCH_BUILDTOOLS+=	bin/sh
+
+###################################################################
+# Programs from standard /sbin
+#
+
+##################################################################
+# Programs from stock /usr/bin
+#
+
+##################################################################
+# Programs from stock /usr/sbin
+#
+
+##################################################################
+# Library dependencies
+#
+
+CRUNCH_LIBS+= -ledit
+CRUNCH_LIBS+= -lncurses
+CRUNCH_LIBS+= -lncursesw
+

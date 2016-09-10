@@ -2,12 +2,10 @@
 
 .include <src.opts.mk>
 
-FILES=	${_BSD.debug.dist} \
-	BSD.include.dist \
+FILES=	BSD.include.dist \
 	BSD.root.dist \
 	${_BSD.lib32.dist} \
 	${_BSD.libsoft.dist} \
-	${_BSD.tests.dist} \
 	BSD.usr.dist \
 	BSD.var.dist
 
@@ -19,9 +17,6 @@ _BSD.lib32.dist=	BSD.lib32.dist
 .endif
 .if ${MK_LIBSOFT} != "no"
 _BSD.libsoft.dist=	BSD.libsoft.dist
-.endif
-.if ${MK_TESTS} != "no"
-_BSD.tests.dist=	BSD.tests.dist
 .endif
 
 NO_OBJ=

@@ -2,7 +2,7 @@
 
 .include <src.opts.mk>
 
-MDOCMLDIR=	${.CURDIR}/../../contrib/mdocml
+MDOCMLDIR=	${.CURDIR}/../../tools/mdocml
 .PATH: ${MDOCMLDIR}
 
 PROG=	mandoc

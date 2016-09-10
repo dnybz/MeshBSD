@@ -22,9 +22,8 @@ SUBDIR+=sftp-server ssh-keysign ssh-pkcs11-helper
 _rtld-elf=	rtld-elf
 .endif
 
-.if ${MK_TESTS} != "no"
+.if ${MK_TESTS_SUPPORT} != "no"
 _atf=		atf
-_tests=		tests
 .endif
 
 .include <bsd.arch.inc.mk>
