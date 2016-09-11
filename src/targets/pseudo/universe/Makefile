@@ -35,7 +35,18 @@
 UNIVERSE_TARGET_RELDIR?= targets/pseudo/the-lot
 
 # the list of machines
-TARGET_MACHINE_LIST = i386 amd64
+TARGET_MACHINE_LIST = \
+		arm \
+		armeb/arm \
+		armv6/arm \
+		armv6hf/arm \
+		mips \
+		mipsel/mips \
+		mips64el/mips \
+		mips64/mips \
+		mipsn32el/mips \
+		mipsn32/mips \
+		riscv64/riscv
 
 # avoid ../Makefile.inc defining this
 all:

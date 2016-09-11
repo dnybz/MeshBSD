@@ -132,6 +132,11 @@ SUBDIR+= 	ypset
 .endif
 .endif
 
+.if ${MK_NAND} != "no"
+SUBDIR+= 	nandsim
+SUBDIR+= 	nandtool
+.endif
+
 .if ${MK_NETGRAPH} != "no"
 SUBDIR+= 	ngctl
 SUBDIR+= 	nghook

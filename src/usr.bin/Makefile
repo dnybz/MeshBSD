@@ -133,6 +133,10 @@ SUBDIR+= 	yes
 SUBDIR+= 	bluetooth
 .endif
 
+.if ${MK_GPL_DTC} != "yes"
+SUBDIR+= usr.bin/dtc
+.endif
+
 .if ${MK_INET_SUPPORT} != "no" || \
     ${MK_INET6_SUPPORT} != "no"
 SUBDIR+= 	fetch
