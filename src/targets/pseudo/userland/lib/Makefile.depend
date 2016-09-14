@@ -6,213 +6,220 @@
 .include <src.opts.mk>
 .endif
 
-DIRDEPS = \
-	lib/${CSU_DIR} \
-	lib/atf/libatf-c \
-	lib/atf/libatf-c++ \
-	lib/lib80211 \
-	lib/libalias/libalias \
-	lib/libalias/modules/cuseeme \
-	lib/libalias/modules/dummy \
-	lib/libalias/modules/ftp \
-	lib/libalias/modules/irc \
-	lib/libalias/modules/nbt \
-	lib/libalias/modules/pptp \
-	lib/libalias/modules/skinny \
-	lib/libalias/modules/smedia \
-	lib/libarchive \
-	lib/libauditd \
-	lib/libbegemot \
-	lib/libblocksruntime \
-	lib/libbluetooth \
-	lib/libbsdstat \
-	lib/libbsm \
-	lib/libbsnmp/libbsnmp \
-	lib/libbz2 \
-	lib/libc \
-	lib/libc++ \
-	lib/libcalendar \
-	lib/libcam \
-	lib/libcom_err/doc \
-	lib/libcompat \
-	lib/libcompiler_rt \
-	lib/libcrypt \
-	lib/libcuse \
-	lib/libcxxrt \
-	lib/libdevctl \
-	lib/libdevinfo \
-	lib/libdevstat \
-	lib/libdwarf \
-	lib/libedit/edit/readline \
-	lib/libelf \
-	lib/libelftc \
-	lib/libevent \
-	lib/libexecinfo \
-	lib/libexpat \
-	lib/libfetch \
-	lib/libgeom \
-	lib/libgssapi \
-	lib/libiconv_modules/BIG5 \
-	lib/libiconv_modules/DECHanyu \
-	lib/libiconv_modules/EUC \
-	lib/libiconv_modules/EUCTW \
-	lib/libiconv_modules/GBK2K \
-	lib/libiconv_modules/HZ \
-	lib/libiconv_modules/ISO2022 \
-	lib/libiconv_modules/JOHAB \
-	lib/libiconv_modules/MSKanji \
-	lib/libiconv_modules/UES \
-	lib/libiconv_modules/UTF1632 \
-	lib/libiconv_modules/UTF7 \
-	lib/libiconv_modules/UTF8 \
-	lib/libiconv_modules/VIQR \
-	lib/libiconv_modules/ZW \
-	lib/libiconv_modules/iconv_none \
-	lib/libiconv_modules/iconv_std \
-	lib/libiconv_modules/mapper_646 \
-	lib/libiconv_modules/mapper_none \
-	lib/libiconv_modules/mapper_parallel \
-	lib/libiconv_modules/mapper_serial \
-	lib/libiconv_modules/mapper_std \
-	lib/libiconv_modules/mapper_zone \
-	lib/libipsec \
-	lib/libipx \
-	lib/libjail \
-	lib/libkiconv \
-	lib/libkvm \
-	lib/libldns \
-	lib/liblzma \
-	lib/libmagic \
-	lib/libmandoc \
-	lib/libmd \
-	lib/libmemstat \
-	lib/libmilter \
-	lib/libmp \
-	lib/libnetgraph \
-	lib/libngatm \
-	lib/libnv \
-	lib/libopie \
-	lib/libpam/libpam \
-	lib/libpam/modules/pam_chroot \
-	lib/libpam/modules/pam_deny \
-	lib/libpam/modules/pam_echo \
-	lib/libpam/modules/pam_exec \
-	lib/libpam/modules/pam_ftpusers \
-	lib/libpam/modules/pam_group \
-	lib/libpam/modules/pam_guest \
-	lib/libpam/modules/pam_krb5 \
-	lib/libpam/modules/pam_ksu \
-	lib/libpam/modules/pam_lastlog \
-	lib/libpam/modules/pam_login_access \
-	lib/libpam/modules/pam_nologin \
-	lib/libpam/modules/pam_opie \
-	lib/libpam/modules/pam_opieaccess \
-	lib/libpam/modules/pam_passwdqc \
-	lib/libpam/modules/pam_permit \
-	lib/libpam/modules/pam_radius \
-	lib/libpam/modules/pam_rhosts \
-	lib/libpam/modules/pam_rootok \
-	lib/libpam/modules/pam_securetty \
-	lib/libpam/modules/pam_self \
-	lib/libpam/modules/pam_ssh \
-	lib/libpam/modules/pam_tacplus \
-	lib/libpam/modules/pam_unix \
-	lib/libpam/static_libpam \
-	lib/libpcap \
-	lib/libpe \
-	lib/libpjdlog \
-	lib/libpmc \
-	lib/libproc \
-	lib/libprocstat \
-	lib/libradius \
-	lib/librpcsec_gss \
-	lib/librpcsvc \
-	lib/librt \
-	lib/librtld_db \
-	lib/libsbuf \
-	lib/libsdp \
-	lib/libsm \
-	lib/libsmb \
-	lib/libsmdb \
-	lib/libsmutil \
-	lib/libstand \
-	lib/libstdbuf \
-	lib/libstdthreads \
-	lib/libsysdecode \
-	lib/libtacplus \
-	lib/libtelnet \
-	lib/libthr \
-	lib/libthread_db \
-	lib/libufs \
-	lib/libugidfw \
-	lib/libulog \
-	lib/libunbound \
-	lib/libusb \
-	lib/libusbhid \
-	lib/libutil \
-	lib/libvgl \
-	lib/libvmmapi \
-	lib/libwrap \
-	lib/liby \
-	lib/libyaml \
-	lib/libypclnt \
-	lib/libz \
-	lib/msun \
-	lib/ncurses/form \
-	lib/ncurses/formw \
-	lib/ncurses/menu \
-	lib/ncurses/menuw \
-	lib/ncurses/ncurses \
-	lib/ncurses/ncursesw \
-	lib/ncurses/panel \
-	lib/ncurses/panelw \
+DIRDEPS=	lib/${CSU_DIR} 
+DIRDEPS+= 	lib/lib80211 
+DIRDEPS+= 	lib/libalias/libalias 
+DIRDEPS+= 	lib/libalias/modules/cuseeme 
+DIRDEPS+= 	lib/libalias/modules/dummy
+DIRDEPS+= 	lib/libalias/modules/ftp
+DIRDEPS+= 	lib/libalias/modules/irc
+DIRDEPS+= 	lib/libalias/modules/nbt
+DIRDEPS+= 	lib/libalias/modules/pptp
+DIRDEPS+= 	lib/libalias/modules/skinny
+DIRDEPS+= 	lib/libalias/modules/smedia
+DIRDEPS+= 	lib/libarchive
+DIRDEPS+= 	lib/libauditd
+DIRDEPS+= 	lib/libbegemot
+DIRDEPS+= 	lib/libbsm
+DIRDEPS+= 	lib/libbz2 
+DIRDEPS+= 	lib/libc 
+DIRDEPS+= 	lib/libcalendar 
+DIRDEPS+= 	lib/libcam
+DIRDEPS+= 	lib/libcompat
+DIRDEPS+= 	lib/libcompiler_rt
+DIRDEPS+= 	lib/libcrypt
+DIRDEPS+= 	lib/libdevctl
+DIRDEPS+= 	lib/libdevinfo
+DIRDEPS+= 	lib/libdevstat
+DIRDEPS+= 	lib/libdwarf
+DIRDEPS+= 	lib/libedit/edit/readline
+DIRDEPS+= 	lib/libevent
+DIRDEPS+= 	lib/libexpat
+DIRDEPS+= 	lib/libfetch
+DIRDEPS+= 	lib/libgeom
+DIRDEPS+= 	lib/libipsec
+DIRDEPS+= 	lib/libjail
+DIRDEPS+= 	lib/libkiconv
+DIRDEPS+= 	lib/libkvm
+DIRDEPS+= 	lib/liblzma
+DIRDEPS+= 	lib/libmandoc
+DIRDEPS+= 	lib/libmd
+DIRDEPS+= 	lib/libmemstat
+DIRDEPS+= 	lib/libopie
+DIRDEPS+= 	lib/libpam/libpam
+DIRDEPS+= 	lib/libpam/modules/pam_chroot
+DIRDEPS+= 	lib/libpam/modules/pam_deny
+DIRDEPS+= 	lib/libpam/modules/pam_echo
+DIRDEPS+= 	lib/libpam/modules/pam_exec
+DIRDEPS+= 	lib/libpam/modules/pam_ftpusers
+DIRDEPS+= 	lib/libpam/modules/pam_group
+DIRDEPS+= 	lib/libpam/modules/pam_guest
+DIRDEPS+= 	lib/libpam/modules/pam_krb5
+DIRDEPS+= 	lib/libpam/modules/pam_ksu
+DIRDEPS+= 	lib/libpam/modules/pam_lastlog
+DIRDEPS+= 	lib/libpam/modules/pam_login_access
+DIRDEPS+= 	lib/libpam/modules/pam_nologin
+DIRDEPS+= 	lib/libpam/modules/pam_opie
+DIRDEPS+= 	lib/libpam/modules/pam_opieaccess
+DIRDEPS+= 	lib/libpam/modules/pam_passwdqc
+DIRDEPS+= 	lib/libpam/modules/pam_permit
+DIRDEPS+= 	lib/libpam/modules/pam_radius
+DIRDEPS+= 	lib/libpam/modules/pam_rhosts
+DIRDEPS+= 	lib/libpam/modules/pam_rootok
+DIRDEPS+= 	lib/libpam/modules/pam_securetty
+DIRDEPS+= 	lib/libpam/modules/pam_self
+DIRDEPS+= 	lib/libpam/modules/pam_ssh
+DIRDEPS+= 	lib/libpam/modules/pam_tacplus
+DIRDEPS+= 	lib/libpam/modules/pam_unix
+DIRDEPS+= 	lib/libpam/static_libpam
+DIRDEPS+= 	lib/libpcap
+DIRDEPS+= 	lib/libprocstat
+DIRDEPS+= 	lib/librpcsvc
+DIRDEPS+= 	lib/librt
+DIRDEPS+= 	lib/libsbuf
+DIRDEPS+= 	lib/libstdthreads
+DIRDEPS+= 	lib/libsysdecode
+DIRDEPS+= 	lib/libtacplus
+DIRDEPS+= 	lib/libufs
+DIRDEPS+= 	lib/libugidfw
+DIRDEPS+= 	lib/libulog
+DIRDEPS+= 	lib/libutil
+DIRDEPS+= 	lib/libvgl
+DIRDEPS+= 	lib/libwrap
+DIRDEPS+= 	lib/liby
+DIRDEPS+= 	lib/libyaml
+DIRDEPS+= 	lib/libypclnt
+DIRDEPS+= 	lib/libz
+DIRDEPS+= 	lib/msun
+DIRDEPS+= 	lib/ncurses/form
+DIRDEPS+= 	lib/ncurses/formw
+DIRDEPS+= 	lib/ncurses/menu
+DIRDEPS+= 	lib/ncurses/menuw
+DIRDEPS+= 	lib/ncurses/ncurses
+DIRDEPS+= 	lib/ncurses/ncursesw
+DIRDEPS+= 	lib/ncurses/panel
+DIRDEPS+= 	lib/ncurses/panelw
 
-.if ${MK_CLANG} != "no" && \
-    (${MACHINE_CPUARCH} == "aarch64" || ${MACHINE_CPUARCH} == "amd64" || \
-    (${MACHINE_CPUARCH} == "arm" && ${MACHINE_ARCH} != "armeb") || \
-    (${MACHINE_CPUARCH} == "i386"))
-DIRDEPS+= \
-	lib/libclang_rt/asan-preinit \
-	lib/libclang_rt/asan \
-	lib/libclang_rt/asan_cxx \
-	lib/libclang_rt/include \
-	lib/libclang_rt/profile \
-	lib/libclang_rt/safestack \
-	lib/libclang_rt/ubsan_standalone \
-	lib/libclang_rt/ubsan_standalone_cxx \
+if ${MK_ATF} != "no"
+DIRDEPS+= 	lib/atf/libatf-c 
+DIRDEPS+= 	lib/atf/libatf-c++ 
+.endif
 
+.if ${MK_BLUETOOTH} != "no"
+DIRDEPS+= 	lib/libbluetooth
+DIRDEPS+= 	lib/libsdp
+.endif
+
+.if ${MK_BSNMP} != "no"
+DIRDEPS+= 	lib/libbsnmp
+.endif
+
+.if ${MK_CASPER} != "no"
+DIRDEPS+= 	lib/libcasper/libcasper
+DIRDEPS+= 	lib/libcasper/services/cap_dns
+DIRDEPS+= 	lib/libcasper/services/cap_grp
+DIRDEPS+= 	lib/libcasper/services/cap_pwd
+DIRDEPS+= 	lib/libcasper/services/cap_random
+DIRDEPS+= 	lib/libcasper/services/cap_sysctl
+.endif
+
+.if ${MK_LIBCPLUSPLUS} != "no"
+DIRDEPS+= 	lib/libc++ 
+DIRDEPS+= 	lib/libcxxrt
+.endif
+
+.if ${MK_CUSE} != "no"
+DIRDEPS+= 	lib/libcuse
+.endif
+
+.if ${MK_FILE} != "no"
+DIRDEPS+= 	lib/libmagic
+.endif
+
+.if ${MK_GSSAPI} != "no"
+DIRDEPS+= 	lib/libgssapi
+DIRDEPS+= 	lib/librpcsec_gss
+.endif
+
+.if ${MK_ICONV} != "no"
+DIRDEPS+= 	lib/libiconv_modules/BIG5
+DIRDEPS+= 	lib/libiconv_modules/DECHanyu
+DIRDEPS+= 	lib/libiconv_modules/EUC
+DIRDEPS+= 	lib/libiconv_modules/EUCTW
+DIRDEPS+= 	lib/libiconv_modules/GBK2K
+DIRDEPS+= 	lib/libiconv_modules/HZ
+DIRDEPS+= 	lib/libiconv_modules/ISO2022
+DIRDEPS+= 	lib/libiconv_modules/JOHAB
+DIRDEPS+= 	lib/libiconv_modules/MSKanji
+DIRDEPS+= 	lib/libiconv_modules/UES
+DIRDEPS+= 	lib/libiconv_modules/UTF1632
+DIRDEPS+= 	lib/libiconv_modules/UTF7
+DIRDEPS+= 	lib/libiconv_modules/UTF8
+DIRDEPS+= 	lib/libiconv_modules/VIQR
+DIRDEPS+= 	lib/libiconv_modules/ZW
+DIRDEPS+= 	lib/libiconv_modules/iconv_none
+DIRDEPS+= 	lib/libiconv_modules/iconv_std
+DIRDEPS+= 	lib/libiconv_modules/mapper_646
+DIRDEPS+= 	lib/libiconv_modules/mapper_none
+DIRDEPS+= 	lib/libiconv_modules/mapper_parallel
+DIRDEPS+= 	lib/libiconv_modules/mapper_serial
+DIRDEPS+= 	lib/libiconv_modules/mapper_std
+DIRDEPS+= 	lib/libiconv_modules/mapper_zone
+.endif
+
+.if ${MK_KERBEROS_SUPPORT} != "no"
+DIRDEPS+= 	lib/libcom_err/doc
+.endif
+
+.if ${MK_LDNS} != "no"
+DIRDEPS+= 	lib/libldns
+.endif
+
+.if ${MK_LIBRESSL} != "no"
+DIRDEPS+= 	lib/libmp
+.endif
+
+.if ${MK_LIBTHR} != "no"
+DIRDEPS+= 	lib/libthr
+DIRDEPS+= 	lib/libthread_db
 .endif
 
 .if ${MK_NAND} != "no"
 DIRDEPS+= lib/libnandfs
 .endif
 
-.if ${MK_CASPER} != "no"
-DIRDEPS+= \
-	lib/libcasper/libcasper \
-	lib/libcasper/services/cap_dns \
-	lib/libcasper/services/cap_grp \
-	lib/libcasper/services/cap_pwd \
-	lib/libcasper/services/cap_random \
-	lib/libcasper/services/cap_sysctl \
-
+.if ${MK_NETGRAPH} != "no"
+DIRDEPS+= 	lib/libnetgraph
 .endif
 
-.if ${MK_OFED} != "no"
-DIRDEPS+= \
-	contrib/ofed/usr.lib/libcxgb4 \
-	contrib/ofed/usr.lib/libibcm \
-	contrib/ofed/usr.lib/libibcommon \
-	contrib/ofed/usr.lib/libibmad \
-	contrib/ofed/usr.lib/libibumad \
-	contrib/ofed/usr.lib/libibverbs \
-	contrib/ofed/usr.lib/libmlx4 \
-	contrib/ofed/usr.lib/libmthca \
-	contrib/ofed/usr.lib/libopensm \
-	contrib/ofed/usr.lib/libosmcomp \
-	contrib/ofed/usr.lib/libosmvendor \
-	contrib/ofed/usr.lib/librdmacm \
-	contrib/ofed/usr.lib/libsdp
+.if ${MK_NIS} != "no"
+_libypclnt=	libypclnt
+.endif
+
+.if ${MK_PMC} != "no"
+DIRDEPS+= 	lib/libpmc
+.endif
+
+.if ${MK_RADIUS_SUPPORT} != "no"
+DIRDEPS+= 	lib/libradius
+.endif
+
+.if ${MK_TOOLCHAIN} != "no"
+DIRDEPS+= 	lib/libelf
+DIRDEPS+= 	lib/libelftc
+DIRDEPS+= 	lib/libpe
+.endif
+
+.if ${MK_USB} != "no"
+DIRDEPS+= 	lib/libusb
+DIRDEPS+= 	lib/libusbhid
+.endif
+
+.if ${MACHINE_CPUARCH} == "arm" || \
+	${MACHINE_CPUARCH} == "mips" || \
+    ${MACHINE_CPUARCH} == "riscv"
+DIRDEPS+= 	lib/libproc
+DIRDEPS+= 	lib/librtld_db
 .endif
 
 .include <dirdeps.mk>
