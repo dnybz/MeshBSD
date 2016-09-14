@@ -158,6 +158,16 @@ SUBDIR+= 	ypcat
 SUBDIR+= 	ypmatch
 SUBDIR+= 	ypwhich
 .endif
+
+#
+# XXX: openssl-util shall replaced by libressl-util
+#
+.if ${MK_LIBRESSL} != "no"
+SUBDIR+=bdes openssl
+.if ${MK_OPENSSH} != "no"
+SUBDIR+=scp sftp ssh ssh-add ssh-agent ssh-keygen ssh-keyscan
+.endif
+.endif
 .endif
 
 .include <bsd.arch.inc.mk>

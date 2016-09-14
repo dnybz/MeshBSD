@@ -130,6 +130,9 @@ SUBDIR+= 	yppush
 SUBDIR+= 	ypserv
 SUBDIR+= 	ypset
 .endif
+.if ${MK_OPENSSH} != "no"
+SUBDIR+=sshd
+.endif
 .endif
 
 .if ${MK_NAND} != "no"
