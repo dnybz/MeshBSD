@@ -71,7 +71,7 @@ MLINKS+=libradius.3 rad_acct_open.3 \
 
 WARNS?=		3
 
-.if ${MK_OPENSSL} != "no"
+.if ${MK_LIBRESSL} != "no"
 LIBADD+=	crypto
 CFLAGS+=	-DWITH_SSL
 .else

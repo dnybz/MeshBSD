@@ -2,7 +2,7 @@
 .include <src.opts.mk>
 
 PACKAGE=lib${LIB}
-_LIBARCHIVEDIR=	${.CURDIR}/../../contrib/libarchive
+_LIBARCHIVEDIR=	${.CURDIR}/../../tools/libarchive
 
 LIB=	archive
 
@@ -16,7 +16,7 @@ SHLIB_MAJOR= 6
 CFLAGS+=	-DPLATFORM_CONFIG_H=\"${.CURDIR}/config_freebsd.h\"
 CFLAGS+=	-I${.OBJDIR}
 
-.if ${MK_OPENSSL} != "no"
+.if ${MK_LIBRESSL} != "no"
 CFLAGS+=	-DWITH_OPENSSL
 LIBADD+=	crypto
 .else
@@ -411,9 +411,5 @@ MLINKS+=	archive_write_set_options.3 archive_write_set_filter_option.3
 MLINKS+=	archive_write_set_options.3 archive_write_set_format_option.3
 MLINKS+=	archive_write_set_options.3 archive_write_set_option.3
 MLINKS+=	libarchive.3 archive.3
-
-.if ${MK_TESTS} != "no"
-SUBDIR+=	tests
-.endif
 
 .include <bsd.lib.mk>

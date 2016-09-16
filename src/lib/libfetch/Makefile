@@ -15,7 +15,7 @@ CLEANFILES=	ftperr.h httperr.h
 CFLAGS+=	-DINET6
 .endif
 
-.if ${MK_OPENSSL} != "no"
+.if ${MK_LIBRESSL} != "no"
 CFLAGS+=	-DWITH_SSL
 LIBADD+=	ssl crypto
 .else

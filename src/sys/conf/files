@@ -160,9 +160,9 @@ libfdt/fdt_wip.c	optional fdt
 #
 # libnv(4)
 #
-contrib/libnv/dnvlist.c		standard
-contrib/libnv/nvlist.c		standard
-contrib/libnv/nvpair.c		standard
+libnv/dnvlist.c		standard
+libnv/nvlist.c		standard
+libnv/nvpair.c		standard
 
 #
 # crypto(4)

@@ -40,9 +40,5 @@ WARNS?=		2
 
 PRECIOUSLIB=
 
-.if ${MK_TESTS} != "no"
-SUBDIR+=	tests
-.endif
-
 .include <bsd.lib.mk>
 .include <bsd.subdir.mk>

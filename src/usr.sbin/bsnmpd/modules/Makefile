@@ -2,7 +2,7 @@
 
 .include <src.opts.mk>
 
-.PATH: ${.CURDIR}/../../../contrib/bsnmp/snmpd
+.PATH: ${.CURDIR}/../../../tools/bsnmp/snmpd
 
 .if ${MK_ATM} != "no"
 _snmp_atm= snmp_atm

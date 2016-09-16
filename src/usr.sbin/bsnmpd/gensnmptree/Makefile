@@ -2,7 +2,7 @@
 #
 # Author: Harti Brandt <harti@freebsd.org>
 
-CONTRIB=${.CURDIR}/../../../contrib/bsnmp
+CONTRIB=${.CURDIR}/../../../tools/bsnmp
 .PATH: ${CONTRIB}/gensnmptree
 
 PROG=	gensnmptree
