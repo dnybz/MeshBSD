@@ -1,2 +1,0 @@
-atf-check.full: /usr/lib/libc.a /usr/lib/libprivateatf-c++.a /usr/lib/libprivateatf-c.a
-atf-check.full: /usr/lib/libc++.a

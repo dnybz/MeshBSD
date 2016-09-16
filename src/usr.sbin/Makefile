@@ -12,6 +12,7 @@ SUBDIR+= 	adduser
 SUBDIR+= 	amd
 SUBDIR+= 	ancontrol
 SUBDIR+= 	autofs
+SUBDIR+= 	chkgrp
 SUBDIR+= 	chown
 SUBDIR+= 	chroot
 SUBDIR+= 	config
@@ -74,6 +75,10 @@ SUBDIR+= 	auditreduce
 
 .if ${MK_BLUETOOTH} != "no"
 SUBDIR+= 	bluetooth
+.endif
+
+.if ${MK_BSNMP} != "no"
+SUBDIR+= 	bsnmpd
 .endif
 
 .if ${MK_INET_SUPPORT} != "no"

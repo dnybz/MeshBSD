@@ -12,18 +12,15 @@ SUBDIR=	\
 
 BIN1=	rc
 
-MTREE=	BSD.include.dist BSD.root.dist BSD.usr.dist BSD.var.dist
+MTREE= 	BSD.include.dist
+MTREE+= 	BSD.root.dist 
+MTREE+= 	BSD.usr.dist
+MTREE+= 	BSD.var.dist
 .if ${MK_LIB32} != "no"
 MTREE+=	BSD.lib32.dist
 .endif
 .if ${MK_LIBSOFT} != "no"
 MTREE+=	BSD.libsoft.dist
-.endif
-.if ${MK_TESTS} != "no"
-MTREE+=	BSD.tests.dist
-.endif
-.if ${MK_SENDMAIL} != "no"
-MTREE+=	BSD.sendmail.dist
 .endif
 
 # Special top level files for FreeBSD
@@ -203,25 +200,15 @@ MTREE_FSCHG=	-i
 MTREES=		mtree/BSD.root.dist		/		\
 		mtree/BSD.var.dist		/var		\
 		mtree/BSD.usr.dist		/usr		\
-		mtree/BSD.include.dist		/usr/include	\
-		mtree/BSD.debug.dist		/usr/lib
+		mtree/BSD.include.dist		/usr/include
 .if ${MK_GROFF} != "no"
 MTREES+=	mtree/BSD.groff.dist		/usr
 .endif
 .if ${MK_LIB32} != "no"
 MTREES+=	mtree/BSD.lib32.dist		/usr
-MTREES+=	mtree/BSD.lib32.dist		/usr/lib/debug/usr
 .endif
 .if ${MK_LIBSOFT} != "no"
 MTREES+=	mtree/BSD.libsoft.dist		/usr
-MTREES+=	mtree/BSD.libsoft.dist		/usr/lib/debug/usr
-.endif
-.if ${MK_TESTS} != "no"
-MTREES+=	mtree/BSD.tests.dist		${TESTSBASE}
-MTREES+=	mtree/BSD.tests.dist		/usr/lib/debug/${TESTSBASE}
-.endif
-.if ${MK_SENDMAIL} != "no"
-MTREES+=	mtree/BSD.sendmail.dist		/
 .endif
 .for mtree in ${LOCAL_MTREE}
 MTREES+=	../${mtree}			/

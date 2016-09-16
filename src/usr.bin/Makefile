@@ -6,7 +6,6 @@
 SUBDIR= 	addr2line
 SUBDIR+= 	alias
 SUBDIR+= 	ar
-SUBDIR+= 	at
 SUBDIR+= 	awk
 SUBDIR+= 	basename
 SUBDIR+= 	bmake
@@ -15,6 +14,7 @@ SUBDIR+= 	cap_mkdb
 SUBDIR+= 	chkey
 SUBDIR+= 	cksum
 SUBDIR+= 	cmp
+SUBDIR+= 	compile_et
 SUBDIR+= 	cpio
 SUBDIR+= 	cut
 SUBDIR+= 	dirname
@@ -128,6 +128,10 @@ SUBDIR+= 	xz
 SUBDIR+= 	xzdec
 SUBDIR+= 	yacc
 SUBDIR+= 	yes
+
+.if ${MK_AT} != "no"
+SUBDIR+= 	at
+.endif
 
 .if ${MK_BLUETOOTH} != "no"
 SUBDIR+= 	bluetooth

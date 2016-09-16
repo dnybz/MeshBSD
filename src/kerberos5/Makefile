@@ -6,7 +6,7 @@ SUBDIR_PARALLEL=
 
 # These are the programs which depend on Kerberos.
 KPROGS=	lib/libpam \
-	secure/lib/libssh secure/usr.bin/ssh secure/usr.sbin/sshd
+	lib/libssh usr.bin/ssh usr.sbin/sshd
 
 # This target is used to rebuild these programs WITH Kerberos.
 kerberize:
