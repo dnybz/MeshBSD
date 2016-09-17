@@ -46,8 +46,4 @@ LIBADD=	util
 
 WARNS?=	2
 
-.if ${MK_TESTS} != "no"
-SUBDIR+=    tests
-.endif
-
 .include <bsd.prog.mk>

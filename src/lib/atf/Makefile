@@ -28,11 +28,6 @@
 .include <src.opts.mk>
 
 SUBDIR=		libatf-c \
-		libatf-c++ \
-                ${_tests}
-
-.if ${MK_TESTS} != "no"
-_tests= 	tests
-.endif
+		libatf-c++ 
 
 .include <bsd.subdir.mk>

@@ -12,10 +12,6 @@ SUBDIR+= libgcov libgomp
 SUBDIR+= libssp
 .endif
 
-.if ${MK_TESTS} != "no"
-SUBDIR+= tests
-.endif
-
 .if ${MK_BINUTILS} != "no" && ${MK_GDB} != "no"
 SUBDIR+=	libreadline
 .endif

@@ -45,10 +45,6 @@ SRCS+=	inet6.c
 CFLAGS+=-DINET6
 .endif
 
-.if ${MK_OFED} != "no"
-CFLAGS+=-DSDP
-.endif
-
 .if ${MK_PF} != "no"
 CFLAGS+=-DPF
 .endif

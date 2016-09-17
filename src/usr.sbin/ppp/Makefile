@@ -85,7 +85,7 @@ CFLAGS+=-DNOSUID
 SRCS+=	id.c
 .endif
 
-.if ${MK_OPENSSL} == "no" || defined(PPP_NO_DES)
+.if ${MK_LIBRESSL} == "no" || defined(PPP_NO_DES)
 CFLAGS+=-DNODES
 .else
 SRCS+=	chap_ms.c mppe.c

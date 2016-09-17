@@ -3,9 +3,9 @@
 .include <src.opts.mk>
 
 GCCVER=	4.2
-GCCDIR=	${.CURDIR}/../../../contrib/gcc
-GCCLIB=	${.CURDIR}/../../../contrib/gcclibs
-SRCDIR=	${.CURDIR}/../../../contrib/libstdc++
+GCCDIR=	${.CURDIR}/../../../tools/gcc
+GCCLIB=	${.CURDIR}/../../../tools/gcclibs
+SRCDIR=	${.CURDIR}/../../../tools/libstdc++
 SUPDIR=	${SRCDIR}/libsupc++
 
 .PATH: ${SRCDIR}/src ${SRCDIR}/libmath ${SRCDIR}/config/io \

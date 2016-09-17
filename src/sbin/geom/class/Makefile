@@ -4,7 +4,7 @@
 
 SUBDIR=	cache
 SUBDIR+=concat
-.if ${MK_OPENSSL} != "no"
+.if ${MK_LIBRESSL} != "no"
 SUBDIR+=eli
 .endif
 SUBDIR+=journal

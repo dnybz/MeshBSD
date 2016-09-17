@@ -7,8 +7,4 @@ PROG=	chown
 LINKS=	${BINDIR}/chown /usr/bin/chgrp
 MAN=	chgrp.1 chown.8
 
-.if ${MK_TESTS} != "no"
-SUBDIR+= tests
-.endif
-
 .include <bsd.prog.mk>

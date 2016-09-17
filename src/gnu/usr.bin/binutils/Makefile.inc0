@@ -26,7 +26,7 @@ TARGET_BIG_ENDIAN=t
 # added to it as we descend into subdirectories.
 RELTOP:= ..
 
-RELSRC=	${RELTOP}/../../../contrib/binutils
+RELSRC=	${RELTOP}/../../../tools/binutils
 SRCDIR=	${.CURDIR}/${RELSRC}
 
 .if ${TARGET_CPUARCH} == "arm" || ${TARGET_CPUARCH} == "i386" || \

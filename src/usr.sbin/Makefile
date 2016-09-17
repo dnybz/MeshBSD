@@ -9,9 +9,7 @@
 
 SUBDIR= 	ac
 SUBDIR+= 	adduser
-SUBDIR+= 	amd
 SUBDIR+= 	ancontrol
-SUBDIR+= 	autofs
 SUBDIR+= 	chkgrp
 SUBDIR+= 	chown
 SUBDIR+= 	chroot
@@ -66,6 +64,11 @@ SUBDIR+= 	wpa
 SUBDIR+= 	zic
 SUBDIR+= 	zzz
 
+.if ${MK_AMD} != "no"
+SUBDIR+= 	amd
+SUBDIR+= 	autofs
+.endif
+
 .if ${MK_AUDIT} != "no" 
 SUBDIR+= 	audit
 SUBDIR+= 	auditd
@@ -104,7 +107,6 @@ SUBDIR+= 	ftp-proxy
 SUBDIR+= 	fwcontrol
 SUBDIR+= 	inetd
 SUBDIR+= 	mailstats
-SUBDIR+= 	mailwrapper
 SUBDIR+= 	nscd
 SUBDIR+= 	ntp
 SUBDIR+= 	phttpget
@@ -123,7 +125,7 @@ SUBDIR+= 	rtsold
 SUBDIR+= 	setfib
 SUBDIR+= 	services_mkdb
 SUBDIR+= 	tcpdrop
-if ${MK_NIS} != "no"}
+.if ${MK_NIS} != "no"
 SUBDIR+= 	rpc.yppasswdd
 SUBDIR+= 	rpc.ypupdated
 SUBDIR+= 	rpc.ypxfrd

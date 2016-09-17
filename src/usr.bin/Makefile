@@ -10,6 +10,8 @@ SUBDIR+= 	awk
 SUBDIR+= 	basename
 SUBDIR+= 	bmake
 SUBDIR+= 	bzip2
+SUBDIR+= 	c89
+SUBDIR+= 	c99
 SUBDIR+= 	cap_mkdb
 SUBDIR+= 	chkey
 SUBDIR+= 	cksum
@@ -157,7 +159,7 @@ SUBDIR+= 	ssh-copy-id
 SUBDIR+= 	tftp
 .endif
 SUBDIR+= 	whois
-if ${MK_NIS} != "no"}
+.if ${MK_NIS} != "no"
 SUBDIR+= 	ypcat
 SUBDIR+= 	ypmatch
 SUBDIR+= 	ypwhich

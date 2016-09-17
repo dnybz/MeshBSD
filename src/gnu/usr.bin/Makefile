@@ -34,10 +34,6 @@ _dtc=		dtc
 _rcs=		rcs
 .endif
 
-.if ${MK_TESTS} != "no"
-_tests=		tests
-.endif
-
 .if ${MK_BINUTILS} != "no"
 _binutils=	binutils
 .if ${MK_GDB} != "no"

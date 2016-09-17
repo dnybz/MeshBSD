@@ -408,28 +408,21 @@ LIBAMU?=	${LIBAMUDIR}/libamu/libamu.a
 # Define a directory for each library.  This is useful for adding -L in when
 # not using a --sysroot or for meta mode bootstrapping when there is no
 # Makefile.depend.  These are sorted by directory.
-LIBAVLDIR=	${OBJTOP}/cddl/lib/libavl
-LIBCTFDIR=	${OBJTOP}/cddl/lib/libctf
-LIBDTRACEDIR=	${OBJTOP}/cddl/lib/libdtrace
-LIBNVPAIRDIR=	${OBJTOP}/cddl/lib/libnvpair
-LIBUMEMDIR=	${OBJTOP}/cddl/lib/libumem
-LIBUUTILDIR=	${OBJTOP}/cddl/lib/libuutil
-LIBZFSDIR=	${OBJTOP}/cddl/lib/libzfs
-LIBZFS_COREDIR=	${OBJTOP}/cddl/lib/libzfs_core
-LIBZPOOLDIR=	${OBJTOP}/cddl/lib/libzpool
-LIBCXGB4DIR=	${OBJTOP}/contrib/ofed/usr.lib/libcxgb4
-LIBIBCMDIR=	${OBJTOP}/contrib/ofed/usr.lib/libibcm
-LIBIBCOMMONDIR=	${OBJTOP}/contrib/ofed/usr.lib/libibcommon
-LIBIBMADDIR=	${OBJTOP}/contrib/ofed/usr.lib/libibmad
-LIBIBUMADDIR=	${OBJTOP}/contrib/ofed/usr.lib/libibumad
-LIBIBVERBSDIR=	${OBJTOP}/contrib/ofed/usr.lib/libibverbs
-LIBMLX4DIR=	${OBJTOP}/contrib/ofed/usr.lib/libmlx4
-LIBMTHCADIR=	${OBJTOP}/contrib/ofed/usr.lib/libmthca
-LIBOPENSMDIR=	${OBJTOP}/contrib/ofed/usr.lib/libopensm
-LIBOSMCOMPDIR=	${OBJTOP}/contrib/ofed/usr.lib/libosmcomp
-LIBOSMVENDORDIR=	${OBJTOP}/contrib/ofed/usr.lib/libosmvendor
-LIBRDMACMDIR=	${OBJTOP}/contrib/ofed/usr.lib/librdmacm
-LIBIBSDPDIR=	${OBJTOP}/contrib/ofed/usr.lib/libsdp
+
+#
+# XXX: dtrace stuff will be integrated sonner or later ...
+#
+# LIBAVLDIR=	${OBJTOP}/cddl/lib/libavl
+# LIBCTFDIR=	${OBJTOP}/cddl/lib/libctf
+# LIBDTRACEDIR=	${OBJTOP}/cddl/lib/libdtrace
+# LIBNVPAIRDIR=	${OBJTOP}/cddl/lib/libnvpair
+# LIBUMEMDIR=	${OBJTOP}/cddl/lib/libumem
+# LIBUUTILDIR=	${OBJTOP}/cddl/lib/libuutil
+# LIBZFSDIR=	${OBJTOP}/cddl/lib/libzfs
+# LIBZFS_COREDIR=	${OBJTOP}/cddl/lib/libzfs_core
+# LIBZPOOLDIR=	${OBJTOP}/cddl/lib/libzpool
+#
+LIBIBSDPDIR=	${OBJTOP}/lib/libsdp
 LIBDIALOGDIR=	${OBJTOP}/gnu/lib/libdialog
 LIBGCOVDIR=	${OBJTOP}/gnu/lib/libgcov
 LIBGOMPDIR=	${OBJTOP}/gnu/lib/libgomp
@@ -477,9 +470,9 @@ LIBNCURSESDIR=	${OBJTOP}/lib/ncurses/ncurses
 LIBNCURSESWDIR=	${OBJTOP}/lib/ncurses/ncursesw
 LIBPANELDIR=	${OBJTOP}/lib/ncurses/panel
 LIBPANELWDIR=	${OBJTOP}/lib/ncurses/panelw
-LIBCRYPTODIR=	${OBJTOP}/secure/lib/libcrypto
-LIBSSHDIR=	${OBJTOP}/secure/lib/libssh
-LIBSSLDIR=	${OBJTOP}/secure/lib/libssl
+LIBCRYPTODIR=	${OBJTOP}/lib/libcrypto
+LIBSSHDIR=	${OBJTOP}/lib/libssh
+LIBSSLDIR=	${OBJTOP}/lib/libssl
 LIBTEKENDIR=	${OBJTOP}/sys/teken/libteken
 LIBEGACYDIR=	${OBJTOP}/tools/build
 LIBLNDIR=	${OBJTOP}/usr.bin/lex/lib

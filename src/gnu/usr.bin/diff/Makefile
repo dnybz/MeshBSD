@@ -2,11 +2,11 @@
 
 .include <src.opts.mk>
 
-DIFFSRC=${.CURDIR}/../../../contrib/diff/src
+DIFFSRC=${.CURDIR}/../../../tools/diff/src
 .PATH: ${DIFFSRC} \
-       ${.CURDIR}/../../../contrib/diff/lib \
-       ${.CURDIR}/../../../contrib/diff/man \
-       ${.CURDIR}/../../../contrib/diff/doc
+       ${.CURDIR}/../../../tools/diff/lib \
+       ${.CURDIR}/../../../tools/diff/man \
+       ${.CURDIR}/../../../tools/diff/doc
 
 PROG=	diff
 SRCS=   analyze.c context.c diff.c dir.c ed.c ifdef.c io.c \
@@ -20,17 +20,13 @@ CFLAGS+=-funsigned-char
 
 CFLAGS+=-DHAVE_CONFIG_H
 CFLAGS+=-DPR_PROGRAM=\"/usr/bin/pr\"
-CFLAGS+=-I${.CURDIR}/../../../contrib/diff
-CFLAGS+=-I${.CURDIR}/../../../contrib/diff/src
-CFLAGS+=-I${.CURDIR}/../../../contrib/diff/lib
+CFLAGS+=-I${.CURDIR}/../../../tools/diff
+CFLAGS+=-I${.CURDIR}/../../../tools/diff/src
+CFLAGS+=-I${.CURDIR}/../../../tools/diff/lib
 CFLAGS+=-I${DESTDIR}/usr/include/gnu
 
 MAN=	diff.1 diff.7
 
 LIBADD+=	gnuregex
-
-.if ${MK_TESTS} != "no"
-SUBDIR+=	tests
-.endif
 
 .include <bsd.prog.mk>

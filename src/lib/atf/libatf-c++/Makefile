@@ -37,7 +37,7 @@ LIBADD+=	atf_c
 
 LDFLAGS+=	-L${.OBJDIR}/../libatf-c
 
-ATF=		${.CURDIR:H:H:H}/lib/atf/src
+ATF=		${.CURDIR:H:H:H}/external/atf
 .PATH:		${ATF}
 .PATH:		${ATF}/atf-c++
 .PATH:		${ATF}/atf-c++/detail
@@ -71,10 +71,6 @@ INCSDIR_atf-c++.hpp= ${INCLUDEDIR}
 
 MAN=		atf-c++.3
 MLINKS+=	atf-c++.3 atf-c-api++.3  # Backwards compatibility.
-
-.if ${MK_TESTS} != "no"
-SUBDIR=		tests
-.endif
 
 .include "../common.mk"
 .include <bsd.lib.mk>

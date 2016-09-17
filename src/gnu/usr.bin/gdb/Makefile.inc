@@ -9,7 +9,7 @@ BMAKE_GDB= ${.CURDIR}/..
 BMAKE_ROOT= ${BMAKE_GDB}/..
 BMAKE_BU= ${BMAKE_ROOT}/binutils
 
-CNTRB_ROOT= ${BMAKE_ROOT}/../../contrib
+CNTRB_ROOT= ${BMAKE_ROOT}/../../tools
 CNTRB_BU= ${CNTRB_ROOT}/binutils
 CNTRB_GDB= ${CNTRB_ROOT}/gdb
 CNTRB_RL= ${CNTRB_ROOT}/libreadline

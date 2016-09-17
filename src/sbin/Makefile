@@ -75,7 +75,7 @@ SUBDIR+= 	ping6
 
 .if ${MK_INET_SUPPORT} != "no" || \
     ${MK_INET6_SUPPORT} != "no"
-	SUBDIR+= 	nfsiod
+SUBDIR+= 	nfsiod
 .endif
 
 .if ${MK_NAND} != "no"

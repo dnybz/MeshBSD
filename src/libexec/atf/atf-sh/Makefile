@@ -28,7 +28,7 @@
 .include <src.opts.mk>
 .include <bsd.init.mk>
 
-ATF=		${.CURDIR:H:H:H}/lib/atf/src
+ATF=		${.CURDIR:H:H:H}/external/atf
 .PATH:		${ATF}/atf-sh
 
 PROG_CXX=	atf-sh
@@ -48,10 +48,6 @@ FILESGROUPS=	SUBR
 
 SUBRDIR=	${SHAREDIR}/atf
 SUBR=		libatf-sh.subr
-
-.if ${MK_TESTS} != "no"
-SUBDIR+=	tests
-.endif
 
 .include "../../../lib/atf/common.mk"
 .include <bsd.prog.mk>

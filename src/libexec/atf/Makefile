@@ -25,6 +25,6 @@
 #
 # $FreeBSD: head/libexec/atf/Makefile 267181 2014-06-06 18:58:06Z jmmv $
 
-SUBDIR=	atf-check atf-sh tests
+SUBDIR=	atf-check atf-sh
 
 .include <bsd.subdir.mk>

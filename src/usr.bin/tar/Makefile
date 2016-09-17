@@ -1,7 +1,7 @@
 # $FreeBSD: head/usr.bin/tar/Makefile 299529 2016-05-12 10:16:16Z mm $
 .include <src.opts.mk>
 
-_LIBARCHIVEDIR=	${.CURDIR}/../../contrib/libarchive
+_LIBARCHIVEDIR=	${.CURDIR}/../../tools/libarchive
 
 PROG=	bsdtar
 BSDTAR_VERSION_STRING=	3.2.0
@@ -32,9 +32,5 @@ CFLAGS+=	-I${_LIBARCHIVEDIR}/tar -I${_LIBARCHIVEDIR}/libarchive
 CFLAGS+=	-I${_LIBARCHIVEDIR}/libarchive_fe
 SYMLINKS=	bsdtar ${BINDIR}/tar
 MLINKS=	bsdtar.1 tar.1
-
-.if ${MK_TESTS} != "no"
-SUBDIR+=	tests
-.endif
 
 .include <bsd.prog.mk>

@@ -20,8 +20,4 @@ tokenizer.o: parser.h
 
 CLEANFILES+=	parser.c parser.h tokenizer.o
 
-.if ${MK_TESTS} != "no"
-SUBDIR+= tests
-.endif
-
 .include <bsd.prog.mk>

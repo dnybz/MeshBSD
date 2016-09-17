@@ -105,8 +105,4 @@ MAN+=	pf.conf.5 \
 	pf.os.5
 .endif
 
-.if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386"
-_boot.config.5=	boot.config.5
-.endif
-
 .include <bsd.prog.mk>

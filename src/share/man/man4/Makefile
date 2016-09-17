@@ -851,8 +851,8 @@ MAN+=		ng_bluetooth.4
 _ccd.4=		ccd.4
 .endif
 
-.if ${MK_TESTS} != "no"
-ATF=            ${.CURDIR}/../../../contrib/atf
+.if ${MK_ATF} != "no"
+ATF=            ${.CURDIR}/../../../external/atf
 .PATH:          ${ATF}/doc
 _atf_test_case.4=	atf-test-case.4
 .endif

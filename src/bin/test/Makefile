@@ -8,8 +8,4 @@ PROG=	test
 LINKS=	${BINDIR}/test ${BINDIR}/[
 MLINKS=	test.1 [.1
 
-.if ${MK_TESTS} != "no"
-SUBDIR+=    tests
-.endif
-
 .include <bsd.prog.mk>

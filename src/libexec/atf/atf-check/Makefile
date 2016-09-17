@@ -28,7 +28,7 @@
 .include <src.opts.mk>
 .include <bsd.init.mk>
 
-ATF=		${.CURDIR:H:H:H}/lib/atf/src
+ATF=		${.CURDIR:H:H:H}/external/atf
 .PATH:		${ATF}/atf-sh
 
 PROG_CXX=	atf-check
@@ -39,9 +39,5 @@ CFLAGS+=	-I${ATF}
 CFLAGS+=	-DATF_SHELL='"/bin/sh"'
 
 LIBADD=		atf_cxx
-
-.if ${MK_TESTS} != "no"
-SUBDIR+=	tests
-.endif
 
 .include <bsd.prog.mk>

@@ -7,8 +7,4 @@ PROG=	uudecode
 LINKS=	${BINDIR}/uudecode ${BINDIR}/b64decode
 MAN=
 
-.if ${MK_TESTS} != "no"
-SUBDIR+= tests
-.endif
-
 .include <bsd.prog.mk>

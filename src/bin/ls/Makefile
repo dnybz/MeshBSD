@@ -14,8 +14,4 @@ CFLAGS+= -DCOLORLS
 LIBADD+=	termcapw
 .endif
 
-.if ${MK_TESTS} != "no"
-SUBDIR+=	tests
-.endif
-
 .include <bsd.prog.mk>

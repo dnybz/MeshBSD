@@ -2,7 +2,7 @@
 
 .include <src.opts.mk>
 
-_LIBARCHIVEDIR=	${.CURDIR}/../../contrib/libarchive
+_LIBARCHIVEDIR=	${.CURDIR}/../../tools/libarchive
 _LIBARCHIVECONFDIR=	${.CURDIR}/../../lib/libarchive
 
 PROG=	bsdcpio
@@ -31,9 +31,5 @@ CFLAGS+=	-DHAVE_ICONV=1 -DHAVE_ICONV_H=1 -DICONV_CONST=const
 
 SYMLINKS=bsdcpio ${BINDIR}/cpio
 MLINKS= bsdcpio.1 cpio.1
-
-.if ${MK_TESTS} != "no"
-SUBDIR+=	tests
-.endif
 
 .include <bsd.prog.mk>

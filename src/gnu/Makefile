@@ -6,10 +6,6 @@
 SUBDIR= lib .WAIT \
 	${_tests} usr.bin
 
-.if ${MK_TESTS} != "no"
-_tests=	tests
-.endif
-
 SUBDIR_PARALLEL=
 
 .include <bsd.subdir.mk>

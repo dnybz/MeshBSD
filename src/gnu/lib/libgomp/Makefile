@@ -1,7 +1,7 @@
 # $FreeBSD: head/gnu/lib/libgomp/Makefile 282115 2015-04-27 21:27:51Z pfg $
 
-GCCDIR=	${.CURDIR}/../../../contrib/gcc
-GCCLIB=	${.CURDIR}/../../../contrib/gcclibs
+GCCDIR=	${.CURDIR}/../../../tools/gcc
+GCCLIB=	${.CURDIR}/../../../tools/gcclibs
 SRCDIR=	${GCCLIB}/libgomp
 
 .PATH: ${SRCDIR} ${SRCDIR}/config/posix

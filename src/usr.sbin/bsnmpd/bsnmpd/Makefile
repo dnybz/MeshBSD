@@ -4,7 +4,7 @@
 
 .include <src.opts.mk>
 
-CONTRIB=${.CURDIR}/../../../contrib/bsnmp
+CONTRIB=${.CURDIR}/../../../tools/bsnmp
 .PATH: ${CONTRIB}/snmpd
 
 PROG=	bsnmpd
@@ -32,7 +32,7 @@ LIBADD=	begemot bsnmp wrap
 
 LDFLAGS= -Wl,-export-dynamic
 
-.if ${MK_OPENSSL} != "no"
+.if ${MK_LIBRESSL} != "no"
 CFLAGS+= -DHAVE_LIBCRYPTO
 .endif
 

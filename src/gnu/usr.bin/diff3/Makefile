@@ -1,9 +1,9 @@
 # $FreeBSD: head/gnu/usr.bin/diff3/Makefile 204227 2010-02-22 22:32:24Z delphij $
 
-DIFFSRC=${.CURDIR}/../../../contrib/diff/src
+DIFFSRC=${.CURDIR}/../../../tools/diff/src
 .PATH:  ${DIFFSRC} \
-	${.CURDIR}/../../../contrib/diff/lib \
-	${.CURDIR}/../../../contrib/diff/man
+	${.CURDIR}/../../../tools/diff/lib \
+	${.CURDIR}/../../../tools/diff/man
 
 PROG=		diff3
 SRCS=           diff3.c version-etc.c \
@@ -12,9 +12,9 @@ SRCS=           diff3.c version-etc.c \
 # Important for ctype macros!
 CFLAGS+=-funsigned-char
 
-CFLAGS+=-I${.CURDIR}/../../../contrib/diff/
-CFLAGS+=-I${.CURDIR}/../../../contrib/diff/src
-CFLAGS+=-I${.CURDIR}/../../../contrib/diff/lib
+CFLAGS+=-I${.CURDIR}/../../../tools/diff/
+CFLAGS+=-I${.CURDIR}/../../../tools/diff/src
+CFLAGS+=-I${.CURDIR}/../../../tools/diff/lib
 CFLAGS+=-DHAVE_CONFIG_H
 CFLAGS+=-DDEFAULT_DIFF_PROGRAM=\"/usr/bin/diff\"
 

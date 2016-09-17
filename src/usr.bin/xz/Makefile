@@ -10,7 +10,7 @@ LINKS+=	${BINDIR}/xz ${BINDIR}/lzcat
 
 MLINKS= xz.1 unxz.1 xz.1 lzma.1 xz.1 unlzma.1 xz.1 xzcat.1 xz.1 lzcat.1
 
-XZDIR=	${.CURDIR}/../../contrib/xz/src
+XZDIR=	${.CURDIR}/../../external/xz/src
 LZMALIBDIR=	${.CURDIR}/../../lib/liblzma
 
 .PATH: ${XZDIR}/xz
