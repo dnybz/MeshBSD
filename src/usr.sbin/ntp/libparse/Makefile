@@ -1,6 +1,6 @@
 # $FreeBSD: head/usr.sbin/ntp/libparse/Makefile 280849 2015-03-30 13:30:15Z cy $
 
-.PATH: ${.CURDIR}/../../../contrib/ntp/libparse
+.PATH: ${.CURDIR}/../../../external/ntp/libparse
 
 LIB=	parse
 INTERNALLIB=
@@ -12,8 +12,8 @@ SRCS=	binio.c	clk_computime.c	clk_dcf7000.c	clk_hopf6021.c \
 	info_trimble.c	mfp_mul.c	parse.c	parse_conf.c \
 	trim_info.c
 
-CFLAGS+= -I${.CURDIR}/../../../contrib/ntp/include \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/unix/include \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/include -I${.CURDIR}/../
+CFLAGS+= -I${.CURDIR}/../../../external/ntp/include \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/unix/include \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/include -I${.CURDIR}/../
 
 .include <bsd.lib.mk>

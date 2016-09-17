@@ -74,9 +74,6 @@ distribution:
 .if ${MK_AT} == "no"
 	sed -i "" -e 's;.*/usr/libexec/atrun;#&;' ${DESTDIR}/etc/crontab
 .endif
-.if ${MK_TCSH} == "no"
-	sed -i "" -e 's;/bin/csh;/bin/sh;' ${DESTDIR}/etc/master.passwd
-.endif
 	pwd_mkdb -i -p -d ${DESTDIR}/etc ${DESTDIR}/etc/master.passwd
 .if defined(NO_ROOT)
 	( \
@@ -115,19 +112,11 @@ distribution:
 	    ${BSM_ETC_RESTRICTED_FILES} ${BSM_ETC_DIR}
 	cd ${.CURDIR}; ${INSTALL} -o ${BINOWN} -g ${BINGRP} -m 0500 \
 	    ${BSM_ETC_EXEC_FILES} ${BSM_ETC_DIR}
-.if ${MK_UNBOUND} != "no"
-	if [ ! -e ${DESTDIR}/etc/unbound ]; then \
-		${INSTALL_SYMLINK} ../var/unbound ${DESTDIR}/etc/unbound; \
-	fi
-.endif
-.if ${MK_SENDMAIL} != "no"
-	${_+_}cd ${.CURDIR}/sendmail; ${MAKE} distribution
-.endif
 .if ${MK_OPENSSH} != "no"
 	cd ${.CURDIR}; ${INSTALL} -o ${BINOWN} -g ${BINGRP} -m 644 \
 	    ${SSH} ${DESTDIR}/etc/ssh
 .endif
-.if ${MK_OPENSSL} != "no"
+.if ${MK_LIBRESSL} != "no"
 	cd ${.CURDIR}; ${INSTALL} -o ${BINOWN} -g ${BINGRP} -m 644 \
 	    ${SSL} ${DESTDIR}/etc/ssl
 .endif
@@ -141,15 +130,6 @@ distribution:
 		dot.profile ${DESTDIR}/root/.profile; \
 	    rm -f ${DESTDIR}/.profile; \
 	    ln ${DESTDIR}/root/.profile ${DESTDIR}/.profile
-.if ${MK_TCSH} != "no"
-	cd ${.CURDIR}/root; \
-	    ${INSTALL} -o ${BINOWN} -g ${BINGRP} -m 644 \
-		dot.cshrc ${DESTDIR}/root/.cshrc; \
-	    ${INSTALL} -o ${BINOWN} -g ${BINGRP} -m 644 \
-		dot.login ${DESTDIR}/root/.login; \
-	    rm -f ${DESTDIR}/.cshrc; \
-	    ln ${DESTDIR}/root/.cshrc ${DESTDIR}/.cshrc
-.endif
 	cd ${.CURDIR}/mtree; ${INSTALL} -o ${BINOWN} -g ${BINGRP} -m 444 \
 	    ${MTREE} ${DESTDIR}/etc/mtree
 .if ${MK_MAIL} != "no"
@@ -266,7 +246,7 @@ distrib-dirs: ${MTREES:N/*} distrib-cleanup .PHONY
 		${INSTALL_SYMLINK} ../$$mandir \
 		    ${DESTDIR}${SHAREDIR}/man/en.UTF-8/; \
 	done
-.if ${MK_OPENSSL} != "no"
+.if ${MK_LIBRESSL} != "no"
 	cd ${DESTDIR}${SHAREDIR}/openssl/man; \
 	for mandir in man*; do \
 		${INSTALL_SYMLINK} ../$$mandir \

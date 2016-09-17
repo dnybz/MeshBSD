@@ -11,9 +11,4 @@ WARNS?=	3
 LIBADD=	crypt util sbuf
 
 .include <src.opts.mk>
-
-.if ${MK_TESTS} != "no"
-SUBDIR+=	tests
-.endif
-
 .include <bsd.prog.mk>

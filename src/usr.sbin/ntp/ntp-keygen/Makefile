@@ -4,25 +4,25 @@ MAN=
 
 .include <src.opts.mk>
 
-.PATH:	${.CURDIR}/../../../contrib/ntp/util \
-	${.CURDIR}/../../../contrib/ntp/ntpd
+.PATH:	${.CURDIR}/../../../external/ntp/util \
+	${.CURDIR}/../../../external/ntp/ntpd
 
 PROG=	ntp-keygen
 SRCS=	ntp-keygen.c ntp-keygen-opts.c
 
-CFLAGS+= -I${.CURDIR}/../../../contrib/ntp/include \
-	-I${.CURDIR}/../../../contrib/ntp/include \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/include \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/unix/include \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/pthreads/include \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/${NTP_ATOMIC}/include \
-	-I${.CURDIR}/../../../contrib/ntp/sntp/libopts \
+CFLAGS+= -I${.CURDIR}/../../../external/ntp/include \
+	-I${.CURDIR}/../../../external/ntp/include \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/include \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/unix/include \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/pthreads/include \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/${NTP_ATOMIC}/include \
+	-I${.CURDIR}/../../../external/ntp/sntp/libopts \
 	-I${.CURDIR}/../../../lib/libc/${MACHINE_ARCH} \
 	-I${.CURDIR}/../
 
 LIBADD+=	ntp opts pthread
 
-.if ${MK_OPENSSL} != "no"
+.if ${MK_LIBRESSL} != "no"
 LIBADD+=	crypto
 .endif
 

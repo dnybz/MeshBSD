@@ -5,25 +5,25 @@ MAN=
 .include <src.opts.mk>
 .include <bsd.own.mk>
 
-.PATH: ${.CURDIR}/../../../contrib/ntp/ntpq
+.PATH: ${.CURDIR}/../../../external/ntp/ntpq
 
 BINDIR=	/usr/bin
 
 PROG=	ntpq
 SRCS= 	ntpq.c ntpq-opts.c ntpq-subs.c version.c
 
-CFLAGS+= -I${.CURDIR}/../../../contrib/ntp/include \
-	-I${.CURDIR}/../../../contrib/ntp/include \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/include \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/unix/include \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/pthreads/include \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/${NTP_ATOMIC}/include \
-	-I${.CURDIR}/../../../contrib/ntp/sntp/libopts \
+CFLAGS+= -I${.CURDIR}/../../../external/ntp/include \
+	-I${.CURDIR}/../../../external/ntp/include \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/include \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/unix/include \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/pthreads/include \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/${NTP_ATOMIC}/include \
+	-I${.CURDIR}/../../../external/ntp/sntp/libopts \
 	-I${.CURDIR}/../
 
 LIBADD+=	edit ntp opts m pthread
 
-.if ${MK_OPENSSL} != "no"
+.if ${MK_LIBRESSL} != "no"
 LIBADD+=	crypto
 .else
 LIBADD+=	md

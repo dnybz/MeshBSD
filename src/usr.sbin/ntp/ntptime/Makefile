@@ -1,14 +1,14 @@
 # $FreeBSD: head/usr.sbin/ntp/ntptime/Makefile 280849 2015-03-30 13:30:15Z cy $
 
-.PATH: ${.CURDIR}/../../../contrib/ntp/util
+.PATH: ${.CURDIR}/../../../external/ntp/util
 
 PROG=	ntptime
 MAN=
 
-CFLAGS+= -I${.CURDIR}/../../../contrib/ntp/include \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/include/ \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/unix/include/ \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/pthreads/include \
+CFLAGS+= -I${.CURDIR}/../../../external/ntp/include \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/include/ \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/unix/include/ \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/pthreads/include \
 	-I${.CURDIR}/../
 
 LIBADD=	ntp pthread

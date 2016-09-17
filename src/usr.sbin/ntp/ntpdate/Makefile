@@ -2,21 +2,21 @@
 
 .include <src.opts.mk>
 
-.PATH: ${.CURDIR}/../../../contrib/ntp/ntpdate
+.PATH: ${.CURDIR}/../../../external/ntp/ntpdate
 
 PROG=	ntpdate
 MAN=
 SRCS=	ntpdate.c version.c
 
-CFLAGS+= -I${.CURDIR}/../../../contrib/ntp/include \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/include/ \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/unix/include/ \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/pthreads/include \
+CFLAGS+= -I${.CURDIR}/../../../external/ntp/include \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/include/ \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/unix/include/ \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/pthreads/include \
 	-I${.CURDIR}/../
 
 LIBADD=	ntp m pthread
 
-.if ${MK_OPENSSL} != "no"
+.if ${MK_LIBRESSL} != "no"
 LIBADD+=	crypto
 .else
 LIBADD+=	md

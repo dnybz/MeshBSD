@@ -1,10 +1,10 @@
 # $FreeBSD: head/usr.sbin/ntp/libntp/Makefile 298695 2016-04-27 07:46:38Z delphij $
 
-.PATH: ${.CURDIR}/../../../contrib/ntp/libntp \
-	${.CURDIR}/../../../contrib/ntp/lib/isc \
-	${.CURDIR}/../../../contrib/ntp/lib/isc/nls \
-	${.CURDIR}/../../../contrib/ntp/lib/isc/pthreads \
-	${.CURDIR}/../../../contrib/ntp/lib/isc/unix \
+.PATH: ${.CURDIR}/../../../external/ntp/libntp \
+	${.CURDIR}/../../../external/ntp/lib/isc \
+	${.CURDIR}/../../../external/ntp/lib/isc/nls \
+	${.CURDIR}/../../../external/ntp/lib/isc/pthreads \
+	${.CURDIR}/../../../external/ntp/lib/isc/unix \
 
 LIB= ntp
 INTERNALLIB=
@@ -71,11 +71,11 @@ ISC_SRCS= assertions.c \
 
 SRCS=	${NTP_SRCS} ${ISC_SRCS} version.c
 
-CFLAGS+= -I${.CURDIR}/../../../contrib/ntp/include \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/include \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/unix/include \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/pthreads/include \
-	-I${.CURDIR}/../../../contrib/ntp/sntp/libopts \
+CFLAGS+= -I${.CURDIR}/../../../external/ntp/include \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/include \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/unix/include \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/pthreads/include \
+	-I${.CURDIR}/../../../external/ntp/sntp/libopts \
 	-I${.CURDIR}/../../../lib/libc/${MACHINE_ARCH} \
 	-I${.CURDIR}/../../../lib/libedit/edit \
 	-I${.CURDIR}/../ \

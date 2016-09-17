@@ -4,7 +4,7 @@ MAN=
 
 .include <src.opts.mk>
 
-.PATH:	${.CURDIR}/../../../contrib/ntp/ntpd \
+.PATH:	${.CURDIR}/../../../external/ntp/ntpd \
 	${.OBJDIR}
 
 PROG=	ntpd
@@ -27,18 +27,18 @@ SRCS=	cmd_args.c ntp_config.c ntp_control.c ntp_crypto.c ntp_filegen.c \
 	refclock_tt560.c refclock_ulink.c refclock_wwv.c refclock_wwvb.c \
 	refclock_zyfer.c version.c
 
-CFLAGS+= -I${.CURDIR}/../../../contrib/ntp/ntpd \
-	-I${.CURDIR}/../../../contrib/ntp/include \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/include \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/pthreads/include \
-	-I${.CURDIR}/../../../contrib/ntp/lib/isc/unix/include \
-	-I${.CURDIR}/../../../contrib/ntp/sntp/libopts \
+CFLAGS+= -I${.CURDIR}/../../../external/ntp/ntpd \
+	-I${.CURDIR}/../../../external/ntp/include \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/include \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/pthreads/include \
+	-I${.CURDIR}/../../../external/ntp/lib/isc/unix/include \
+	-I${.CURDIR}/../../../external/ntp/sntp/libopts \
 	-I${.CURDIR}/../ \
 	-I${.CURDIR}
 
 LIBADD=	parse ntp m opts pthread
 
-.if ${MK_OPENSSL} != "no"
+.if ${MK_LIBRESSL} != "no"
 LIBADD+=	crypto
 .else
 LIBADD+=	md

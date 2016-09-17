@@ -1,6 +1,6 @@
 # $FreeBSD: head/usr.sbin/ntp/libntpevent/Makefile 280849 2015-03-30 13:30:15Z cy $
 
-.PATH:	${.CURDIR}/../../../contrib/ntp/sntp/libevent
+.PATH:	${.CURDIR}/../../../external/ntp/sntp/libevent
 
 LIB= ntpevent
 INTERNALLIB=
@@ -25,8 +25,8 @@ NTP_ATOMIC=sparc64
 NTP_ATOMIC=noatomic
 .endif
 
-CFLAGS+= -I${.CURDIR}/../../../contrib/ntp/include \
-	-I${.CURDIR}/../../../contrib/ntp/sntp/libevent/include \
+CFLAGS+= -I${.CURDIR}/../../../external/ntp/include \
+	-I${.CURDIR}/../../../external/ntp/sntp/libevent/include \
 	-I${.CURDIR}/
 
 CFLAGS+= -DHAVE_BSD_NICE -DHAVE_STDINT_H

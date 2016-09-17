@@ -1,6 +1,6 @@
 # $FreeBSD: head/usr.sbin/wpa/Makefile.crypto 289549 2015-10-18 21:38:25Z rpaulo $
 
-.if ${MK_OPENSSL} != "no" && !defined(RELEASE_CRUNCH)
+.if ${MK_LIBRESSL} != "no" && !defined(RELEASE_CRUNCH)
 SRCS+=	crypto_openssl.c random.c sha1-prf.c sha256-prf.c sha256-tlsprf.c
 LIBADD+=	ssl crypto
 CFLAGS+= -DCONFIG_SHA256
