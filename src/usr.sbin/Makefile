@@ -10,6 +10,7 @@
 SUBDIR= 	ac
 SUBDIR+= 	adduser
 SUBDIR+= 	ancontrol
+SUBDIR+= 	btxld
 SUBDIR+= 	chkgrp
 SUBDIR+= 	chown
 SUBDIR+= 	chroot

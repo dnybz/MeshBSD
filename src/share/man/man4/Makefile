@@ -740,7 +740,7 @@ MLINKS+=xe.4 if_xe.4
 MLINKS+=xl.4 if_xl.4
 MLINKS+=zyd.4 if_zyd.4
 
-.if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386"
+.if ${TARGET_ARCH} == "amd64" || ${TARGET_ARCH} == "i386"
 _acpi_asus.4=	acpi_asus.4
 _acpi_asus_wmi.4=	acpi_asus_wmi.4
 _acpi_dock.4=	acpi_dock.4
@@ -815,7 +815,7 @@ _xnb.4=		xnb.4
 
 .endif
 
-.if ${MACHINE_CPUARCH} == "amd64"
+.if ${TARGET_ARCH} == "amd64"
 _if_ntb.4=	if_ntb.4
 _ioat.4=	ioat.4
 _ntb.4=		ntb.4
@@ -835,12 +835,12 @@ _bhyve.4=	bhyve.4
 .endif
 .endif
 
-.if ${MACHINE_CPUARCH} == "mips"
+.if ${TARGET_ARCH} == "mips"
 _nvram2env.4=	nvram2env.4
 .endif
 
-.if exists(${.CURDIR}/man4.${MACHINE_CPUARCH})
-SUBDIR=	man4.${MACHINE_CPUARCH}
+.if exists(${.CURDIR}/man4.${TARGET_ARCH})
+SUBDIR=	man4.${TARGET_ARCH}
 .endif
 
 .if ${MK_BLUETOOTH} != "no"

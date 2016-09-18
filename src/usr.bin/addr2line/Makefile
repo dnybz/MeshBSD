@@ -2,7 +2,7 @@
 
 .include <src.opts.mk>
 
-ELFTCDIR=	${SRCTOP}/contrib/elftoolchain
+ELFTCDIR=	${SRCTOP}/tools/elftoolchain
 ADDR2LINEDIR=	${ELFTCDIR}/addr2line
 
 .PATH: ${ADDR2LINEDIR}

@@ -2,24 +2,13 @@
 
 .PATH: ${.CURDIR}/../../dev/uart
 
-.if ${MACHINE_CPUARCH} == "sparc64"
-uart_bus_ebus=	uart_bus_ebus.c
-.endif
-
-.if ${MACHINE_CPUARCH} == "arm"
+.if ${TARGET_ARCH} == "arm"
 uart_dev_lpc=	uart_dev_lpc.c
-.endif
-
-.if ${MACHINE_CPUARCH} == "aarch64" || ${MACHINE_CPUARCH} == "arm" || \
-    ${MACHINE_CPUARCH} == "sparc64" || ${MACHINE_CPUARCH} == "powerpc"
 ofw_bus_if=	ofw_bus_if.h
 .endif
 
-.if ${MACHINE} == "i386" || ${MACHINE} == "amd64"
-_uart_cpu=uart_cpu_x86.c
-.else
-_uart_cpu=uart_cpu_${MACHINE}.c
-.endif
+_uart_cpu=uart_cpu_${TARGET_ARCH}.c
+
 .if exists(${.CURDIR:H:H}/dev/uart/${_uart_cpu})
 uart_cpu_machine= ${_uart_cpu}
 .endif

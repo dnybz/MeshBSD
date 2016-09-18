@@ -41,7 +41,7 @@ CFLAGS+=	-Wformat -Wall
 CFLAGS+=	-g
 CFLAGS+=	-fno-pic
 
-.if ${MACHINE_CPUARCH} == "mips"
+.if ${TARGET_ARCH} == "mips"
 CFLAGS+=	-mno-abicalls
 .endif
 

@@ -2,7 +2,7 @@
 
 # This Makefile is shared by libncurses, libform, libmenu, libpanel.
 
-NCURSES_DIR=	${.CURDIR}/../../../contrib/ncurses
+NCURSES_DIR=	${.CURDIR}/../../../tools/ncurses
 
 .if defined(ENABLE_WIDEC)
 LIB_SUFFIX=	w

@@ -6,8 +6,8 @@ SRCS=	kldxref.c ef.c ef_obj.c
 
 WARNS?=	2
 
-.if exists(ef_${MACHINE_CPUARCH}.c) && ${MACHINE_ARCH} != "powerpc64"
-SRCS+=	ef_${MACHINE_CPUARCH}.c
+.if exists(ef_${TARGET_ARCH}.c) && ${TARGET_ARCH} != "powerpc64"
+SRCS+=	ef_${TARGET_ARCH}.c
 .else
 SRCS+=	ef_nop.c
 .endif

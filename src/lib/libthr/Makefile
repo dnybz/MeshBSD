@@ -20,10 +20,10 @@ WARNS?=	3
 CFLAGS+=-DPTHREAD_KERNEL
 CFLAGS+=-I${.CURDIR}/../libc/include -I${.CURDIR}/thread \
 	-I${.CURDIR}/../../include
-CFLAGS+=-I${.CURDIR}/arch/${MACHINE_CPUARCH}/include
+CFLAGS+=-I${.CURDIR}/arch/${TARGET_ARCH}/include
 CFLAGS+=-I${.CURDIR}/sys
 CFLAGS+=-I${.CURDIR}/../../libexec/rtld-elf
-CFLAGS+=-I${.CURDIR}/../../libexec/rtld-elf/${MACHINE_CPUARCH}
+CFLAGS+=-I${.CURDIR}/../../libexec/rtld-elf/${TARGET_ARCH}
 CFLAGS+=-I${.CURDIR}/../libthread_db
 CFLAGS+=-Winline
 
@@ -44,10 +44,10 @@ CFLAGS+=-D_PTHREADS_INVARIANTS
 
 PRECIOUSLIB=
 
-.PATH: ${.CURDIR}/arch/${MACHINE_CPUARCH}/${MACHINE_CPUARCH}
+.PATH: ${.CURDIR}/arch/${TARGET_ARCH}/${TARGET_ARCH}
 
-.if exists(${.CURDIR}/arch/${MACHINE_CPUARCH}/Makefile.inc)
-.include "${.CURDIR}/arch/${MACHINE_CPUARCH}/Makefile.inc"
+.if exists(${.CURDIR}/arch/${TARGET_ARCH}/Makefile.inc)
+.include "${.CURDIR}/arch/${TARGET_ARCH}/Makefile.inc"
 .endif
 .include "${.CURDIR}/sys/Makefile.inc"
 .include "${.CURDIR}/thread/Makefile.inc"

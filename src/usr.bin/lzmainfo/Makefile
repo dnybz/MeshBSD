@@ -2,7 +2,7 @@
 
 PROG=	lzmainfo
 
-XZDIR=	${.CURDIR}/../../contrib/xz/src
+XZDIR=	${.CURDIR}/../../external/xz/src
 LZMALIBDIR=	${.CURDIR}/../../lib/liblzma
 
 .PATH: ${XZDIR}/lzmainfo

@@ -4,7 +4,7 @@
 .include <bsd.own.mk>
 
 PACKAGE=vi
-V=	${.CURDIR}/../../../contrib/nvi
+V=	${.CURDIR}/../../../tools/nvi
 
 FILESGROUPS+=VICAT
 CAT=	dutch english french german polish ru_RU.KOI8-R spanish swedish \

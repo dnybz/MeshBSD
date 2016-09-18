@@ -6,7 +6,7 @@ MAN=	newfs_msdos.8
 SRCS=	newfs_msdos.c mkfs_msdos.c
 
 # XXX - this is verboten
-.if ${MACHINE_CPUARCH} == "arm"
+.if ${TARGET_ARCH} == "arm"
 WARNS?= 3
 .endif
 

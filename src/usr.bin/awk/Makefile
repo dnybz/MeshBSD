@@ -1,6 +1,6 @@
 # $FreeBSD: head/usr.bin/awk/Makefile 299289 2016-05-09 22:21:09Z bdrewery $
 
-AWKSRC=	${.CURDIR}/../../contrib/one-true-awk
+AWKSRC=	${.CURDIR}/../../tools/one-true-awk
 .PATH: ${AWKSRC}
 
 PROG=	awk

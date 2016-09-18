@@ -58,14 +58,12 @@ FILES+= sysctl.conf
 FILES+= syslog.conf
 FILES+= wpa_supplicant.conf
 
-.if exists(${.CURDIR}/etc.${MACHINE}/ttys)
-BIN1+=	etc.${MACHINE}/ttys
-.elif exists(${.CURDIR}/etc.${MACHINE_ARCH}/ttys)
-BIN1+=	etc.${MACHINE_ARCH}/ttys
-.elif exists(${.CURDIR}/etc.${MACHINE_CPUARCH}/ttys)
-BIN1+=	etc.${MACHINE_CPUARCH}/ttys
+.if exists(${.CURDIR}/etc.${TARGET}/ttys)
+BIN1+=	etc.${TARGET}/ttys
+.elif exists(${.CURDIR}/etc.${TARGET_ARCH}/ttys)
+BIN1+=	etc.${TARGET_ARCH}/ttys
 .else
-.error etc.MACHINE/ttys missing
+.error etc.TARGET/ttys missing
 .endif
 
 NO_OBJ=

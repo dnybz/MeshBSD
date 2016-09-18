@@ -2,7 +2,7 @@
 
 .include <src.opts.mk>
 
-ELFTCDIR=	${SRCTOP}/contrib/elftoolchain
+ELFTCDIR=	${SRCTOP}/tools/elftoolchain
 SIZEDIR=	${ELFTCDIR}/size
 
 .PATH: ${SIZEDIR}

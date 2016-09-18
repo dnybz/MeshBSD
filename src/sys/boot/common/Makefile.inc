@@ -4,23 +4,13 @@ SRCS+=	boot.c commands.c console.c devopen.c interp.c
 SRCS+=	interp_backslash.c interp_parse.c ls.c misc.c 
 SRCS+=	module.c panic.c
 
-.if ${MACHINE} == "i386" || ${MACHINE_CPUARCH} == "amd64"
-SRCS+=	load_elf32.c load_elf32_obj.c reloc_elf32.c
-SRCS+=	load_elf64.c load_elf64_obj.c reloc_elf64.c
-.elif ${MACHINE} == "pc98"
-SRCS+=	load_elf32.c load_elf32_obj.c reloc_elf32.c
-.elif ${MACHINE_CPUARCH} == "aarch64"
+.if ${TARGET_ARCH} == "aarch64"
 SRCS+=	load_elf64.c reloc_elf64.c
-.elif ${MACHINE_CPUARCH} == "arm"
+.elif ${TARGET_ARCH} == "arm"
 SRCS+=	load_elf32.c reloc_elf32.c
-.elif ${MACHINE_CPUARCH} == "powerpc"
-SRCS+=	load_elf32.c reloc_elf32.c
-SRCS+=	load_elf64.c reloc_elf64.c
-.elif ${MACHINE_CPUARCH} == "sparc64"
-SRCS+=	load_elf64.c reloc_elf64.c
-.elif ${MACHINE_ARCH} == "mips64" || ${MACHINE_ARCH} == "mips64el"
+.elif ${TARGET_ARCH} == "mips64" || ${TARGET_ARCH} == "mips64el"
 SRCS+= load_elf64.c reloc_elf64.c
-.elif ${MACHINE} == "mips"
+.elif ${TARGET} == "mips"
 SRCS+=	load_elf32.c reloc_elf32.c
 .endif
 

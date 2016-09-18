@@ -9,8 +9,8 @@ SRCS=		fbt.c fbt_isa.c
 SRCS+=		vnode_if.h
 
 
-CFLAGS+=	-I${SYSDIR}/cddl/dev/fbt/${MACHINE_CPUARCH}
-.PATH:		${SYSDIR}/cddl/dev/fbt/${MACHINE_CPUARCH}
+CFLAGS+=	-I${SYSDIR}/cddl/dev/fbt/${TARGET_ARCH}
+.PATH:		${SYSDIR}/cddl/dev/fbt/${TARGET_ARCH}
 
 CFLAGS+=	-I${SYSDIR}/cddl/dev/fbt \
 		-I${SYSDIR}/cddl/compat/opensolaris \

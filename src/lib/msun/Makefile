@@ -14,7 +14,7 @@
 
 PACKAGE=	clibs
 
-ARCH_SUBDIR= ${MACHINE_CPUARCH}
+ARCH_SUBDIR= ${TARGET_ARCH}
 
 .include "${ARCH_SUBDIR}/Makefile.inc"
 
@@ -76,9 +76,9 @@ COMMON_SRCS= b_exp.c b_log.c b_tgamma.c \
 
 # Location of fpmath.h and _fpmath.h
 .if exists(${LIBCSRCDIR}/${MACHINE_ARCH})
-LIBC_ARCH=${MACHINE_ARCH}
+LIBC_ARCH=${TARGET}
 .else
-LIBC_ARCH=${MACHINE_CPUARCH}
+LIBC_ARCH=${TARGET_ARCH}
 .endif
 CFLAGS+=	-I${.CURDIR}/src -I${LIBCSRCDIR}/include \
 	-I${LIBCSRCDIR}/${LIBC_ARCH}
