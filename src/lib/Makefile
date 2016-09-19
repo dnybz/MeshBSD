@@ -222,9 +222,9 @@ _libnetgraph=	libnetgraph
 _libypclnt=	libypclnt
 .endif
 
-.if ${MACHINE_CPUARCH} == "arm" || \
-	${MACHINE_CPUARCH} == "mips" || \
-    ${MACHINE_CPUARCH} == "riscv"
+.if ${TARGET_ARCH} == "arm" || \
+	${TARGET_ARCH} == "mips" || \
+    ${TARGET_ARCH} == "riscv"
 _libproc=	libproc
 _librtld_db=	librtld_db
 .endif

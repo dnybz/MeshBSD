@@ -24,7 +24,7 @@ CFLAGS+=	-I${.CURDIR}/../../fdt
 CFLAGS+=	-I${.CURDIR}/../../common -I${.CURDIR}/../../.. -I.
 
 machine: .NOMETA
-	ln -sf ${.CURDIR}/../../../${MACHINE_CPUARCH}/include machine
+	ln -sf ${.CURDIR}/../../../${TARGET_ARCH}/include machine
 
 CLEANFILES+=	machine
 

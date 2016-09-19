@@ -4,7 +4,7 @@
 
 FILES=		ubldr ubldr.bin
 
-NEWVERSWHAT=	"U-Boot loader" ${MACHINE_ARCH}
+NEWVERSWHAT=	"U-Boot loader" ${TARGET_ARCH}
 BINDIR?=	/boot
 INSTALLFLAGS=	-b
 WARNS?=		1
@@ -96,7 +96,7 @@ CLEANFILES+=	vers.c loader.help
 
 CFLAGS+=	-ffreestanding -msoft-float
 
-LDFLAGS=	-nostdlib -static -T ${.CURDIR}/ldscript.${MACHINE_CPUARCH}
+LDFLAGS=	-nostdlib -static -T ${.CURDIR}/ldscript.${TARGET_ARCH}
 
 # Pull in common loader code
 .PATH:		${.CURDIR}/../../uboot/common
@@ -132,11 +132,11 @@ ldscript.abs:
 ldscript.pie:
 	echo "UBLDR_LOADADDR = 0;" >${.TARGET}
 
-ubldr: ${OBJS} ldscript.abs ${.CURDIR}/ldscript.${MACHINE_CPUARCH} ${DPADD}
+ubldr: ${OBJS} ldscript.abs ${.CURDIR}/ldscript.${TARGET_ARCH} ${DPADD}
 	${CC} ${CFLAGS} -T ldscript.abs ${LDFLAGS} \
 	    -o ${.TARGET} ${OBJS} ${LDADD}
 
-ubldr.pie: ${OBJS} ldscript.pie ${.CURDIR}/ldscript.${MACHINE_CPUARCH} ${DPADD}
+ubldr.pie: ${OBJS} ldscript.pie ${.CURDIR}/ldscript.${TARGET_ARCH} ${DPADD}
 	${CC} ${CFLAGS} -T ldscript.pie ${LDFLAGS} -pie -Wl,-Bsymbolic \
 	    -o ${.TARGET} ${OBJS} ${LDADD}
 

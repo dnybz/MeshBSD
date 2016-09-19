@@ -13,7 +13,7 @@ SUBDIR+=		common
 .include <bsd.arch.inc.mk>
 
 # Pick the machine-dependent subdir based on the target architecture.
-ADIR=			${MACHINE}
+ADIR=			${TARGET}
 .if exists(${.CURDIR}/${ADIR}/.)
 SUBDIR+=		${ADIR}
 .endif

@@ -79,7 +79,7 @@ OBJCOPY?=	objcopy
 .SUFFIXES: .out .o .c .cc .cxx .C .y .l .s .S .m
 
 # amd64 and mips use direct linking for kmod, all others use shared binaries
-.if ${MACHINE_CPUARCH} != amd64 && ${MACHINE_CPUARCH} != mips
+.if ${TARGET_ARCH} != mips
 __KLD_SHARED=yes
 .else
 __KLD_SHARED=no
@@ -116,17 +116,17 @@ CFLAGS+=	-fno-common
 LDFLAGS+=	-d -warn-common
 
 CFLAGS+=	${DEBUG_FLAGS}
-.if ${MACHINE_CPUARCH} == amd64
+.if ${TARGET_ARCH} == amd64
 CFLAGS+=	-fno-omit-frame-pointer -mno-omit-leaf-frame-pointer
 .endif
 
-.if ${MACHINE_CPUARCH} == "aarch64"
+.if ${TARGET_ARCH} == "aarch64"
 CFLAGS+=	-fPIC
 .endif
 
 # Temporary workaround for PR 196407, which contains the fascinating details.
 # Don't allow clang to use fpu instructions or registers in kernel modules.
-.if ${MACHINE_CPUARCH} == arm
+.if ${TARGET_ARCH} == arm
 .if ${COMPILER_VERSION} < 30800
 CFLAGS.clang+=	-mllvm -arm-use-movt=0
 .else
@@ -136,11 +136,7 @@ CFLAGS.clang+=	-mfpu=none
 CFLAGS+=	-funwind-tables
 .endif
 
-.if ${MACHINE_CPUARCH} == powerpc
-CFLAGS+=	-mlongcall -fno-omit-frame-pointer
-.endif
-
-.if ${MACHINE_CPUARCH} == mips
+.if ${TARGET_ARCH} == mips
 CFLAGS+=	-G0 -fno-pic -mno-abicalls -mlong-calls
 .endif
 
@@ -197,7 +193,7 @@ ${PROG}.debug: ${FULLPROG}
 
 .if ${__KLD_SHARED} == yes
 ${FULLPROG}: ${KMOD}.kld
-.if ${MACHINE_CPUARCH} != "aarch64"
+.if ${TARGET_ARCH} != "aarch64"
 	${LD} -Bshareable ${_LDFLAGS} -o ${.TARGET} ${KMOD}.kld
 .else
 #XXXKIB Relocatable linking in aarch64 ld from binutils 2.25.1 does
@@ -245,11 +241,8 @@ ${FULLPROG}: ${OBJS}
 .endif
 
 _ILINKS=machine
-.if ${MACHINE} != ${MACHINE_CPUARCH} && ${MACHINE} != "arm64"
-_ILINKS+=${MACHINE_CPUARCH}
-.endif
-.if ${MACHINE_CPUARCH} == "i386" || ${MACHINE_CPUARCH} == "amd64"
-_ILINKS+=x86
+.if ${TARGET} != ${TARGET_ARCH} && ${TARGET} != "arm64"
+_ILINKS+=${TARGET_ARCH}
 .endif
 CLEANFILES+=${_ILINKS}
 
@@ -281,7 +274,7 @@ SYSDIR=	${_dir}
 ${_ILINKS}:
 	@case ${.TARGET} in \
 	machine) \
-		path=${SYSDIR}/${MACHINE}/include ;; \
+		path=${SYSDIR}/${TARGET}/include ;; \
 	*) \
 		path=${SYSDIR}/${.TARGET:T}/include ;; \
 	esac ; \
@@ -457,10 +450,10 @@ genassym.o: opt_global.h
 .endif
 assym.s: ${SYSDIR}/kern/genassym.sh
 	sh ${SYSDIR}/kern/genassym.sh genassym.o > ${.TARGET}
-genassym.o: ${SYSDIR}/${MACHINE}/${MACHINE}/genassym.c
+genassym.o: ${SYSDIR}/${TARGET}/${TARGET}/genassym.c
 genassym.o: ${SRCS:Mopt_*.h}
 	${CC} -c ${CFLAGS:N-fno-common} \
-	    ${SYSDIR}/${MACHINE}/${MACHINE}/genassym.c
+	    ${SYSDIR}/${TARGET}/${TARGET}/genassym.c
 .endif
 
 lint: ${SRCS}

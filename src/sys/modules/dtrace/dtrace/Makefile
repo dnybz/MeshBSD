@@ -2,7 +2,7 @@
 
 SYSDIR?=	${.CURDIR}/../../..
 
-ARCHDIR=	${MACHINE_CPUARCH}
+ARCHDIR=	${TARGET_ARCH}
 
 .PATH: ${SYSDIR}/cddl/contrib/opensolaris/uts/common/dtrace
 .PATH: ${SYSDIR}/cddl/compat/opensolaris/kern
@@ -42,7 +42,7 @@ EXPORT_SYMS=	dtrace_register \
 
 dtrace_asm.o:  assym.s
 
-.if ${MACHINE_CPUARCH} == "arm"
+.if ${TARGET_ARCH} == "arm"
 assym.o: assym.s
 	${AS} -meabi=5 -o assym.o assym.s
 .endif

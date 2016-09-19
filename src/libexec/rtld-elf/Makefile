@@ -22,7 +22,7 @@ CFLAGS+=	-I${SRCTOP}/lib/csu/common
 .if exists(${.CURDIR}/${MACHINE_ARCH})
 RTLD_ARCH=	${MACHINE_ARCH}
 .else
-RTLD_ARCH=	${MACHINE_CPUARCH}
+RTLD_ARCH=	${TARGET_ARCH}
 .endif
 CFLAGS+=	-I${.CURDIR}/${RTLD_ARCH} -I${.CURDIR}
 LDFLAGS+=	-nostdlib -e .rtld_start
@@ -45,7 +45,7 @@ LIBADD=		c_pic
 LDFLAGS+=	-L${LIBCDIR}
 .endif
 
-.if ${MACHINE_CPUARCH} == "arm"
+.if ${TARGET_ARCH} == "arm"
 # Some of the required math functions (div & mod) are implemented in
 # libcompiler_rt on ARM. The library also needs to be placed first to be
 # correctly linked. As some of the functions are used before we have

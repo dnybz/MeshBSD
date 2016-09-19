@@ -11,7 +11,7 @@ WARNS?=		6
 SRCS=		efi_fdt.c
 
 CFLAGS+=	-ffreestanding -msoft-float
-.if ${MACHINE_CPUARCH} == "aarch64"
+.if ${TARGET_ARCH} == "aarch64"
 CFLAGS+=	-mgeneral-regs-only
 .endif
 
