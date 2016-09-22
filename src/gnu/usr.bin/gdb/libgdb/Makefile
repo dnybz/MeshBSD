@@ -1,14 +1,14 @@
 # $FreeBSD: head/gnu/usr.bin/gdb/libgdb/Makefile 263660 2014-03-23 12:49:25Z andrew $
 
 # These assignments duplicate much of the functionality of
-# MACHINE_CPUARCH, but there's no easy way to export make functions...
+# TARGET_ARCH, but there's no easy way to export make functions...
 
 .if defined(TARGET_ARCH)
 TARGET_CPUARCH=${TARGET_ARCH:C/mips(n32|64)?(el)?/mips/:C/arm(v6)?(eb|hf)?/arm/:C/powerpc64/powerpc/}
 .else
-TARGET_CPUARCH=${MACHINE_CPUARCH}
+TARGET_CPUARCH=${TARGET_ARCH}
 .endif
-TARGET_ARCH?=	${MACHINE_ARCH}
+TARGET_ARCH?=	${TARGET_ARCH}
 
 LIB=	gdb
 INTERNALLIB=
@@ -61,11 +61,9 @@ xregcomp xre_exec xregexec xre_search xre_compile_fastmap xregerror xre_comp xre
 CFLAGS+= -D${stupid_gnu}=${stupid_gnu:S/^x//}
 .endfor
 
-.if ${TARGET_ARCH} == ${MACHINE_ARCH}
 _fork_child= fork-child.c
 _infptrace= infptrace.c
 _inftarg= inftarg.c
-.endif
 
 GENSRCS= version.c
 

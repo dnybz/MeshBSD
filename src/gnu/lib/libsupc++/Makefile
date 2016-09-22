@@ -32,7 +32,7 @@ HDRS=	exception new typeinfo cxxabi.h exception_defines.h
 INCS=	${HDRS:S;^;${SRCDIR}/;}
 INCSDIR=${INCLUDEDIR}/c++/${GCCVER}
 
-.if ${MACHINE_CPUARCH} == "arm"
+.if ${TARGET_ARCH} == "arm"
 unwind.h: ${GCCDIR}/config/arm/unwind-arm.h
 .else
 unwind.h: ${GCCDIR}/unwind-generic.h

@@ -4,11 +4,7 @@
 CSCOPEDIRS= 	boot 
 CSCOPEDIRS+= 	bsm 
 CSCOPEDIRS+= 	cam
-
-.if ${MK_CDDL} != "no"
 CSCOPEDIRS+= 	cddl
-.endif
-
 CSCOPEDIRS+= 	conf
 CSCOPEDIRS+= 	crypto
 CSCOPEDIRS+= 	ddb
@@ -20,11 +16,9 @@ CSCOPEDIRS+= 	geom
 CSCOPEDIRS+= 	gnu
 CSCOPEDIRS+= 	isa
 CSCOPEDIRS+= 	kern
-
 CSCOPEDIRS+= 	libfdt
 CSCOPEDIRS+= 	libkern
 CSCOPEDIRS+= 	libnv
-
 CSCOPEDIRS+= 	modules
 CSCOPEDIRS+= 	net
 CSCOPEDIRS+= 	net80211

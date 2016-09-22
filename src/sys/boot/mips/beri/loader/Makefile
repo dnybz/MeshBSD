@@ -34,7 +34,7 @@ MK_SSP=		no
 MAN=
 
 PROG?=		loader
-NEWVERSWHAT=	"BERI loader" ${MACHINE_CPUARCH}
+NEWVERSWHAT=	"BERI loader" ${TARGET_ARCH}
 INSTALLFLAGS=	-b
 
 # Architecture-specific loader code

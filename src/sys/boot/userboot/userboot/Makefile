@@ -37,7 +37,7 @@ CFLAGS+=	-ffreestanding -I.
 
 LDFLAGS+=	-nostdlib -Wl,-Bsymbolic
 
-NEWVERSWHAT=	"User boot" ${MACHINE_CPUARCH}
+NEWVERSWHAT=	"User boot" ${TARGET_ARCH}
 
 vers.c: ${.CURDIR}/../../common/newvers.sh ${.CURDIR}/version
 	sh ${.CURDIR}/../../common/newvers.sh ${.CURDIR}/version ${NEWVERSWHAT}

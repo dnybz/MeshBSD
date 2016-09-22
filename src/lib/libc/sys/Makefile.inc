@@ -64,12 +64,7 @@ INTERPOSED = \
 	write \
 	writev
 
-.if ${MACHINE_CPUARCH} == "sparc64"
-SRCS+=	sigaction.c
-NOASM+=	sigaction.o
-.else
 INTERPOSED+= sigaction
-.endif
 
 SRCS+=	${INTERPOSED:S/$/.c/}
 NOASM+=	${INTERPOSED:S/$/.o/}
@@ -101,8 +96,7 @@ SYM_MAPS+=	${LIBC_SRCTOP}/sys/Symbol.map
 # Generated files
 CLEANFILES+=	${SASM} ${SPSEUDO}
 
-.if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386" || \
-    ${MACHINE_CPUARCH} == "powerpc" || ${MACHINE_ARCH:Marmv6*}
+.if ${TARGET_ARCH:Marmv6*}
 NOTE_GNU_STACK='\t.section .note.GNU-stack,"",%%progbits\n'
 .else
 NOTE_GNU_STACK=''
