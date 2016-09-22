@@ -29,6 +29,6 @@ DIRDEPS+= \
 
 DIRDEPS.arm= ${_sys_boot_fdt} ${_sys_boot_efi}
 
-DIRDEPS+= ${DIRDEPS.${MACHINE}:U}
+DIRDEPS+= ${DIRDEPS.${TARGET}:U}
 
 .include <dirdeps.mk>

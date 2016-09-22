@@ -12,13 +12,13 @@ MK_TOOLCHAIN=	yes
 LIBC_SRCTOP?= ${.CURDIR}
 
 # Pick the current architecture directory for libc. In general, this is
-# named TARGET_ARCH, but some ABIs are different enough to require
-# their own libc, so allow a directory named TARGET_ARCH to override this.
+# named MACHINE_CPUARCH, but some ABIs are different enough to require
+# their own libc, so allow a directory named MACHINE_ARCH to override this.
 
-.if exists(${LIBC_SRCTOP}/${TARGET_ARCH})
-LIBC_ARCH=${TARGET_ARCH}
+.if exists(${LIBC_SRCTOP}/${MACHINE_ARCH})
+LIBC_ARCH=${MACHINE_ARCH}
 .else
-LIBC_ARCH=${TARGET_ARCH}
+LIBC_ARCH=${MACHINE_CPUARCH}
 .endif
 
 # All library objects contain FreeBSD revision strings by default; they may be
@@ -89,8 +89,8 @@ NOASM=
     ${LIBC_ARCH} != "powerpc64" && \
     ${LIBC_ARCH} != "riscv" && \
     ${LIBC_ARCH} != "sparc64" && \
-    ${TARGET_ARCH:Mmipsn32*} == "" && \
-    ${TARGET_ARCH:Mmips64*} == ""
+    ${MACHINE_ARCH:Mmipsn32*} == "" && \
+    ${MACHINE_ARCH:Mmips64*} == ""
 .include "${LIBC_SRCTOP}/quad/Makefile.inc"
 .endif
 .include "${LIBC_SRCTOP}/regex/Makefile.inc"
@@ -105,7 +105,7 @@ NOASM=
 .include "${LIBC_SRCTOP}/rpc/Makefile.inc"
 .include "${LIBC_SRCTOP}/uuid/Makefile.inc"
 .include "${LIBC_SRCTOP}/xdr/Makefile.inc"
-.if (${LIBC_ARCH} == "arm" && ${TARGET_ARCH} != "armv6hf") ||\
+.if (${LIBC_ARCH} == "arm" && ${MACHINE_ARCH} != "armv6hf") ||\
      ${LIBC_ARCH} == "mips"
 .include "${LIBC_SRCTOP}/softfloat/Makefile.inc"
 .endif
@@ -164,6 +164,10 @@ libkern.${LIBC_ARCH}:: ${KMSRCS}
 	${CP} ${.ALLSRC} ${DESTDIR}/sys/libkern/${LIBC_ARCH}
 .endif
 
+.if ${MK_TESTS} != "no"
+SUBDIR+=	tests
+.endif
+
 .include <bsd.lib.mk>
 
 .if !defined(_SKIP_BUILD)
@@ -174,7 +178,7 @@ CFLAGS+= -I${SRCTOP}/lib/libutil
 MSUN_ARCH_SUBDIR != ${MAKE} -B -C ${SRCTOP}/lib/msun -V ARCH_SUBDIR
 # unfortunately msun/src contains both private and public headers
 CFLAGS+= -I${SRCTOP}/lib/msun/${MSUN_ARCH_SUBDIR}
-.if ${TARGET_ARCH} == "i386" || ${TARGET_ARCH} == "amd64"
+.if ${MACHINE_CPUARCH} == "i386" || ${MACHINE_CPUARCH} == "amd64"
 CFLAGS+= -I${SRCTOP}/lib/msun/x86
 .endif
 CFLAGS+= -I${SRCTOP}/lib/msun/src

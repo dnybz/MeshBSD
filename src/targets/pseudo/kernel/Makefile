@@ -3,7 +3,6 @@
 # Build the kernel ${KERNCONF}
 KERNCONF?= ${KERNEL:UGENERIC}
 
-TARGET?= ${MACHINE}
 # keep this compatible with peoples expectations...
 KERN_OBJDIR= ${OBJTOP}/sys/compile/${KERNCONF}
 KERN_CONFDIR= ${SRCTOP}/sys/${TARGET}/conf

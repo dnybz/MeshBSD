@@ -39,13 +39,13 @@ SIZE?=		size
 _MINUS_O=	-O
 CTFFLAGS+=	-g
 .else
-.if ${TARGET_ARCH} == "powerpc"
+.if ${MACHINE_CPUARCH} == "powerpc"
 _MINUS_O=	-O	# gcc miscompiles some code at -O2
 .else
 _MINUS_O=	-O2
 .endif
 .endif
-.if ${TARGET_ARCH} == "amd64"
+.if ${MACHINE_CPUARCH} == "amd64"
 .if ${COMPILER_TYPE} == "clang"
 COPTFLAGS?=-O2 -pipe
 .else
@@ -68,7 +68,7 @@ CFLAGS=	${COPTFLAGS} ${DEBUG}
 CFLAGS+= ${INCLUDES} -D_KERNEL -DHAVE_KERNEL_OPTION_HEADERS -include opt_global.h
 CFLAGS_PARAM_INLINE_UNIT_GROWTH?=100
 CFLAGS_PARAM_LARGE_FUNCTION_GROWTH?=1000
-.if ${TARGET_ARCH} == "mips"
+.if ${MACHINE_CPUARCH} == "mips"
 CFLAGS_ARCH_PARAMS?=--param max-inline-insns-single=1000
 .endif
 CFLAGS.gcc+= -fno-common -fms-extensions -finline-limit=${INLINE_LIMIT}
@@ -128,8 +128,8 @@ ZFS_C=		${CC} -c ${ZFS_CFLAGS} ${WERROR} ${PROF} ${.IMPSRC}
 ZFS_S=		${CC} -c ${ZFS_ASM_CFLAGS} ${WERROR} ${.IMPSRC}
 
 # Special flags for managing the compat compiles for DTrace
-DTRACE_CFLAGS=	-DBUILDING_DTRACE ${CDDL_CFLAGS} -I$S/cddl/dev/dtrace -I$S/cddl/dev/dtrace/${TARGET_ARCH}
-.if ${TARGET_ARCH} == "amd64" || ${TARGET_ARCH} == "i386"
+DTRACE_CFLAGS=	-DBUILDING_DTRACE ${CDDL_CFLAGS} -I$S/cddl/dev/dtrace -I$S/cddl/dev/dtrace/${MACHINE_CPUARCH}
+.if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386"
 DTRACE_CFLAGS+=	-I$S/cddl/contrib/opensolaris/uts/intel -I$S/cddl/dev/dtrace/x86
 .endif
 DTRACE_CFLAGS+=	-I$S/cddl/contrib/opensolaris/common/util -I$S -DDIS_MEM -DSMP
@@ -138,8 +138,8 @@ DTRACE_C=	${CC} -c ${DTRACE_CFLAGS}	${WERROR} ${PROF} ${.IMPSRC}
 DTRACE_S=	${CC} -c ${DTRACE_ASM_CFLAGS}	${WERROR} ${.IMPSRC}
 
 # Special flags for managing the compat compiles for DTrace/FBT
-FBT_CFLAGS=	-DBUILDING_DTRACE -nostdinc -I$S/cddl/dev/fbt/${TARGET_ARCH} -I$S/cddl/dev/fbt -I$S/cddl/compat/opensolaris -I$S/cddl/contrib/opensolaris/uts/common -I$S ${CDDL_CFLAGS}
-.if ${TARGET_ARCH} == "amd64" || ${TARGET_ARCH} == "i386"
+FBT_CFLAGS=	-DBUILDING_DTRACE -nostdinc -I$S/cddl/dev/fbt/${MACHINE_CPUARCH} -I$S/cddl/dev/fbt -I$S/cddl/compat/opensolaris -I$S/cddl/contrib/opensolaris/uts/common -I$S ${CDDL_CFLAGS}
+.if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386"
 FBT_CFLAGS+=	-I$S/cddl/dev/fbt/x86
 .endif
 FBT_C=		${CC} -c ${FBT_CFLAGS}		${WERROR} ${PROF} ${.IMPSRC}
@@ -195,8 +195,8 @@ __MPATH!=find ${S:tA}/ -name \*_if.m
 # them.
 
 MKMODULESENV+=	MAKEOBJDIRPREFIX=${.OBJDIR}/modules KMODDIR=${KODIR}
-MKMODULESENV+=	TARGET_ARCH=${TARGET_ARCH}
-MKMODULESENV+=	TARGET=${TARGET} TARGET_ARCH=${TARGET_ARCH}
+MKMODULESENV+=	MACHINE_CPUARCH=${MACHINE_CPUARCH}
+MKMODULESENV+=	TARGET=${TARGET} MACHINE_CPUARCH=${MACHINE_CPUARCH}
 MKMODULESENV+=	MODULES_EXTRA="${MODULES_EXTRA}" WITHOUT_MODULES="${WITHOUT_MODULES}"
 .if (${KERN_IDENT} == LINT)
 MKMODULESENV+=	ALL_MODULES=LINT
@@ -214,17 +214,17 @@ MKMODULESENV+=	__MPATH="${__MPATH}"
 
 .if ${MFS_IMAGE:Uno} != "no"
 .if empty(MD_ROOT_SIZE_CONFIGURED)
-.if !defined(EMBEDFS_FORMAT.${TARGET_ARCH})
-EMBEDFS_FORMAT.${TARGET_ARCH}!= awk -F'"' '/OUTPUT_FORMAT/ {print $$2}' ${LDSCRIPT}
-.if empty(EMBEDFS_FORMAT.${TARGET_ARCH})
-.undef EMBEDFS_FORMAT.${TARGET_ARCH}
+.if !defined(EMBEDFS_FORMAT.${MACHINE_CPUARCH})
+EMBEDFS_FORMAT.${MACHINE_CPUARCH}!= awk -F'"' '/OUTPUT_FORMAT/ {print $$2}' ${LDSCRIPT}
+.if empty(EMBEDFS_FORMAT.${MACHINE_CPUARCH})
+.undef EMBEDFS_FORMAT.${MACHINE_CPUARCH}
 .endif
 .endif
 
-.if !defined(EMBEDFS_ARCH.${TARGET_ARCH})
-EMBEDFS_ARCH.${TARGET_ARCH}!= sed -n '/OUTPUT_ARCH/s/.*(\(.*\)).*/\1/p' ${LDSCRIPT}
-.if empty(EMBEDFS_ARCH.${TARGET_ARCH})
-.undef EMBEDFS_ARCH.${TARGET_ARCH}
+.if !defined(EMBEDFS_ARCH.${MACHINE_CPUARCH})
+EMBEDFS_ARCH.${MACHINE_CPUARCH}!= sed -n '/OUTPUT_ARCH/s/.*(\(.*\)).*/\1/p' ${LDSCRIPT}
+.if empty(EMBEDFS_ARCH.${MACHINE_CPUARCH})
+.undef EMBEDFS_ARCH.${MACHINE_CPUARCH}
 .endif
 .endif
 

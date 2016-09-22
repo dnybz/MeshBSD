@@ -43,7 +43,7 @@ LIBSTAND=	${.OBJDIR}/../../../../lib/libstand/libstand.a
 BOOT_FORTH=	yes
 CFLAGS+=	-DBOOT_FORTH
 CFLAGS+=	-I${.CURDIR}/../../ficl
-CFLAGS+=	-I${.CURDIR}/../../ficl/${TARGET_ARCH}
+CFLAGS+=	-I${.CURDIR}/../../ficl/${MACHINE_CPUARCH}
 LIBFICL=	${.OBJDIR}/../../ficl/libficl.a
 .endif
 

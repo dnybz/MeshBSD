@@ -55,12 +55,8 @@ FILESMODE_boot1.efi=	${BINMODE}
 LDSCRIPT=	${.CURDIR}/../loader/arch/${TARGET}/ldscript.${TARGET}
 LDFLAGS+=	-Wl,-T${LDSCRIPT} -Wl,-Bsymbolic -shared
 
-.if ${TARGET_ARCH} == "aarch64"
+.if ${MACHINE_CPUARCH} == "aarch64"
 CFLAGS+=	-msoft-float -mgeneral-regs-only
-.endif
-.if ${TARGET_ARCH} == "amd64" || ${TARGET_ARCH} == "i386"
-CFLAGS+=	-fPIC
-LDFLAGS+=	-Wl,-znocombreloc
 .endif
 
 #
@@ -121,7 +117,7 @@ CLEANFILES+=   machine
 machine: .NOMETA
 	ln -sf ${.CURDIR}/../../../${TARGET}/include machine
 
-.if ${TARGET_ARCH} == "amd64" || ${TARGET_ARCH} == "i386"
+.if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386"
 beforedepend ${OBJS}: x86
 CLEANFILES+=   x86
 

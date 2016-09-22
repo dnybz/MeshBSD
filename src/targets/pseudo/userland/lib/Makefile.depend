@@ -215,9 +215,9 @@ DIRDEPS+= 	lib/libusb
 DIRDEPS+= 	lib/libusbhid
 .endif
 
-.if ${TARGET_ARCH} == "arm" || \
-	${TARGET_ARCH} == "mips" || \
-    ${TARGET_ARCH} == "riscv"
+.if ${MACHINE_CPUARCH} == "arm" || \
+	${MACHINE_CPUARCH} == "mips" || \
+    ${MACHINE_CPUARCH} == "riscv"
 DIRDEPS+= 	lib/libproc
 DIRDEPS+= 	lib/librtld_db
 .endif

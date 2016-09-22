@@ -24,8 +24,8 @@ ioctl_includes=$(
 		awk '{printf("#include <%s>\\n", $1)}'
 )
 
-: ${MACHINE=$(uname -m)}
-case "${MACHINE}" in
+
+case "${TARGET}" in
 *pc98*)
 	ioctl_includes="$ioctl_includes#include <sys/diskpc98.h>\\n"
 	;;

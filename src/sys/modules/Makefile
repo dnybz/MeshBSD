@@ -12,7 +12,7 @@ SUBDIR_PARALLEL=
 SUBDIR=${MODULES_OVERRIDE}
 .else
 SUBDIR=	\
-SUBDIR+= 	... \
+SUBDIR+= 	... \ # XXX: ...
 	
 
 .if ${MK_AUTOFS} != "no" || defined(ALL_MODULES)

@@ -79,7 +79,7 @@ OBJCOPY?=	objcopy
 .SUFFIXES: .out .o .c .cc .cxx .C .y .l .s .S .m
 
 # amd64 and mips use direct linking for kmod, all others use shared binaries
-.if ${TARGET_ARCH} != mips
+.if ${MACHINE_CPUARCH} != mips
 __KLD_SHARED=yes
 .else
 __KLD_SHARED=no
@@ -116,17 +116,17 @@ CFLAGS+=	-fno-common
 LDFLAGS+=	-d -warn-common
 
 CFLAGS+=	${DEBUG_FLAGS}
-.if ${TARGET_ARCH} == amd64
+.if ${MACHINE_CPUARCH} == amd64
 CFLAGS+=	-fno-omit-frame-pointer -mno-omit-leaf-frame-pointer
 .endif
 
-.if ${TARGET_ARCH} == "aarch64"
+.if ${MACHINE_CPUARCH} == "aarch64"
 CFLAGS+=	-fPIC
 .endif
 
 # Temporary workaround for PR 196407, which contains the fascinating details.
 # Don't allow clang to use fpu instructions or registers in kernel modules.
-.if ${TARGET_ARCH} == arm
+.if ${MACHINE_CPUARCH} == arm
 .if ${COMPILER_VERSION} < 30800
 CFLAGS.clang+=	-mllvm -arm-use-movt=0
 .else
@@ -136,7 +136,7 @@ CFLAGS.clang+=	-mfpu=none
 CFLAGS+=	-funwind-tables
 .endif
 
-.if ${TARGET_ARCH} == mips
+.if ${MACHINE_CPUARCH} == mips
 CFLAGS+=	-G0 -fno-pic -mno-abicalls -mlong-calls
 .endif
 
@@ -193,7 +193,7 @@ ${PROG}.debug: ${FULLPROG}
 
 .if ${__KLD_SHARED} == yes
 ${FULLPROG}: ${KMOD}.kld
-.if ${TARGET_ARCH} != "aarch64"
+.if ${MACHINE_CPUARCH} != "aarch64"
 	${LD} -Bshareable ${_LDFLAGS} -o ${.TARGET} ${KMOD}.kld
 .else
 #XXXKIB Relocatable linking in aarch64 ld from binutils 2.25.1 does
@@ -241,8 +241,8 @@ ${FULLPROG}: ${OBJS}
 .endif
 
 _ILINKS=machine
-.if ${TARGET} != ${TARGET_ARCH} && ${TARGET} != "arm64"
-_ILINKS+=${TARGET_ARCH}
+.if ${TARGET} != ${MACHINE_CPUARCH} && ${TARGET} != "arm64"
+_ILINKS+=${MACHINE_CPUARCH}
 .endif
 CLEANFILES+=${_ILINKS}
 

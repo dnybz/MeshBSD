@@ -9,7 +9,7 @@ BMAKE_GDB= ${.CURDIR}/..
 BMAKE_ROOT= ${BMAKE_GDB}/..
 BMAKE_BU= ${BMAKE_ROOT}/binutils
 
-CNTRB_ROOT= ${BMAKE_ROOT}/../../tools
+CNTRB_ROOT= ${BMAKE_ROOT}/../../contrib
 CNTRB_BU= ${CNTRB_ROOT}/binutils
 CNTRB_GDB= ${CNTRB_ROOT}/gdb
 CNTRB_RL= ${CNTRB_ROOT}/libreadline
@@ -20,12 +20,12 @@ OBJ_GDB= ${OBJ_ROOT}/gdb
 OBJ_RL= ${OBJ_ROOT}/../lib/libreadline/readline
 
 # These assignments duplicate much of the functionality of
-# TARGET_ARCH, but there's no easy way to export make functions...
+# MACHINE_CPUARCH, but there's no easy way to export make functions...
 
 .if defined(TARGET_ARCH)
 TARGET_CPUARCH=${TARGET_ARCH:C/mips(n32|64)?(el)?/mips/:C/arm(v6)?(eb|hf)?/arm/:C/powerpc64/powerpc/}
 .else
-TARGET_CPUARCH=${TARGET_ARCH}
+TARGET_CPUARCH=${MACHINE_CPUARCH}
 .endif
 TARGET_ARCH?=	${MACHINE_ARCH}
 TARGET_SUBDIR= ${BMAKE_GDB}/arch/${TARGET_CPUARCH}

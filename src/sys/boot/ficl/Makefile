@@ -3,10 +3,10 @@
 
 FICLDIR?=	${.CURDIR}
 
-.if ${TARGET_ARCH} == "mips64" || ${TARGET_ARCH} == "mips64el"
+.if ${MACHINE_CPUARCH} == "mips64" || ${TARGET_ARCH} == "mips64el"
 .PATH: ${FICLDIR}/mips64
 .else
-.PATH: ${FICLDIR}/${TARGET_ARCH}
+.PATH: ${FICLDIR}/${MACHINE_CPUARCH}
 .endif
 BASE_SRCS=	dict.c ficl.c fileaccess.c float.c loader.c math64.c \
 		prefix.c search.c stack.c tools.c vm.c words.c

@@ -42,7 +42,7 @@ CFLAGS+= -DDISK_DEBUG
 .endif
 
 machine: .NOMETA
-	ln -sf ${.CURDIR}/../../../${TARGET_ARCH}/include machine
+	ln -sf ${.CURDIR}/../../../${MACHINE_CPUARCH}/include machine
 
 CLEANFILES+=	machine
 

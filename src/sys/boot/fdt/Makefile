@@ -16,7 +16,7 @@ CFLAGS+=	-I${.CURDIR}/../../contrib/libfdt/ -I${.CURDIR}/../common/
 
 CFLAGS+=	-ffreestanding
 
-.if ${TARGET_ARCH} == "arm" || ${TARGET_ARCH} == "mips"
+.if ${MACHINE_CPUARCH} == "arm" || ${MACHINE_CPUARCH} == "mips"
 CFLAGS+=	-msoft-float
 .endif
 

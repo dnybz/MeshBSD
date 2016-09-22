@@ -22,7 +22,7 @@ CFLAGS+=	-I${SRCTOP}/lib/csu/common
 .if exists(${.CURDIR}/${MACHINE_ARCH})
 RTLD_ARCH=	${MACHINE_ARCH}
 .else
-RTLD_ARCH=	${TARGET_ARCH}
+RTLD_ARCH=	${MACHINE_CPUARCH}
 .endif
 CFLAGS+=	-I${.CURDIR}/${RTLD_ARCH} -I${.CURDIR}
 LDFLAGS+=	-nostdlib -e .rtld_start

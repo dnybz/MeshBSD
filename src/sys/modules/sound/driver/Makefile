@@ -17,17 +17,17 @@ _ds1=		ds1
 _maestro3=	maestro3
 .endif
 
-.if ${TARGET_ARCH} == "i386" || ${TARGET_ARCH} == "amd64"
+.if ${MACHINE_CPUARCH} == "i386" || ${MACHINE_CPUARCH} == "amd64"
 SUBDIR+=	cmi mss
 .endif
 
-.if ${TARGET_ARCH} == "sparc64"
+.if ${MACHINE_CPUARCH} == "sparc64"
 .if ${MACHINE} == "sparc64"
 SUBDIR+=	audiocs
 .endif
 .endif
 
-.if ${TARGET_ARCH} == "powerpc"
+.if ${MACHINE_CPUARCH} == "powerpc"
 SUBDIR+=	ai2s davbus
 .endif
 

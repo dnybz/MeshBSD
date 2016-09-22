@@ -85,11 +85,11 @@ FORMAT_EXTENSIONS=	-fformat-extensions
 # Setting -mno-mmx implies -mno-3dnow and -mno-3dnowa
 # Setting -mno-sse implies -mno-sse2, -mno-sse3, -mno-ssse3, -mno-sse41 and -mno-sse42
 #
-.if ${TARGET_ARCH} == "arm"
+.if ${MACHINE_CPUARCH} == "arm"
 INLINE_LIMIT?=	8000
 .endif
 
-.if ${TARGET_ARCH} == "riscv"
+.if ${MACHINE_CPUARCH} == "riscv"
 CFLAGS.gcc+=	-mcmodel=medany
 INLINE_LIMIT?=	8000
 .endif
@@ -97,7 +97,7 @@ INLINE_LIMIT?=	8000
 #
 # For MIPS we also tell gcc to use floating point emulation
 #
-.if ${TARGET_ARCH} == "mips"
+.if ${MACHINE_CPUARCH} == "mips"
 CFLAGS+=	-msoft-float
 INLINE_LIMIT?=	8000
 .endif
@@ -120,7 +120,7 @@ CFLAGS+=	-fwrapv
 # GCC SSP support
 #
 .if ${MK_SSP} != "no" && \
-    ${TARGET_ARCH} != "arm" && ${TARGET_ARCH} != "mips"
+    ${MACHINE_CPUARCH} != "arm" && ${MACHINE_CPUARCH} != "mips"
 CFLAGS+=	-fstack-protector
 .endif
 

@@ -1,9 +1,5 @@
 # $FreeBSD: head/lib/csu/Makefile 283125 2015-05-19 21:00:53Z emaste $
 
-.if exists(${.CURDIR}/${MACHINE_ARCH})
-SUBDIR+= ${TARGET}
-.else
-SUBDIR+= ${TARGET_ARCH}
-.endif
+SUBDIR+= ${MACHINE_CPUARCH}
 
 .include <bsd.subdir.mk>

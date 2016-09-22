@@ -4,11 +4,11 @@ SRCS+=	boot.c commands.c console.c devopen.c interp.c
 SRCS+=	interp_backslash.c interp_parse.c ls.c misc.c 
 SRCS+=	module.c panic.c
 
-.if ${TARGET_ARCH} == "aarch64"
+.if ${MACHINE_CPUARCH} == "aarch64"
 SRCS+=	load_elf64.c reloc_elf64.c
-.elif ${TARGET_ARCH} == "arm"
+.elif ${MACHINE_CPUARCH} == "arm"
 SRCS+=	load_elf32.c reloc_elf32.c
-.elif ${TARGET_ARCH} == "mips64" || ${TARGET_ARCH} == "mips64el"
+.elif ${MACHINE_CPUARCH} == "mips64" || ${MACHINE_CPUARCH} == "mips64el"
 SRCS+= load_elf64.c reloc_elf64.c
 .elif ${TARGET} == "mips"
 SRCS+=	load_elf32.c reloc_elf32.c

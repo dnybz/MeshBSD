@@ -7,12 +7,12 @@ WARNS?=	2
 SRCS=	delay.c efi_console.c efinet.c efipart.c env.c errno.c handles.c \
 	libefi.c time.c
 
-.if ${TARGET_ARCH} == "aarch64"
+.if ${MACHINE_CPUARCH} == "aarch64"
 CFLAGS+=	-msoft-float -mgeneral-regs-only
 .endif
 
 CFLAGS+= -I${.CURDIR}/../include
-CFLAGS+= -I${.CURDIR}/../include/${MACHINE}
+CFLAGS+= -I${.CURDIR}/../include/${TARGET}
 CFLAGS+= -I${.CURDIR}/../../../../lib/libstand
 
 # Pick up the bootstrap header for some interface items

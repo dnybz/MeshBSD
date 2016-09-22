@@ -11,7 +11,7 @@ WARNS?=		6
 SRCS=		efi_fdt.c
 
 CFLAGS+=	-ffreestanding -msoft-float
-.if ${TARGET_ARCH} == "aarch64"
+.if ${MACHINE_CPUARCH} == "aarch64"
 CFLAGS+=	-mgeneral-regs-only
 .endif
 
@@ -19,7 +19,7 @@ CFLAGS+=	-I${.CURDIR}/../../../../lib/libstand/
 
 # EFI library headers
 CFLAGS+=	-I${.CURDIR}/../include
-CFLAGS+=	-I${.CURDIR}/../include/${MACHINE}
+CFLAGS+=	-I${.CURDIR}/../include/${TARGET}
 
 # libfdt headers
 CFLAGS+=	-I${.CURDIR}/../../fdt
@@ -28,7 +28,7 @@ CFLAGS+=	-I${.CURDIR}/../../fdt
 CFLAGS+=	-I${.CURDIR}/../../common -I${.CURDIR}/../../.. -I.
 
 machine: .NOMETA
-	ln -sf ${.CURDIR}/../../../${MACHINE}/include machine
+	ln -sf ${.CURDIR}/../../../${TARGET}/include machine
 
 CLEANFILES+=	machine
 

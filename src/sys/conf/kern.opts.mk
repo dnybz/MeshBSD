@@ -52,13 +52,13 @@ __DEFAULT_NO_OPTIONS = \
 # affected by KERNEL_SYMBOLS, FORMAT_EXTENSIONS, CTF and SSP.
 
 # Things that don't work based on the CPU
-.if ${TARGET_ARCH} == "arm"
-. if ${TARGET_ARCH:Marmv6*} == ""
+.if ${MACHINE_CPUARCH} == "arm"
+. if ${MACHINE_CPUARCH:Marmv6*} == ""
 BROKEN_OPTIONS+= CDDL
 . endif
 .endif
 
-.if ${TARGET_ARCH} == "mips"
+.if ${MACHINE_CPUARCH} == "mips"
 BROKEN_OPTIONS+= CDDL
 .endif
 

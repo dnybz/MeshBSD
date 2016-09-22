@@ -5,7 +5,7 @@
 SUBDIR=
 SUBDIR+=	${_nf10bmac}
 
-.if ${TARGET_ARCH} == "mips"
+.if ${MACHINE_CPUARCH} == "mips"
 _nf10bmac=	nf10bmac
 .endif
 

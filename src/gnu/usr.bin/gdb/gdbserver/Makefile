@@ -14,7 +14,7 @@ SRCS=	inferiors.c mem-break.c regcache.c remote-utils.c	\
 	server.c signals.c target.c utils.c
 SRCS+=	fbsd-low.c
 
-SRCS+=	fbsd-${TARGET_ARCH}-low.c reg-${TARGET_ARCH}.c
+SRCS+=	fbsd-${MACHINE_CPUARCH}-low.c reg-${MACHINE_CPUARCH}.c
 .if ${TARGET_ARCH} == "i386" || ${TARGET_ARCH} == "amd64"
 SRCS+= i387-fp.c
 .endif

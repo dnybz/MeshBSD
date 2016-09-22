@@ -10,7 +10,11 @@ WARNS?=	2
 CFLAGS+=${PICFLAG} -fvisibility=hidden -DVISIBILITY_HIDDEN
 CFLAGS+=-I${.CURDIR}/../../contrib/libcxxrt
 
-CRTARCH=${TARGET_ARCH}
+.if ${MACHINE_CPUARCH} == "amd64"
+CRTARCH=x86_64
+.else
+CRTARCH=${MACHINE_CPUARCH}
+.endif
 
 CRTSRC=${.CURDIR}/../../contrib/compiler-rt/lib/builtins
 
@@ -133,7 +137,7 @@ SRCF=	absvdi2 \
 	umodti3
 
 # 128-bit quad precision long double support, only used on arm64
-.if ${TARGET_ARCH} == "aarch64"
+.if ${MACHINE_CPUARCH} == "aarch64"
 SRCF+=	addtf3 \
 	comparetf2 \
 	divtf3 \
@@ -153,7 +157,7 @@ SRCF+=	addtf3 \
 .endif
 
 # These are already shipped by libc.a on arm and mips
-.if ${TARGET_ARCH} != "arm" && ${TARGET_ARCH} != "mips"
+.if ${MACHINE_CPUARCH} != "arm" && ${MACHINE_CPUARCH} != "mips"
 SRCF+=	adddf3 \
 	addsf3 \
 	divdf3 \
@@ -170,12 +174,12 @@ SRCF+=	adddf3 \
 	truncdfsf2
 .endif
 
-.if ${TARGET_ARCH} != "arm"
+.if ${MACHINE_CPUARCH} != "arm"
 SRCF+=	comparedf2 \
 	comparesf2
 .endif
 
-.if ${TARGET_ARCH} != "mips"
+.if ${MACHINE_CPUARCH} != "mips"
 SRCF+=	divsi3 \
 	modsi3 \
 	udivsi3 \
@@ -183,28 +187,28 @@ SRCF+=	divsi3 \
 .endif
 
 # FreeBSD-specific atomic intrinsics.
-.if ${TARGET_ARCH} == "arm" || ${TARGET_ARCH} == "armv6"
+.if ${MACHINE_CPUARCH} == "arm" || ${MACHINE_CPUARCH} == "armv6"
 .PATH: ${.CURDIR}/../../sys/arm/arm
 
 SRCF+=	stdatomic
 CFLAGS+=	-DEMIT_SYNC_ATOMICS
-.elif ${TARGET_ARCH} == "mips"
+.elif ${MACHINE_CPUARCH} == "mips"
 .PATH: ${.CURDIR}/../../sys/mips/mips
 
 SRCF+=	stdatomic
 .endif
 
 .for file in ${SRCF}
-. if ${TARGET_ARCH:Marm*hf*} != "" && exists(${CRTSRC}/${CRTARCH}/${file}vfp.S)
+. if ${MACHINE_ARCH:Marm*hf*} != "" && exists(${CRTSRC}/${CRTARCH}/${file}vfp.S)
 SRCS+= ${file}vfp.S
-. elif !(${TARGET_ARCH} == "arm" && ${TARGET_ARCH:Marm*hf*} == "") && exists(${CRTSRC}/${CRTARCH}/${file}.S)
+. elif !(${MACHINE_CPUARCH} == "arm" && ${MACHINE_ARCH:Marm*hf*} == "") && exists(${CRTSRC}/${CRTARCH}/${file}.S)
 SRCS+=	${file}.S
 . else
 SRCS+=	${file}.c
 . endif
 .endfor
 
-.if ${TARGET_ARCH} == "arm"
+.if ${MACHINE_CPUARCH} == "arm"
 SRCS+=	aeabi_div0.c \
 	aeabi_idivmod.S \
 	aeabi_ldivmod.S \
@@ -230,7 +234,8 @@ SYMLINKS+=libcompiler_rt.a ${LIBDIR}/libgcc.a
 SYMLINKS+=libcompiler_rt_p.a ${LIBDIR}/libgcc_p.a
 .endif
 
-.if ${TARGET_ARCH:Marmv6*}
+.if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386" || \
+    ${MACHINE_CPUARCH} == "powerpc" || ${MACHINE_ARCH:Marmv6*}
 AFLAGS+=--noexecstack
 ACFLAGS+=-Wa,--noexecstack
 .endif

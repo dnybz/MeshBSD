@@ -2,7 +2,7 @@
 
 SYSDIR?=	${.CURDIR}/../../..
 
-ARCHDIR=	${TARGET_ARCH}
+ARCHDIR=	${MACHINE_CPUARCH}
 
 .PATH: ${SYSDIR}/cddl/contrib/opensolaris/uts/common/dtrace
 .PATH: ${SYSDIR}/cddl/compat/opensolaris/kern
