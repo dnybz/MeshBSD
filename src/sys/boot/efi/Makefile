@@ -13,7 +13,6 @@ SUBDIR+=	fdt
 .endif
 
 .if ${MACHINE_CPUARCH} == "aarch64" || \
-    ${MACHINE_CPUARCH} == "amd64" || \
     ${MACHINE_CPUARCH} == "arm"
 SUBDIR+=	libefi loader boot1
 .endif
