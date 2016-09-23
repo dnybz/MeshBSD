@@ -1,5 +1,5 @@
 # Base configuration
-X_BUILD_BASE_CFG="mips_ap"
+X_TARGET_ARCH="mips_ap"
 
 KERNCONF=TP-WN1043ND
 
