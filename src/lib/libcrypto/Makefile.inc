@@ -1,26 +1,28 @@
-# $FreeBSD: head/secure/lib/libcrypto/Makefile.inc 298998 2016-05-03 18:50:10Z jkim $
+# $MeshBSD$
 
 .include <bsd.own.mk>
 
-# OpenSSL version used for manual page generation
-OPENSSL_VER=	1.0.2h
-OPENSSL_DATE=	2016-05-03
+# XXX OpenSSL version used for manual page generation
+OPENSSL_VER=	2.4.1
+OPENSSL_DATE=	2016-06-07
 
-LCRYPTO_SRC=	${.CURDIR}/../../../crypto/openssl
+LIBRESSL_SRC=	${.CURDIR}/../../../external/libressl
+LCRYPTO_SRC=	${LIBRESSL_SRC}/crypto
 LCRYPTO_DOC=	${LCRYPTO_SRC}/doc
+LSSL_SRC=	${LIBRESSL_SRC}/ssl
 
-CFLAGS+=	-I${LCRYPTO_SRC}
 CFLAGS+=	-DTERMIOS -DANSI_SOURCE
-CFLAGS+=	-DOPENSSL_THREADS -DDSO_DLFCN -DHAVE_DLFCN_H
+CFLAGS+=	-I${LCRYPTO_SRC} -I${LSSL_SRC} -I${.OBJDIR}
+CFLAGS+=	-I${LIBRESSL_SRC}/include -I${LIBRESSL_SRC}/include/compat
+CFLAGS+=	-DDSO_DLFCN -DHAVE_DLFCN_H
+CFLAGS+=	-DLIBRESSL_INTERNAL
 
-.include <bsd.endian.mk>
-
-.if ${TARGET_ENDIANNESS} == 1234
-CFLAGS+=-DL_ENDIAN
-.elif ${TARGET_ENDIANNESS} == 4321
-CFLAGS+=-DB_ENDIAN
+.if 2 == 1
 .endif
 
+#
+# XXX Yeah... this is ugly... 
+#
 MANDIR=	${SHAREDIR}/openssl/man/man
 
 .if defined(LIB)
@@ -33,35 +35,3 @@ _skip=	config
 _sec=	1
 .endif
 
-man-update:
-.for manpage in ${MAN}
-	@(sec=${manpage:E}; \
-	pod=${manpage:R}.pod; \
-	cp ${LCRYPTO_DOC}/${_docs}/$$pod .; \
-	pod2man --section=$$sec --release="${OPENSSL_VER}" \
-	  --date="${OPENSSL_DATE}" --center="OpenSSL"  \
-	  $$pod > ${.CURDIR}/man/${manpage}; \
-	rm -f $$pod; \
-	${ECHO} ${manpage})
-.endfor
-
-man-makefile-update:
-	rm -f ${.CURDIR}/Makefile.man
-	echo '# $$'FreeBSD'$$' >> ${.CURDIR}/Makefile.man
-	echo '# DO NOT EDIT: generated from man-makefile-update target' >> \
-	    ${.CURDIR}/Makefile.man
-	for i in ${LCRYPTO_DOC}/${_docs}/*.pod; do \
-		fn=`basename $$i .pod`; \
-		if ! echo '${_skip}' | grep -qw "$$fn"; then \
-		${ECHO} "MAN+= $$fn.${_sec}" >> ${.CURDIR}/Makefile.man; \
-		fi; \
-	done
-	for i in ${LCRYPTO_DOC}/${_docs}/*.pod; do \
-		fn=`basename $$i .pod`; \
-		if ! echo '${_skip}' | grep -qw "$$fn"; then \
-		perl ${LCRYPTO_SRC}/util/extract-names.pl < $$i | \
-		  awk "/^$$fn\$$/ { next; } \
-		  { print \"MLINKS+= $$fn.${_sec} \" \$$1 \".${_sec}\" }" >> \
-		  ${.CURDIR}/Makefile.man; \
-		fi; \
-	done

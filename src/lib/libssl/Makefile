@@ -1,31 +1,58 @@
-# $FreeBSD: head/secure/lib/libssl/Makefile 290460 2015-11-06 17:39:17Z jkim $
+# $OpenBSD: Makefile,v 1.56 2015/09/11 17:54:23 jsing Exp $
 
-LIB=		ssl
-SHLIB_MAJOR=	8
+LIB=	ssl
+SHLIB_MAJOR=	39
 
 NO_LINT=
 
 .if exists(Makefile.man)
-.include "Makefile.man"
+#.include "Makefile.man"
 .endif
 .include "../libcrypto/Makefile.inc"
+.warning Building LibreSSL ${OPENSSL_VER}
+CFLAGS+= -Wall -Wundef
+CFLAGS+= -I${LCRYPTO_SRC} -I${LCRYPTO_SRC}/evp
 
-SRCS=	bio_ssl.c d1_both.c d1_clnt.c d1_lib.c d1_meth.c d1_pkt.c d1_srtp.c \
-	d1_srvr.c s23_clnt.c s23_lib.c s23_meth.c s23_pkt.c s23_srvr.c \
-	s3_both.c s3_cbc.c s3_clnt.c s3_enc.c s3_lib.c s3_meth.c s3_pkt.c \
-	s3_srvr.c ssl_algs.c ssl_asn1.c ssl_cert.c ssl_ciph.c ssl_conf.c \
-	ssl_err.c ssl_err2.c ssl_lib.c ssl_rsa.c ssl_sess.c ssl_stat.c \
-	ssl_txt.c t1_clnt.c t1_enc.c t1_ext.c t1_lib.c t1_meth.c t1_reneg.c \
-	t1_srvr.c tls_srp.c
+### This is copied straight from the original Makefile
+### src/lib/libssl/ssl/Makefile
 
-INCS=	dtls1.h kssl.h srtp.h ssl.h ssl2.h ssl23.h ssl3.h tls1.h
+SRCS=\
+	s3_srvr.c s3_clnt.c s3_lib.c s3_pkt.c s3_both.c \
+	s23_srvr.c s23_clnt.c s23_lib.c s23_pkt.c \
+	t1_meth.c t1_srvr.c t1_clnt.c t1_lib.c t1_enc.c \
+	d1_meth.c d1_srvr.c d1_clnt.c d1_lib.c d1_pkt.c \
+	d1_both.c d1_enc.c d1_srtp.c \
+	ssl_lib.c ssl_err2.c ssl_cert.c ssl_sess.c \
+	ssl_ciph.c ssl_stat.c ssl_rsa.c \
+	ssl_asn1.c ssl_txt.c ssl_algs.c \
+	bio_ssl.c ssl_err.c t1_reneg.c \
+	pqueue.c
+SRCS+=	s3_cbc.c
+SRCS+=	bs_ber.c bs_cbb.c bs_cbs.c
+
+INCS=	srtp.h ssl.h ssl2.h ssl3.h ssl23.h tls1.h dtls1.h
 INCSDIR=${INCLUDEDIR}/openssl
-
-LIBADD=	crypto
 
 CFLAGS+=	-I${LCRYPTO_SRC}/crypto
 
+LIBADD=	crypto
+
 .include <bsd.lib.mk>
 
-.PATH:	${LCRYPTO_SRC}/ssl \
-	${.CURDIR}/man
+.PATH:	${LSSL_SRC} \
+	${LIBRESSL_SRC}/include/openssl
+
+.if 1 == 2
+includes:
+	@test -d ${DESTDIR}/usr/include/openssl || \
+	    mkdir ${DESTDIR}/usr/include/openssl
+	@cd ${LSSL_SRC}; for i in $(HDRS); do \
+	    j="cmp -s $$i ${DESTDIR}/usr/include/openssl/`basename $$i` || \
+	    ${INSTALL} ${INSTALL_COPY} -o ${BINOWN} -g ${BINGRP} -m 444 $$i\
+		${DESTDIR}/usr/include/openssl"; \
+	    echo $$j; \
+	    eval "$$j"; \
+	done;
+.endif
+
+

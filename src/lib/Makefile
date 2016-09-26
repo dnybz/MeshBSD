@@ -233,9 +233,11 @@ _librtld_db=	librtld_db
 _libmp=		libmp
 _libcrypto= 	libcrypto
 _libssl= 	libssl
+
 .if ${MK_OPENSSH} != "no"
 _libssh= 	libssh
 .endif
+SUBDIR+= 	libtls
 .endif
 
 .if ${MK_PMC} != "no"
