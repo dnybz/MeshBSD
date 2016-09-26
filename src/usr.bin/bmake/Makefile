@@ -1,5 +1,5 @@
 # This is a generated file, do NOT edit!
-# See contrib/bmake/bsd.after-import.mk
+# See external/bmake/bsd.after-import.mk
 #
 # $FreeBSD: head/usr.bin/bmake/Makefile 297040 2016-03-18 20:03:09Z sjg $
 
@@ -172,6 +172,6 @@ MANDIR= /usr/share/man/man
 # make sure we get this
 CFLAGS+= ${COPTS.${.IMPSRC:T}}
 
-after-import: ${SRCTOP}/contrib/bmake/bsd.after-import.mk
-	cd ${.CURDIR} && ${.MAKE} -f ${SRCTOP}/contrib/bmake/bsd.after-import.mk
+after-import: ${SRCTOP}/external/bmake/bsd.after-import.mk
+	cd ${.CURDIR} && ${.MAKE} -f ${SRCTOP}/external/bmake/bsd.after-import.mk
 
