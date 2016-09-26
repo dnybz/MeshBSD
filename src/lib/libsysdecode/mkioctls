@@ -25,10 +25,7 @@ ioctl_includes=$(
 )
 
 
-case "${TARGET}" in
-*pc98*)
-	ioctl_includes="$ioctl_includes#include <sys/diskpc98.h>\\n"
-	;;
+case "${MACHINE}" in
 *)
 	ioctl_includes="$ioctl_includes#include <sys/diskmbr.h>\\n"
 	;;

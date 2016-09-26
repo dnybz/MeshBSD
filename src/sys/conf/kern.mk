@@ -85,13 +85,79 @@ FORMAT_EXTENSIONS=	-fformat-extensions
 # Setting -mno-mmx implies -mno-3dnow and -mno-3dnowa
 # Setting -mno-sse implies -mno-sse2, -mno-sse3, -mno-ssse3, -mno-sse41 and -mno-sse42
 #
+.if ${MACHINE_CPUARCH} == "i386"
+CFLAGS.gcc+=	-mno-align-long-strings -mpreferred-stack-boundary=2
+CFLAGS.clang+=	-mno-aes -mno-avx
+CFLAGS+=	-mno-mmx -mno-sse -msoft-float
+INLINE_LIMIT?=	8000
+.endif
+
 .if ${MACHINE_CPUARCH} == "arm"
 INLINE_LIMIT?=	8000
+.endif
+
+.if ${MACHINE_CPUARCH} == "aarch64"
+# We generally don't want fpu instructions in the kernel.
+CFLAGS += -mgeneral-regs-only
+# Reserve x18 for pcpu data
+CFLAGS += -ffixed-x18
 .endif
 
 .if ${MACHINE_CPUARCH} == "riscv"
 CFLAGS.gcc+=	-mcmodel=medany
 INLINE_LIMIT?=	8000
+.endif
+
+#
+# For sparc64 we want the medany code model so modules may be located
+# anywhere in the 64-bit address space.  We also tell GCC to use floating
+# point emulation.  This avoids using floating point registers for integer
+# operations which it has a tendency to do.
+#
+.if ${MACHINE_CPUARCH} == "sparc64"
+CFLAGS.clang+=	-mcmodel=large -fno-dwarf2-cfi-asm
+CFLAGS.gcc+=	-mcmodel=medany -msoft-float
+INLINE_LIMIT?=	15000
+.endif
+
+#
+# For AMD64, we explicitly prohibit the use of FPU, SSE and other SIMD
+# operations inside the kernel itself.  These operations are exclusively
+# reserved for user applications.
+#
+# gcc:
+# Setting -mno-mmx implies -mno-3dnow
+# Setting -mno-sse implies -mno-sse2, -mno-sse3, -mno-ssse3 and -mfpmath=387
+#
+# clang:
+# Setting -mno-mmx implies -mno-3dnow and -mno-3dnowa
+# Setting -mno-sse implies -mno-sse2, -mno-sse3, -mno-ssse3, -mno-sse41 and -mno-sse42
+# (-mfpmath= is not supported)
+#
+.if ${MACHINE_CPUARCH} == "amd64"
+CFLAGS.clang+=	-mno-aes -mno-avx
+CFLAGS+=	-mcmodel=kernel -mno-red-zone -mno-mmx -mno-sse -msoft-float \
+		-fno-asynchronous-unwind-tables
+INLINE_LIMIT?=	8000
+.endif
+
+#
+# For PowerPC we tell gcc to use floating point emulation.  This avoids using
+# floating point registers for integer operations which it has a tendency to do.
+# Also explicitly disable Altivec instructions inside the kernel.
+#
+.if ${MACHINE_CPUARCH} == "powerpc"
+CFLAGS+=	-mno-altivec
+CFLAGS.clang+=	-mllvm -disable-ppc-float-in-variadic=true
+CFLAGS.gcc+=	-msoft-float
+INLINE_LIMIT?=	15000
+.endif
+
+#
+# Use dot symbols on powerpc64 to make ddb happy
+#
+.if ${MACHINE_ARCH} == "powerpc64"
+CFLAGS.gcc+=	-mcall-aixdesc
 .endif
 
 #

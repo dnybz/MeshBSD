@@ -30,7 +30,6 @@ SUBDIR+= 	gpioctl
 #
 SUBDIR+= 	i2c
 SUBDIR+= 	kbdcontrol
-SUBDIR+= 	kldxref
 SUBDIR+= 	lastlogin
 SUBDIR+= 	lpr
 SUBDIR+= 	makefs

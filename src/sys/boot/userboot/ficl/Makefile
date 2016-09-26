@@ -4,7 +4,7 @@
 MK_SSP=		no
 
 .PATH: ${.CURDIR}/../../ficl
-.PATH: ${.CURDIR}/../../ficl/${TARGET_ARCH}
+.PATH: ${.CURDIR}/../../ficl/${MACHINE_CPUARCH}
 BASE_SRCS=	dict.c ficl.c fileaccess.c float.c loader.c math64.c \
 		prefix.c search.c stack.c tools.c vm.c words.c
 
@@ -33,7 +33,7 @@ SOFTWORDS=	softcore.fr jhlocal.fr marker.fr freebsd.fr ficllocal.fr \
 #SOFTWORDS+=	oo.fr classes.fr
 
 CFLAGS+=	-I${.CURDIR}/../../ficl
-CFLAGS+=	-I${.CURDIR}/../../ficl/${TARGET_ARCH}
+CFLAGS+=	-I${.CURDIR}/../../ficl/${MACHINE_CPUARCH}
 CFLAGS+=	-I${.CURDIR}/../../common
 
 softcore.c: ${SOFTWORDS} softcore.awk

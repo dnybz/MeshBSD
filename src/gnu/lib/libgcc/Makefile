@@ -1,12 +1,12 @@
 # $FreeBSD: head/gnu/lib/libgcc/Makefile 298218 2016-04-18 18:13:58Z bdrewery $
 
 PACKAGE=	clibs
-GCCDIR=	${.CURDIR}/../../../tools/gcc
-GCCLIB=	${.CURDIR}/../../../tools/gcclibs
+GCCDIR=	${.CURDIR}/../../../contrib/gcc
+GCCLIB=	${.CURDIR}/../../../contrib/gcclibs
 CCDIR=	${.CURDIR}/../../usr.bin/cc
-COMPILERRTDIR=	${.CURDIR}/../../../tools/compiler-rt
-UNWINDINCDIR=	${.CURDIR}/../../../tools/llvm/projects/libunwind/include
-UNWINDSRCDIR=	${.CURDIR}/../../../tools/llvm/projects/libunwind/src
+COMPILERRTDIR=	${.CURDIR}/../../../contrib/compiler-rt
+UNWINDINCDIR=	${.CURDIR}/../../../contrib/llvm/projects/libunwind/include
+UNWINDSRCDIR=	${.CURDIR}/../../../contrib/llvm/projects/libunwind/src
 
 SHLIB_NAME=	libgcc_s.so.1
 SHLIBDIR?=	/lib

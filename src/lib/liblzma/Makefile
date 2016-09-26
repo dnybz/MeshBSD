@@ -2,7 +2,7 @@
 
 PACKAGE=lib${LIB}
 LIB=		lzma
-LZMADIR=	${.CURDIR}/../../contrib/xz/src/liblzma
+LZMADIR=	${.CURDIR}/../../external/xz/src/liblzma
 
 .PATH: ${LZMADIR}/../common
 SRCS+=	tuklib_physmem.c tuklib_cpucores.c

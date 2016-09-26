@@ -24,6 +24,7 @@
 
 __DEFAULT_YES_OPTIONS = \
     AUTOFS \
+    BHYVE \
     BLUETOOTH \
     CCD \
     CDDL \
@@ -32,16 +33,20 @@ __DEFAULT_YES_OPTIONS = \
     FORMAT_EXTENSIONS \
     INET \
     INET6 \
+    IPFILTER \
+    ISCSI \
     KERNEL_SYMBOLS \
     NETGRAPH \
     PF \
     SOURCELESS_HOST \
     SOURCELESS_UCODE \
-    USB_GADGET_EXAMPLES 
+    USB_GADGET_EXAMPLES \
+    ZFS
 
 __DEFAULT_NO_OPTIONS = \
     EISA \
-    NAND 
+    NAND \
+    OFED
 
 # Some options are totally broken on some architectures. We disable
 # them. If you need to enable them on an experimental basis, you
@@ -53,13 +58,27 @@ __DEFAULT_NO_OPTIONS = \
 
 # Things that don't work based on the CPU
 .if ${MACHINE_CPUARCH} == "arm"
-. if ${MACHINE_CPUARCH:Marmv6*} == ""
-BROKEN_OPTIONS+= CDDL
+. if ${MACHINE_ARCH:Marmv6*} == ""
+BROKEN_OPTIONS+= CDDL ZFS
 . endif
 .endif
 
 .if ${MACHINE_CPUARCH} == "mips"
-BROKEN_OPTIONS+= CDDL
+BROKEN_OPTIONS+= CDDL ZFS
+.endif
+
+.if ${MACHINE_CPUARCH} == "powerpc" && ${MACHINE_ARCH} == "powerpc"
+BROKEN_OPTIONS+= ZFS
+.endif
+
+# Things that don't work because the kernel doesn't have the support
+# for them.
+.if ${MACHINE} != "i386"
+BROKEN_OPTIONS+= EISA
+.endif
+
+.if ${MACHINE} != "i386" && ${MACHINE} != "amd64"
+BROKEN_OPTIONS+= OFED
 .endif
 
 # expanded inline from bsd.mkopt.mk to avoid share/mk dependency

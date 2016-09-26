@@ -29,7 +29,7 @@ INCS=	a.out.h ar.h assert.h bitstring.h complex.h cpio.h _ctype.h ctype.h \
 	uchar.h ulimit.h unistd.h utime.h utmpx.h uuid.h varargs.h \
 	wchar.h wctype.h wordexp.h xlocale.h
 
-.PATH: ${.CURDIR}/../contrib/libc-vis
+.PATH: ${.CURDIR}/../tools/libc-vis
 INCS+=	vis.h
 
 MHDRS=	float.h floatingpoint.h stdarg.h
@@ -43,18 +43,18 @@ LDIRS=	bsm cam geom net net80211 netgraph netinet netinet6 \
 	netipsec netnatm netsmb nfs nfsclient nfsserver sys vm
 
 LSUBDIRS=	cam/ata cam/scsi \
-	dev/acpica dev/agp dev/an dev/bktr dev/ciss dev/filemon dev/firewire \
+	dev/filemon dev/firewire \
 	dev/hwpmc \
-	dev/ic dev/iicbus dev/io dev/lmc dev/mfi dev/nvme \
-	dev/ofw dev/pbio dev/pci dev/ppbus dev/smbus \
-	dev/speaker dev/utopia dev/vkbd dev/wi \
+	dev/ic dev/iicbus dev/io \
+	dev/ofw dev/pbio dev/pc dev/ppbus dev/smbus \
+	dev/vkbd \
 	fs/devfs fs/fdescfs fs/msdosfs fs/nandfs fs/nfs fs/nullfs \
-	fs/procfs fs/smbfs fs/udf fs/unionfs \
+	fs/procfs \
 	geom/cache geom/concat geom/eli geom/gate geom/journal geom/label \
 	geom/mirror geom/mountver geom/multipath geom/nop \
 	geom/raid geom/raid3 geom/shsec geom/stripe geom/virstor \
 	net/altq \
-	netgraph/atm netgraph/netflow \
+	netgraph/netflow \
 	netinet/cc \
 	security/audit \
 	security/mac_biba security/mac_bsdextended security/mac_lomac \
@@ -69,6 +69,11 @@ LSUBSUBDIRS+=	netgraph/bluetooth/include
 
 .if ${MK_CUSE} != "no"
 LSUBDIRS+=	fs/cuse
+.endif
+
+.if ${MK_GSSAPI} != "no"
+SUBDIR+=	gssapi
+INCS+=		gssapi.h
 .endif
 
 .if ${MK_HESIOD} != "no"
@@ -114,8 +119,8 @@ INCSLINKS+=	machine/$i ${INCLUDEDIR}/$i
 INCSLINKS+=	sys/$i ${INCLUDEDIR}/$i
 .endfor
 
-.if ${TARGET} != ${TARGET_ARCH}
-_MARCHS=	${TARGET_ARCH}
+.if ${MACHINE} != ${MACHINE_CPUARCH}
+_MARCHS=	${MACHINE_CPUARCH}
 .endif
 
 META_TARGETS+=	compat copies symlinks
@@ -147,17 +152,6 @@ copies:
 	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 $i/*.h \
 	    ${DESTDIR}${INCLUDEDIR}/$i
 .endfor
-	cd ${.CURDIR}/../sys/dev/acpica; \
-	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 acpiio.h \
-	    ${DESTDIR}${INCLUDEDIR}/dev/acpica; \
-	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 acpi_hpet.h \
-	    ${DESTDIR}${INCLUDEDIR}/dev/acpica
-	cd ${.CURDIR}/../sys/dev/agp; \
-	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 agpreg.h \
-	    ${DESTDIR}${INCLUDEDIR}/dev/agp
-	cd ${.CURDIR}/../sys/dev/bktr; \
-	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 ioctl_*.h \
-	    ${DESTDIR}${INCLUDEDIR}/dev/bktr
 .if ${MK_NAND} != "no"
 	cd ${.CURDIR}/../sys/dev/nand; \
 	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 nandsim.h \
@@ -168,9 +162,6 @@ copies:
 	cd ${.CURDIR}/../sys/dev/pci; \
 	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 pcireg.h \
 	    ${DESTDIR}${INCLUDEDIR}/dev/pci
-	cd ${.CURDIR}/../sys/fs/cd9660/; \
-	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 *.h \
-	    ${DESTDIR}${INCLUDEDIR}/isofs/cd9660
 .if ${MK_PF} != "no"
 	cd ${.CURDIR}/../sys/pf; \
 	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 *.h \
@@ -182,11 +173,11 @@ copies:
 	cd ${.CURDIR}/../sys/opencrypto; \
 	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 *.h \
 	    ${DESTDIR}${INCLUDEDIR}/crypto
-	cd ${.CURDIR}/../sys/${TARGET}/include; \
+	cd ${.CURDIR}/../sys/${MACHINE}/include; \
 	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 *.h \
 	    ${DESTDIR}${INCLUDEDIR}/machine
-.if exists(${.CURDIR}/../sys/${TARGET}/include/pc)
-	cd ${.CURDIR}/../sys/${TARGET}/include/pc; \
+.if exists(${.CURDIR}/../sys/${MACHINE}/include/pc)
+	cd ${.CURDIR}/../sys/${MACHINE}/include/pc; \
 	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 *.h \
 	    ${DESTDIR}${INCLUDEDIR}/machine/pc
 .endif
@@ -262,15 +253,15 @@ symlinks:
 		${INSTALL_SYMLINK} ${TAG_ARGS} ../../../sys/opencrypto/$$h \
 		    ${DESTDIR}${INCLUDEDIR}/crypto; \
 	done
-	cd ${.CURDIR}/../sys/${TARGET}/include; \
+	cd ${.CURDIR}/../sys/${MACHINE}/include; \
 	for h in *.h; do \
-		${INSTALL_SYMLINK} ${TAG_ARGS} ../../../sys/${TARGET}/include/$$h \
+		${INSTALL_SYMLINK} ${TAG_ARGS} ../../../sys/${MACHINE}/include/$$h \
 		    ${DESTDIR}${INCLUDEDIR}/machine; \
 	done
-.if exists(${.CURDIR}/../sys/${TARGET}/include/pc)
-	cd ${.CURDIR}/../sys/${TARGET}/include/pc; \
+.if exists(${.CURDIR}/../sys/${MACHINE}/include/pc)
+	cd ${.CURDIR}/../sys/${MACHINE}/include/pc; \
 	for h in *.h; do \
-		${INSTALL_SYMLINK} ${TAG_ARGS} ../../../../sys/${TARGET}/include/pc/$$h \
+		${INSTALL_SYMLINK} ${TAG_ARGS} ../../../../sys/${MACHINE}/include/pc/$$h \
 		    ${DESTDIR}${INCLUDEDIR}/machine/pc; \
 	done
 .endif
@@ -305,6 +296,11 @@ symlinks:
 installincludes: ${SHARED}
 ${SHARED}: compat
 
-TARGET:= ${TARGET}
-TARGET_ARCH:= ${TARGET_ARCH}
-
+.if ${MACHINE} == "host" && !defined(_SKIP_BUILD)
+# we're here because we are building a sysroot...
+# we need MACHINE et al set correctly
+HOST_MACHINE!= uname -m
+HOST_MACHINE_ARCH!= uname -p
+MACHINE:= ${HOST_MACHINE}
+MACHINE_ARCH:= ${HOST_MACHINE_ARCH}
+.endif

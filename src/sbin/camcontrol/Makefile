@@ -9,7 +9,7 @@ SRCS+=	attrib.c fwdownload.c modeedit.c persist.c progress.c
 CFLAGS+= -DMINIMALISTIC
 .endif
 # This is verboten
-.if ${TARGET_ARCH} == "arm"
+.if ${MACHINE_CPUARCH} == "arm"
 WARNS?= 3
 .endif
 LIBADD=	cam sbuf util

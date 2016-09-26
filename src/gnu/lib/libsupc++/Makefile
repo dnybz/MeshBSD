@@ -3,9 +3,9 @@
 .include <src.opts.mk>
 
 GCCVER=	4.2
-GCCDIR=	${.CURDIR}/../../../tools/gcc
-GCCLIB=	${.CURDIR}/../../../tools/gcclibs
-SRCDIR=	${.CURDIR}/../../../tools/libstdc++/libsupc++
+GCCDIR=	${.CURDIR}/../../../contrib/gcc
+GCCLIB=	${.CURDIR}/../../../contrib/gcclibs
+SRCDIR=	${.CURDIR}/../../../contrib/libstdc++/libsupc++
 
 .PATH: ${SRCDIR} ${GCCLIB}/libiberty
 
@@ -32,7 +32,7 @@ HDRS=	exception new typeinfo cxxabi.h exception_defines.h
 INCS=	${HDRS:S;^;${SRCDIR}/;}
 INCSDIR=${INCLUDEDIR}/c++/${GCCVER}
 
-.if ${TARGET_ARCH} == "arm"
+.if ${MACHINE_CPUARCH} == "arm"
 unwind.h: ${GCCDIR}/config/arm/unwind-arm.h
 .else
 unwind.h: ${GCCDIR}/unwind-generic.h

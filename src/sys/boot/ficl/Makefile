@@ -3,7 +3,9 @@
 
 FICLDIR?=	${.CURDIR}
 
-.if ${MACHINE_CPUARCH} == "mips64" || ${TARGET_ARCH} == "mips64el"
+.if defined(FICL32)
+.PATH: ${FICLDIR}/${MACHINE_CPUARCH:S/amd64/i386/}
+.elif ${MACHINE_ARCH} == "mips64" || ${MACHINE_ARCH} == "mips64el"
 .PATH: ${FICLDIR}/mips64
 .else
 .PATH: ${FICLDIR}/${MACHINE_CPUARCH}
@@ -13,6 +15,13 @@ BASE_SRCS=	dict.c ficl.c fileaccess.c float.c loader.c math64.c \
 
 SRCS=		${BASE_SRCS} sysdep.c softcore.c
 CLEANFILES=	softcore.c testmain testmain.o
+.if ${MACHINE_CPUARCH} == "i386" || \
+    (${MACHINE_CPUARCH} == "amd64" && defined(FICL32))
+CFLAGS+=	-march=i386
+.endif
+.if HAVE_PNP
+CFLAGS+=	-DHAVE_PNP
+.endif
 .include <bsd.stand.mk>
 .ifmake testmain
 CFLAGS+=	-DTESTMAIN -D_TESTMAIN
@@ -32,20 +41,34 @@ SOFTWORDS=	softcore.fr jhlocal.fr marker.fr freebsd.fr ficllocal.fr \
 # Optional OO extension softwords
 #SOFTWORDS+=	oo.fr classes.fr
 
-.if ${TARGET_ARCH} == "mips64" || ${TARGET_ARCH} == "mips64el"
-FICL_ARCH=	mips64
+.if ${MACHINE_CPUARCH} == "amd64"
+.if defined(FICL32)
+CFLAGS+=	-m32 -I.
 .else
-FICL_ARCH=	${TARGET_ARCH}
+CFLAGS+=	-fPIC
+.endif
 .endif
 
-CFLAGS+=	-I${FICLDIR} -I${FICLDIR}/${FICL_ARCH} \
+.if ${MACHINE_ARCH} == "powerpc64"
+CFLAGS+=	-m32 -mcpu=powerpc -I.
+.endif
+
+.if ${MACHINE_CPUARCH} == "amd64" && defined(FICL32)
+FICL_CPUARCH=	i386
+.elif ${MACHINE_ARCH} == "mips64" || ${MACHINE_ARCH} == "mips64el"
+FICL_CPUARCH=	mips64
+.else
+FICL_CPUARCH=	${MACHINE_CPUARCH}
+.endif
+
+CFLAGS+=	-I${FICLDIR} -I${FICLDIR}/${FICL_CPUARCH} \
 		-I${FICLDIR}/../common
 
 softcore.c: ${SOFTWORDS} softcore.awk
 	(cd ${FICLDIR}/softwords; cat ${SOFTWORDS} \
 	    | awk -f softcore.awk -v datestamp="`LC_ALL=C date`") > ${.TARGET}
 
-.if ${TARGET_ARCH} == "amd64" && defined(FICL32)
+.if ${MACHINE_CPUARCH} == "amd64" && defined(FICL32)
 .if !exists(machine)
 ${SRCS:M*.c:R:S/$/.o/g}: machine
 

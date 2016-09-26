@@ -3,7 +3,7 @@
 LIB=		gnuregex
 SHLIB_MAJOR=	5
 
-REGEXDIR=	${.CURDIR}/../../../tools/libgnuregex
+REGEXDIR=	${.CURDIR}/../../../contrib/libgnuregex
 .PATH:		${REGEXDIR}
 
 SRCS=		gnuregex.c

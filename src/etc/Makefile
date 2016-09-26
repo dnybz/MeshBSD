@@ -56,7 +56,7 @@ METALOG.add?=	cat -l >> ${METALOG}
 
 distribution:
 .if !defined(DESTDIR)
-	@echo "set DESTDIR before running \"make ${.TARGET}\""
+	@echo "set DESTDIR before running \"make ${.MACHINE}\""
 	@false
 .endif
 	cd ${.CURDIR}; \

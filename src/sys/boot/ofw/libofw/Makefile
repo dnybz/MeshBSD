@@ -14,6 +14,10 @@ CFLAGS+=	-I${.CURDIR}/../../../../lib/libstand/
 CFLAGS+=	-I${.CURDIR}/../../common -I${.CURDIR}/../../.. -I.
 
 CFLAGS+=	-ffreestanding
+.if ${MACHINE_CPUARCH} == "powerpc"
+CFLAGS+=	-msoft-float
+SRCS+=		ppc64_elf_freebsd.c
+.endif
 
 .ifdef(BOOT_DISK_DEBUG)
 # Make the disk code more talkative
@@ -21,7 +25,7 @@ CFLAGS+= -DDISK_DEBUG
 .endif
 
 machine: .NOMETA
-	ln -sf ${.CURDIR}/../../../${TARGET_ARCH}/include machine
+	ln -sf ${.CURDIR}/../../../${MACHINE_CPUARCH}/include machine
 
 CLEANFILES+=	machine
 

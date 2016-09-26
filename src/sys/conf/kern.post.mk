@@ -121,8 +121,8 @@ gdbinit:
 	grep -v '# XXX' ${S}/../tools/debugscripts/dot.gdbinit | \
 	    sed "s:MODPATH:${.OBJDIR}/modules:" > .gdbinit
 	cp ${S}/../tools/debugscripts/gdbinit.kernel ${.CURDIR}
-.if exists(${S}/../tools/debugscripts/gdbinit.${TARGET_ARCH})
-	cp ${S}/../tools/debugscripts/gdbinit.${TARGET_ARCH} \
+.if exists(${S}/../tools/debugscripts/gdbinit.${MACHINE_CPUARCH})
+	cp ${S}/../tools/debugscripts/gdbinit.${MACHINE_CPUARCH} \
 	    ${.CURDIR}/gdbinit.machine
 .endif
 .endif
@@ -255,8 +255,11 @@ ${__obj}: ${OBJS_DEPEND_GUESS.${__obj}}
 .depend: .PRECIOUS ${SRCS}
 
 _ILINKS= machine
-.if ${TARGET} != ${TARGET_ARCH} && ${TARGET} != "arm64"
-_ILINKS+= ${TARGET_ARCH}
+.if ${MACHINE} != ${MACHINE_CPUARCH} && ${MACHINE} != "arm64"
+_ILINKS+= ${MACHINE_CPUARCH}
+.endif
+.if ${MACHINE_CPUARCH} == "i386" || ${MACHINE_CPUARCH} == "amd64"
+_ILINKS+= x86
 .endif
 
 # Ensure that the link exists without depending on it when it exists.
@@ -269,7 +272,7 @@ ${SRCS} ${CLEAN:M*.o}: ${_link}
 ${_ILINKS}:
 	@case ${.TARGET} in \
 	machine) \
-		path=${S}/${TARGET}/include ;; \
+		path=${S}/${MACHINE}/include ;; \
 	*) \
 		path=${S}/${.TARGET}/include ;; \
 	esac ; \
@@ -358,8 +361,8 @@ vnode_if_typedef.h:
 # respectively.
 embedfs_${MFS_IMAGE:T:R}.o: ${MFS_IMAGE}
 	${OBJCOPY} --input-target binary \
-	    --output-target ${EMBEDFS_FORMAT.${TARGET_ARCH}} \
-	    --binary-architecture ${EMBEDFS_ARCH.${TARGET_ARCH}} \
+	    --output-target ${EMBEDFS_FORMAT.${MACHINE_ARCH}} \
+	    --binary-architecture ${EMBEDFS_ARCH.${MACHINE_ARCH}} \
 	    ${MFS_IMAGE} ${.TARGET}
 	${OBJCOPY} \
 	    --rename-section .data=mfs,contents,alloc,load,readonly,data \

@@ -15,7 +15,7 @@ SRCS=	inferiors.c mem-break.c regcache.c remote-utils.c	\
 SRCS+=	fbsd-low.c
 
 SRCS+=	fbsd-${MACHINE_CPUARCH}-low.c reg-${MACHINE_CPUARCH}.c
-.if ${TARGET_ARCH} == "i386" || ${TARGET_ARCH} == "amd64"
+.if ${MACHINE_CPUARCH} == "i386" || ${MACHINE_CPUARCH} == "amd64"
 SRCS+= i387-fp.c
 .endif
 #CFLAGS+=	-I${.CURDIR}/../arch/${MACHINE_ARCH}

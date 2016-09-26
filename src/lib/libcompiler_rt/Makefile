@@ -8,15 +8,11 @@ NO_PIC=
 WARNS?=	2
 
 CFLAGS+=${PICFLAG} -fvisibility=hidden -DVISIBILITY_HIDDEN
-CFLAGS+=-I${.CURDIR}/../../contrib/libcxxrt
+CFLAGS+=-I${.CURDIR}/../../tools/libcxxrt
 
-.if ${MACHINE_CPUARCH} == "amd64"
-CRTARCH=x86_64
-.else
 CRTARCH=${MACHINE_CPUARCH}
-.endif
 
-CRTSRC=${.CURDIR}/../../contrib/compiler-rt/lib/builtins
+CRTSRC=${.CURDIR}/../../tools/compiler-rt/lib/builtins
 
 .PATH: ${CRTSRC}/${CRTARCH} ${CRTSRC}
 
@@ -234,8 +230,7 @@ SYMLINKS+=libcompiler_rt.a ${LIBDIR}/libgcc.a
 SYMLINKS+=libcompiler_rt_p.a ${LIBDIR}/libgcc_p.a
 .endif
 
-.if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386" || \
-    ${MACHINE_CPUARCH} == "powerpc" || ${MACHINE_ARCH:Marmv6*}
+.if ${MACHINE_ARCH:Marmv6*}
 AFLAGS+=--noexecstack
 ACFLAGS+=-Wa,--noexecstack
 .endif

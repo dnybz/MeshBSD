@@ -3,9 +3,9 @@
 .include <src.opts.mk>
 
 GCCVER=	4.2
-GCCDIR=	${.CURDIR}/../../../tools/gcc
-GCCLIB=	${.CURDIR}/../../../tools/gcclibs
-SRCDIR=	${.CURDIR}/../../../tools/libstdc++
+GCCDIR=	${.CURDIR}/../../../contrib/gcc
+GCCLIB=	${.CURDIR}/../../../contrib/gcclibs
+SRCDIR=	${.CURDIR}/../../../contrib/libstdc++
 SUPDIR=	${SRCDIR}/libsupc++
 
 .PATH: ${SRCDIR}/src ${SRCDIR}/libmath ${SRCDIR}/config/io \
@@ -66,14 +66,14 @@ SRCS+=	del_op.cc del_opnt.cc del_opv.cc del_opvnt.cc eh_alloc.cc eh_arm.cc \
 SRCS+=	cp-demangle.c
 
 # MD headers location
-.if ${TARGET_ARCH} == "sparc64"
+.if ${MACHINE_CPUARCH} == "sparc64"
 MARCHDIR=	sparc
-.elif ${TARGET_ARCH} == "i386" && ${MACHINE_CPU} != 'i386'
+.elif ${MACHINE_CPUARCH} == "i386" && ${MACHINE_CPU} != 'i386'
 MARCHDIR=	i486
-.elif ${TARGET_ARCH} == "amd64"
+.elif ${MACHINE_CPUARCH} == "amd64"
 MARCHDIR=	i486
 .else
-MARCHDIR=	${TARGET_ARCH}
+MARCHDIR=	${MACHINE_CPUARCH}
 .endif
 
 .if exists(${SRCDIR}/config/cpu/${MARCHDIR}/atomicity.h)
@@ -82,7 +82,7 @@ ATOMICITY_H=	${SRCDIR}/config/cpu/${MARCHDIR}/atomicity.h
 ATOMICITY_H=	${SRCDIR}/config/cpu/generic/atomicity_mutex/atomicity.h
 .endif
 
-.if ${TARGET_ARCH} == "amd64" || ${TARGET_ARCH} == "i386"
+.if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386"
 .if exists(${SRCDIR}/config/cpu/generic/atomicity_builtins/atomicity.h)
 ATOMICITY_H=	${SRCDIR}/config/cpu/generic/atomicity_builtins/atomicity.h
 .endif
@@ -593,7 +593,7 @@ gthr-default.h: ${GCCDIR}/gthr-posix.h
 
 CLEANFILES+=	${THRHDRS}
 
-.if ${TARGET_ARCH} == "arm"
+.if ${MACHINE_CPUARCH} == "arm"
 unwind.h: ${GCCDIR}/config/arm/unwind-arm.h
 .else
 unwind.h: ${GCCDIR}/unwind-generic.h
