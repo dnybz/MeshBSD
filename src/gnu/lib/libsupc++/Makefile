@@ -3,9 +3,9 @@
 .include <src.opts.mk>
 
 GCCVER=	4.2
-GCCDIR=	${.CURDIR}/../../../contrib/gcc
-GCCLIB=	${.CURDIR}/../../../contrib/gcclibs
-SRCDIR=	${.CURDIR}/../../../contrib/libstdc++/libsupc++
+GCCDIR=	${.CURDIR}/../../../tools/gcc
+GCCLIB=	${.CURDIR}/../../../tools/gcclibs
+SRCDIR=	${.CURDIR}/../../../tools/libstdc++/libsupc++
 
 .PATH: ${SRCDIR} ${GCCLIB}/libiberty
 

@@ -1,6 +1,6 @@
 # $FreeBSD: head/gnu/lib/libdialog/Makefile 275077 2014-11-25 21:18:18Z bapt $
 
-DIALOG=		${.CURDIR}/../../../contrib/dialog
+DIALOG=		${.CURDIR}/../../../tools/dialog
 
 LIB=		dialog
 SHLIB_MAJOR=	8

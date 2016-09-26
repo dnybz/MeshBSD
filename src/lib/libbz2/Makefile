@@ -1,7 +1,7 @@
 # $FreeBSD: head/lib/libbz2/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 PACKAGE=	lib${LIB}
-BZ2DIR=	${.CURDIR}/../../contrib/bzip2
+BZ2DIR=	${.CURDIR}/../../external/bzip2
 .PATH: ${BZ2DIR}
 
 LIB=		bz2
