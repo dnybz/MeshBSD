@@ -147,7 +147,6 @@ SUBDIR+= usr.bin/dtc
     ${MK_INET6_SUPPORT} != "no"
 SUBDIR+= 	fetch
 SUBDIR+= 	mail
-SUBDIR+= 	nc
 SUBDIR+= 	netstat
 SUBDIR+= 	rlogin
 SUBDIR+= 	rpcgen
@@ -155,24 +154,21 @@ SUBDIR+= 	rpcinfo
 SUBDIR+= 	rsh
 SUBDIR+= 	sockstat
 SUBDIR+= 	ssh-copy-id
-.if ${MK_TFTP} != "no"
-SUBDIR+= 	tftp
-.endif
 SUBDIR+= 	whois
+.if ${MK_LIBRESSL} != "no"
+SUBDIR+=bdes openssl  # XXX 	
+SUBDIR+= 	nc
+.if ${MK_OPENSSH} != "no"
+SUBDIR+=scp sftp ssh ssh-add ssh-agent ssh-keygen ssh-keyscan
+.endif
+.endif
 .if ${MK_NIS} != "no"
 SUBDIR+= 	ypcat
 SUBDIR+= 	ypmatch
 SUBDIR+= 	ypwhich
 .endif
-
-#
-# XXX: openssl-util shall replaced by libressl-util
-#
-.if ${MK_LIBRESSL} != "no"
-SUBDIR+=bdes openssl
-.if ${MK_OPENSSH} != "no"
-SUBDIR+=scp sftp ssh ssh-add ssh-agent ssh-keygen ssh-keyscan
-.endif
+.if ${MK_TFTP} != "no"
+SUBDIR+= 	tftp
 .endif
 .endif
 

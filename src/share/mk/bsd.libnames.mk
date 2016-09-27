@@ -4,6 +4,11 @@
 # Other include files (e.g. bsd.prog.mk, bsd.lib.mk) include this
 # file where necessary.
 
+#
+# XXX: file is subject on ongoing changes 
+#
+
+
 .if !target(__<bsd.init.mk>__)
 .error bsd.libnames.mk cannot be included directly.
 .endif
@@ -142,6 +147,7 @@ LIBSYSDECODE?=	${DESTDIR}${LIBDIR}/libsysdecode.a
 LIBTACPLUS?=	${DESTDIR}${LIBDIR}/libtacplus.a
 LIBTERMCAP?=	${DESTDIR}${LIBDIR}/libtermcap.a
 LIBTERMCAPW?=	${DESTDIR}${LIBDIR}/libtermcapw.a
+LIBTLS?=	${DESTDIR}${LIBDIR}/libtls.a
 LIBTERMLIB?=	"don't use LIBTERMLIB, use LIBTERMCAP"
 LIBTINFO?=	"don't use LIBTINFO, use LIBNCURSES"
 LIBUFS?=	${DESTDIR}${LIBDIR}/libufs.a

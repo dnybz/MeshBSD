@@ -3,6 +3,10 @@
 # The include file <src.libnames.mk> define library names suitable
 # for INTERNALLIB and PRIVATELIB definition
 
+#
+# XXX: file is subject on ongoing changes 
+#
+
 .if !target(__<bsd.init.mk>__)
 .error src.libnames.mk cannot be included directly.
 .endif
@@ -372,11 +376,8 @@ LIBVERS?=	${LIBVERSDIR}/libvers.a
 LIBSLDIR=	${OBJTOP}/kerberos5/lib/libsl
 LIBSL?=		${LIBSLDIR}/libsl.a
 
-LIBIPFDIR=	${OBJTOP}/sbin/ipf/libipf
-LIBIPF?=	${LIBIPFDIR}/libipf.a
-
-LIBTELNETDIR=	${OBJTOP}/lib/libtelnet
-LIBTELNET?=	${LIBTELNETDIR}/libtelnet.a
+LIBTLSDIR=	${OBJTOP}/lib/libtls
+LIBTLS?=	${LIBTELNETDIR}/libtls.a
 
 LIBCRONDIR=	${OBJTOP}/usr.sbin/cron/lib
 LIBCRON?=	${LIBCRONDIR}/libcron.a
