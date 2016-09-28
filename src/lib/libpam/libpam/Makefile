@@ -36,7 +36,7 @@
 # $FreeBSD: head/lib/libpam/libpam/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 PACKAGE=lib${LIB}
-OPENPAM=	${.CURDIR}/../../../contrib/openpam
+OPENPAM=	${.CURDIR}/../../../external/openpam
 .PATH: ${OPENPAM}/include ${OPENPAM}/lib/libpam ${OPENPAM}/doc/man
 
 # static_libpam will build libpam.a
