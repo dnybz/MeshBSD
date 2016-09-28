@@ -112,9 +112,9 @@ WARNS?=	0
 SHLIB_MAJOR=	8
 
 #
-# Magic to grab sources out of src/contrib
+# Magic to grab sources out of src/external
 #
-PCAP_DISTDIR?=${.CURDIR}/../../contrib/libpcap
+PCAP_DISTDIR?=${.CURDIR}/../../external/libpcap
 CFLAGS+=-I${PCAP_DISTDIR}
 .PATH:	${PCAP_DISTDIR}
 .PATH:	${PCAP_DISTDIR}/bpf/net
