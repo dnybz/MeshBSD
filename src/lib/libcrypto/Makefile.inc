@@ -2,11 +2,13 @@
 
 .include <bsd.own.mk>
 
-# XXX OpenSSL version used for manual page generation
+#
+# XXX Yeah... this is ugly... I'll fix it
+#
 OPENSSL_VER=	2.4.1
 OPENSSL_DATE=	2016-06-07
 
-LIBRESSL_SRC=	${.CURDIR}/../../../external/libressl
+LIBRESSL_SRC=	${.CURDIR}/../../external/libressl
 LCRYPTO_SRC=	${LIBRESSL_SRC}/crypto
 LCRYPTO_DOC=	${LCRYPTO_SRC}/doc
 LSSL_SRC=	${LIBRESSL_SRC}/ssl
@@ -20,10 +22,7 @@ CFLAGS+=	-DLIBRESSL_INTERNAL
 .if 2 == 1
 .endif
 
-#
-# XXX Yeah... this is ugly... 
-#
-MANDIR=	${SHAREDIR}/openssl/man/man
+MANDIR= 	${LIBRESSL_SRC}/man
 
 .if defined(LIB)
 _docs=	${LIB}

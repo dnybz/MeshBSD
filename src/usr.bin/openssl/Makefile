@@ -2,12 +2,11 @@
 
 PROG=	openssl
 
-DPADD=  ${LIBSSL} ${LIBCRYPTO}
-LDADD=  -lssl -lcrypto
+LIBADD= ssl crypto
 
 MAN1=	openssl.1
 
-.include "../../lib/libcrypto/Makefile.inc.libressl"
+.include "../../lib/libcrypto/Makefile.inc"
 
 CFLAGSx=        -DMONOLITH
 
