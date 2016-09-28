@@ -46,7 +46,7 @@ LSUBDIRS=	cam/ata cam/scsi \
 	dev/filemon dev/firewire \
 	dev/hwpmc \
 	dev/ic dev/iicbus dev/io \
-	dev/ofw dev/pbio dev/pc dev/ppbus dev/smbus \
+	dev/ofw dev/smbus \
 	dev/vkbd \
 	fs/devfs fs/fdescfs fs/msdosfs fs/nandfs fs/nfs fs/nullfs \
 	fs/procfs \
@@ -60,8 +60,6 @@ LSUBDIRS=	cam/ata cam/scsi \
 	security/mac_biba security/mac_bsdextended security/mac_lomac \
 	security/mac_mls security/mac_partition \
 	ufs/ffs ufs/ufs
-
-LSUBSUBDIRS=	dev/mpt/mpilib
 
 .if ${MK_BLUETOOTH} != "no"
 LSUBSUBDIRS+=	netgraph/bluetooth/include
