@@ -37,6 +37,8 @@ CFLAGS+=	-I${LCRYPTO_SRC}/crypto
 
 LIBADD=	crypto
 
+WARNS?= 	0
+
 .include <bsd.lib.mk>
 
 .PATH:	${LSSL_SRC} \
