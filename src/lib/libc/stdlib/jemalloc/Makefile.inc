@@ -9,18 +9,18 @@ JEMALLOCSRCS:= jemalloc.c arena.c atomic.c base.c bitmap.c chunk.c \
 
 SYM_MAPS+=${LIBC_SRCTOP}/stdlib/jemalloc/Symbol.map
 
-CFLAGS+=-I${LIBC_SRCTOP}/../../contrib/jemalloc/include
+CFLAGS+=-I${LIBC_SRCTOP}/../../external/jemalloc/include
 
 .for src in ${JEMALLOCSRCS}
 MISRCS+=jemalloc_${src}
 CLEANFILES+=jemalloc_${src}
-jemalloc_${src}: ${LIBC_SRCTOP}/../../contrib/jemalloc/src/${src} .NOMETA
+jemalloc_${src}: ${LIBC_SRCTOP}/../../external/jemalloc/src/${src} .NOMETA
 	ln -sf ${.ALLSRC} ${.TARGET}
 .endfor
 
 MAN+=jemalloc.3
 CLEANFILES+=jemalloc.3
-jemalloc.3: ${LIBC_SRCTOP}/../../contrib/jemalloc/doc/jemalloc.3 .NOMETA
+jemalloc.3: ${LIBC_SRCTOP}/../../external/jemalloc/doc/jemalloc.3 .NOMETA
 	ln -sf ${.ALLSRC} ${.TARGET}
 
 MLINKS+= \
