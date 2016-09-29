@@ -2,14 +2,14 @@
 # $FreeBSD: head/lib/libc/stdtime/Makefile.inc 297283 2016-03-26 03:46:12Z bdrewery $
 
 .PATH:	${LIBC_SRCTOP}/stdtime ${LIBC_SRCTOP}/../locale \
-	${LIBC_SRCTOP}/../../contrib/tzcode/stdtime
+	${LIBC_SRCTOP}/../../external/tzcode/stdtime
 
 SRCS+=	asctime.c difftime.c localtime.c strftime.c strptime.c timelocal.c \
 	time32.c
 
 SYM_MAPS+= ${LIBC_SRCTOP}/stdtime/Symbol.map
 
-CFLAGS+= -I${LIBC_SRCTOP}/../../contrib/tzcode/stdtime -I${LIBC_SRCTOP}/stdtime
+CFLAGS+= -I${LIBC_SRCTOP}/../../external/tzcode/stdtime -I${LIBC_SRCTOP}/stdtime
 
 CFLAGS.localtime.c= -fwrapv
 

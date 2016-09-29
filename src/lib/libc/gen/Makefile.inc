@@ -150,11 +150,11 @@ SRCS+=	fts-compat.c \
 	unvis-compat.c
 .endif
 
-.PATH: ${LIBC_SRCTOP}/../../contrib/libc-pwcache
+.PATH: ${LIBC_SRCTOP}/../../tools/libc-pwcache
 SRCS+=	pwcache.c pwcache.h
 
-.PATH: ${LIBC_SRCTOP}/../../contrib/libc-vis
-CFLAGS+=	-I${LIBC_SRCTOP}/../../contrib/libc-vis
+.PATH: ${LIBC_SRCTOP}/../../tools/libc-vis
+CFLAGS+=	-I${LIBC_SRCTOP}/../../tools/libc-vis
 SRCS+=	unvis.c vis.c
 
 MISRCS+=modf.c
