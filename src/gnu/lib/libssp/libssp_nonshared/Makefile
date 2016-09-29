@@ -1,7 +1,7 @@
 # $FreeBSD: head/gnu/lib/libssp/libssp_nonshared/Makefile 264928 2014-04-25 19:25:26Z imp $
 
-GCCDIR=	${.CURDIR}/../../../../contrib/gcc
-GCCLIB=	${.CURDIR}/../../../../contrib/gcclibs
+GCCDIR=	${.CURDIR}/../../../../tools/gcc
+GCCLIB=	${.CURDIR}/../../../../tools/gcclibs
 
 .PATH: ${GCCLIB}/libssp ${GCCLIB}/libssp/ssp
 
