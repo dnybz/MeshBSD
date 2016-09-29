@@ -10,11 +10,11 @@ GDTOASRCS+=dmisc.c dtoa.c gdtoa.c gethex.c gmisc.c \
 
 SYM_MAPS+=${LIBC_SRCTOP}/gdtoa/Symbol.map
 
-CFLAGS+=-I${LIBC_SRCTOP}/../../contrib/gdtoa
+CFLAGS+=-I${LIBC_SRCTOP}/../../external/gdtoa
 
 .for src in ${GDTOASRCS}
 MISRCS+=gdtoa_${src}
 CLEANFILES+=gdtoa_${src}
-gdtoa_${src}: ${LIBC_SRCTOP}/../../contrib/gdtoa/${src} .NOMETA
+gdtoa_${src}: ${LIBC_SRCTOP}/../../external/gdtoa/${src} .NOMETA
 	ln -sf ${.ALLSRC} ${.TARGET}
 .endfor
