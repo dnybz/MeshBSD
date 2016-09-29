@@ -285,6 +285,8 @@ SRCS+= des_enc.c fcrypt_b.c
 SRCS+= rc4_enc.c rc4_skey.c
 SRCS+= wp_block.c
 
+WARNS?=	3
+
 .include <bsd.lib.mk>
 
 .PATH:	${LCRYPTO_SRC} \
