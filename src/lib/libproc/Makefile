@@ -26,15 +26,18 @@ LIBADD+=	supcplusplus
 
 LIBADD+=	elf rtld_db util
 
-.if ${MK_CDDL} != "no"
-LIBADD+=	ctf
-IGNORE_PRAGMA=	YES
-CFLAGS+=	-I${.CURDIR}/../../cddl/contrib/opensolaris/lib/libctf/common \
-		-I${.CURDIR}/../../sys/cddl/contrib/opensolaris/uts/common \
-		-I${.CURDIR}/../../sys/cddl/compat/opensolaris
-.else
+#
+# XXX I-ll re-integrate OpenSolaris specific compoonents sooner or later...
+#
+#.if ${MK_CDDL} != "no"
+#LIBADD+=	ctf
+#IGNORE_PRAGMA=	YES
+#CFLAGS+=	-I${.CURDIR}/../../cddl/contrib/opensolaris/lib/libctf/common \
+#		-I${.CURDIR}/../../sys/cddl/contrib/opensolaris/uts/common \
+#		-I${.CURDIR}/../../sys/cddl/compat/opensolaris
+#.else
 CFLAGS+=	-DNO_CTF
-.endif
+#.endif
 
 SHLIB_MAJOR=	3
 

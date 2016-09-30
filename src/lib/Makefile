@@ -148,7 +148,7 @@ SUBDIR_DEPEND_libstdc++:= msun
 SUBDIR_DEPEND_libtacplus= libmd
 SUBDIR_DEPEND_libulog= libmd
 SUBDIR_DEPEND_liblzma= ${_libthr}
-SUBDIR_DEPEND_lib80211= libsbuf libbsdxml
+SUBDIR_DEPEND_lib80211= libsbuf libexpat
 
 # NB: keep these sorted by MK_* knobs
 

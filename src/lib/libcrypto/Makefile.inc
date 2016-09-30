@@ -5,8 +5,8 @@
 #
 # XXX Yeah... this is ugly... I'll fix it
 #
-OPENSSL_VER=	2.4.1
-OPENSSL_DATE=	2016-06-07
+OPENSSL_VER=	2.3.6
+OPENSSL_DATE=	
 
 LIBRESSL_SRC=	${.CURDIR}/../../external/libressl
 LCRYPTO_SRC=	${LIBRESSL_SRC}/crypto
