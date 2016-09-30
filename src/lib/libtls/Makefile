@@ -79,4 +79,6 @@ MLINKS+=tls_init.3 tls_read.3
 MLINKS+=tls_init.3 tls_write.3
 MLINKS+=tls_init.3 tls_close.3
 
+WARNS?= 	0
+
 .include <bsd.lib.mk>

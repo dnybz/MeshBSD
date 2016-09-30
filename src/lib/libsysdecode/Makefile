@@ -37,7 +37,7 @@ CFLAGS.gcc+=	${CFLAGS.gcc.${.IMPSRC}}
 
 ioctl.c: mkioctls
 	env MACHINE=${MACHINE} CPP="${CPP}" \
-		/bin/sh ${.CURDIR}/mkioctls ${DESTDIR}${INCLUDEDIR} > ${.MACHINE}
+		/bin/sh ${.CURDIR}/mkioctls ${DESTDIR}${INCLUDEDIR} > ${.TARGET}
 
 beforedepend: ioctl.c
 
