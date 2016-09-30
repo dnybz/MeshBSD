@@ -43,7 +43,6 @@ SUBDIR+= 	uuidgen
 .if ${MK_INET_SUPPORT} != "no" || \
     ${MK_INET6_SUPPORT} != "no"
 SUBDIR+= 	rcp
-SUBDIR+= 	rmail
 .endif
 
 .include <bsd.arch.inc.mk>
