@@ -1,25 +1,37 @@
-# $FreeBSD$
+# $Id: Makefile,v 1.2 2003/09/07 20:34:19 max Exp $
+# $FreeBSD: head/lib/libsdp/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
-SHLIBDIR?=	/usr/lib
+PACKAGE=lib${LIB}
+LIB=		sdp
+MAN=		sdp.3
 
-.include <bsd.own.mk>
+WARNS?=		2
+CFLAGS+=	-I${.CURDIR}
 
-SDPDIR=	${.CURDIR}/src
+SHLIB_MAJOR=	4
 
-.PATH: ${SDPDIR}
+SRCS=		search.c service.c session.c util.c
+INCS=		sdp.h
 
-LIB=		ibsdp
-SHLIB_MAJOR=	1
-MK_PROFILE=	no
-MAN=
-
-SRCS=	log.c match.c port.c config_parser.c config_scanner.c
-
-CFLAGS+=	-DSYSCONFDIR=\"/etc\"
-CFLAGS+= -I${OFEDSYS}/include
+MLINKS+=	sdp.3 SDP_GET8.3
+MLINKS+=	sdp.3 SDP_GET16.3
+MLINKS+=	sdp.3 SDP_GET32.3
+MLINKS+=	sdp.3 SDP_GET64.3
+MLINKS+=	sdp.3 SDP_GET128.3
+MLINKS+=	sdp.3 SDP_PUT8.3
+MLINKS+=	sdp.3 SDP_PUT16.3
+MLINKS+=	sdp.3 SDP_PUT32.3
+MLINKS+=	sdp.3 SDP_PUT64.3
+MLINKS+=	sdp.3 SDP_PUT128.3
+MLINKS+=	sdp.3 sdp_open.3
+MLINKS+=	sdp.3 sdp_open_local.3
+MLINKS+=	sdp.3 sdp_close.3
+MLINKS+=	sdp.3 sdp_error.3
+MLINKS+=	sdp.3 sdp_search.3
+MLINKS+=	sdp.3 sdp_attr2desc.3
+MLINKS+=	sdp.3 sdp_uuid2desc.3
+MLINKS+=	sdp.3 sdp_register_service.3
+MLINKS+=	sdp.3 sdp_unregister_service.3
+MLINKS+=	sdp.3 sdp_change_service.3
 
 .include <bsd.lib.mk>
-
-# Remove .[ly] since the checked-in version is preferred.
-.SUFFIXES:
-.SUFFIXES: .o .po .So .c .ln
