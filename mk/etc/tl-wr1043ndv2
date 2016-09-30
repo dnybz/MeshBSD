@@ -1,4 +1,4 @@
-BUILD_AS_ROOT=YES
+BUILD_AS_ROOT=NO
 
 # Base configuration
 X_TARGET_ARCH="mips_ap"
