@@ -186,6 +186,7 @@ DIRDEPS+= 	usr.bin/mt
 DIRDEPS+= 	usr.bin/nc
 DIRDEPS+= 	usr.bin/ncal
 DIRDEPS+= 	usr.bin/netstat
+DIRDEPS+= 	usr.bin/newkey
 DIRDEPS+= 	usr.bin/nice
 DIRDEPS+= 	usr.bin/nm
 DIRDEPS+= 	usr.bin/nohup

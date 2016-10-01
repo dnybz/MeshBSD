@@ -71,6 +71,7 @@ SUBDIR+= 	mktemp
 SUBDIR+= 	mkuzip
 SUBDIR+= 	mt
 SUBDIR+= 	ncal
+SUBDIR+= 	newkey
 SUBDIR+= 	nice
 SUBDIR+= 	nm
 SUBDIR+= 	nohup
