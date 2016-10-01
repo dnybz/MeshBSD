@@ -18,36 +18,18 @@ SRCS=	autoload.c \
 	devicename.c \
 	main.c \
 	self_reloc.c \
-	smbios.c \
 	vers.c
 
-.if ${MK_ZFS} != "no"
-SRCS+=		zfs.c
-.PATH:		${.CURDIR}/../../zfs
-
-# Disable warnings that are currently incompatible with the zfs boot code
-CWARNFLAGS.zfs.c+=	-Wno-sign-compare
-CWARNFLAGS.zfs.c+=	-Wno-array-bounds
-CWARNFLAGS.zfs.c+=	-Wno-missing-prototypes
-.endif
-
 .PATH: ${.CURDIR}/arch/${MACHINE}
-# For smbios.c
-.PATH: ${.CURDIR}/../../i386/libi386
+
 .include "${.CURDIR}/arch/${MACHINE}/Makefile.inc"
 
 CFLAGS+=	-I${.CURDIR}
 CFLAGS+=	-I${.CURDIR}/arch/${MACHINE}
 CFLAGS+=	-I${.CURDIR}/../include
 CFLAGS+=	-I${.CURDIR}/../include/${MACHINE}
-CFLAGS+=	-I${.CURDIR}/../../../contrib/dev/acpica/include
 CFLAGS+=	-I${.CURDIR}/../../..
-CFLAGS+=	-I${.CURDIR}/../../i386/libi386
-.if ${MK_ZFS} != "no"
-CFLAGS+=	-I${.CURDIR}/../../zfs
-CFLAGS+=	-I${.CURDIR}/../../../cddl/boot/zfs
-CFLAGS+=	-DEFI_ZFS_BOOT
-.endif
+
 CFLAGS+=	-DNO_PCI -DEFI
 
 # make buildenv doesn't set DESTDIR, this means LIBSTAND
@@ -101,13 +83,7 @@ vers.c:	${.CURDIR}/../../common/newvers.sh ${.CURDIR}/../../efi/loader/version
 NM?=		nm
 OBJCOPY?=	objcopy
 
-.if ${MACHINE_CPUARCH} == "amd64"
-EFI_TARGET=	efi-app-x86_64
-.elif ${MACHINE_CPUARCH} == "i386"
-EFI_TARGET=	efi-app-ia32
-.else
 EFI_TARGET=	binary
-.endif
 
 loader.efi: ${PROG}
 	if ${NM} ${.ALLSRC} | grep ' U '; then \
@@ -133,11 +109,3 @@ CLEANFILES+=   machine
 
 machine: .NOMETA
 	ln -sf ${.CURDIR}/../../../${MACHINE}/include machine
-
-.if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386"
-beforedepend ${OBJS}: x86
-CLEANFILES+=   x86
-
-x86: .NOMETA
-	ln -sf ${.CURDIR}/../../../x86/include x86
-.endif

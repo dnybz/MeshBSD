@@ -85,7 +85,7 @@ SRCS+=	_setjmp.S
 # decompression functionality from libbz2
 # NOTE: to actually test this functionality after libbz2 upgrade compile
 # loader(8) with LOADER_BZIP2_SUPPORT defined
-.PATH: ${LIBSTAND_SRC}/../../tools/bzip2
+.PATH: ${LIBSTAND_SRC}/../../external/bzip2
 CFLAGS+= -DBZ_NO_STDIO -DBZ_NO_COMPRESS
 SRCS+=	libstand_bzlib_private.h
 
