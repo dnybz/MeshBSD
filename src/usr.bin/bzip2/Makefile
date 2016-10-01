@@ -1,6 +1,6 @@
 # $FreeBSD: head/usr.bin/bzip2/Makefile 275042 2014-11-25 14:29:10Z bapt $
 
-BZ2DIR=	${.CURDIR}/../../contrib/bzip2
+BZ2DIR=	${.CURDIR}/../../external/bzip2
 .PATH: ${BZ2DIR}
 
 PROG=	bzip2
