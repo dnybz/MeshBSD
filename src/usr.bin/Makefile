@@ -155,7 +155,7 @@ SUBDIR+= 	rsh
 SUBDIR+= 	sockstat
 SUBDIR+= 	ssh-copy-id
 SUBDIR+= 	whois
-.if ${MK_KERBEROS_SUPPORT} != "NO"
+.if ${MK_KERBEROS_SUPPORT} != "no"
 SUBDIR+= 	compile_et
 .endif
 .if ${MK_LIBRESSL} != "no"

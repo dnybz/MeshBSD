@@ -88,9 +88,9 @@ MAN+=	bluetooth.device.conf.5 \
 	bluetooth.protocols.5
 .endif
 
-.if ${MK_FREEBSD_UPDATE} != "no"
-MAN+=	freebsd-update.conf.5
-.endif
+#.if ${MK_FREEBSD_UPDATE} != "no"
+#MAN+=	freebsd-update.conf.5
+#.endif
 
 .if ${MK_HESIOD} != "no"
 MAN+=	hesiod.conf.5 

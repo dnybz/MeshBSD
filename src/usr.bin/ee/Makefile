@@ -1,6 +1,6 @@
 # $FreeBSD: head/usr.bin/ee/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
-.PATH:	${.CURDIR}/../../contrib/ee
+.PATH:	${.CURDIR}/../../external/ee
 
 CFLAGS+= -DHAS_NCURSES -DHAS_UNISTD -DHAS_STDARG -DHAS_STDLIB \
 	 -DHAS_SYS_WAIT
@@ -29,7 +29,7 @@ NLSSRCFILES=ee.msg
 . if exists(${.CURDIR}/nls/${lang}/ee.msg)
 NLSSRCDIR_${lang}= ${.CURDIR}/nls/${lang}
 . else
-NLSSRCDIR_${lang}= ${.CURDIR}/../../contrib/ee
+NLSSRCDIR_${lang}= ${.CURDIR}/../../external/ee
 . endif
 .endfor
 

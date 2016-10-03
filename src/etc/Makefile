@@ -99,9 +99,6 @@ distribution:
 	${_+_}cd ${.CURDIR}/ntp; ${MAKE} install
 .endif
 	${_+_}cd ${.CURDIR}/periodic; ${MAKE} install
-.if ${MK_PKGBOOTSTRAP} != "no"
-	${_+_}cd ${.CURDIR}/pkg; ${MAKE} install
-.endif
 	${_+_}cd ${.CURDIR}/rc.d; ${MAKE} install
 	${_+_}cd ${.CURDIR}/../share/termcap; ${MAKE} etc-termcap
 	${_+_}cd ${.CURDIR}/../usr.sbin/rmt; ${MAKE} etc-rmt
