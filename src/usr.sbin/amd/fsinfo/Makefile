@@ -5,7 +5,7 @@
 #
 # $FreeBSD: head/usr.sbin/amd/fsinfo/Makefile 275054 2014-11-25 16:57:27Z bapt $
 
-.PATH: ${.CURDIR}/../../../contrib/amd/fsinfo
+.PATH: ${.CURDIR}/../../../external/amd/fsinfo
 
 PROG=	fsinfo
 MAN=	fsinfo.8
@@ -13,7 +13,7 @@ SRCS=	fsi_gram.y fsi_lex.l
 SRCS+=	fsi_analyze.c fsi_dict.c fsi_util.c fsinfo.c wr_atab.c 
 SRCS+=	wr_bparam.c wr_dumpset.c wr_exportfs.c wr_fstab.c
 
-CFLAGS+= -I${.CURDIR}/../../../contrib/amd/fsinfo
+CFLAGS+= -I${.CURDIR}/../../../external/amd/fsinfo
 
 LIBADD=	amu
 

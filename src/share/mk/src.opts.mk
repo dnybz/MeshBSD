@@ -102,6 +102,8 @@ __DEFAULT_YES_OPTIONS = \
     INETD \
     JAIL \
     KDUMP \
+	KERBEROS \
+	KERBEROS_SUPPORT \
     KVM \
     LDNS \
     LDNS_UTILS \

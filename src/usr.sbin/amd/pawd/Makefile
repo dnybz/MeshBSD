@@ -5,14 +5,14 @@
 #
 # $FreeBSD: head/usr.sbin/amd/pawd/Makefile 275054 2014-11-25 16:57:27Z bapt $
 
-.PATH: ${.CURDIR}/../../../contrib/amd/amq
+.PATH: ${.CURDIR}/../../../external/amd/amq
 
 BINDIR=	/usr/bin
 
 PROG=	pawd
 SRCS=	pawd.c amq_clnt.c amq_xdr.c
 
-CFLAGS+= -I${.CURDIR}/../../../contrib/amd/amq
+CFLAGS+= -I${.CURDIR}/../../../external/amd/amq
 
 LIBADD=	amu
 

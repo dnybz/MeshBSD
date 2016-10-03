@@ -5,7 +5,7 @@
 #
 # $FreeBSD: head/usr.sbin/amd/mk-amd-map/Makefile 275054 2014-11-25 16:57:27Z bapt $
 
-.PATH: ${.CURDIR}/../../../contrib/amd/mk-amd-map
+.PATH: ${.CURDIR}/../../../external/amd/mk-amd-map
 
 PROG=	mk-amd-map
 MAN=	mk-amd-map.8

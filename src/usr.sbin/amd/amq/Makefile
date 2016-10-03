@@ -6,13 +6,13 @@
 # $FreeBSD: head/usr.sbin/amd/amq/Makefile 275054 2014-11-25 16:57:27Z bapt $
 #
 
-.PATH: ${.CURDIR}/../../../contrib/amd/amq
+.PATH: ${.CURDIR}/../../../external/amd/amq
 
 PROG=	amq
 MAN=	amq.8
 SRCS=	amq.c amq_clnt.c amq_xdr.c
 
-CFLAGS+= -I${.CURDIR}/../../../contrib/amd/amq
+CFLAGS+= -I${.CURDIR}/../../../external/amd/amq
 
 LIBADD=	amu
 

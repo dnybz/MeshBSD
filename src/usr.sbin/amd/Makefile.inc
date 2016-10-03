@@ -18,8 +18,8 @@ CFLAGS+= -I${.CURDIR}/../include
 .if exists(${.OBJDIR}/../include)
 CFLAGS+= -I${.OBJDIR}/../include
 .endif
-CFLAGS+= -I${.CURDIR}/../../../contrib/amd/include
-CFLAGS+= -I${.CURDIR}/../../../contrib/amd
+CFLAGS+= -I${.CURDIR}/../../../external/amd/include
+CFLAGS+= -I${.CURDIR}/../../../external/amd
 CFLAGS+= -DHAVE_CONFIG_H
 .if ${MK_NIS} == "no"
 CFLAGS+= -DHAVE_LOCALCONFIG_H

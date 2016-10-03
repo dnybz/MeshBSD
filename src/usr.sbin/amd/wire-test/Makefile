@@ -5,7 +5,7 @@
 #
 # $FreeBSD: head/usr.sbin/amd/wire-test/Makefile 275054 2014-11-25 16:57:27Z bapt $
 
-.PATH: ${.CURDIR}/../../../contrib/amd/wire-test
+.PATH: ${.CURDIR}/../../../external/amd/wire-test
 
 PROG=	wire-test
 MAN=	wire-test.8

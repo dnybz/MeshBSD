@@ -5,13 +5,13 @@
 #
 # $FreeBSD: head/usr.sbin/amd/hlfsd/Makefile 275054 2014-11-25 16:57:27Z bapt $
 
-.PATH: ${.CURDIR}/../../../contrib/amd/hlfsd
+.PATH: ${.CURDIR}/../../../external/amd/hlfsd
 
 PROG=	hlfsd
 MAN=	hlfsd.8
 SRCS=	hlfsd.c homedir.c nfs_prot_svc.c stubs.c
 
-CFLAGS+= -I${.CURDIR}/../../../contrib/amd/hlfsd
+CFLAGS+= -I${.CURDIR}/../../../external/amd/hlfsd
 
 LIBADD=	amu
 
