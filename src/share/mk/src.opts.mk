@@ -274,23 +274,6 @@ MK_GROFF:=	no
 MK_GNUCXX:=	no
 .endif
 
-#
-# XXX ...
-#
-
-.if ${MK_INET_SUPPORT} == "no" && \
-    ${MK_INET6_SUPPORT} == "no"
-MK_BSNMP:= 	no
-MK_FTP:= 	no
-MK_INETD:= 	no
-MK_PF:= 	no
-MK_LIBRESSL:= 	no
-MK_MAIL:= 	no
-MK_NIS:= 	no
-MK_RCMDS:= 	no
-MK_TFTP:= 	no
-.endif
-
 .if ${MK_LIBRESSL} == "no"
 MK_OPENSSH:=	no
 MK_KERBEROS:=	no
@@ -358,6 +341,22 @@ MK_${var}_SUPPORT:= no
 MK_${var}_SUPPORT:= yes
 .endif
 .endfor
+
+#
+# XXX ...
+#
+
+.if ${MK_INET_SUPPORT} == "no" && ${MK_INET6_SUPPORT} == "no"
+MK_BSNMP:= 	no
+MK_FTP:= 	no
+MK_INETD:= 	no
+MK_PF:= 	no
+MK_LIBRESSL:= 	no
+MK_MAIL:= 	no
+MK_NIS:= 	no
+MK_RCMDS:= 	no
+MK_TFTP:= 	no
+.endif
 
 #
 # MK_* options whose default value depends on another option.
