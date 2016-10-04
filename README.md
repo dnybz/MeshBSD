@@ -33,13 +33,9 @@ This operation is divided into three major stages:
 Well, there are some pending operational tasks
 
 <pre><code>
- #1 Complete integration of LibreSSL and tls(3)
-    into code-base. This means replacement of
-    OpenSSL.
+ #1 Complete integration of httpd(8).
 
- #2 Complete integration of httpd(8).
-
- #3 Integration of OpenSMTPd(8) as replacement for 
+ #2 Integration of OpenSMTPd(8) as replacement for 
     sendmail(8), but I'll not integrate the portable
     version, because of some dependencies (!) like:
 
@@ -53,9 +49,9 @@ Well, there are some pending operational tasks
 
     are still increasing the complexity.
 
- #4 Porting if_pppoe(4) from NetBSD for kernel ppp(4).
+ #3 Porting if_pppoe(4) from NetBSD for kernel ppp(4).
 
- #5 Integration of common or generic llc(4) domain
+ #4 Integration of common or generic llc(4) domain
     on top of Ethernet MAC layer. 
 </code></pre>
 
