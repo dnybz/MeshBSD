@@ -5,8 +5,8 @@
 #
 # $FreeBSD: head/usr.sbin/amd/fixmount/Makefile 275054 2014-11-25 16:57:27Z bapt $
 
-.PATH: ${.CURDIR}/../../../contrib/amd/fixmount \
-       ${.CURDIR}/../../../contrib/amd/conf/checkmount
+.PATH: ${.CURDIR}/../../../external/amd/fixmount \
+       ${.CURDIR}/../../../external/amd/conf/checkmount
 
 PROG=	fixmount
 MAN=	fixmount.8

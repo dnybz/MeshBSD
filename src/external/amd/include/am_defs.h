@@ -944,13 +944,6 @@ struct sockaddr_dl;
 #endif /* HAVE_HSFS_HSFS_H */
 
 /*
- * Actions to take if <cdfs/cdfsmount.h> exists.
- */
-#ifdef HAVE_CDFS_CDFSMOUNT_H
-# include <cdfs/cdfsmount.h>
-#endif /* HAVE_CDFS_CDFSMOUNT_H */
-
-/*
  * Actions to take if <mount.h> exists.
  */
 #ifdef HAVE_MOUNT_H

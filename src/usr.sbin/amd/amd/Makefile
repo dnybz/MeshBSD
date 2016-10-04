@@ -10,6 +10,12 @@
 
 .PATH: ${.CURDIR}/../../../external/amd/amd
 
+#
+# XXX: disabled components
+#
+#  ops_cdfs.c 
+#  ops_unionfs.c
+#
 PROG=	amd
 MAN=	amd.8
 SRCS=	conf_parse.y conf_tok.l
@@ -19,9 +25,9 @@ SRCS+=	amfs_nfsx.c amfs_program.c amfs_root.c amfs_toplvl.c
 SRCS+=	amfs_union.c amq_subr.c amq_svc.c autil.c clock.c conf.c
 SRCS+=	get_args.c info_exec.c info_file.c info_ndbm.c info_passwd.c
 SRCS+=	info_union.c map.c mapc.c mntfs.c nfs_prot_svc.c nfs_start.c
-SRCS+=	nfs_subr.c ops_cdfs.c ops_mfs.c ops_nfs.c ops_nfs3.c
+SRCS+=	nfs_subr.c ops_mfs.c ops_nfs.c ops_nfs3.c
 SRCS+=	ops_nullfs.c ops_pcfs.c ops_tfs.c ops_ufs.c ops_umapfs.c
-SRCS+=	ops_unionfs.c opts.c readdir.c restart.c rpc_fwd.c sched.c
+SRCS+=	opts.c readdir.c restart.c rpc_fwd.c sched.c
 SRCS+=	srvr_amfs_auto.c srvr_nfs.c
 
 CFLAGS+= -I${.CURDIR}/../../../external/amd/amd \

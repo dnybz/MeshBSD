@@ -83,28 +83,15 @@ static am_ops *vops[] =
 #ifdef HAVE_AMU_FS_PROGRAM
   &amfs_program_ops,		/* program F/S */
 #endif /* HAVE_AMU_FS_PROGRAM */
-#ifdef HAVE_AMU_FS_UNION
-  &amfs_union_ops,		/* union F/S */
-#endif /* HAVE_AMU_FS_UNION */
-
   /*
    * A few more native filesystems.
    */
 #ifdef HAVE_FS_UFS
   &ufs_ops,			/* Unix F/S */
 #endif /* HAVE_FS_UFS */
-#ifdef HAVE_FS_XFS
-  &xfs_ops,			/* Unix (irix) F/S */
-#endif /* HAVE_FS_XFS */
-#ifdef HAVE_FS_EFS
-  &efs_ops,			/* Unix (irix) F/S */
-#endif /* HAVE_FS_EFS */
 #ifdef HAVE_FS_LOFS
   &lofs_ops,			/* loopback F/S */
 #endif /* HAVE_FS_LOFS */
-#ifdef HAVE_FS_CDFS
-  &cdfs_ops,			/* CDROM/HSFS/ISO9960 F/S */
-#endif /* HAVE_FS_CDFS */
 #ifdef HAVE_FS_PCFS
   &pcfs_ops,			/* Floppy/MSDOS F/S */
 #endif /* HAVE_FS_PCFS */
