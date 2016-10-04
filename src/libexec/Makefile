@@ -9,6 +9,7 @@ SUBDIR+=	ftpd
 SUBDIR+= 	getty
 SUBDIR+= 	${_open_ssh}
 SUBDIR+= 	${_pppoed}
+SUBDIR+= 	$(_rlogind}
 SUBDIR+= 	$(_rshd}
 SUBDIR+= 	${_rtld-elf}
 SUBDIR+= 	${_tests}
@@ -29,6 +30,7 @@ _open_ssh= 	sftp-server ssh-keysign ssh-pkcs11-helper
 .endif
 
 .if ${MK_RCMDS} != "no"
+_rlogind= 	rlogind
 _rshd= 	rshd
 .endif
 
