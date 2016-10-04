@@ -17,6 +17,9 @@ CLEANFILES=	${SRCS}
 
 all depend: ${SRCS}
 
+config.h:
+	@echo "#undef HAVE_ISOFS_CD9660_CD9660_MOUNT_H" >> ${.TARGET}
+
 config_local.h: newvers.sh ${.CURDIR}/../../../sys/conf/newvers.sh
 	@rm -f ${.TARGET}
 	sh ${.ALLSRC} > ${.TARGET}
@@ -25,6 +28,6 @@ localconfig.h:
 	@rm -f ${.TARGET}
 	@echo "/* NIS disabled by WITHOUT_NIS src.conf option */" >> ${.TARGET}
 	@echo "#undef HAVE_MAP_NIS" >> ${.TARGET}
-	@echo "#undef HAVE_ISOFS_CD9660_CD9660_MOUNT_H" >> ${.TARGET}
+#	@echo "#undef HAVE_ISOFS_CD9660_CD9660_MOUNT_H" >> ${.TARGET}
 
 .include <bsd.prog.mk>
