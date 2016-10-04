@@ -25,7 +25,7 @@ MODULES+= 	pam_permit
 .if ${MK_RADIUS_SUPPORT} != "no"
 MODULES+= 	pam_radius
 .endif
-.if ${MK_CMDS} != "no"
+.if ${MK_RCMDS} != "no"
 MODULES+= 	pam_rhosts
 .endif
 MODULES+= 	pam_rootok
