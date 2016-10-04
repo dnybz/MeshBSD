@@ -128,6 +128,7 @@ SUBDIR+= 	tcpdrop
 .if ${MK_INETD} != "no" 
 SUBDIR+= 	inetd
 .endif
+
 .if ${MK_NIS} != "no"
 SUBDIR+= 	rpc.yppasswdd
 SUBDIR+= 	rpc.ypupdated
