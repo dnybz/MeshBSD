@@ -288,6 +288,7 @@ MK_BLUETOOTH:=	no
 .if ${MK_LIBRESSL} == "no"
 MK_OPENSSH:=	no
 MK_KERBEROS:=	no
+MK_NETCAT:= 	no
 .endif
 
 .if ${MK_PF} == "no"

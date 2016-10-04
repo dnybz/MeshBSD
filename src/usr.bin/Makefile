@@ -145,7 +145,6 @@ SUBDIR+= usr.bin/dtc
 .if ${MK_INET_SUPPORT} != "no" || \
     ${MK_INET6_SUPPORT} != "no"
 SUBDIR+= 	fetch
-SUBDIR+= 	mail
 SUBDIR+= 	netstat
 SUBDIR+= 	rpcgen
 SUBDIR+= 	rpcinfo
@@ -157,7 +156,12 @@ SUBDIR+= 	compile_et
 .endif
 .if ${MK_LIBRESSL} != "no"
 SUBDIR+= 	bdes openssl
+.if ${MK_NETCAT} != "no"
 SUBDIR+= 	nc
+.endif
+.if ${MK_MAIL} != "no" 
+SUBDIR+= 	mail
+.endif 
 .if ${MK_OPENSSH} != "no"
 SUBDIR+=scp sftp ssh ssh-add ssh-agent ssh-keygen ssh-keyscan
 .endif

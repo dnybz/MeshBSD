@@ -5,6 +5,7 @@
 
 SUBDIR+= 	${_atf} 
 SUBDIR+= 	${_atrun}
+SUBDIR+=	${_bootpd}
 SUBDIR+=	${_ftpd}
 SUBDIR+= 	getty
 SUBDIR+= 	${_open_ssh}
@@ -26,6 +27,9 @@ _atf=		atf
 
 .if ${MK_INET_SUPPORT} != "no" || \
     ${MK_INET6_SUPPORT} != "no"
+.if ${MK_BOOTPD} != "no"
+_bootpd= 	bootpd
+.endif
 .if ${MK_FTP} != "no"
 _ftpd= 	ftpd
 .endif
@@ -41,7 +45,6 @@ _rshd= 	rshd
 .if ${MK_NETGRAPH} != "no"
 _pppoed= 	pppoed
 .endif
-
 
 .if !defined(NO_PIC) && !defined(NO_RTLD)
 _rtld-elf=	rtld-elf
