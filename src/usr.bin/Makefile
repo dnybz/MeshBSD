@@ -27,7 +27,6 @@ SUBDIR+= 	expand
 SUBDIR+= 	false
 SUBDIR+= 	find
 SUBDIR+= 	fold
-SUBDIR+= 	fortune
 SUBDIR+= 	fstat
 SUBDIR+= 	fsync
 SUBDIR+= 	ftp
