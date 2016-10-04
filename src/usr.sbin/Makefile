@@ -23,8 +23,7 @@ SUBDIR+= 	devinfo
 SUBDIR+= 	eeprom
 SUBDIR+= 	gpioctl
 #
-# XXX: LibreSSL and tls(3) are missing dependencies, but
-# XXX: integration of those components are present task.
+# XXX: The integration of httpd(8) is pending...
 #
 #SUBDIR+= 	httpd
 #

@@ -158,7 +158,8 @@ SUBDIR+= 	compile_et
 .endif
 
 .if ${MK_LIBRESSL} != "no"
-SUBDIR+= 	bdes openssl
+SUBDIR+= 	bdes 
+SUBDIR+= 	openssl
 .if ${MK_NETCAT} != "no"
 SUBDIR+= 	nc
 .endif

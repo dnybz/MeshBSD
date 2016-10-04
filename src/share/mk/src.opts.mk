@@ -277,18 +277,31 @@ MK_GNUCXX:=	no
 #
 # XXX ...
 #
-.if ${MK_MAIL} == "no"
-MK_DMAGENT:=	no
-.endif
 
-.if ${MK_NETGRAPH} == "no"
-MK_BLUETOOTH:=	no
+.if ${MK_INET_SUPPORT} == "no" && \
+    ${MK_INET6_SUPPORT} == "no"
+MK_FTP:= 	no
+MK_INETD:= 	no
+MK_PF:= 	no
+MK_LIBRESSL:= 	no
+MK_MAIL:= 	no
+MK_NIS:= 	no
+MK_RCMDS:= 	no
+MK_TFTP:= 	no
 .endif
 
 .if ${MK_LIBRESSL} == "no"
 MK_OPENSSH:=	no
 MK_KERBEROS:=	no
 MK_NETCAT:= 	no
+.endif
+
+.if ${MK_MAIL} == "no"
+MK_DMAGENT:=	no
+.endif
+
+.if ${MK_NETGRAPH} == "no"
+MK_BLUETOOTH:=	no
 .endif
 
 .if ${MK_PF} == "no"
