@@ -4,7 +4,7 @@
 .include <bsd.own.mk>
 
 PROG=	iconv
-SRCS=	iconv.c
+#SRCS=	iconv.c
 MAN=	iconv.1
 
 .include <bsd.prog.mk>
