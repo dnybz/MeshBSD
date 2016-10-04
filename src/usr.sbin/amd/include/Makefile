@@ -28,6 +28,5 @@ localconfig.h:
 	@rm -f ${.TARGET}
 	@echo "/* NIS disabled by WITHOUT_NIS src.conf option */" >> ${.TARGET}
 	@echo "#undef HAVE_MAP_NIS" >> ${.TARGET}
-#	@echo "#undef HAVE_ISOFS_CD9660_CD9660_MOUNT_H" >> ${.TARGET}
 
 .include <bsd.prog.mk>
