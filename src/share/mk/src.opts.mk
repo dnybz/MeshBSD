@@ -280,6 +280,7 @@ MK_GNUCXX:=	no
 
 .if ${MK_INET_SUPPORT} == "no" && \
     ${MK_INET6_SUPPORT} == "no"
+MK_BSNMP:= 	no
 MK_FTP:= 	no
 MK_INETD:= 	no
 MK_PF:= 	no

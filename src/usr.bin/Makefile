@@ -164,7 +164,13 @@ SUBDIR+= 	openssl
 SUBDIR+= 	nc
 .endif
 .if ${MK_OPENSSH} != "no"
-SUBDIR+=scp sftp ssh ssh-add ssh-agent ssh-keygen ssh-keyscan
+SUBDIR+= 	scp
+SUBDIR+= 	sftp
+SUBDIR+= 	ssh
+SUBDIR+= 	ssh-add 
+SUBDIR+= 	ssh-agent
+SUBDIR+= 	ssh-keygen
+SUBDIR+= 	ssh-keyscan
 .endif
 .endif
 
