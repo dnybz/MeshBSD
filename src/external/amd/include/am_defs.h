@@ -951,13 +951,6 @@ struct sockaddr_dl;
 #endif /* HAVE_CDFS_CDFSMOUNT_H */
 
 /*
- * Actions to take if <isofs/cd9660/cd9660_mount.h> exists.
- */
-#ifdef HAVE_ISOFS_CD9660_CD9660_MOUNT_H
-# include <isofs/cd9660/cd9660_mount.h>
-#endif /* HAVE_ISOFS_CD9660_CD9660_MOUNT_H */
-
-/*
  * Actions to take if <mount.h> exists.
  */
 #ifdef HAVE_MOUNT_H

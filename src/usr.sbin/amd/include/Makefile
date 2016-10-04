@@ -17,9 +17,6 @@ CLEANFILES=	${SRCS}
 
 all depend: ${SRCS}
 
-config.h:
-	@echo "#undef HAVE_ISOFS_CD9660_CD9660_MOUNT_H" >> ${.TARGET}
-
 config_local.h: newvers.sh ${.CURDIR}/../../../sys/conf/newvers.sh
 	@rm -f ${.TARGET}
 	sh ${.ALLSRC} > ${.TARGET}
