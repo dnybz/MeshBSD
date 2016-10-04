@@ -147,10 +147,8 @@ SUBDIR+= usr.bin/dtc
 SUBDIR+= 	fetch
 SUBDIR+= 	mail
 SUBDIR+= 	netstat
-SUBDIR+= 	rlogin
 SUBDIR+= 	rpcgen
 SUBDIR+= 	rpcinfo
-SUBDIR+= 	rsh
 SUBDIR+= 	sockstat
 SUBDIR+= 	ssh-copy-id
 SUBDIR+= 	whois
@@ -168,6 +166,10 @@ SUBDIR+=scp sftp ssh ssh-add ssh-agent ssh-keygen ssh-keyscan
 SUBDIR+= 	ypcat
 SUBDIR+= 	ypmatch
 SUBDIR+= 	ypwhich
+.endif
+.if ${MK_RCMDS} != "no"
+SUBDIR+= 	rlogin
+SUBDIR+= 	rsh
 .endif
 .if ${MK_TFTP} != "no"
 SUBDIR+= 	tftp
