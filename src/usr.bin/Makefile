@@ -151,33 +151,39 @@ SUBDIR+= 	rpcinfo
 SUBDIR+= 	sockstat
 SUBDIR+= 	ssh-copy-id
 SUBDIR+= 	whois
+.endif
+
 .if ${MK_KERBEROS_SUPPORT} != "no"
 SUBDIR+= 	compile_et
 .endif
+
 .if ${MK_LIBRESSL} != "no"
 SUBDIR+= 	bdes openssl
 .if ${MK_NETCAT} != "no"
 SUBDIR+= 	nc
 .endif
-.if ${MK_MAIL} != "no" 
-SUBDIR+= 	mail
-.endif 
 .if ${MK_OPENSSH} != "no"
 SUBDIR+=scp sftp ssh ssh-add ssh-agent ssh-keygen ssh-keyscan
 .endif
 .endif
+
+.if ${MK_MAIL} != "no" 
+SUBDIR+= 	mail
+.endif 
+
 .if ${MK_NIS} != "no"
 SUBDIR+= 	ypcat
 SUBDIR+= 	ypmatch
 SUBDIR+= 	ypwhich
 .endif
+
 .if ${MK_RCMDS} != "no"
 SUBDIR+= 	rlogin
 SUBDIR+= 	rsh
 .endif
+
 .if ${MK_TFTP} != "no"
 SUBDIR+= 	tftp
-.endif
 .endif
 
 .include <bsd.arch.inc.mk>

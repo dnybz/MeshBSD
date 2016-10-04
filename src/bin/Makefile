@@ -40,8 +40,7 @@ SUBDIR+= 	sync
 SUBDIR+= 	test
 SUBDIR+= 	uuidgen
 
-.if ${MK_INET_SUPPORT} != "no" || \
-    ${MK_INET6_SUPPORT} != "no"
+.if ${MK_RCMDS} != "no"
 SUBDIR+= 	rcp
 .endif
 

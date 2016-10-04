@@ -125,6 +125,8 @@ SUBDIR+= 	rtsold
 SUBDIR+= 	setfib
 SUBDIR+= 	services_mkdb
 SUBDIR+= 	tcpdrop
+.endif
+
 .if ${MK_INETD} != "no" 
 SUBDIR+= 	inetd
 .endif
@@ -140,9 +142,9 @@ SUBDIR+= 	yppush
 SUBDIR+= 	ypserv
 SUBDIR+= 	ypset
 .endif
+
 .if ${MK_OPENSSH} != "no"
 SUBDIR+=sshd
-.endif
 .endif
 
 .if ${MK_NAND} != "no"
