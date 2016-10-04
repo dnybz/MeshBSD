@@ -1,7 +1,7 @@
 # $FreeBSD: head/usr.bin/host/Makefile 275042 2014-11-25 14:29:10Z bapt $
 
-LDNSDIR=	${.CURDIR}/../../contrib/ldns
-LDNSHOSTDIR=	${.CURDIR}/../../contrib/ldns-host
+LDNSDIR=	${.CURDIR}/../../external/ldns
+LDNSHOSTDIR=	${.CURDIR}/../../external/ldns-host
 
 .PATH:		${LDNSHOSTDIR}
 
