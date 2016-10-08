@@ -13,7 +13,7 @@
 # A PARTICULAR PURPOSE.
 # $FreeBSD: head/usr.sbin/traceroute6/Makefile 275054 2014-11-25 16:57:27Z bapt $
 
-TRACEROUTE_DISTDIR?= ${.CURDIR}/../../contrib/traceroute
+TRACEROUTE_DISTDIR?= ${.CURDIR}/../../external/traceroute
 .PATH: ${TRACEROUTE_DISTDIR}
 
 PROG=	traceroute6

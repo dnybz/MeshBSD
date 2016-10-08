@@ -25,10 +25,10 @@ FILES=	access.html accopt.html assoc.html audio.html authentic.html \
 MAN=	ntp.conf.5 ntp.keys.5
 MAN+=	ntp-keygen.8 ntpd.8 ntpdate.8 ntpdc.8 ntpq.8 ntptime.8 sntp.8
 
-.PATH: ${.CURDIR}/../../../contrib/ntp/html \
-	${.CURDIR}/../../../contrib/ntp/util \
-	${.CURDIR}/../../../contrib/ntp/util \
-	${.CURDIR}/../../../contrib/ntp/ntpd \
-	${.CURDIR}/../../../contrib/ntp/ntpsnmpd
+.PATH: ${.CURDIR}/../../../external/ntp/html \
+	${.CURDIR}/../../../external/ntp/util \
+	${.CURDIR}/../../../external/ntp/util \
+	${.CURDIR}/../../../external/ntp/ntpd \
+	${.CURDIR}/../../../external/ntp/ntpsnmpd
 
 .include <bsd.prog.mk>

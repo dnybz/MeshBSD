@@ -17,8 +17,10 @@ LIBC_SRCTOP?= ${.CURDIR}
 
 .if exists(${LIBC_SRCTOP}/${MACHINE_ARCH})
 LIBC_ARCH=${MACHINE_ARCH}
-.else
+.elif exists(${LIBC_SRCTOP}/${MACHINE_CPUARCH})
 LIBC_ARCH=${MACHINE_CPUARCH}
+.else
+LIBC_ARCH=${TARGET_ARCH}
 .endif
 
 # All library objects contain FreeBSD revision strings by default; they may be
@@ -66,7 +68,6 @@ MISRCS=
 MDASM=
 MIASM=
 NOASM=
-
 .include "${LIBC_SRCTOP}/${LIBC_ARCH}/Makefile.inc"
 .include "${LIBC_SRCTOP}/db/Makefile.inc"
 .include "${LIBC_SRCTOP}/compat-43/Makefile.inc"
@@ -84,8 +85,7 @@ NOASM=
 .include "${LIBC_SRCTOP}/net/Makefile.inc"
 .include "${LIBC_SRCTOP}/nls/Makefile.inc"
 .include "${LIBC_SRCTOP}/posix1e/Makefile.inc"
-.if ${LIBC_ARCH} != "aarch64" && \
-    ${LIBC_ARCH} != "riscv" && \
+.if ${LIBC_ARCH} != "riscv" && \
     ${MACHINE_ARCH:Mmipsn32*} == "" && \
     ${MACHINE_ARCH:Mmips64*} == ""
 .include "${LIBC_SRCTOP}/quad/Makefile.inc"

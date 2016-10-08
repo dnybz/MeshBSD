@@ -82,12 +82,12 @@ SUBDIR+= 	libpcap
 SUBDIR+= 	${_libpe}
 SUBDIR+= 	libpjdlog
 SUBDIR+= 	${_libpmc}
-SUBDIR+= 	${_libproc}
+SUBDIR+= 	libproc
 SUBDIR+= 	libprocstat
 SUBDIR+= 	${_libradius}
 SUBDIR+= 	librpcsvc
 SUBDIR+= 	librt
-SUBDIR+= 	${_librtld_db}
+SUBDIR+= 	librtld_db
 SUBDIR+= 	libsbuf
 SUBDIR+= 	${_libsdp}
 SUBDIR+= 	libsqlite3
@@ -99,7 +99,7 @@ SUBDIR+= 	libstdthreads
 SUBDIR+= 	libsysdecode
 SUBDIR+= 	libtacplus
 SUBDIR+= 	${_libthr}
-SUBDIR+= 	libtls
+SUBDIR+= 	${_libtls}
 SUBDIR+= 	libthread_db
 SUBDIR+= 	libufs
 SUBDIR+= 	libugidfw
@@ -222,13 +222,6 @@ _libnetgraph=	libnetgraph
 _libypclnt=	libypclnt
 .endif
 
-.if ${MACHINE_CPUARCH} == "arm" || \
-	${MACHINE_CPUARCH} == "mips" || \
-    ${MACHINE_CPUARCH} == "riscv"
-_libproc=	libproc
-_librtld_db=	librtld_db
-.endif
-
 .if ${MK_LIBRESSL} != "no"
 _libmp=		libmp
 _libcrypto= 	libcrypto
@@ -237,7 +230,7 @@ _libssl= 	libssl
 .if ${MK_OPENSSH} != "no"
 _libssh= 	libssh
 .endif
-SUBDIR+= 	libtls
+_libtls= 	libtls
 .endif
 
 .if ${MK_PMC} != "no"

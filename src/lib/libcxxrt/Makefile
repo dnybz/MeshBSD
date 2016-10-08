@@ -1,7 +1,7 @@
 # $FreeBSD: head/lib/libcxxrt/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 PACKAGE=	clibs
-SRCDIR=		${.CURDIR}/../../contrib/libcxxrt
+SRCDIR=		${.CURDIR}/../../tools/libcxxrt
 
 SHLIB_MAJOR=	1
 SHLIBDIR?=	/lib

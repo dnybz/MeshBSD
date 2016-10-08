@@ -6,7 +6,7 @@ PROG=	makefs
 
 CFLAGS+=-I${.CURDIR}
 
-SRCS=	cd9660.c ffs.c \
+SRCS=	ffs.c \
 	makefs.c \
 	mtree.c \
 	walk.c
@@ -14,18 +14,17 @@ MAN=	makefs.8
 
 WARNS?=	2
 
-.include "${.CURDIR}/cd9660/Makefile.inc"
 .include "${.CURDIR}/ffs/Makefile.inc"
 
 CFLAGS+=-DHAVE_STRUCT_STAT_ST_FLAGS=1
 CFLAGS+=-DHAVE_STRUCT_STAT_ST_GEN=1
 
-.PATH: ${.CURDIR}/../../contrib/mtree
-CFLAGS+=-I${.CURDIR}/../../contrib/mtree
+.PATH: ${.CURDIR}/../../tools/mtree
+CFLAGS+=-I${.CURDIR}/../../tools/mtree
 SRCS+=	getid.c misc.c spec.c
 
-.PATH: ${.CURDIR}/../../contrib/mknod
-CFLAGS+=-I${.CURDIR}/../../contrib/mknod
+.PATH: ${.CURDIR}/../../tools/mknod
+CFLAGS+=-I${.CURDIR}/../../tools/mknod
 SRCS+=	pack_dev.c
 
 .PATH:	${.CURDIR}/../../sys/ufs/ffs

@@ -1,6 +1,10 @@
 # $FreeBSD: head/lib/libthread_db/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
+.if exists(${.CURDIR}/arch/${MACHINE_CPUARCH})
 .PATH:	${.CURDIR}/arch/${MACHINE_CPUARCH}
+.else
+.PATH:	${.CURDIR}/arch/${TARGET_ARCH}
+.endif
 
 PACKAGE=lib${LIB}
 LIB=	thread_db

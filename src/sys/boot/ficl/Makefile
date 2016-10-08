@@ -5,6 +5,10 @@ FICLDIR?=	${.CURDIR}
 
 .if ${MACHINE_ARCH} == "mips64" || ${MACHINE_ARCH} == "mips64el"
 .PATH: ${FICLDIR}/mips64
+.elif ${TARGET} == "mips64" || ${TARGET} == "mips64el"
+.PATH: ${FICLDIR}/mips64
+.elif exists(${FICLDIR}/${TARGET_ARCH})
+.PATH: ${FICLDIR}/${TARGET_ARCH}
 .else
 .PATH: ${FICLDIR}/${MACHINE_CPUARCH}
 .endif

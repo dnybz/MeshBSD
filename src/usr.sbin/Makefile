@@ -104,7 +104,6 @@ SUBDIR+= 	flowctl
 SUBDIR+= 	ftp-proxy
 SUBDIR+= 	fwcontrol
 SUBDIR+= 	inetd
-SUBDIR+= 	mailstats
 SUBDIR+= 	nscd
 SUBDIR+= 	ntp
 SUBDIR+= 	phttpget

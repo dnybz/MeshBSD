@@ -46,7 +46,6 @@ __<src.opts.mk>__:
 __DEFAULT_YES_OPTIONS = \
     ACCT \
     AMD \
-    APM \
     AT \
 	ATF \
 	AUDIT \

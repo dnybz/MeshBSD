@@ -3,7 +3,7 @@
 # Not elf specific so don't install in /usr/libexec/elf
 BINDIR=/usr/bin
 
-GDBDIR=	${.CURDIR}/../../../../contrib/gdb
+GDBDIR=	${.CURDIR}/../../../../tools/gdb
 .PATH:	${GDBDIR}/gdb/signals
 .PATH:	${GDBDIR}/gdb/gdbserver
 .PATH:	${GDBDIR}/gdb

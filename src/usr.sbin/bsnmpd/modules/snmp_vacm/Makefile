@@ -2,7 +2,7 @@
 #
 # Author: Shteryana Shopova <syrinx@freebsd.org>
 
-CONTRIB= ${.CURDIR}/../../../../contrib/bsnmp
+CONTRIB= ${.CURDIR}/../../../../tools/bsnmp
 .PATH: ${CONTRIB}/snmp_vacm
 
 MOD=	vacm

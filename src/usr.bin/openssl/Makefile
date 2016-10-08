@@ -20,6 +20,8 @@ SRCS=	apps.c apps_posix.c asn1pars.c ca.c certhash.c ciphers.c cms.c crl.c \
 	s_server.c s_socket.c s_time.c sess_id.c smime.c speed.c spkac.c ts.c \
 	verify.c version.c x509.c
 
+WARNS?= 	0
+
 .include <bsd.prog.mk>
 
 .PATH:  ${LIBRESSL_SRC}/apps/openssl \

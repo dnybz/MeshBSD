@@ -19,11 +19,15 @@ MAN=		rtld.1
 CSTD?=		gnu99
 CFLAGS+=	-Wall -DFREEBSD_ELF -DIN_RTLD -ffreestanding
 CFLAGS+=	-I${SRCTOP}/lib/csu/common
+
 .if exists(${.CURDIR}/${MACHINE_ARCH})
 RTLD_ARCH=	${MACHINE_ARCH}
-.else
+.elif exists(${.CURDIR}/${MACHINE_CPUARCH})
 RTLD_ARCH=	${MACHINE_CPUARCH}
+.else
+RTLD_ARCH=	${TARGET_ARCH}
 .endif
+
 CFLAGS+=	-I${.CURDIR}/${RTLD_ARCH} -I${.CURDIR}
 LDFLAGS+=	-nostdlib -e .rtld_start
 

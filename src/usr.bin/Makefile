@@ -38,7 +38,6 @@ SUBDIR+= 	gzip
 SUBDIR+= 	head
 SUBDIR+= 	hexdump
 SUBDIR+= 	host
-#SUBDIR+= 	iconv
 SUBDIR+= 	id
 SUBDIR+= 	ipcrm
 SUBDIR+= 	ipcs
@@ -60,10 +59,6 @@ SUBDIR+= 	man
 SUBDIR+= 	mandoc
 SUBDIR+= 	mesg
 SUBDIR+= 	minigzip
-SUBDIR+= 	mkcsmapper
-SUBDIR+= 	mkcsmapper_static
-SUBDIR+= 	mkesdb
-SUBDIR+= 	mkesdb_static
 SUBDIR+= 	mkfifo
 SUBDIR+= 	mktemp
 SUBDIR+= 	mkuzip
@@ -140,6 +135,12 @@ SUBDIR+= 	bluetooth
 
 .if ${MK_GPL_DTC} != "yes"
 SUBDIR+= usr.bin/dtc
+.endif
+
+.if ${MK_ICONV} != "no"
+SUBDIR+= 	iconv
+SUBDIR+= 	mkcsmapper
+SUBDIR+= 	mkesdb
 .endif
 
 .if ${MK_INET_SUPPORT} != "no" || \
