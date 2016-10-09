@@ -163,12 +163,6 @@ int		ffs_parse_opts(const char *, fsinfo_t *);
 void		ffs_cleanup_opts(fsinfo_t *);
 void		ffs_makefs(const char *, const char *, fsnode *, fsinfo_t *);
 
-void		cd9660_prep_opts(fsinfo_t *);
-int		cd9660_parse_opts(const char *, fsinfo_t *);
-void		cd9660_cleanup_opts(fsinfo_t *);
-void		cd9660_makefs(const char *, const char *, fsnode *, fsinfo_t *);
-
-
 extern	u_int		debug;
 extern	int		dupsok;
 extern	struct timespec	start_time;

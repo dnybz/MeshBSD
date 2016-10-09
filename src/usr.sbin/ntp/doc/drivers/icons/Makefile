@@ -8,6 +8,6 @@ FILESDIR=	${SHAREDIR}/doc/ntp/drivers/icons
 FILES=	home.gif mail2.gif
 .endif
 
-.PATH: ${.CURDIR}/../../../../../contrib/ntp/html/drivers/icons
+.PATH: ${.CURDIR}/../../../../../external/ntp/html/drivers/icons
 
 .include <bsd.prog.mk>

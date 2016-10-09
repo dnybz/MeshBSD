@@ -2174,7 +2174,9 @@ netgraph/netflow/netflow.c	optional netgraph_netflow
 netgraph/netflow/netflow_v9.c	optional netgraph_netflow
 netgraph/netflow/ng_netflow.c	optional netgraph_netflow
 netgraph/ng_base.c		optional netgraph
+netgraph/ng_async.c		optional netgraph
 netgraph/ng_ether.c		optional netgraph_ether
+netgraph/ng_ppp.c		optional netgraph_ppp
 netgraph/ng_pppoe.c		optional netgraph_pppoe
 netgraph/ng_socket.c		optional netgraph_socket
 netgraph/ng_tty.c		optional netgraph_tty

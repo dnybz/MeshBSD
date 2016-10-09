@@ -71,7 +71,6 @@ static fstype_t fstypes[] = {
 	name ## _cleanup_opts, name ## _makefs  \
 }
 	ENTRY(ffs),
-	ENTRY(cd9660),
 	{ .type = NULL	},
 };
 

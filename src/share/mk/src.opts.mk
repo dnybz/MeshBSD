@@ -141,14 +141,13 @@ __DEFAULT_YES_OPTIONS = \
     TEXTPROC \
     TFTP \
     TIMED \
-    USB \
+	TOOLCHAIN \
+	USB \
     UTMPX \
     VI \
     VT \
     WIRELESS \
     WPA_SUPPLICANT_EAPOL \
-	XO \
-	ZFS \
     ZONEINFO
 
 __DEFAULT_NO_OPTIONS = \

@@ -108,15 +108,13 @@ SUBDIR+= 	${_libusbhid}
 SUBDIR+= 	${_libusb}
 SUBDIR+= 	libutil
 SUBDIR+= 	libwrap
-SUBDIR+= 	${_libxo}
+SUBDIR+= 	libxo
 SUBDIR+= 	liby
 SUBDIR+= 	${_libypclnt}
 SUBDIR+= 	libz
 SUBDIR+= 	ncurses
 SUBDIR+= 	${_atf}
-SUBDIR+= 	${_clang}
 SUBDIR+= 	${_cuse}
-SUBDIR+= 	${_tests}
 
 # Inter-library dependencies.  When the makefile for a library contains LDADD
 # libraries, those libraries should be listed as build order dependencies here.
@@ -248,10 +246,6 @@ _libucl= 	libucl
 .if ${MK_USB} != "no"
 _libusbhid=	libusbhid
 _libusb=	libusb
-.endif
-
-.if ${MK_XO} != "no"
-_libxo= 	libxo
 .endif
 
 .if !make(install)
