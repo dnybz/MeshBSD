@@ -11,6 +11,10 @@ MAN+=		patterns.7
 
 LIBADD=		event tls ssl crypto util openbsd
 
+CFLAGS+= -I${.CURDIR}/../../lib/libevent
+CFLAGS+= -I${.CURDIR}/../../lib/libopenbsd
+
+
 #DEBUG=		-g -DDEBUG=3 -O0
 CFLAGS+=	-Wall -I${.CURDIR}
 CFLAGS+=	-Wstrict-prototypes -Wmissing-prototypes

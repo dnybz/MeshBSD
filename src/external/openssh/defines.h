@@ -106,7 +106,6 @@ enum
 #endif /* MAXPATHLEN */
 
 #ifndef HOST_NAME_MAX
-# include "netdb.h" /* for MAXHOSTNAMELEN */
 # if defined(_POSIX_HOST_NAME_MAX)
 #  define HOST_NAME_MAX _POSIX_HOST_NAME_MAX
 # elif defined(MAXHOSTNAMELEN)

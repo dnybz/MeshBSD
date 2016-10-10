@@ -70,9 +70,12 @@ logger_shutdown(void)
 void
 logger_init(struct privsep *ps, struct privsep_proc *p, void *arg)
 {
-	if (pledge("stdio recvfd", NULL) == -1)
+/*
+ * XXX: shall ported...
+ *
+ 	if (pledge("stdio recvfd", NULL) == -1)
 		fatal("pledge");
-
+ */
 	if (config_init(ps->ps_env) == -1)
 		fatal("failed to initialize configuration");
 

@@ -38,6 +38,16 @@
 
 #include "patterns.h"
 
+#ifndef HOST_NAME_MAX
+# if defined(_POSIX_HOST_NAME_MAX)
+#  define HOST_NAME_MAX _POSIX_HOST_NAME_MAX
+# elif defined(MAXHOSTNAMELEN)
+#  define HOST_NAME_MAX MAXHOSTNAMELEN
+# else
+#  define HOST_NAME_MAX	255
+# endif
+#endif /* HOST_NAME_MAX */
+
 #define CONF_FILE		"/etc/httpd.conf"
 #define HTTPD_SOCKET		"/var/run/httpd.sock"
 #define HTTPD_USER		"www"
@@ -676,9 +686,9 @@ void	logit(int, const char *, ...)
 	    __attribute__((__format__ (printf, 2, 3)));
 void	vlog(int, const char *, va_list)
 	    __attribute__((__format__ (printf, 2, 0)));
-__dead void fatal(const char *, ...)
+void fatal(const char *, ...)
 	    __attribute__((__format__ (printf, 1, 2)));
-__dead void fatalx(const char *, ...)
+void fatalx(const char *, ...)
 	    __attribute__((__format__ (printf, 1, 2)));
 
 /* proc.c */
