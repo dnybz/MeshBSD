@@ -2229,45 +2229,8 @@ static int tls_parse_pkcs12(struct tls_data *data, SSL *ssl, PKCS12 *p12,
 	}
 
 	if (certs) {
-#if OPENSSL_VERSION_NUMBER >= 0x10002000L
-		SSL_clear_chain_certs(ssl);
-		while ((cert = sk_X509_pop(certs)) != NULL) {
-			X509_NAME_oneline(X509_get_subject_name(cert), buf,
-					  sizeof(buf));
-			wpa_printf(MSG_DEBUG, "TLS: additional certificate"
-				   " from PKCS12: subject='%s'", buf);
-			if (SSL_add1_chain_cert(ssl, cert) != 1) {
-				tls_show_errors(MSG_DEBUG, __func__,
-						"Failed to add additional certificate");
-				res = -1;
-				break;
-			}
-		}
-		if (!res) {
-			/* Try to continue anyway */
-		}
-		sk_X509_free(certs);
-#ifndef OPENSSL_IS_BORINGSSL
-		res = SSL_build_cert_chain(ssl,
-					   SSL_BUILD_CHAIN_FLAG_CHECK |
-					   SSL_BUILD_CHAIN_FLAG_IGNORE_ERROR);
-		if (!res) {
-			tls_show_errors(MSG_DEBUG, __func__,
-					"Failed to build certificate chain");
-		} else if (res == 2) {
-			wpa_printf(MSG_DEBUG,
-				   "TLS: Ignore certificate chain verification error when building chain with PKCS#12 extra certificates");
-		}
-#endif /* OPENSSL_IS_BORINGSSL */
-		/*
-		 * Try to continue regardless of result since it is possible for
-		 * the extra certificates not to be required.
-		 */
-		res = 0;
-#else /* OPENSSL_VERSION_NUMBER >= 0x10002000L */
-#if OPENSSL_VERSION_NUMBER >= 0x10001000L
 		SSL_CTX_clear_extra_chain_certs(data->ssl);
-#endif /* OPENSSL_VERSION_NUMBER >= 0x10001000L */
+
 		while ((cert = sk_X509_pop(certs)) != NULL) {
 			X509_NAME_oneline(X509_get_subject_name(cert), buf,
 					  sizeof(buf));
@@ -2284,7 +2247,6 @@ static int tls_parse_pkcs12(struct tls_data *data, SSL *ssl, PKCS12 *p12,
 			}
 		}
 		sk_X509_free(certs);
-#endif /* OPENSSL_VERSION_NUMBER >= 0x10002000L */
 	}
 
 	PKCS12_free(p12);
@@ -2812,7 +2774,7 @@ int tls_connection_get_random(void *ssl_ctx, struct tls_connection *conn,
 	if (conn == NULL || keys == NULL)
 		return -1;
 	ssl = conn->ssl;
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
+
 	if (ssl == NULL || ssl->s3 == NULL || ssl->session == NULL)
 		return -1;
 
@@ -2821,18 +2783,6 @@ int tls_connection_get_random(void *ssl_ctx, struct tls_connection *conn,
 	keys->client_random_len = SSL3_RANDOM_SIZE;
 	keys->server_random = ssl->s3->server_random;
 	keys->server_random_len = SSL3_RANDOM_SIZE;
-#else
-	if (ssl == NULL)
-		return -1;
-
-	os_memset(keys, 0, sizeof(*keys));
-	keys->client_random = conn->client_random;
-	keys->client_random_len = SSL_get_client_random(
-		ssl, conn->client_random, sizeof(conn->client_random));
-	keys->server_random = conn->server_random;
-	keys->server_random_len = SSL_get_server_random(
-		ssl, conn->server_random, sizeof(conn->server_random));
-#endif
 
 	return 0;
 }
@@ -2841,7 +2791,6 @@ int tls_connection_get_random(void *ssl_ctx, struct tls_connection *conn,
 #ifndef CONFIG_FIPS
 static int openssl_get_keyblock_size(SSL *ssl)
 {
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
 	const EVP_CIPHER *c;
 	const EVP_MD *h;
 	int md_size;
@@ -2851,17 +2800,12 @@ static int openssl_get_keyblock_size(SSL *ssl)
 		return -1;
 
 	c = ssl->enc_read_ctx->cipher;
-#if OPENSSL_VERSION_NUMBER >= 0x00909000L
+
 	h = EVP_MD_CTX_md(ssl->read_hash);
-#else
-	h = ssl->read_hash;
-#endif
 	if (h)
 		md_size = EVP_MD_size(h);
-#if OPENSSL_VERSION_NUMBER >= 0x10000000L
 	else if (ssl->s3)
 		md_size = ssl->s3->tmp.new_mac_secret_size;
-#endif
 	else
 		return -1;
 
@@ -2871,33 +2815,6 @@ static int openssl_get_keyblock_size(SSL *ssl)
 	return 2 * (EVP_CIPHER_key_length(c) +
 		    md_size +
 		    EVP_CIPHER_iv_length(c));
-#else
-	const SSL_CIPHER *ssl_cipher;
-	int cipher, digest;
-	const EVP_CIPHER *c;
-	const EVP_MD *h;
-
-	ssl_cipher = SSL_get_current_cipher(ssl);
-	if (!ssl_cipher)
-		return -1;
-	cipher = SSL_CIPHER_get_cipher_nid(ssl_cipher);
-	digest = SSL_CIPHER_get_digest_nid(ssl_cipher);
-	wpa_printf(MSG_DEBUG, "OpenSSL: cipher nid %d digest nid %d",
-		   cipher, digest);
-	if (cipher < 0 || digest < 0)
-		return -1;
-	c = EVP_get_cipherbynid(cipher);
-	h = EVP_get_digestbynid(digest);
-	if (!c || !h)
-		return -1;
-
-	wpa_printf(MSG_DEBUG,
-		   "OpenSSL: keyblock size: key_len=%d MD_size=%d IV_len=%d",
-		   EVP_CIPHER_key_length(c), EVP_MD_size(h),
-		   EVP_CIPHER_iv_length(c));
-	return 2 * (EVP_CIPHER_key_length(c) + EVP_MD_size(h) +
-		    EVP_CIPHER_iv_length(c));
-#endif
 }
 #endif /* CONFIG_FIPS */
 
@@ -2911,7 +2828,6 @@ static int openssl_tls_prf(struct tls_connection *conn,
 		   "mode");
 	return -1;
 #else /* CONFIG_FIPS */
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
 	SSL *ssl;
 	u8 *rnd;
 	int ret = -1;
@@ -2978,85 +2894,6 @@ static int openssl_tls_prf(struct tls_connection *conn,
 	bin_clear_free(tmp_out, skip);
 
 	return ret;
-#else
-	SSL *ssl;
-	SSL_SESSION *sess;
-	u8 *rnd;
-	int ret = -1;
-	int skip = 0;
-	u8 *tmp_out = NULL;
-	u8 *_out = out;
-	unsigned char client_random[SSL3_RANDOM_SIZE];
-	unsigned char server_random[SSL3_RANDOM_SIZE];
-	unsigned char master_key[64];
-	size_t master_key_len;
-	const char *ver;
-
-	/*
-	 * TLS library did not support key generation, so get the needed TLS
-	 * session parameters and use an internal implementation of TLS PRF to
-	 * derive the key.
-	 */
-
-	if (conn == NULL)
-		return -1;
-	ssl = conn->ssl;
-	if (ssl == NULL)
-		return -1;
-	ver = SSL_get_version(ssl);
-	sess = SSL_get_session(ssl);
-	if (!ver || !sess)
-		return -1;
-
-	if (skip_keyblock) {
-		skip = openssl_get_keyblock_size(ssl);
-		if (skip < 0)
-			return -1;
-		tmp_out = os_malloc(skip + out_len);
-		if (!tmp_out)
-			return -1;
-		_out = tmp_out;
-	}
-
-	rnd = os_malloc(2 * SSL3_RANDOM_SIZE);
-	if (!rnd) {
-		os_free(tmp_out);
-		return -1;
-	}
-
-	SSL_get_client_random(ssl, client_random, sizeof(client_random));
-	SSL_get_server_random(ssl, server_random, sizeof(server_random));
-	master_key_len = SSL_SESSION_get_master_key(sess, master_key,
-						    sizeof(master_key));
-
-	if (server_random_first) {
-		os_memcpy(rnd, server_random, SSL3_RANDOM_SIZE);
-		os_memcpy(rnd + SSL3_RANDOM_SIZE, client_random,
-			  SSL3_RANDOM_SIZE);
-	} else {
-		os_memcpy(rnd, client_random, SSL3_RANDOM_SIZE);
-		os_memcpy(rnd + SSL3_RANDOM_SIZE, server_random,
-			  SSL3_RANDOM_SIZE);
-	}
-
-	if (os_strcmp(ver, "TLSv1.2") == 0) {
-		tls_prf_sha256(master_key, master_key_len,
-			       label, rnd, 2 * SSL3_RANDOM_SIZE,
-			       _out, skip + out_len);
-		ret = 0;
-	} else if (tls_prf_sha1_md5(master_key, master_key_len,
-				    label, rnd, 2 * SSL3_RANDOM_SIZE,
-				    _out, skip + out_len) == 0) {
-		ret = 0;
-	}
-	os_memset(master_key, 0, sizeof(master_key));
-	os_free(rnd);
-	if (ret == 0 && skip_keyblock)
-		os_memcpy(out, _out + skip, out_len);
-	bin_clear_free(tmp_out, skip);
-
-	return ret;
-#endif
 #endif /* CONFIG_FIPS */
 }
 
@@ -3065,7 +2902,6 @@ int tls_connection_prf(void *tls_ctx, struct tls_connection *conn,
 		       const char *label, int server_random_first,
 		       int skip_keyblock, u8 *out, size_t out_len)
 {
-#if OPENSSL_VERSION_NUMBER >= 0x10001000L
 	SSL *ssl;
 	if (conn == NULL)
 		return -1;
@@ -3079,7 +2915,6 @@ int tls_connection_prf(void *tls_ctx, struct tls_connection *conn,
 		wpa_printf(MSG_DEBUG, "OpenSSL: Using internal PRF");
 		return 0;
 	}
-#endif
 	return openssl_tls_prf(conn, label, server_random_first,
 			       skip_keyblock, out, out_len);
 }
