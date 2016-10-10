@@ -12,7 +12,6 @@ openssl_SOURCES = apps.c
 openssl_SOURCES += asn1pars.c
 openssl_SOURCES += ca.c
 openssl_SOURCES += ciphers.c
-openssl_SOURCES += cms.c
 openssl_SOURCES += crl.c
 openssl_SOURCES += crl2p7.c
 openssl_SOURCES += dgst.c
@@ -89,6 +88,7 @@ noinst_HEADERS += timeouts.h
 EXTRA_DIST = cert.pem
 EXTRA_DIST += openssl.cnf
 EXTRA_DIST += x509v3.cnf
+EXTRA_DIST += CMakeLists.txt
 
 install-exec-hook:
 	@if [ "@OPENSSLDIR@x" != "x" ]; then \

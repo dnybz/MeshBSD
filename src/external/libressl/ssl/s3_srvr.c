@@ -1,4 +1,4 @@
-/* $OpenBSD: s3_srvr.c,v 1.123 2015/09/13 12:39:16 jsing Exp $ */
+/* $OpenBSD: s3_srvr.c,v 1.126 2016/05/30 13:42:54 beck Exp $ */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -776,21 +776,26 @@ ssl3_get_client_hello(SSL *s)
 	}
 
 	/*
-	 * If we require cookies and this ClientHello doesn't
+	 * If we require cookies (DTLS) and this ClientHello doesn't
 	 * contain one, just return since we do not want to
 	 * allocate any memory yet. So check cookie length...
 	 */
 	if (SSL_get_options(s) & SSL_OP_COOKIE_EXCHANGE) {
 		unsigned int session_length, cookie_length;
 
+		if (p - d + SSL3_RANDOM_SIZE + 1 >= n)
+			goto truncated;
 		session_length = *(p + SSL3_RANDOM_SIZE);
-		cookie_length = *(p + SSL3_RANDOM_SIZE + session_length + 1);
+
+		if (p - d + SSL3_RANDOM_SIZE + session_length + 1 >= n)
+			goto truncated;
+		cookie_length = p[SSL3_RANDOM_SIZE + session_length + 1];
 
 		if (cookie_length == 0)
 			return (1);
 	}
 
-	if (p + SSL3_RANDOM_SIZE + 1 - d > n)
+	if (p - d + SSL3_RANDOM_SIZE + 1 > n)
 		goto truncated;
 
 	/* load the client random */
@@ -799,7 +804,7 @@ ssl3_get_client_hello(SSL *s)
 
 	/* get the session-id */
 	j= *(p++);
-	if (p + j - d > n)
+	if (p - d + j > n)
 		goto truncated;
 
 	s->hit = 0;
@@ -839,7 +844,7 @@ ssl3_get_client_hello(SSL *s)
 
 	if (SSL_IS_DTLS(s)) {
 		/* cookie stuff */
-		if (p + 1 - d > n)
+		if (p - d + 1 > n)
 			goto truncated;
 		cookie_len = *(p++);
 
@@ -856,7 +861,7 @@ ssl3_get_client_hello(SSL *s)
 			goto f_err;
 		}
 
-		if (p + cookie_len - d > n)
+		if (p - d + cookie_len > n)
 			goto truncated;
 
 		/* verify the cookie if appropriate option is set. */
@@ -888,7 +893,7 @@ ssl3_get_client_hello(SSL *s)
 		p += cookie_len;
 	}
 
-	if (p + 2 - d > n)
+	if (p - d + 2 > n)
 		goto truncated;
 	n2s(p, i);
 	if ((i == 0) && (j != 0)) {
@@ -898,7 +903,7 @@ ssl3_get_client_hello(SSL *s)
 		    SSL_R_NO_CIPHERS_SPECIFIED);
 		goto f_err;
 	}
-	if (p + i - d > n)
+	if (p - d + i > n)
 		goto truncated;
 	if (i > 0) {
 		if ((ciphers = ssl_bytes_to_cipher_list(s, p, i)) == NULL)
@@ -931,10 +936,10 @@ ssl3_get_client_hello(SSL *s)
 	}
 
 	/* compression */
-	if (p + 1 - d > n)
+	if (p - d + 1 > n)
 		goto truncated;
 	i= *(p++);
-	if (p + i - d > n)
+	if (p - d + i > n)
 		goto truncated;
 	for (j = 0; j < i; j++) {
 		if (p[j] == 0)
@@ -1655,7 +1660,7 @@ ssl3_get_client_key_exchange(SSL *s)
 			/* SSLerr(SSL_F_SSL3_GET_CLIENT_KEY_EXCHANGE,SSL_R_BAD_RSA_DECRYPT); */
 		}
 
-		if (p + 2 - d > n)	/* needed in the SSL3 case */
+		if (p - d + 2 > n)	/* needed in the SSL3 case */
 			goto truncated;
 		if ((al == -1) && !((p[0] == (s->client_version >> 8)) &&
 		    (p[1] == (s->client_version & 0xff)))) {
@@ -2376,8 +2381,7 @@ ssl3_get_client_certificate(SSL *s)
 		}
 	}
 
-	if (s->session->peer != NULL) /* This should not be needed */
-		X509_free(s->session->peer);
+	X509_free(s->session->peer);
 	s->session->peer = sk_X509_shift(sk);
 	s->session->verify_result = s->verify_result;
 
@@ -2414,8 +2418,7 @@ f_err:
 		ssl3_send_alert(s, SSL3_AL_FATAL, al);
 	}
 err:
-	if (x != NULL)
-		X509_free(x);
+	X509_free(x);
 	if (sk != NULL)
 		sk_X509_pop_free(sk, X509_free);
 	return (ret);
@@ -2560,7 +2563,7 @@ ssl3_send_newsession_ticket(SSL *s)
 		/* Encrypt session data */
 		EVP_EncryptUpdate(&ctx, p, &len, senc, slen);
 		p += len;
-		EVP_EncryptFinal(&ctx, p, &len);
+		EVP_EncryptFinal_ex(&ctx, p, &len);
 		p += len;
 		EVP_CIPHER_CTX_cleanup(&ctx);
 

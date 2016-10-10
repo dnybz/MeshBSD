@@ -13,14 +13,15 @@ LIBADD= ssl crypto
 
 INCS=	tls.h
 
-SRCS=	tls.c \
-	tls_client.c \
-	tls_config.c \
-	tls_conninfo.c \
-	tls_peer.c \
-	tls_server.c \
-	tls_util.c \
-	tls_verify.c
+SRCS=	tls.c
+SRC+= 	tls_bio_cb.c
+SRC+= 	tls_client.c
+SRC+= 	tls_config.c
+SRC+= 	tls_conninfo.c
+SRC+= 	tls_server.c
+SRC+= 	tls_peer.c
+SRC+= 	tls_util.c
+SRC+= 	tls_verify.c
 
 .PATH: ${LTLS_SRC} \
 	${LIBRESSL_SRC}/include \

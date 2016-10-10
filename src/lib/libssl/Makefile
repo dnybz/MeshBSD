@@ -6,7 +6,7 @@ SHLIB_MAJOR=	39
 NO_LINT=
 
 .if exists(Makefile.man)
-#.include "Makefile.man"
+.include "Makefile.man"
 .endif
 .include "../libcrypto/Makefile.inc"
 .warning Building LibreSSL ${OPENSSL_VER}

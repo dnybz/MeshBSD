@@ -4,6 +4,7 @@ lib_LTLIBRARIES = libtls.la
 
 EXTRA_DIST = VERSION
 EXTRA_DIST += CMakeLists.txt
+EXTRA_DIST += tls.def
 
 libtls_la_LDFLAGS = -version-info @LIBTLS_VERSION@ -no-undefined
 libtls_la_LIBADD = $(abs_top_builddir)/ssl/libssl.la
@@ -19,6 +20,7 @@ endif
 
 libtls_la_SOURCES = tls.c
 libtls_la_SOURCES += tls_client.c
+libtls_la_SOURCES += tls_bio_cb.c
 libtls_la_SOURCES += tls_config.c
 libtls_la_SOURCES += tls_conninfo.c
 libtls_la_SOURCES += tls_server.c

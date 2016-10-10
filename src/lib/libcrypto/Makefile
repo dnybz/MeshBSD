@@ -5,7 +5,7 @@ SHLIBDIR?=      /lib
 .include <bsd.own.mk>
 
 LIB=            crypto
-SHLIB_MAJOR=    38
+SHLIB_MAJOR=    39
 ALLOW_SHARED_TEXTREL=
 
 NO_LINT=
@@ -20,7 +20,7 @@ CFLAGS+= -Wall -Wundef -Werror -fpic -DPIC
 INCS+=	crypto.h opensslv.h ossl_typ.h
 INCS+=  aes.h asn1.h asn1_mac.h asn1t.h
 INCS+=  blowfish.h bio.h bn.h buffer.h 
-INCS+=  camellia.h cast.h chacha.h cmac.h cms.h comp.h conf.h conf_api.h
+INCS+=  camellia.h cast.h chacha.h cmac.h comp.h conf.h conf_api.h
 INCS+=  des.h dh.h dsa.h dso.h 
 INCS+=  ec.h ecdh.h ecdsa.h engine.h err.h evp.h 
 INCS+=  gost.h hmac.h idea.h krb5_asn.h lhash.h 

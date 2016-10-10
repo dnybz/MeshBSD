@@ -1,4 +1,4 @@
-/* $OpenBSD: rsa.h,v 1.26 2014/07/12 16:03:37 miod Exp $ */
+/* $OpenBSD: rsa.h,v 1.28 2016/06/30 02:02:06 bcook Exp $ */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -194,16 +194,6 @@ struct rsa_st {
  */
 #define RSA_FLAG_NO_BLINDING		0x0080
 
-/*
- * The built-in RSA implementation uses constant time operations by default
- * in private key operations, e.g., constant time modular exponentiation,
- * modular inverse without leaking branches, division without leaking branches.
- * This flag disables these constant time operations and results in faster RSA
- * private key operations.
- */
-#define RSA_FLAG_NO_CONSTTIME		0x0100
-
-
 #define EVP_PKEY_CTX_set_rsa_padding(ctx, pad) \
 	EVP_PKEY_CTX_ctrl(ctx, EVP_PKEY_RSA, -1, EVP_PKEY_CTRL_RSA_PADDING, \
 				pad, NULL)
@@ -303,8 +293,12 @@ const RSA_METHOD *RSA_PKCS1_SSLeay(void);
 
 const RSA_METHOD *RSA_null_method(void);
 
-DECLARE_ASN1_ENCODE_FUNCTIONS_const(RSA, RSAPublicKey)
-DECLARE_ASN1_ENCODE_FUNCTIONS_const(RSA, RSAPrivateKey)
+RSA *d2i_RSAPublicKey(RSA **a, const unsigned char **in, long len);
+int i2d_RSAPublicKey(const RSA *a, unsigned char **out);
+extern const ASN1_ITEM RSAPublicKey_it;
+RSA *d2i_RSAPrivateKey(RSA **a, const unsigned char **in, long len);
+int i2d_RSAPrivateKey(const RSA *a, unsigned char **out);
+extern const ASN1_ITEM RSAPrivateKey_it;
 
 typedef struct rsa_pss_params_st {
 	X509_ALGOR *hashAlgorithm;
@@ -313,7 +307,11 @@ typedef struct rsa_pss_params_st {
 	ASN1_INTEGER *trailerField;
 } RSA_PSS_PARAMS;
 
-DECLARE_ASN1_FUNCTIONS(RSA_PSS_PARAMS)
+RSA_PSS_PARAMS *RSA_PSS_PARAMS_new(void);
+void RSA_PSS_PARAMS_free(RSA_PSS_PARAMS *a);
+RSA_PSS_PARAMS *d2i_RSA_PSS_PARAMS(RSA_PSS_PARAMS **a, const unsigned char **in, long len);
+int i2d_RSA_PSS_PARAMS(RSA_PSS_PARAMS *a, unsigned char **out);
+extern const ASN1_ITEM RSA_PSS_PARAMS_it;
 
 int RSA_print_fp(FILE *fp, const RSA *r, int offset);
 

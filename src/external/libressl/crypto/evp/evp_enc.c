@@ -1,4 +1,4 @@
-/* $OpenBSD: evp_enc.c,v 1.27 2015/09/10 15:56:25 jsing Exp $ */
+/* $OpenBSD: evp_enc.c,v 1.34 2016/09/04 12:35:23 bcook Exp $ */
 /* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
  * All rights reserved.
  *
@@ -59,6 +59,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include <sys/types.h>
 
 #include <openssl/opensslconf.h>
 
@@ -260,13 +262,18 @@ EVP_CipherFinal_ex(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
 		return EVP_DecryptFinal_ex(ctx, out, outl);
 }
 
+__warn_references(EVP_CipherFinal,
+    "warning: EVP_CipherFinal is often misused, please use EVP_CipherFinal_ex and EVP_CIPHER_CTX_cleanup");
+
 int
 EVP_CipherFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
 {
+	int ret;
 	if (ctx->encrypt)
-		return EVP_EncryptFinal(ctx, out, outl);
+		ret = EVP_EncryptFinal_ex(ctx, out, outl);
 	else
-		return EVP_DecryptFinal(ctx, out, outl);
+		ret = EVP_DecryptFinal_ex(ctx, out, outl);
+	return ret;
 }
 
 int
@@ -364,6 +371,9 @@ EVP_EncryptUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl,
 	ctx->buf_len = i;
 	return 1;
 }
+
+__warn_references(EVP_EncryptFinal,
+    "warning: EVP_EncryptFinal is often misused, please use EVP_EncryptFinal_ex and EVP_CIPHER_CTX_cleanup");
 
 int
 EVP_EncryptFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
@@ -478,6 +488,9 @@ EVP_DecryptUpdate(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl,
 	return 1;
 }
 
+__warn_references(EVP_DecryptFinal,
+    "warning: EVP_DecryptFinal is often misused, please use EVP_DecryptFinal_ex and EVP_CIPHER_CTX_cleanup");
+
 int
 EVP_DecryptFinal(EVP_CIPHER_CTX *ctx, unsigned char *out, int *outl)
 {
@@ -571,7 +584,7 @@ EVP_CIPHER_CTX_cleanup(EVP_CIPHER_CTX *c)
 		 * functional reference we held for this reason. */
 		ENGINE_finish(c->engine);
 #endif
-	memset(c, 0, sizeof(EVP_CIPHER_CTX));
+	explicit_bzero(c, sizeof(EVP_CIPHER_CTX));
 	return 1;
 }
 

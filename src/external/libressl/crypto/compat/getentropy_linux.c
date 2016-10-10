@@ -1,4 +1,4 @@
-/*	$OpenBSD: getentropy_linux.c,v 1.40 2015/08/25 17:26:43 deraadt Exp $	*/
+/*	$OpenBSD: getentropy_linux.c,v 1.42 2016/04/19 20:20:24 tj Exp $	*/
 
 /*
  * Copyright (c) 2014 Theo de Raadt <deraadt@openbsd.org>
@@ -17,7 +17,7 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
  * Emulation of getentropy(2) as documented at:
- * http://www.openbsd.org/cgi-bin/man.cgi/OpenBSD-current/man2/getentropy.2
+ * http://man.openbsd.org/getentropy.2
  */
 
 #define	_POSIX_C_SOURCE	199309L
@@ -120,7 +120,7 @@ getentropy(void *buf, size_t len)
 	 * Try to use sysctl CTL_KERN, KERN_RANDOM, RANDOM_UUID.
 	 * sysctl is a failsafe API, so it guarantees a result.  This
 	 * should work inside a chroot, or when file descriptors are
-	 * exhuasted.
+	 * exhausted.
 	 *
 	 * However this can fail if the Linux kernel removes support
 	 * for sysctl.  Starting in 2007, there have been efforts to

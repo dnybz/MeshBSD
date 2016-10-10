@@ -1,9 +1,10 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 2.8.8)
 include(CheckFunctionExists)
 include(CheckLibraryExists)
 include(CheckIncludeFiles)
+include(CheckTypeSize)
 
-project (LibreSSL)
+project (LibreSSL C)
 
 enable_testing()
 
@@ -22,6 +23,17 @@ string(STRIP ${TLS_VERSION} TLS_VERSION)
 string(REPLACE ":" "." TLS_VERSION ${TLS_VERSION})
 string(REGEX REPLACE "\\..*" "" TLS_MAJOR_VERSION ${TLS_VERSION})
 
+option(ENABLE_ASM "Enable assembly" ON)
+option(ENABLE_EXTRATESTS "Enable extra tests that may be unreliable on some platforms" OFF)
+option(ENABLE_NC "Enable installing TLS-enabled nc(1)" OFF)
+set(OPENSSLDIR ${OPENSSLDIR} CACHE PATH "Set the default openssl directory" FORCE)
+
+set(BUILD_NC true)
+
+if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+	add_definitions(-fno-common)
+endif()
+
 if(CMAKE_SYSTEM_NAME MATCHES "OpenBSD")
 	add_definitions(-DHAVE_ATTRIBUTE__BOUNDED__)
 endif()
@@ -33,9 +45,34 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 	add_definitions(-D_GNU_SOURCE)
 endif()
 
+if(CMAKE_SYSTEM_NAME MATCHES "MINGW")
+	set(BUILD_NC false)
+endif()
+
+if(WIN32)
+	set(BUILD_NC false)
+endif()
+
+if(CMAKE_SYSTEM_NAME MATCHES "HP-UX")
+	if(CMAKE_C_COMPILER MATCHES "gcc")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=gnu99 -fno-strict-aliasing")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mlp64")
+	else()
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O2 +DD64 +Otype_safety=off")
+	endif()
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_XOPEN_SOURCE=600 -D__STRICT_ALIGNMENT")
+endif()
+
+if(CMAKE_SYSTEM_NAME MATCHES "SunOS")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=gnu99 -fno-strict-aliasing")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__EXTENSIONS__")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_XOPEN_SOURCE=600")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DBSD_COMP")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fpic -m64")
+endif()
+
 add_definitions(-DLIBRESSL_INTERNAL)
 add_definitions(-DOPENSSL_NO_HW_PADLOCK)
-add_definitions(-DOPENSSL_NO_ASM)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE true)
 
@@ -43,14 +80,17 @@ if (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID MATCHES "Clang")
 	add_definitions(-Wno-pointer-sign)
 endif()
 
-if(MSVC)
-	add_definitions(-Dinline=__inline)
+if(WIN32)
 	add_definitions(-Drestrict)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 	add_definitions(-D_CRT_DEPRECATED_NO_WARNINGS)
 	add_definitions(-D_REENTRANT -D_POSIX_THREAD_SAFE_FUNCTIONS)
 	add_definitions(-DWIN32_LEAN_AND_MEAN -D_WIN32_WINNT=0x0501)
 	add_definitions(-DCPPFLAGS -DOPENSSL_NO_SPEED -DNO_SYSLOG -DNO_CRYPT)
+endif()
+
+if(MSVC)
+	add_definitions(-Dinline=__inline)
 
 	set(MSVC_DISABLED_WARNINGS_LIST
 		"C4057" # C4057: 'initializing' : 'unsigned char *' differs in
@@ -61,6 +101,8 @@ if(MSVC)
 		        # possible loss of data
 		"C4244" # 'function' : conversion from 'int' to 'uint8_t',
 		        # possible loss of data
+		"C4267" # conversion from 'size_t' to 'some type that is almost
+		        # certainly safe to convert a size_t to'.
 		"C4706" # assignment within conditional expression
 		"C4820" # 'bytes' bytes padding added after construct 'member_name'
 		"C4996" # 'read': The POSIX name for this item is deprecated. Instead,
@@ -68,7 +110,8 @@ if(MSVC)
 	)
 	string(REPLACE "C" " -wd" MSVC_DISABLED_WARNINGS_STR
 		${MSVC_DISABLED_WARNINGS_LIST})
-	set(CMAKE_C_FLAGS  "-MP -W4 ${MSVC_DISABLED_WARNINGS_STR}")
+	string(REGEX REPLACE "[/-]W[1234][ ]?" "" CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -MP -W4 ${MSVC_DISABLED_WARNINGS_STR}")
 endif()
 
 check_function_exists(asprintf HAVE_ASPRINTF)
@@ -106,8 +149,8 @@ if(HAVE_STRNDUP)
 	add_definitions(-DHAVE_STRNDUP)
 endif()
 
-if(MSVC)
-	set(HAVE_STRNLEN)
+if(WIN32)
+	set(HAVE_STRNLEN true)
 	add_definitions(-DHAVE_STRNLEN)
 else()
 	check_function_exists(strnlen HAVE_STRNLEN)
@@ -129,6 +172,11 @@ endif()
 check_function_exists(arc4random_buf HAVE_ARC4RANDOM_BUF)
 if(HAVE_ARC4RANDOM_BUF)
 	add_definitions(-DHAVE_ARC4RANDOM_BUF)
+endif()
+
+check_function_exists(arc4random_uniform HAVE_ARC4RANDOM_UNIFORM)
+if(HAVE_ARC4RANDOM_UNIFORM)
+	add_definitions(-DHAVE_ARC4RANDOM_UNIFORM)
 endif()
 
 check_function_exists(explicit_bzero HAVE_EXPLICIT_BZERO)
@@ -156,12 +204,46 @@ if(HAVE_MEMCMP)
 	add_definitions(-DHAVE_MEMCMP)
 endif()
 
+check_function_exists(memmem HAVE_MEMMEM)
+if(HAVE_MEMMEM)
+	add_definitions(-DHAVE_MEMMEM)
+endif()
+
 check_include_files(err.h HAVE_ERR_H)
 if(HAVE_ERR_H)
 	add_definitions(-DHAVE_ERR_H)
 endif()
 
-set(OPENSSL_LIBS ssl crypto)
+if(ENABLE_ASM)
+	if("${CMAKE_C_COMPILER_ABI}" STREQUAL "ELF")
+		if("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "(x86_64|amd64)")
+			set(HOST_ASM_ELF_X86_64 true)
+		elseif(CMAKE_SYSTEM_NAME STREQUAL "SunOS" AND "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "i386")
+			set(HOST_ASM_ELF_X86_64 true)
+		endif()
+	elseif(APPLE AND "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "x86_64")
+		set(HOST_ASM_MACOSX_X86_64 true)
+	endif()
+endif()
+
+if(NOT (CMAKE_SYSTEM_NAME MATCHES "(Darwin|CYGWIN)"))
+	set(BUILD_SHARED true)
+endif()
+
+# USE_SHARED builds applications (e.g. openssl) using shared LibreSSL.
+# By default, applications use LibreSSL static library to avoid dependencies.
+# USE_SHARED isn't set by default; use -DUSE_SHARED=ON with CMake to enable.
+# Can be helpful for debugging; don't use for public releases.
+if(NOT BUILD_SHARED)
+	set(USE_SHARED off)
+endif()
+
+if(USE_SHARED)
+	set(OPENSSL_LIBS ssl-shared crypto-shared)
+else()
+	set(OPENSSL_LIBS ssl crypto)
+endif()
+
 if(CMAKE_HOST_WIN32)
 	set(OPENSSL_LIBS ${OPENSSL_LIBS} ws2_32)
 endif()
@@ -171,10 +253,20 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 		set(OPENSSL_LIBS ${OPENSSL_LIBS} rt)
 	endif()
 endif()
-
-if(NOT (CMAKE_SYSTEM_NAME MATCHES "Darwin" OR MSVC))
-	set(BUILD_SHARED true)
+if(CMAKE_SYSTEM_NAME MATCHES "HP-UX")
+	set(OPENSSL_LIBS ${OPENSSL_LIBS} pthread)
 endif()
+if(CMAKE_SYSTEM_NAME MATCHES "SunOS")
+	set(OPENSSL_LIBS ${OPENSSL_LIBS} nsl socket)
+endif()
+
+check_type_size(time_t SIZEOF_TIME_T)
+if(SIZEOF_TIME_T STREQUAL "4")
+	set(SMALL_TIME_T true)
+	message(WARNING " ** Warning, this system is unable to represent times past 2038\n"
+	                " ** It will behave incorrectly when handling valid RFC5280 dates")
+endif()
+add_definitions(-DSIZEOF_TIME_T=${SIZEOF_TIME_T})
 
 add_subdirectory(crypto)
 add_subdirectory(ssl)
@@ -185,3 +277,11 @@ if(NOT MSVC)
 	add_subdirectory(man)
 	add_subdirectory(tests)
 endif()
+
+configure_file(
+	"${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+	"${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+	IMMEDIATE @ONLY)
+
+add_custom_target(uninstall
+	COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)

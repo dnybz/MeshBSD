@@ -2,10 +2,7 @@
 
 .include <bsd.own.mk>
 
-#
-# XXX Yeah... this is ugly... I'll fix it
-#
-OPENSSL_VER=	2.3.6
+OPENSSL_VER=	2.5.0
 OPENSSL_DATE=	
 
 LIBRESSL_SRC=	${.CURDIR}/../../external/libressl
