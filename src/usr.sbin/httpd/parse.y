@@ -1,4 +1,4 @@
-/*	$OpenBSD: parse.y,v 1.73 2015/07/19 05:17:27 reyk Exp $	*/
+/*	$OpenBSD: parse.y,v 1.78 2016/06/21 21:35:24 benno Exp $	*/
 
 /*
  * Copyright (c) 2007 - 2015 Reyk Floeter <reyk@openbsd.org>
@@ -171,6 +171,14 @@ include		: INCLUDE STRING		{
 		;
 
 varset		: STRING '=' STRING	{
+			char *s = $1;
+			while (*s++) {
+				if (isspace((unsigned char)*s)) {
+					yyerror("macro name cannot contain "
+					    "whitespace");
+					YYERROR;
+				}
+			}
 			if (symset($1, $3, 0) == -1)
 				fatal("cannot store variable");
 			free($1);
@@ -1007,7 +1015,7 @@ mediaoptsl	: mediastring medianames_l optsemicolon
 		| include
 		;
 
-mediastring	: STRING '/' STRING 	{
+mediastring	: STRING '/' STRING	{
 			if (strlcpy(media.media_type, $1,
 			    sizeof(media.media_type)) >=
 			    sizeof(media.media_type) ||
@@ -1212,10 +1220,10 @@ lookup(char *s)
 
 #define MAXPUSHBACK	128
 
-u_char	*parsebuf;
-int	 parseindex;
-u_char	 pushback_buffer[MAXPUSHBACK];
-int	 pushback_index = 0;
+unsigned char	*parsebuf;
+int		 parseindex;
+unsigned char	 pushback_buffer[MAXPUSHBACK];
+int		 pushback_index = 0;
 
 int
 lgetc(int quotec)
@@ -1307,10 +1315,10 @@ findeol(void)
 int
 yylex(void)
 {
-	u_char	 buf[8096];
-	u_char	*p, *val;
-	int	 quotec, next, c;
-	int	 token;
+	unsigned char	 buf[8096];
+	unsigned char	*p, *val;
+	int		 quotec, next, c;
+	int		 token;
 
 top:
 	p = buf;
@@ -1723,7 +1731,7 @@ host_v4(const char *s)
 		return (NULL);
 
 	if ((h = calloc(1, sizeof(*h))) == NULL)
-		fatal(NULL);
+		fatal(__func__);
 	sain = (struct sockaddr_in *)&h->ss;
 	sain->sin_len = sizeof(struct sockaddr_in);
 	sain->sin_family = AF_INET;
@@ -1748,7 +1756,7 @@ host_v6(const char *s)
 	hints.ai_flags = AI_NUMERICHOST;
 	if (getaddrinfo(s, "0", &hints, &res) == 0) {
 		if ((h = calloc(1, sizeof(*h))) == NULL)
-			fatal(NULL);
+			fatal(__func__);
 		sa_in6 = (struct sockaddr_in6 *)&h->ss;
 		sa_in6->sin6_len = sizeof(struct sockaddr_in6);
 		sa_in6->sin6_family = AF_INET6;
@@ -1799,7 +1807,7 @@ host_dns(const char *s, struct addresslist *al, int max,
 		    res->ai_family != AF_INET6)
 			continue;
 		if ((h = calloc(1, sizeof(*h))) == NULL)
-			fatal(NULL);
+			fatal(__func__);
 
 		if (port != NULL)
 			memcpy(&h->port, port, sizeof(h->port));
@@ -2091,7 +2099,7 @@ getservice(char *n)
 		return (s->s_port);
 	}
 
-	return (htons((u_short)llval));
+	return (htons((unsigned short)llval));
 }
 
 int
@@ -2116,9 +2124,8 @@ is_if_in_group(const char *ifname, const char *groupname)
 	}
 
 	len = ifgr.ifgr_len;
-	ifgr.ifgr_groups =
-	    (struct ifg_req *)calloc(len / sizeof(struct ifg_req),
-		sizeof(struct ifg_req));
+	ifgr.ifgr_groups = calloc(len / sizeof(struct ifg_req),
+	    sizeof(struct ifg_req));
 	if (ifgr.ifgr_groups == NULL)
 		err(1, "getifgroups");
 	if (ioctl(s, SIOCGIFGROUP, (caddr_t)&ifgr) == -1)

@@ -1,4 +1,4 @@
-/*	$OpenBSD: httpd.c,v 1.38 2015/07/18 06:00:43 reyk Exp $	*/
+/*	$OpenBSD: httpd.c,v 1.56 2016/06/10 12:09:48 florian Exp $	*/
 
 /*
  * Copyright (c) 2014 Reyk Floeter <reyk@openbsd.org>
@@ -33,10 +33,12 @@
 #include <string.h>
 #include <signal.h>
 #include <getopt.h>
+#include <netdb.h>
 #include <fnmatch.h>
 #include <err.h>
 #include <errno.h>
 #include <event.h>
+#include <syslog.h>
 #include <unistd.h>
 #include <ctype.h>
 #include <pwd.h>
@@ -49,7 +51,7 @@ __dead void	 usage(void);
 
 int		 parent_configure(struct httpd *);
 void		 parent_configure_done(struct httpd *);
-void		 parent_reload(struct httpd *, u_int, const char *);
+void		 parent_reload(struct httpd *, unsigned int, const char *);
 void		 parent_reopen(struct httpd *);
 void		 parent_sig_handler(int, short, void *);
 void		 parent_shutdown(struct httpd *);
@@ -158,7 +160,7 @@ main(int argc, char *argv[])
 	int			 c;
 	unsigned int		 proc;
 	int			 debug = 0, verbose = 0;
-	u_int32_t		 opts = 0;
+	uint32_t		 opts = 0;
 	struct httpd		*env;
 	struct privsep		*ps;
 	const char		*conffile = CONF_FILE;
@@ -189,7 +191,8 @@ main(int argc, char *argv[])
 		}
 	}
 
-	log_init(debug ? debug : 1);	/* log to stderr until daemonized */
+	/* log to stderr until daemonized */
+	log_init(debug ? debug : 1, LOG_DAEMON);
 
 	argc -= optind;
 	if (argc > 0)
@@ -218,7 +221,7 @@ main(int argc, char *argv[])
 	/* Configure the control socket */
 	ps->ps_csock.cs_name = NULL;
 
-	log_init(debug);
+	log_init(debug, LOG_DAEMON);
 	log_verbose(verbose);
 
 	if (!debug && daemon(1, 0) == -1)
@@ -244,8 +247,11 @@ main(int argc, char *argv[])
 	}
 
 	proc_init(ps, procs, nitems(procs));
+	log_procinit("parent");
 
-	setproctitle("parent");
+	if (pledge("stdio rpath wpath cpath inet dns proc ioctl sendfd",
+	    NULL) == -1)
+		fatal("pledge");
 
 	event_init();
 
@@ -331,8 +337,7 @@ parent_configure(struct httpd *env)
 		cf.cf_opts = env->sc_opts;
 		cf.cf_flags = env->sc_flags;
 
-		proc_compose_imsg(env->sc_ps, id, -1, IMSG_CFG_DONE, -1,
-		    &cf, sizeof(cf));
+		proc_compose(env->sc_ps, id, IMSG_CFG_DONE, &cf, sizeof(cf));
 	}
 
 	ret = 0;
@@ -342,7 +347,7 @@ parent_configure(struct httpd *env)
 }
 
 void
-parent_reload(struct httpd *env, u_int reset, const char *filename)
+parent_reload(struct httpd *env, unsigned int reset, const char *filename)
 {
 	if (env->sc_reload) {
 		log_debug("%s: already in progress: %d pending",
@@ -377,8 +382,7 @@ parent_reload(struct httpd *env, u_int reset, const char *filename)
 void
 parent_reopen(struct httpd *env)
 {
-	proc_compose_imsg(env->sc_ps, PROC_LOGGER, -1, IMSG_CTL_REOPEN,
-	    -1, NULL, 0);
+	proc_compose(env->sc_ps, PROC_LOGGER, IMSG_CTL_REOPEN, NULL, 0);
 }
 
 void
@@ -397,8 +401,7 @@ parent_configure_done(struct httpd *env)
 			if (id == privsep_process)
 				continue;
 
-			proc_compose_imsg(env->sc_ps, id, -1, IMSG_CTL_START,
-			    -1, NULL, 0);
+			proc_compose(env->sc_ps, id, IMSG_CTL_START, NULL, 0);
 		}
 	}
 }
@@ -441,7 +444,7 @@ int
 parent_dispatch_logger(int fd, struct privsep_proc *p, struct imsg *imsg)
 {
 	struct httpd		*env = p->p_env;
-	u_int			 v;
+	unsigned int		 v;
 	char			*str = NULL;
 
 	switch (imsg->hdr.type) {
@@ -454,8 +457,7 @@ parent_dispatch_logger(int fd, struct privsep_proc *p, struct imsg *imsg)
 		if (IMSG_DATA_SIZE(imsg) > 0)
 			str = get_string(imsg->data, IMSG_DATA_SIZE(imsg));
 		parent_reload(env, CONFIG_RELOAD, str);
-		if (str != NULL)
-			free(str);
+		free(str);
 		break;
 	case IMSG_CTL_SHUTDOWN:
 		parent_shutdown(env);
@@ -565,7 +567,7 @@ canonicalize_host(const char *host, char *name, size_t len)
 	for (i = j = 0; i < plen; i++) {
 		if (j >= (len - 1))
 			goto fail;
-		c = tolower(host[i]);
+		c = tolower((unsigned char)host[i]);
 		if ((c == '.') && (j == 0 || name[j - 1] == '.'))
 			continue;
 		name[j++] = c;
@@ -591,9 +593,9 @@ canonicalize_host(const char *host, char *name, size_t len)
 const char *
 url_decode(char *url)
 {
-	char	*p, *q;
-	char	 hex[3];
-	u_long	 x;
+	char		*p, *q;
+	char		 hex[3];
+	unsigned long	 x;
 
 	hex[2] = '\0';
 	p = q = url;
@@ -602,7 +604,8 @@ url_decode(char *url)
 		switch (*p) {
 		case '%':
 			/* Encoding character is followed by two hex chars */
-			if (!(isxdigit(p[1]) && isxdigit(p[2])))
+			if (!(isxdigit((unsigned char)p[1]) &&
+			    isxdigit((unsigned char)p[2])))
 				return (NULL);
 
 			hex[0] = p[1];
@@ -741,7 +744,7 @@ escape_html(const char* src)
 {
 	char		*dp, *dst;
 
-	/* We need 5 times the memory if every letter is "<" or ">". */
+	/* We need 5 times the memory if every letter is "&" */
 	if ((dst = calloc(5, strlen(src) + 1)) == NULL)
 		return NULL;
 
@@ -792,7 +795,7 @@ socket_rlimit(int maxfd)
 char *
 evbuffer_getline(struct evbuffer *evb)
 {
-	u_int8_t	*ptr = EVBUFFER_DATA(evb);
+	uint8_t		*ptr = EVBUFFER_DATA(evb);
 	size_t		 len = EVBUFFER_LENGTH(evb);
 	char		*str;
 	size_t		 i;
@@ -824,28 +827,24 @@ evbuffer_getline(struct evbuffer *evb)
 }
 
 char *
-get_string(u_int8_t *ptr, size_t len)
+get_string(uint8_t *ptr, size_t len)
 {
 	size_t	 i;
-	char	*str;
 
 	for (i = 0; i < len; i++)
-		if (!(isprint(ptr[i]) || isspace(ptr[i])))
+		if (!(isprint((unsigned char)ptr[i]) ||
+		    isspace((unsigned char)ptr[i])))
 			break;
 
-	if ((str = calloc(1, i + 1)) == NULL)
-		return (NULL);
-	memcpy(str, ptr, i);
-
-	return (str);
+	return strndup(ptr, i);
 }
 
 void *
-get_data(u_int8_t *ptr, size_t len)
+get_data(uint8_t *ptr, size_t len)
 {
-	u_int8_t	*data;
+	uint8_t		*data;
 
-	if ((data = calloc(1, len)) == NULL)
+	if ((data = malloc(len)) == NULL)
 		return (NULL);
 	memcpy(data, ptr, len);
 
@@ -857,7 +856,7 @@ sockaddr_cmp(struct sockaddr *a, struct sockaddr *b, int prefixlen)
 {
 	struct sockaddr_in	*a4, *b4;
 	struct sockaddr_in6	*a6, *b6;
-	u_int32_t		 av[4], bv[4], mv[4];
+	uint32_t		 av[4], bv[4], mv[4];
 
 	if (a->sa_family == AF_UNSPEC || b->sa_family == AF_UNSPEC)
 		return (0);
@@ -915,8 +914,8 @@ sockaddr_cmp(struct sockaddr *a, struct sockaddr *b, int prefixlen)
 	return (0);
 }
 
-u_int32_t
-prefixlen2mask(u_int8_t prefixlen)
+uint32_t
+prefixlen2mask(uint8_t prefixlen)
 {
 	if (prefixlen == 0)
 		return (0);
@@ -928,7 +927,7 @@ prefixlen2mask(u_int8_t prefixlen)
 }
 
 struct in6_addr *
-prefixlen2mask6(u_int8_t prefixlen, u_int32_t *mask)
+prefixlen2mask6(uint8_t prefixlen, uint32_t *mask)
 {
 	static struct in6_addr  s6;
 	int			i;
@@ -959,7 +958,7 @@ accept_reserve(int sockfd, struct sockaddr *addr, socklen_t *addrlen,
 		return (-1);
 	}
 
-	if ((ret = accept(sockfd, addr, addrlen)) > -1) {
+	if ((ret = accept4(sockfd, addr, addrlen, SOCK_NONBLOCK)) > -1) {
 		(*counter)++;
 		DPRINTF("%s: inflight incremented, now %d",__func__, *counter);
 	}
@@ -1001,11 +1000,13 @@ kv_set(struct kv *kv, char *fmt, ...)
 	va_list		  ap;
 	char		*value = NULL;
 	struct kv	*ckv;
+	int		ret;
 
 	va_start(ap, fmt);
-	if (vasprintf(&value, fmt, ap) == -1)
-		return (-1);
+	ret = vasprintf(&value, fmt, ap);
 	va_end(ap);
+	if (ret == -1)
+		return (-1);
 
 	/* Remove all children */
 	while ((ckv = TAILQ_FIRST(&kv->kv_children)) != NULL) {
@@ -1015,8 +1016,7 @@ kv_set(struct kv *kv, char *fmt, ...)
 	}
 
 	/* Set the new value */
-	if (kv->kv_value != NULL)
-		free(kv->kv_value);
+	free(kv->kv_value);
 	kv->kv_value = value;
 
 	return (0);
@@ -1027,14 +1027,15 @@ kv_setkey(struct kv *kv, char *fmt, ...)
 {
 	va_list  ap;
 	char	*key = NULL;
+	int	ret;
 
 	va_start(ap, fmt);
-	if (vasprintf(&key, fmt, ap) == -1)
-		return (-1);
+	ret = vasprintf(&key, fmt, ap);
 	va_end(ap);
+	if (ret == -1)
+		return (-1);
 
-	if (kv->kv_key != NULL)
-		free(kv->kv_key);
+	free(kv->kv_key);
 	kv->kv_key = key;
 
 	return (0);
@@ -1089,13 +1090,9 @@ kv_purge(struct kvtree *keys)
 void
 kv_free(struct kv *kv)
 {
-	if (kv->kv_key != NULL) {
-		free(kv->kv_key);
-	}
+	free(kv->kv_key);
 	kv->kv_key = NULL;
-	if (kv->kv_value != NULL) {
-		free(kv->kv_value);
-	}
+	free(kv->kv_value);
 	kv->kv_value = NULL;
 	memset(kv, 0, sizeof(*kv));
 }
@@ -1202,8 +1199,8 @@ void
 media_delete(struct mediatypes *types, struct media_type *media)
 {
 	RB_REMOVE(mediatypes, types, media);
-	if (media->media_encoding != NULL)
-		free(media->media_encoding);
+
+	free(media->media_encoding);
 	free(media);
 }
 
@@ -1285,7 +1282,7 @@ auth_add(struct serverauth *serverauth, struct auth *auth)
 }
 
 struct auth *
-auth_byid(struct serverauth *serverauth, u_int32_t id)
+auth_byid(struct serverauth *serverauth, uint32_t id)
 {
 	struct auth	*auth;
 
@@ -1301,4 +1298,79 @@ void
 auth_free(struct serverauth *serverauth, struct auth *auth)
 {
 	TAILQ_REMOVE(serverauth, auth, auth_entry);
+}
+
+
+const char *
+print_host(struct sockaddr_storage *ss, char *buf, size_t len)
+{
+	if (getnameinfo((struct sockaddr *)ss, ss->ss_len,
+	    buf, len, NULL, 0, NI_NUMERICHOST) != 0) {
+		buf[0] = '\0';
+		return (NULL);
+	}
+	return (buf);
+}
+
+const char *
+print_time(struct timeval *a, struct timeval *b, char *buf, size_t len)
+{
+	struct timeval		tv;
+	unsigned long		h, sec, min;
+
+	timerclear(&tv);
+	timersub(a, b, &tv);
+	sec = tv.tv_sec % 60;
+	min = tv.tv_sec / 60 % 60;
+	h = tv.tv_sec / 60 / 60;
+
+	snprintf(buf, len, "%.2lu:%.2lu:%.2lu", h, min, sec);
+	return (buf);
+}
+
+const char *
+printb_flags(const uint32_t v, const char *bits)
+{
+	static char	 buf[2][BUFSIZ];
+	static int	 idx = 0;
+	int		 i, any = 0;
+	char		 c, *p, *r;
+
+	p = r = buf[++idx % 2];
+	memset(p, 0, BUFSIZ);
+
+	if (bits) {
+		bits++;
+		while ((i = *bits++)) {
+			if (v & (1 << (i - 1))) {
+				if (any) {
+					*p++ = ',';
+					*p++ = ' ';
+				}
+				any = 1;
+				for (; (c = *bits) > 32; bits++) {
+					if (c == '_')
+						*p++ = ' ';
+					else
+						*p++ =
+						    tolower((unsigned char)c);
+				}
+			} else
+				for (; *bits > 32; bits++)
+					;
+		}
+	}
+
+	return (r);
+}
+
+void
+getmonotime(struct timeval *tv)
+{
+	struct timespec	 ts;
+
+	if (clock_gettime(CLOCK_MONOTONIC, &ts))
+		fatal("clock_gettime");
+
+	TIMESPEC_TO_TIMEVAL(tv, &ts);
 }

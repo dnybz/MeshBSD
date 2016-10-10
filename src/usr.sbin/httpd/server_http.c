@@ -1,4 +1,4 @@
-/*	$OpenBSD: server_http.c,v 1.96 2015/07/31 00:10:51 benno Exp $	*/
+/*	$OpenBSD: server_http.c,v 1.108 2016/05/27 11:24:13 krw Exp $	*/
 
 /*
  * Copyright (c) 2006 - 2015 Reyk Floeter <reyk@openbsd.org>
@@ -102,26 +102,18 @@ server_httpdesc_free(struct http_descriptor *desc)
 {
 	if (desc == NULL)
 		return;
-	if (desc->http_path != NULL) {
-		free(desc->http_path);
-		desc->http_path = NULL;
-	}
-	if (desc->http_path_alias != NULL) {
-		free(desc->http_path_alias);
-		desc->http_path_alias = NULL;
-	}
-	if (desc->http_query != NULL) {
-		free(desc->http_query);
-		desc->http_query = NULL;
-	}
-	if (desc->http_version != NULL) {
-		free(desc->http_version);
-		desc->http_version = NULL;
-	}
-	if (desc->http_host != NULL) {
-		free(desc->http_host);
-		desc->http_host = NULL;
-	}
+
+	free(desc->http_path);
+	desc->http_path = NULL;
+	free(desc->http_path_alias);
+	desc->http_path_alias = NULL;
+	free(desc->http_query);
+	desc->http_query = NULL;
+	free(desc->http_version);
+	desc->http_version = NULL;
+	free(desc->http_host);
+	desc->http_host = NULL;
+
 	kv_purge(&desc->http_headers);
 	desc->http_lastheader = NULL;
 	desc->http_method = 0;
@@ -134,7 +126,7 @@ server_http_authenticate(struct server_config *srv_conf, struct client *clt)
 	char			 decoded[1024];
 	FILE			*fp = NULL;
 	struct http_descriptor	*desc = clt->clt_descreq;
-	struct auth		*auth = srv_conf->auth;
+	const struct auth	*auth = srv_conf->auth;
 	struct kv		*ba, key;
 	size_t			 linesize = 0;
 	ssize_t			 linelen;
@@ -152,7 +144,7 @@ server_http_authenticate(struct server_config *srv_conf, struct client *clt)
 	if (strncmp(ba->kv_value, "Basic ", strlen("Basic ")) != 0)
 		goto done;
 
-	if (b64_pton(strchr(ba->kv_value, ' ') + 1, (u_int8_t *)decoded,
+	if (b64_pton(strchr(ba->kv_value, ' ') + 1, (uint8_t *)decoded,
 	    sizeof(decoded)) <= 0)
 		goto done;
 
@@ -195,6 +187,7 @@ server_http_authenticate(struct server_config *srv_conf, struct client *clt)
 		}
 	}
 done:
+	free(line);
 	if (fp != NULL)
 		fclose(fp);
 
@@ -303,8 +296,10 @@ server_read_http(struct bufferevent *bev, void *arg)
 				goto fail;
 
 			desc->http_version = strchr(desc->http_path, ' ');
-			if (desc->http_version == NULL)
-				goto fail;
+			if (desc->http_version == NULL) {
+				server_abort_http(clt, 400, "malformed");
+				goto abort;
+			}
 
 			*desc->http_version++ = '\0';
 			desc->http_query = strchr(desc->http_path, '?');
@@ -388,6 +383,7 @@ server_read_http(struct bufferevent *bev, void *arg)
 		case HTTP_METHOD_OPTIONS:
 		/* WebDAV methods */
 		case HTTP_METHOD_COPY:
+		case HTTP_METHOD_MOVE:
 			clt->clt_toread = 0;
 			break;
 		case HTTP_METHOD_POST:
@@ -596,8 +592,7 @@ server_read_httpchunks(struct bufferevent *bev, void *arg)
 	case 0:
 		/* Chunk is terminated by an empty newline */
 		line = evbuffer_readln(src, NULL, EVBUFFER_EOL_CRLF_STRICT);
-		if (line != NULL)
-			free(line);
+		free(line);
 		if (server_bufferevent_print(clt, "\r\n") == -1)
 			goto fail;
 		clt->clt_toread = TOREAD_HTTP_CHUNK_LENGTH;
@@ -733,7 +728,7 @@ server_http_parsehost(char *host, char *buf, size_t len, int *portval)
 }
 
 void
-server_abort_http(struct client *clt, u_int code, const char *msg)
+server_abort_http(struct client *clt, unsigned int code, const char *msg)
 {
 	struct server_config	*srv_conf = clt->clt_srv_conf;
 	struct bufferevent	*bev = clt->clt_bev;
@@ -823,6 +818,8 @@ server_abort_http(struct client *clt, u_int code, const char *msg)
 	    "<!DOCTYPE html>\n"
 	    "<html>\n"
 	    "<head>\n"
+	    "<meta http-equiv=\"Content-Type\" content=\"text/html; "
+	    "charset=utf-8\"/>\n"
 	    "<title>%03d %s</title>\n"
 	    "<style type=\"text/css\"><!--\n%s\n--></style>\n"
 	    "</head>\n"
@@ -831,8 +828,10 @@ server_abort_http(struct client *clt, u_int code, const char *msg)
 	    "<hr>\n<address>%s</address>\n"
 	    "</body>\n"
 	    "</html>\n",
-	    code, httperr, style, code, httperr, HTTPD_SERVERNAME)) == -1)
+	    code, httperr, style, code, httperr, HTTPD_SERVERNAME)) == -1) {
+		body = NULL;
 		goto done;
+	}
 
 	if (srv_conf->flags & SRVFLAG_SERVER_HSTS) {
 		if (asprintf(&hstsheader, "Strict-Transport-Security: "
@@ -840,8 +839,10 @@ server_abort_http(struct client *clt, u_int code, const char *msg)
 		    srv_conf->hsts_flags & HSTSFLAG_SUBDOMAINS ?
 		    "; includeSubDomains" : "",
 		    srv_conf->hsts_flags & HSTSFLAG_PRELOAD ?
-		    "; preload" : "") == -1)
+		    "; preload" : "") == -1) {
+			hstsheader = NULL;
 			goto done;
+		}
 	}
 
 	/* Add basic HTTP headers */
@@ -917,7 +918,7 @@ server_expand_http(struct client *clt, const char *val, char *buf,
 	/* Find previously matched substrings by index */
 	for (p = val; clt->clt_srv_match.sm_nmatch &&
 	    (p = strstr(p, "%")) != NULL; p++) {
-		if (!isdigit(*(p + 1)))
+		if (!isdigit((unsigned char)*(p + 1)))
 			continue;
 
 		/* Copy number, leading '%' char and add trailing \0 */
@@ -1226,7 +1227,7 @@ server_getlocation(struct client *clt, const char *path)
 }
 
 int
-server_response_http(struct client *clt, u_int code,
+server_response_http(struct client *clt, unsigned int code,
     struct media_type *media, off_t size, time_t mtime)
 {
 	struct server_config	*srv_conf = clt->clt_srv_conf;
@@ -1397,7 +1398,7 @@ server_httpmethod_byname(const char *name)
 }
 
 const char *
-server_httpmethod_byid(u_int id)
+server_httpmethod_byid(unsigned int id)
 {
 	const char	*name = "<UNKNOWN>";
 	int		 i;
@@ -1426,7 +1427,7 @@ server_httpmethod_cmp(const void *a, const void *b)
 }
 
 const char *
-server_httperror_byid(u_int id)
+server_httperror_byid(unsigned int id)
 {
 	struct http_error	 error, *res;
 
@@ -1450,7 +1451,7 @@ server_httperror_cmp(const void *a, const void *b)
 }
 
 int
-server_log_http(struct client *clt, u_int code, size_t len)
+server_log_http(struct client *clt, unsigned int code, size_t len)
 {
 	static char		 tstamp[64];
 	static char		 ip[INET6_ADDRSTRLEN];

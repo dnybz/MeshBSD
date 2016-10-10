@@ -4,7 +4,7 @@
 # for INTERNALLIB and PRIVATELIB definition
 
 #
-# XXX: file is subject on ongoing changes 
+# XXX: file is subject of ongoing changes 
 #
 
 .if !target(__<bsd.init.mk>__)
@@ -160,6 +160,7 @@ _LIBRARIES=	\
 		tacplus \
 		termcap \
 		termcapw \
+		tls \
 		ufs \
 		ugidfw \
 		ulog \
@@ -233,6 +234,7 @@ _DP_mt=		sbuf bsdxml
 _DP_ldns=	crypto
 .if ${MK_LIBRESSL} != "no"
 _DP_fetch=	ssl crypto
+_DP_tls= 	ssl crypto 
 .else
 _DP_fetch=	md
 .endif

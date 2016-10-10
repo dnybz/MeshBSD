@@ -1,4 +1,4 @@
-/*	$OpenBSD: server_fcgi.c,v 1.63 2015/08/03 11:45:17 florian Exp $	*/
+/*	$OpenBSD: server_fcgi.c,v 1.68 2016/04/24 20:09:45 chrisz Exp $	*/
 
 /*
  * Copyright (c) 2014 Florian Obser <florian@openbsd.org>
@@ -76,7 +76,7 @@ struct server_fcgi_param {
 	uint8_t		buf[FCGI_RECORD_SIZE];
 };
 
-int	server_fcgi_header(struct client *, u_int);
+int	server_fcgi_header(struct client *, unsigned int);
 void	server_fcgi_read(struct bufferevent *, void *);
 int	server_fcgi_writeheader(struct client *, struct kv *, void *);
 int	server_fcgi_writechunk(struct client *);
@@ -122,7 +122,8 @@ server_fcgi(struct httpd *env, struct client *clt)
 		struct sockaddr_un	 sun;
 		size_t			 len;
 
-		if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) == -1)
+		if ((fd = socket(AF_UNIX,
+		    SOCK_STREAM | SOCK_NONBLOCK, 0)) == -1)
 			goto fail;
 
 		memset(&sun, 0, sizeof(sun));
@@ -130,7 +131,7 @@ server_fcgi(struct httpd *env, struct client *clt)
 		len = strlcpy(sun.sun_path,
 		    srv_conf->socket, sizeof(sun.sun_path));
 		if (len >= sizeof(sun.sun_path)) {
-			errstr = "socket path to long";
+			errstr = "socket path too long";
 			goto fail;
 		}
 		sun.sun_len = len;
@@ -138,8 +139,6 @@ server_fcgi(struct httpd *env, struct client *clt)
 		if (connect(fd, (struct sockaddr *)&sun, sizeof(sun)) == -1)
 			goto fail;
 	}
-
-	socket_set_blockmode(fd, BM_NONBLOCK);
 
 	memset(hbuf, 0, sizeof(hbuf));
 	clt->clt_fcgi_state = FCGI_READ_HEADER;
@@ -243,12 +242,16 @@ server_fcgi(struct httpd *env, struct client *clt)
 		goto fail;
 	}
 
-	if (desc->http_query)
+	if (desc->http_query) {
 		if (fcgi_add_param(&param, "QUERY_STRING", desc->http_query,
 		    clt) == -1) {
 			errstr = "failed to encode param";
 			goto fail;
 		}
+	} else if (fcgi_add_param(&param, "QUERY_STRING", "", clt) == -1) {
+		errstr = "failed to encode param";
+		goto fail;
+	}
 
 	if (fcgi_add_param(&param, "DOCUMENT_ROOT", srv_conf->root,
 	    clt) == -1) {
@@ -399,6 +402,8 @@ server_fcgi(struct httpd *env, struct client *clt)
 	free(script);
 	if (errstr == NULL)
 		errstr = strerror(errno);
+	if (fd != -1 && clt->clt_fd != fd)
+		close(fd);
 	server_abort_http(clt, 500, errstr);
 	return (-1);
 }
@@ -588,7 +593,7 @@ server_fcgi_read(struct bufferevent *bev, void *arg)
 }
 
 int
-server_fcgi_header(struct client *clt, u_int code)
+server_fcgi_header(struct client *clt, unsigned int code)
 {
 	struct server_config	*srv_conf = clt->clt_srv_conf;
 	struct http_descriptor	*desc = clt->clt_descreq;

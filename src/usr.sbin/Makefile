@@ -21,11 +21,6 @@ SUBDIR+= 	devctl
 SUBDIR+= 	devinfo
 SUBDIR+= 	eeprom
 SUBDIR+= 	gpioctl
-#
-# XXX: The integration of httpd(8) is pending...
-#
-#SUBDIR+= 	httpd
-#
 SUBDIR+= 	i2c
 SUBDIR+= 	kbdcontrol
 SUBDIR+= 	lastlogin
@@ -103,6 +98,11 @@ SUBDIR+= 	dhcpd
 SUBDIR+= 	flowctl
 SUBDIR+= 	ftp-proxy
 SUBDIR+= 	fwcontrol
+#
+# XXX: The integration of httpd(8) is pending...
+#
+SUBDIR+= 	httpd
+
 SUBDIR+= 	inetd
 SUBDIR+= 	nscd
 SUBDIR+= 	ntp
