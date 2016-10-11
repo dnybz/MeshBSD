@@ -71,7 +71,7 @@ void
 logger_init(struct privsep *ps, struct privsep_proc *p, void *arg)
 {
 /*
- * XXX: shall ported...
+ * XXX it is planned to port this facility
  *
  	if (pledge("stdio recvfd", NULL) == -1)
 		fatal("pledge");

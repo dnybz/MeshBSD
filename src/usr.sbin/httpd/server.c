@@ -243,10 +243,12 @@ server_init(struct privsep *ps, struct privsep_proc *p, void *arg)
 
 	/* Unlimited file descriptors (use system limits) */
 	socket_rlimit(-1);
-
+/*
+ * XXX it is planned to port this facility
+ *
 	if (pledge("stdio rpath inet unix recvfd", NULL) == -1)
 		fatal("pledge");
-
+ */
 #if 0
 	/* Schedule statistics timer */
 	evtimer_set(&env->sc_statev, server_statistics, NULL);

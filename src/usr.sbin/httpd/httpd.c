@@ -47,7 +47,7 @@
 
 #define MAXIMUM(a, b)	(((a) > (b)) ? (a) : (b))
 
-__dead void	 usage(void);
+void	 usage(void);
 
 int		 parent_configure(struct httpd *);
 void		 parent_configure_done(struct httpd *);
@@ -144,7 +144,7 @@ parent_sig_handler(int sig, short event, void *arg)
 	}
 }
 
-__dead void
+void
 usage(void)
 {
 	extern char	*__progname;
@@ -249,10 +249,13 @@ main(int argc, char *argv[])
 	proc_init(ps, procs, nitems(procs));
 	log_procinit("parent");
 
+/*
+ * XXX it is planned to port this facility
+ *
 	if (pledge("stdio rpath wpath cpath inet dns proc ioctl sendfd",
 	    NULL) == -1)
 		fatal("pledge");
-
+*/
 	event_init();
 
 	signal_set(&ps->ps_evsigint, SIGINT, parent_sig_handler, ps);
