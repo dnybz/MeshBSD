@@ -17,6 +17,8 @@ SRCS+=	__getosreldate.c \
 	assert.c \
 	auxv.c \
 	basename.c \
+	bcrypt.c  \
+	blowfish.c \
 	cap_sandboxed.c \
 	check_utility_compat.c \
 	clock.c \
@@ -24,6 +26,7 @@ SRCS+=	__getosreldate.c \
 	closedir.c \
 	confstr.c \
 	crypt.c \
+	cryptutil.c \
 	ctermid.c \
 	daemon.c \
 	devname.c \
@@ -175,6 +178,8 @@ SYM_MAPS+=${LIBC_SRCTOP}/gen/Symbol.map
 MAN+=	alarm.3 \
 	arc4random.3 \
 	basename.3 \
+	blowfish.3 \
+	crypt_checkpass.3 \
 	cap_rights_get.3 \
 	cap_sandboxed.3 \
 	check_utility_compat.3 \

@@ -63,8 +63,18 @@ int		 parent_dispatch_logger(int, struct privsep_proc *,
 struct httpd			*httpd_env;
 
 static struct privsep_proc procs[] = {
-	{ "server",	PROC_SERVER, parent_dispatch_server, server },
-	{ "logger",	PROC_LOGGER, parent_dispatch_logger, logger }
+	{ 
+		.p_title = 	"server",	
+		.p_id = 	PROC_SERVER, 
+		.p_cb = 	parent_dispatch_server, 
+		.p_init = 	server 
+	},
+	{ 	
+		.p_title = 	"logger",	
+		.p_id = 	PROC_LOGGER, 
+		.p_cb = 	parent_dispatch_logger, 
+		.p_init = 	logger 
+	}
 };
 
 void

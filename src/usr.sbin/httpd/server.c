@@ -80,8 +80,16 @@ static struct httpd		*env = NULL;
 int				 proc_id;
 
 static struct privsep_proc procs[] = {
-	{ "parent",	PROC_PARENT,	server_dispatch_parent },
-	{ "logger",	PROC_LOGGER,	server_dispatch_logger }
+	{ 
+		.p_title = 	"parent",
+		.p_id = 	PROC_PARENT,	
+		.p_cb = 	logger_dispatch_parent 
+	},
+	{ 
+		.p_title = 	"server",	
+		.p_id = 	PROC_SERVER,	
+		.p_cb = 	logger_dispatch_server 
+	}
 };
 
 pid_t
@@ -504,9 +512,13 @@ server_socket(struct sockaddr_storage *ss, in_port_t port,
 			val = 0;
 		else
 			val = 1;
+/*
+ * XXX: shall replaced by sysctl(3) 
+
 		if (setsockopt(s, IPPROTO_TCP, TCP_SACK_ENABLE,
 		    &val, sizeof(val)) == -1)
 			goto bad;
+*/
 	}
 
 	return (s);

@@ -22,7 +22,10 @@
 #include <sys/uio.h>
 
 #include <limits.h>
+
+# define _WITH_DPRINTF
 #include <stdio.h>
+
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -49,8 +52,16 @@ int				 proc_id;
 static uint32_t		 last_log_id = 0;
 
 static struct privsep_proc procs[] = {
-	{ "parent",	PROC_PARENT,	logger_dispatch_parent },
-	{ "server",	PROC_SERVER,	logger_dispatch_server }
+	{ 
+		.p_title = 	"parent",
+		.p_id = 	PROC_PARENT,	
+		.p_cb = 	logger_dispatch_parent 
+	},
+	{ 
+		.p_title = 	"server",	
+		.p_id = 	PROC_SERVER,	
+		.p_cb = 	logger_dispatch_server 
+	}
 };
 
 pid_t

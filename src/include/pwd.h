@@ -169,6 +169,12 @@ int		 uid_from_user(const char *, uid_t *);
 int		 pwcache_userdb(int (*)(int), void (*)(void),
 		    struct passwd * (*)(const char *),
 		    struct passwd * (*)(uid_t));
+
+char		*bcrypt(const char *, const char *);
+int		bcrypt_newhash(const char *, int, char *, size_t);
+int		bcrypt_checkpass(const char *, const char *);
+
+int	_bcrypt_autorounds(void);
 #endif
 __END_DECLS
 

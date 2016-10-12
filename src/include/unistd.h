@@ -490,6 +490,9 @@ int	 check_utility_compat(const char *);
 const char *
 	 crypt_get_format(void);
 int	 crypt_set_format(const char *);
+int 	crypt_checkpass(const char *password, const char *hash);
+int 	crypt_newhash(const char *password, const char *pref, 
+	char *hash, size_t hashsize);
 int	 des_cipher(const char *, char *, long, int);
 int	 des_setkey(const char *key);
 int	 dup3(int, int, int);

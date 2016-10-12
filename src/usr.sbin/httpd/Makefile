@@ -23,6 +23,6 @@ CFLAGS+=	-Wshadow -Wpointer-arith
 CFLAGS+=	-Wsign-compare
 CLEANFILES+=	y.tab.h
 
-WARNS?= 	0
+WARNS?= 	3
 
 .include <bsd.prog.mk>

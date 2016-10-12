@@ -48,14 +48,6 @@
 # endif
 #endif /* HOST_NAME_MAX */
 
-#ifndef _WITH_DPRINTF
-# define _WITH_DPRINTF
-#endif 	/* _WITH_DPRINTF */
-
-#ifndef _WITH_GETLINE
-# define __WITH_GETLINE
-#endif 	/* _WITH_GETLINE */
-
 #define CONF_FILE		"/etc/httpd.conf"
 #define HTTPD_SOCKET		"/var/run/httpd.sock"
 #define HTTPD_USER		"www"
