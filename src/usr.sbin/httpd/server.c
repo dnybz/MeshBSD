@@ -83,12 +83,12 @@ static struct privsep_proc procs[] = {
 	{ 
 		.p_title = 	"parent",
 		.p_id = 	PROC_PARENT,	
-		.p_cb = 	logger_dispatch_parent 
+		.p_cb = 	server_dispatch_parent 
 	},
 	{ 
-		.p_title = 	"server",	
+		.p_title = 	"logger",	
 		.p_id = 	PROC_SERVER,	
-		.p_cb = 	logger_dispatch_server 
+		.p_cb = 	server_dispatch_logger 
 	}
 };
 

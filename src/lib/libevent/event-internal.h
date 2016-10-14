@@ -1,3 +1,5 @@
+/*	$OpenBSD: event-internal.h,v 1.8 2014/10/15 22:34:44 bluhm Exp $	*/
+
 /*
  * Copyright (c) 2000-2004 Niels Provos <provos@citi.umich.edu>
  * All rights reserved.
@@ -31,6 +33,20 @@
 extern "C" {
 #endif
 
+#include "min_heap.h"
+#include "evsignal.h"
+
+struct eventop {
+	const char *name;
+	void *(*init)(struct event_base *);
+	int (*add)(void *, struct event *);
+	int (*del)(void *, struct event *);
+	int (*dispatch)(struct event_base *, void *, struct timeval *);
+	void (*dealloc)(struct event_base *, void *);
+	/* set if we need to reinitialize the event base */
+	int need_reinit;
+};
+
 struct event_base {
 	const struct eventop *evsel;
 	void *evbase;
@@ -38,16 +54,29 @@ struct event_base {
 	int event_count_active;	/* counts number of active events */
 
 	int event_gotterm;		/* Set to terminate loop */
+	int event_break;		/* Set to terminate loop immediately */
 
 	/* active event management */
 	struct event_list **activequeues;
 	int nactivequeues;
 
+	/* signal handling info */
+	struct evsignal_info sig;
+
 	struct event_list eventqueue;
 	struct timeval event_tv;
 
-	RB_HEAD(event_tree, event) timetree;
+	struct min_heap timeheap;
+
+	struct timeval tv_cache;
 };
+
+int _evsignal_set_handler(struct event_base *base, int evsignal,
+			  void (*fn)(int));
+int _evsignal_restore_handler(struct event_base *base, int evsignal);
+
+/* defined in evutil.c */
+const char *evutil_getenv(const char *varname);
 
 #ifdef __cplusplus
 }

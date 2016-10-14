@@ -58,7 +58,12 @@
 #define HTTPD_LOGROOT		"/logs"
 #define HTTPD_ACCESS_LOG	"access.log"
 #define HTTPD_ERROR_LOG		"error.log"
-#define HTTPD_DEFAULT_TYPE	{ "bin", "application", "octet-stream", NULL }
+#define HTTPD_DEFAULT_TYPE	{ \
+ 	.media_name = 	"bin", \
+ 	.media_type = 	"application", \
+ 	.media_encoding = 	"octet-stream", \
+ 	.media_entry = 	NULL \
+}
 #define HTTPD_LOGVIS		VIS_NL|VIS_TAB|VIS_CSTYLE
 #define HTTPD_TLS_CERT		"/etc/ssl/server.crt"
 #define HTTPD_TLS_KEY		"/etc/ssl/private/server.key"
