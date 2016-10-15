@@ -44,4 +44,4 @@ timingsafe_memcmp(const void *b1, const void *b2, size_t len)
 
         return (res);
 }
-
+__weak_reference(timingsafe_memcmp, timingsafe_memcmp);

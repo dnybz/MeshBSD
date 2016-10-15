@@ -86,6 +86,7 @@ fail:
 	errno = EACCES;
 	return -1;
 }
+__weak_reference(crypt_checkpass, crypt_checkpass);
 
 int
 crypt_newhash(const char *pass, const char *pref, char *hash, size_t hashlen)
@@ -131,3 +132,4 @@ crypt_newhash(const char *pass, const char *pref, char *hash, size_t hashlen)
 err:
 	return rv;
 }
+__weak_reference(crypt_newhash, crypt_newhash);

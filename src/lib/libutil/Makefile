@@ -9,15 +9,21 @@ SHLIBDIR?= /lib
 LIB=	util
 SHLIB_MAJOR= 9
 
-SRCS=	_secure_path.c auth.c expand_number.c flopen.c fparseln.c gr_util.c \
-	hexdump.c humanize_number.c kinfo_getfile.c \
+SRCS=	_secure_path.c auth.c expand_number.c flopen.c fparseln.c \
+	gr_util.c \
+	hexdump.c humanize_number.c \
+	imsg.c imsg-buffer.c \
+	kinfo_getfile.c \
 	kinfo_getallproc.c kinfo_getproc.c kinfo_getvmmap.c \
 	kinfo_getvmobject.c kld.c \
 	login_auth.c login_cap.c \
 	login_class.c login_crypt.c login_ok.c login_times.c login_tty.c \
+	ohash.c \
 	pidfile.c property.c pty.c pw_util.c quotafile.c realhostname.c \
-	stub.c trimdomain.c uucplock.c
-INCS=	libutil.h login_cap.h
+	stub.c trimdomain.c \
+	util.c \
+	uucplock.c
+INCS=	imsg.h ohash.h libutil.h login_cap.h util.h
 
 CFLAGS+= -DLIBC_SCCS
 
@@ -83,5 +89,9 @@ MLINKS+=pw_util.3 pw_copy.3 \
 	pw_util.3 pw_scan.3 \
 	pw_util.3 pw_tempname.3 \
 	pw_util.3 pw_tmp.3
+
+MAN+= 	imsg_init.3 ohash_init.3 ohash_interval.3
+
+WARNS?=	2
 
 .include <bsd.lib.mk>

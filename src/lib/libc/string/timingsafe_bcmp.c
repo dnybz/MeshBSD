@@ -27,3 +27,4 @@ timingsafe_bcmp(const void *b1, const void *b2, size_t n)
 		ret |= *p1++ ^ *p2++;
 	return (ret != 0);
 }
+__weak_reference(timingsafe_bcmp, timingsafe_bcmp);

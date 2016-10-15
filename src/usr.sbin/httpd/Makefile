@@ -9,11 +9,11 @@ MAN=		httpd.8 httpd.conf.5
 SRCS+=		patterns.c
 MAN+=		patterns.7
 
-LIBADD=		event tls ssl crypto util openbsd
-
 CFLAGS+= -I${.CURDIR}/../../lib/libevent
-CFLAGS+= -I${.CURDIR}/../../lib/libopenbsd
+CFLAGS+= -I${.CURDIR}/../../lib/libtls
+CFLAGS+= -I${.CURDIR}/../../lib/libutil
 
+LIBADD=		event tls ssl crypto util
 
 #DEBUG=		-g -DDEBUG=3 -O0
 CFLAGS+=	-Wall -I${.CURDIR}
@@ -23,6 +23,6 @@ CFLAGS+=	-Wshadow -Wpointer-arith
 CFLAGS+=	-Wsign-compare
 CLEANFILES+=	y.tab.h
 
-WARNS?= 	3
+WARNS?=	2
 
 .include <bsd.prog.mk>

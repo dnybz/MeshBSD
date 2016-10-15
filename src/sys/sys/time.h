@@ -495,4 +495,5 @@ __END_DECLS
 
 #endif /* !_KERNEL */
 
+
 #endif /* !_SYS_TIME_H_ */

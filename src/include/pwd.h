@@ -38,8 +38,7 @@
 #ifndef _PWD_H_
 #define	_PWD_H_
 
-#include <sys/cdefs.h>
-#include <sys/_types.h>
+#include <sys/types.h>
 
 #ifndef _GID_T_DECLARED
 typedef	__gid_t		gid_t;
@@ -169,11 +168,13 @@ int		 uid_from_user(const char *, uid_t *);
 int		 pwcache_userdb(int (*)(int), void (*)(void),
 		    struct passwd * (*)(const char *),
 		    struct passwd * (*)(uid_t));
+#endif
 
+char   *bcrypt_gensalt(u_int8_t);
 char		*bcrypt(const char *, const char *);
 int		bcrypt_newhash(const char *, int, char *, size_t);
 int		bcrypt_checkpass(const char *, const char *);
-#endif
+
 __END_DECLS
 
 #endif /* !_PWD_H_ */

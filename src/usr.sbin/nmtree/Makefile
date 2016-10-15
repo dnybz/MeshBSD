@@ -2,19 +2,18 @@
 
 .include <src.opts.mk>
 
-.PATH: ${.CURDIR}/../../tools/mtree
-
 PROG=		mtree
 MAN=		mtree.5 mtree.8
 SRCS=		compare.c crc.c create.c excludes.c getid.c misc.c mtree.c \
 		only.c spec.c specspec.c verify.c
 
-CFLAGS+=	-I${.CURDIR}/../../tools/mknod
-.PATH:		${.CURDIR}/../../tools/mknod
+CFLAGS+=	-I${.CURDIR}/../../sbin/mknod
+.PATH:		${.CURDIR}/../../sbin/mknod
 SRCS+=		pack_dev.c
 
-CFLAGS+=	-I${.CURDIR}/../../lib/libnetbsd
-LIBADD=		netbsd md util
+CFLAGS+=	-I${.CURDIR}/../../lib/libmd
+CFLAGS+=	-I${.CURDIR}/../../lib/libutil
+LIBADD=		md util
 
 LINKS=		${BINDIR}/mtree ${BINDIR}/nmtree
 MLINKS=		mtree.8 nmtree.8

@@ -781,7 +781,7 @@ server_abort_http(struct client *clt, unsigned int code, const char *msg)
 		msg = buf;
 		break;
 	case 401:
-		if (stravis(&escapedmsg, msg, VIS_DQ) == -1) {
+		if (stravis(&escapedmsg, msg, VIS_HTTPSTYLE) == -1) {
 			code = 500;
 			extraheader = NULL;
 		} else if (asprintf(&extraheader,

@@ -19,18 +19,18 @@ WARNS?=	2
 CFLAGS+=-DHAVE_STRUCT_STAT_ST_FLAGS=1
 CFLAGS+=-DHAVE_STRUCT_STAT_ST_GEN=1
 
-.PATH: ${.CURDIR}/../../tools/mtree
-CFLAGS+=-I${.CURDIR}/../../tools/mtree
+.PATH: ${.CURDIR}/../../usr.sbin/nmtree
+CFLAGS+=-I${.CURDIR}/../../usr.sbin/nmtree
 SRCS+=	getid.c misc.c spec.c
 
-.PATH: ${.CURDIR}/../../tools/mknod
-CFLAGS+=-I${.CURDIR}/../../tools/mknod
+.PATH: ${.CURDIR}/../../sbin/mknod
+CFLAGS+=-I${.CURDIR}/../../sbin/mknod
 SRCS+=	pack_dev.c
 
 .PATH:	${.CURDIR}/../../sys/ufs/ffs
 SRCS+=	ffs_tables.c
 
-CFLAGS+=	-I${.CURDIR}/../../lib/libnetbsd
-LIBADD=		netbsd util sbuf
+CFLAGS+=	-I${.CURDIR}/../../lib/libutil
+LIBADD=		util sbuf
 
 .include <bsd.prog.mk>

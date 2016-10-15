@@ -223,7 +223,7 @@ struct http_mediatype {
 	{ "png",	"image",	"png" },	\
 	{ "svg",	"image",	"svg+xml" },	\
 	{ "js",		"application",	"javascript" },	\
-	{ NULL }					\
+	{ NULL, 	NULL, 	NULL }					\
 }
 
 /* Used during runtime */

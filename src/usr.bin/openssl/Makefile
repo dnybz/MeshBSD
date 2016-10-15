@@ -8,7 +8,7 @@ MAN1=	openssl.1
 
 .include "../../lib/libcrypto/Makefile.inc"
 
-CFLAGSx=        -DMONOLITH
+CFLAGS+=        -DMONOLITH
 
 .warning Building for LibreSSL ${OPENSSL_VER}
 

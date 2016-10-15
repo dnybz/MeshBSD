@@ -39,7 +39,6 @@ _INTERNALLIBS=	\
 		netbsd \
 		ntp \
 		ntpevent \
-		openbsd \
 		opts \
 		parse \
 		pe \
@@ -365,12 +364,6 @@ LIBPE?=		${LIBPEDIR}/libpe.a
 
 LIBREADLINEDIR=	${OBJTOP}/gnu/lib/libreadline/readline
 LIBREADLINE?=	${LIBREADLINEDIR}/libreadline.a
-
-LIBOPENBSDDIR=	${OBJTOP}/lib/libopenbsd
-LIBOPENBSD?=	${LIBOPENBSDDIR}/libopenbsd.a
-
-LIBNETBSDDIR?=	${OBJTOP}/lib/libnetbsd
-LIBNETBSD?=	${LIBNETBSDDIR}/libnetbsd.a
 
 LIBVERSDIR?=	${OBJTOP}/kerberos5/lib/libvers
 LIBVERS?=	${LIBVERSDIR}/libvers.a

@@ -41,7 +41,6 @@ LIBCAP_PWD?=	${DESTDIR}${LIBDIR}/libcap_pwd.a
 LIBCAP_RANDOM?=	${DESTDIR}${LIBDIR}/libcap_random.a
 LIBCAP_SYSCTL?=	${DESTDIR}${LIBDIR}/libcap_sysctl.a
 LIBCASPER?=	${DESTDIR}${LIBDIR}/libcasper.a
-LIBCOMPAT?=	${DESTDIR}${LIBDIR}/libcompat.a
 LIBCOMPILER_RT?=${DESTDIR}${LIBDIR}/libcompiler_rt.a
 LIBCOM_ERR?=	${DESTDIR}${LIBDIR}/libcom_err.a
 LIBCPLUSPLUS?=	${DESTDIR}${LIBDIR}/libc++.a

@@ -630,9 +630,6 @@ const char	*canonicalize_host(const char *, char *, size_t);
 const char	*canonicalize_path(const char *, char *, size_t);
 size_t		 path_info(char *);
 char		*escape_html(const char *);
-void		 imsg_event_add(struct imsgev *);
-int		 imsg_compose_event(struct imsgev *, uint16_t, uint32_t,
-		    pid_t, int, void *, uint16_t);
 void		 socket_rlimit(int);
 char		*evbuffer_getline(struct evbuffer *);
 char		*get_string(uint8_t *, size_t);

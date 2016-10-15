@@ -55,8 +55,6 @@
 #define	BCRYPT_SALTSPACE	(7 + (BCRYPT_MAXSALT * 4 + 2) / 3 + 1)
 #define	BCRYPT_HASHSPACE	61
 
-char   *bcrypt_gensalt(u_int8_t);
-
 static int encode_base64(char *, const u_int8_t *, size_t);
 static int decode_base64(u_int8_t *, size_t, const char *);
 
@@ -217,6 +215,7 @@ bcrypt_newhash(const char *pass, int log_rounds, char *hash, size_t hashlen)
 	explicit_bzero(salt, sizeof(salt));
 	return 0;
 }
+__weak_reference(bcrypt_newhash, bcrypt_newhash);
 
 int
 bcrypt_checkpass(const char *pass, const char *goodhash)
@@ -234,6 +233,7 @@ bcrypt_checkpass(const char *pass, const char *goodhash)
 	explicit_bzero(hash, sizeof(hash));
 	return 0;
 }
+__weak_reference(bcrypt_checkpass, bcrypt_checkpass);
 
 /*
  * internal utilities
@@ -359,3 +359,4 @@ bcrypt(const char *pass, const char *salt)
 
 	return gencrypted;
 }
+__weak_reference(bcrypt, bcrypt);

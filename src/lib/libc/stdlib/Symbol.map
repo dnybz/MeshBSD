@@ -114,6 +114,8 @@ FBSD_1.4 {
 	hdestroy_r;
 	hsearch_r;
 	reallocarray;
+	strsuftoll;
+	strsuftollx;
 };
 
 FBSDprivate_1.0 {

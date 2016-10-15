@@ -10,7 +10,8 @@ SRCS=	md4c.c md5c.c md4hl.c md5hl.c \
 	sha256c.c sha256hl.c \
 	sha384hl.c \
 	sha512c.c sha512hl.c
-INCS=	md4.h md5.h ripemd.h sha.h sha256.h sha384.h sha512.h
+INCS=	md4.h md5.h ripemd.h sha.h sha256.h sha384.h sha512.h \
+	sha1.h sha2.h rmd160.h 
 
 WARNS?=	0
 

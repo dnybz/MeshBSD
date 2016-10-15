@@ -410,10 +410,31 @@ FBSD_1.3 {
 };
 
 FBSD_1.4 {
+	bcrypt;
+	bcrypt_checkpass;
+	bcrypt_gensalt;
+	bcrypt_newhash;
+	Blowfish_encipher;
+	Blowfish_decipher;
+	Blowfish_initstate;
+	Blowfish_expand0state;
+	Blowfish_expandstate;
+	blf_key;
+	blf_enc;
+	blf_dec;
+	blf_ecb_encrypt;
+	blf_ecb_decrypt;
+	blf_cbc_encrypt;
+	blf_cbc_decrypt;
+	Blowfish_stream2word;
+	crypt_checkpass;
+	crypt_newhash;
+	getdtablecount;
 	pthread_mutex_consistent;
 	pthread_mutexattr_getrobust;
 	pthread_mutexattr_setrobust;
 	scandir_b;
+	stravis;
 };
 
 FBSDprivate_1.0 {

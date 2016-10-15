@@ -200,7 +200,6 @@ int	quota_read(struct quotafile *_qf, struct dqblk *_dqb, int _id);
 int	quota_write_limits(struct quotafile *_qf, struct dqblk *_dqb, int _id);
 int	quota_write_usage(struct quotafile *_qf, struct dqblk *_dqb, int _id);
 #endif
-
 __END_DECLS
 
 /* fparseln(3) */

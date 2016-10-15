@@ -9,7 +9,6 @@
 
 SUBDIR= 	ac
 SUBDIR+= 	adduser
-SUBDIR+= 	btxld
 SUBDIR+= 	chkgrp
 SUBDIR+= 	chown
 SUBDIR+= 	chroot

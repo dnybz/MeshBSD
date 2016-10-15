@@ -324,6 +324,11 @@ __uint64_t
 
 extern char *suboptarg;			/* getsubopt(3) external variable */
 #endif /* __BSD_VISIBLE */
+
+long long strsuftoll(const char *, const char *, long long, long long);
+long long strsuftollx(const char *, const char *,
+    long long, long long, char *, size_t);
+
 __END_DECLS
 
 #endif /* !_STDLIB_H_ */
