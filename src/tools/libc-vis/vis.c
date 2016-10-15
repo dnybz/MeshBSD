@@ -1,5 +1,4 @@
 /*	$NetBSD: vis.c,v 1.62 2014/09/08 17:35:01 christos Exp $	*/
-
 /*-
  * Copyright (c) 1989, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -654,6 +653,25 @@ int
 strvis(char *mbdst, const char *mbsrc, int flags)
 {
 	return istrsenvisxl(mbdst, NULL, mbsrc, flags, "", NULL);
+}
+
+int
+stravis(char **outp, const char *src, int flag)
+{
+	char *buf;
+	int len, serrno;
+
+	buf = reallocarray(NULL, 4, strlen(src) + 1);
+	if (buf == NULL)
+		return -1;
+	len = strvis(buf, src, flag);
+	serrno = errno;
+	*outp = realloc(buf, len + 1);
+	if (*outp == NULL) {
+		*outp = buf;
+		errno = serrno;
+	}
+	return (len);
 }
 
 int

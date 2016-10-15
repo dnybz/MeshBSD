@@ -37,6 +37,7 @@
 .Nm vis ,
 .Nm nvis ,
 .Nm strvis ,
+.Nm stravis ,
 .Nm strnvis ,
 .Nm strvisx ,
 .Nm strnvisx ,
@@ -59,6 +60,8 @@
 .Fn nvis "char *dst" "size_t dlen" "int c" "int flag" "int nextc"
 .Ft int
 .Fn strvis "char *dst" "const char *src" "int flag"
+.Ft int
+.Fn stravis "char **outp" "const char *src" "int flag"
 .Ft int
 .Fn strnvis "char *dst" "size_t dlen" "const char *src" "int flag"
 .Ft int
@@ -130,6 +133,22 @@ functions encode characters from
 up to the
 first
 .Dv NUL .
+The
+.Fn stravis
+function writes a visual representation of the string
+.Fa src
+into a newly allocated string
+.Fa outp ;
+it does not attempt to
+.Xr realloc 3
+.Fa outp .
+.Fa outp
+should be passed to
+.Xr free 3
+to release the allocated storage when it is no longer needed.
+.Fn stravis
+checks for integer overflow when allocating memory.
+.Pp
 The
 .Fn strvisx
 and
@@ -447,6 +466,18 @@ Specify the locale of the input data.
 Set to C if the input data locale is unknown.
 .El
 .Sh ERRORS
+Upon successful completion,
+.Fn stravis
+returns the number of characters in
+.Pf * Fa outp
+(not including the trailing NUL).
+Otherwise,
+.Fn stravis
+returns -1 and sets
+.Va errno
+to
+.Er ENOMEM .
+.Pp
 The functions
 .Fn nvis
 and
@@ -469,6 +500,20 @@ to:
 .It Bq Er ENOSPC
 The destination buffer size is not large enough to perform the conversion.
 .El
+.Sh EXAMPLES
+If the length of a string to be encoded is not known at compile time, use
+.Fn stravis :
+.Bd -literal -offset indent
+char *src, *dst;
+
+\&...
+if (stravis(&dst, src, VIS_OCTAL) == -1)
+	err(1, "stravis");
+
+\&...
+free(dst);
+.Ed
+.Pp
 .Sh SEE ALSO
 .Xr unvis 1 ,
 .Xr vis 1 ,
