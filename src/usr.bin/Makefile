@@ -146,6 +146,7 @@ SUBDIR+= 	mkesdb
 .if ${MK_INET_SUPPORT} != "no" || \
     ${MK_INET6_SUPPORT} != "no"
 SUBDIR+= 	fetch
+SUBDIR+= 	htpasswd
 SUBDIR+= 	netstat
 SUBDIR+= 	rpcgen
 SUBDIR+= 	rpcinfo

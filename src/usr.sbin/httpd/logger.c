@@ -23,7 +23,7 @@
 
 #include <limits.h>
 
-# define _WITH_DPRINTF
+#define _WITH_DPRINTF
 #include <stdio.h>
 
 #include <stdlib.h>
@@ -335,3 +335,4 @@ logger_dispatch_server(int fd, struct privsep_proc *p, struct imsg *imsg)
 
 	return (0);
 }
+#undef _WITH_DPRINTF

@@ -1600,3 +1600,4 @@ done:
 
 	return (ret);
 }
+#undef _WITH_GETLINE
