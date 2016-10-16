@@ -33,9 +33,7 @@ This operation is divided into three major stages:
 Well, there are some pending operational tasks
 
 <pre><code>
- #1 Complete integration of httpd(8).
-
- #2 Integration of OpenSMTPd(8) as replacement for 
+ #1 Integration of OpenSMTPd(8) as replacement for 
     sendmail(8), but I'll not integrate the portable
     version, because of some dependencies (!) like:
 
@@ -48,10 +46,10 @@ Well, there are some pending operational tasks
      * ...
 
     are still increasing the complexity.
+ 
+ #2 Porting if_pppoe(4) from NetBSD for kernel ppp(4).
 
- #3 Porting if_pppoe(4) from NetBSD for kernel ppp(4).
-
- #4 Integration of common or generic llc(4) domain
+ #3 Integration of common or generic llc(4) domain
     on top of Ethernet MAC layer. 
 </code></pre>
 

@@ -97,17 +97,14 @@ SUBDIR+= 	dhcpd
 SUBDIR+= 	flowctl
 SUBDIR+= 	ftp-proxy
 SUBDIR+= 	fwcontrol
-#
-# XXX: The integration of httpd(8) is pending...
-#
 SUBDIR+= 	httpd
-
 SUBDIR+= 	inetd
 SUBDIR+= 	nscd
 SUBDIR+= 	ntp
 SUBDIR+= 	phttpget
 SUBDIR+= 	ppp
 SUBDIR+= 	pppctl
+SUBDIR+= 	racoon
 SUBDIR+= 	rpc.lockd
 SUBDIR+= 	rpc.statd
 SUBDIR+= 	rpc.umntall
