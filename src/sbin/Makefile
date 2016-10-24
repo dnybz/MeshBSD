@@ -90,6 +90,10 @@ SUBDIR+= 	pflogd
 
 .if ${MK_RACOON2} != "no"
 SUBDIR+= 	iked
+
+.if ${MK_KERBEROS} != "no"
+SUBDIR+= 	kinkd
+.endif
 .endif
 
 .include <bsd.arch.inc.mk>

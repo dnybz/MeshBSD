@@ -14,6 +14,7 @@ SUBDIR+= 	c89
 SUBDIR+= 	c99
 SUBDIR+= 	cap_mkdb
 SUBDIR+= 	chkey
+SUBDIR+= 	chpass
 SUBDIR+= 	cksum
 SUBDIR+= 	cmp
 SUBDIR+= 	cpio

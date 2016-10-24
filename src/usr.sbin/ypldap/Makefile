@@ -9,11 +9,11 @@ SRCS=		parse.y ypldap.c log.c	\
 
 MAN=		ypldap.8 ypldap.conf.5
 
-LIBADD=		openbsd event util rpcsvc
+LIBADD=		event util rpcsvc
 
 CFLAGS+=-I${.CURDIR}
-CFLAGS+=-I${.CURDIR}/../../contrib/pf/libevent
-CFLAGS+=-I${.CURDIR}/../../lib/libopenbsd
+CFLAGS+=-I${.CURDIR}/../../lib/libevent
+CFLAGS+=-I${.CURDIR}/../../lib/libutil
 
 WARNS=	2
 

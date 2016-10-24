@@ -27,6 +27,11 @@ SUBDIR+= 	ftpd
 SUBDIR+= 	pppoed
 .endif
 
+.if ${MK_NIS} != "no"
+SUBDIR+= 	mknetid
+SUBDIR+= 	ypxfr
+.endif
+
 .if ${MK_OPENSSH} != "no"	
 SUBDIR+= 	sftp-server
 SUBDIR+= 	ssh-keysign

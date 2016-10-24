@@ -49,6 +49,7 @@ SUBDIR+= 	usbconfig
 SUBDIR+= 	usbdump
 SUBDIR+= 	utx
 SUBDIR+= 	vidcontrol
+SUBDIR+= 	vipw
 SUBDIR+= 	watch
 SUBDIR+= 	watchdogd
 SUBDIR+= 	wlandebug

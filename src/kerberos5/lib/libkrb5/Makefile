@@ -621,7 +621,8 @@ CFLAGS+=	-I${KRB5DIR}/lib/krb5 \
 		-I${KRB5DIR}/lib/asn1 \
 		-I${KRB5DIR}/lib/roken \
 		-I${KRB5DIR}/lib/ipc \
-		-I${KRB5DIR}/base -I.
+		-I${KRB5DIR}/base -I. \
+		-DLIBRESSL_NO_EDG
 
 .include <bsd.lib.mk>
 
