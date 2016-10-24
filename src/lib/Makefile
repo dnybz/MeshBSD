@@ -81,6 +81,7 @@ SUBDIR+= 	libpjdlog
 SUBDIR+= 	${_libpmc}
 SUBDIR+= 	libproc
 SUBDIR+= 	libprocstat
+SUBDIR+= 	${_libracoon}
 SUBDIR+= 	${_libradius}
 SUBDIR+= 	librpcsvc
 SUBDIR+= 	librt
@@ -135,6 +136,7 @@ SUBDIR_DEPEND_libpam= libcrypt libopie ${_libradius} librpcsvc libtacplus libuti
 SUBDIR_DEPEND_libpjdlog= libutil
 SUBDIR_DEPEND_libprocstat= libkvm libutil
 SUBDIR_DEPEND_libtls= libssl libcrypto
+SUBDIR_DEPEND_libracoon= libcrypto
 SUBDIR_DEPEND_libradius= libmd
 SUBDIR_DEPEND_libsmb= libkiconv
 SUBDIR_DEPEND_libstdc++:= msun
@@ -224,6 +226,10 @@ _libssl= 	libssl
 
 .if ${MK_OPENSSH} != "no"
 _libssh= 	libssh
+.endif
+
+.if ${MK_RACOON} != "no"
+_libracoon= 	libracoon
 .endif
 _libtls= 	libtls
 .endif

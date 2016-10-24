@@ -104,7 +104,6 @@ SUBDIR+= 	ntp
 SUBDIR+= 	phttpget
 SUBDIR+= 	ppp
 SUBDIR+= 	pppctl
-SUBDIR+= 	racoon
 SUBDIR+= 	rpc.lockd
 SUBDIR+= 	rpc.statd
 SUBDIR+= 	rpc.umntall

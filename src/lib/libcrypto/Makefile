@@ -10,9 +10,6 @@ ALLOW_SHARED_TEXTREL=
 
 NO_LINT=
 
-.if exists(Makefile.man)
-.include "Makefile.man"
-.endif
 .include "Makefile.inc"
 
 CFLAGS+= -Wall -Wundef -Werror -fpic -DPIC
@@ -39,8 +36,7 @@ CFLAGS+= -DOPENSSL_NO_HW_PADLOCK # XXX enable this?
 CFLAGS+= -I${LCRYPTO_SRC}/modes -I${LCRYPTO_SRC}/asn1 -I${LCRYPTO_SRC}/evp
 
 # compat/
-SRCS+=	compat/explicit_bzero.c compat/getentropy_freebsd.c compat/reallocarray.c
-SRCS+=	compat/timingsafe_bcmp.c compat/timingsafe_memcmp.c
+SRCS+=	compat/getentropy_freebsd.c 
 
 ### This is copied straight from the original Makefile
 ### src/lib/libcrypto/crypto/Makefile
@@ -395,3 +391,4 @@ SRCS+= wp_block.c
 .endif # 1 == 2
 
 all beforedepend: ${GENERATED}
+

@@ -5,16 +5,10 @@ SHLIB_MAJOR=	39
 
 NO_LINT=
 
-.if exists(Makefile.man)
-.include "Makefile.man"
-.endif
 .include "../libcrypto/Makefile.inc"
-.warning Building LibreSSL ${OPENSSL_VER}
+
 CFLAGS+= -Wall -Wundef
 CFLAGS+= -I${LCRYPTO_SRC} -I${LCRYPTO_SRC}/evp
-
-### This is copied straight from the original Makefile
-### src/lib/libssl/ssl/Makefile
 
 SRCS=\
 	s3_srvr.c s3_clnt.c s3_lib.c s3_pkt.c s3_both.c \
@@ -56,3 +50,4 @@ includes:
 	    eval "$$j"; \
 	done;
 .endif
+

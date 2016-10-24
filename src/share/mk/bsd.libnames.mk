@@ -127,6 +127,7 @@ LIBPMC?=	${DESTDIR}${LIBDIR}/libpmc.a
 LIBPROC?=	${DESTDIR}${LIBDIR}/libproc.a
 LIBPROCSTAT?=	${DESTDIR}${LIBDIR}/libprocstat.a
 LIBPTHREAD?=	${DESTDIR}${LIBDIR}/libpthread.a
+LIBRACOON?=	${DESTDIR}${LIBDIR}/libracoon.a
 LIBRADIUS?=	${DESTDIR}${LIBDIR}/libradius.a
 LIBRDMACM?=	${DESTDIR}${LIBDIR}/librdmacm.a
 LIBROKEN?=	${DESTDIR}${LIBDIR}/libroken.a

@@ -164,7 +164,7 @@ copies:
 	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 pcireg.h \
 	    ${DESTDIR}${INCLUDEDIR}/dev/pci
 .if ${MK_PF} != "no"
-	cd ${.CURDIR}/../sys/pf; \
+	cd ${.CURDIR}/../sys/netpfil/pf; \
 	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 *.h \
 	    ${DESTDIR}${INCLUDEDIR}/netpfil/pf
 .endif
@@ -238,9 +238,9 @@ symlinks:
 	done
 .endfor
 .if ${MK_PF} != "no"
-	cd ${.CURDIR}/../sys/pf; \
+	cd ${.CURDIR}/../sys/netpfil/pf; \
 	for h in *.h; do \
-		${INSTALL_SYMLINK} ${TAG_ARGS} ../../../../sys/pf/$$h \
+		${INSTALL_SYMLINK} ${TAG_ARGS} ../../../../sys/netpfil/pf/$$h \
 		    ${DESTDIR}${INCLUDEDIR}/netpfil/pf; \
 	done
 .endif

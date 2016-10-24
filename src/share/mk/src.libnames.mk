@@ -140,6 +140,7 @@ _LIBRARIES=	\
 		proc \
 		procstat \
 		pthread \
+		racoon \
 		radius \
 		readline \
 		roken \
@@ -233,7 +234,8 @@ _DP_mt=		sbuf bsdxml
 _DP_ldns=	crypto
 .if ${MK_LIBRESSL} != "no"
 _DP_fetch=	ssl crypto
-_DP_tls= 	ssl crypto 
+_DP_racoon= 	crypto
+_DP_tls= 	ssl crypto  
 .else
 _DP_fetch=	md
 .endif
@@ -472,6 +474,8 @@ LIBSSLDIR=	${OBJTOP}/lib/libssl
 LIBTEKENDIR=	${OBJTOP}/sys/teken/libteken
 LIBEGACYDIR=	${OBJTOP}/tools/build
 LIBLNDIR=	${OBJTOP}/usr.bin/lex/lib
+
+LIBRACOONDIR= 	${OBJTOP}/lib/libracoon
 
 LIBTERMCAPDIR=	${LIBNCURSESDIR}
 LIBTERMCAPWDIR=	${LIBNCURSESWDIR}

@@ -40,11 +40,6 @@ FILES=	\
 	bsd.obj.mk \
 	bsd.opts.mk \
 	bsd.own.mk \
-	bsd.port.mk \
-	bsd.port.options.mk \
-	bsd.port.post.mk \
-	bsd.port.pre.mk \
-	bsd.port.subdir.mk \
 	bsd.prog.mk \
 	bsd.progs.mk \
 	bsd.snmpmod.mk \

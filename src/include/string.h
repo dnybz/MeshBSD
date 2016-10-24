@@ -51,6 +51,9 @@ typedef	__size_t	size_t;
 #endif
 
 __BEGIN_DECLS
+#if __BSD_VISIBLE
+void	 explicit_bzero(void *, size_t);
+#endif
 #if __XSI_VISIBLE >= 600
 void	*memccpy(void * __restrict, const void * __restrict, int, size_t);
 #endif
