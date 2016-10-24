@@ -125,7 +125,7 @@ __DEFAULT_YES_OPTIONS = \
     PORTSNAP \
     PPP \
     QUOTAS \
-    RACOON \
+    RACOON2 \
     RADIUS_SUPPORT \
     RCMDS \
     RBOOTD \
@@ -277,7 +277,7 @@ MK_GNUCXX:=	no
 MK_OPENSSH:=	no
 MK_KERBEROS:=	no
 MK_NETCAT:= 	no
-MK_RACOON:= 	no
+MK_RACOON2:= 	no
 .endif
 
 .if ${MK_MAIL} == "no"

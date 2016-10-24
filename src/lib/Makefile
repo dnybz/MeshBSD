@@ -228,7 +228,7 @@ _libssl= 	libssl
 _libssh= 	libssh
 .endif
 
-.if ${MK_RACOON} != "no"
+.if ${MK_RACOON2} != "no"
 _libracoon= 	libracoon
 .endif
 _libtls= 	libtls

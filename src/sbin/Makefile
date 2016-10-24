@@ -88,6 +88,10 @@ SUBDIR+= 	pfctl
 SUBDIR+= 	pflogd
 .endif
 
+.if ${MK_RACOON2} != "no"
+SUBDIR+= 	iked
+.endif
+
 .include <bsd.arch.inc.mk>
 
 SUBDIR:=	${SUBDIR:O}
