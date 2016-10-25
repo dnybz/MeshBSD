@@ -15,6 +15,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#ifndef _IOBUF_H
+#define _IOBUF_H
+
 struct ioqbuf {
 	struct ioqbuf	*next;
 	char		*buf;
@@ -65,3 +68,5 @@ int	iobuf_flush(struct iobuf *, int);
 int	iobuf_flush_ssl(struct iobuf *, void *);
 ssize_t	iobuf_write(struct iobuf *, int);
 ssize_t	iobuf_write_ssl(struct iobuf *, void *);
+
+#endif /* _IOBUF_H */

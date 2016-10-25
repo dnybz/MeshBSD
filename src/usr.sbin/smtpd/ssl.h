@@ -15,6 +15,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#ifndef _SSL_H
+#define _SSL_H
+
 #define SSL_CIPHERS		"HIGH:!aNULL:!MD5"
 #define	SSL_SESSION_TIMEOUT	300
 
@@ -65,3 +68,4 @@ int		ssl_ctx_fake_private_key(SSL_CTX *, const void *, size_t,
 
 /* ssl_privsep.c */
 int		ssl_by_mem_ctrl(X509_LOOKUP *, int, const char *, long, char **);
+#endif /* _SSL_H */

@@ -293,10 +293,12 @@ control(void)
 	config_done();
 
 	control_listen();
-
+/*
+ * XXX: port of pledge(2) is still in preperation
+ *
 	if (pledge("stdio unix recvfd sendfd", NULL) == -1)
 		err(1, "pledge");
-
+ */
 	if (event_dispatch() < 0)
 		fatal("event_dispatch");
 	control_shutdown();

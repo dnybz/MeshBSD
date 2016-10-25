@@ -16,6 +16,19 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#ifndef _SMTPD_DEFINES_H
+#define _SMTPD_DEFINES_H
+
+#ifndef HOST_NAME_MAX
+# if defined(_POSIX_HOST_NAME_MAX)
+#  define HOST_NAME_MAX _POSIX_HOST_NAME_MAX
+# elif defined(MAXHOSTNAMELEN)
+#  define HOST_NAME_MAX MAXHOSTNAMELEN
+# else
+#  define HOST_NAME_MAX	255
+# endif
+#endif /* HOST_NAME_MAX */
+
 #ifndef nitems
 #define nitems(_a) (sizeof((_a)) / sizeof((_a)[0]))
 #endif
@@ -47,3 +60,5 @@
 #define	EX_UNAVAILABLE		69
 #define	EX_SOFTWARE		70
 #define	EX_TEMPFAIL		75
+
+#endif /* _SMTPD_DEFINES_H */

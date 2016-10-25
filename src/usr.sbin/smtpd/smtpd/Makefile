@@ -88,10 +88,15 @@ LIBADD+=	crypto
 LIBADD+=	m 
 LIBADD+=	z
 
-DPADD+=		${LIBEVENT} ${LIBUTIL} ${LIBSSL} ${LIBCRYPTO} ${LIBM} ${LIBZ}
+#
+# XXX: automatically set on SSP_CFLAGS denotes 
+# XXX: subset on CFLAGS, if !ARM && !MIPS TARGET,
+# XXX: see share/mk/bsd.sys.mk, line: 154
+#
+# CFLAGS+=	-fstack-protector-all
+#
 
-CFLAGS+=	-fstack-protector-all
-CFLAGS+=	-I${.CURDIR}/..
+CFLAGS+=	-I${.CURDIR}/.. -I${.CURDIR}/../../../lib/libevent
 CFLAGS+=	-Wall -Wstrict-prototypes -Wmissing-prototypes
 CFLAGS+=	-Wmissing-declarations
 CFLAGS+=	-Wshadow -Wpointer-arith -Wcast-qual

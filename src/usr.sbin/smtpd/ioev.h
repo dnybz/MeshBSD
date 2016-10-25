@@ -15,6 +15,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#ifndef _IOEV_H
+#define _IOEV_H
+
 #include <event.h>
 
 enum {
@@ -68,3 +71,4 @@ int io_connect(struct io *, const struct sockaddr *, const struct sockaddr *);
 int io_start_tls(struct io *, void *);
 const char* io_strio(struct io *);
 const char* io_strevent(int);
+#endif /* _IOEV_H */

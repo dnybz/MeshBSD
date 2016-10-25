@@ -21,6 +21,16 @@
 #ifndef _HTTPD_H
 #define _HTTPD_H
 
+#ifndef HOST_NAME_MAX
+# if defined(_POSIX_HOST_NAME_MAX)
+#  define HOST_NAME_MAX _POSIX_HOST_NAME_MAX
+# elif defined(MAXHOSTNAMELEN)
+#  define HOST_NAME_MAX MAXHOSTNAMELEN
+# else
+#  define HOST_NAME_MAX	255
+# endif
+#endif /* HOST_NAME_MAX */
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/queue.h>
@@ -37,16 +47,6 @@
 #include <vis.h>
 
 #include "patterns.h"
-
-#ifndef HOST_NAME_MAX
-# if defined(_POSIX_HOST_NAME_MAX)
-#  define HOST_NAME_MAX _POSIX_HOST_NAME_MAX
-# elif defined(MAXHOSTNAMELEN)
-#  define HOST_NAME_MAX MAXHOSTNAMELEN
-# else
-#  define HOST_NAME_MAX	255
-# endif
-#endif /* HOST_NAME_MAX */
 
 #define CONF_FILE		"/etc/httpd.conf"
 #define HTTPD_SOCKET		"/var/run/httpd.sock"

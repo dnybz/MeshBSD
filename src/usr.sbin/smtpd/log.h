@@ -16,6 +16,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#ifndef _LOG_H
+#define _LOG_H
+
 void		log_init(int);
 void		log_verbose(int);
 void		log_warn(const char *, ...)
@@ -28,7 +31,8 @@ void		log_debug(const char *, ...)
     __attribute__((format (printf, 1, 2)));
 void		log_trace(int, const char *, ...)
     __attribute__((format (printf, 2, 3)));
-__dead void	fatal(const char *, ...)
+void	fatal(const char *, ...)
     __attribute__((format (printf, 1, 2)));
-__dead void	fatalx(const char *, ...)
+void	fatalx(const char *, ...)
     __attribute__((format (printf, 1, 2)));
+#endif /* _LOG_H */    

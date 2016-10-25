@@ -124,10 +124,12 @@ ca(void)
 
 	/* Ignore them until we get our config */
 	mproc_disable(p_pony);
-
+/*
+ * XXX: port of pledge(2) is still in preperation
+ *
 	if (pledge("stdio", NULL) == -1)
 		err(1, "pledge");
-
+ */
 	if (event_dispatch() < 0)
 		fatal("event_dispatch");
 	ca_shutdown();

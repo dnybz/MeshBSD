@@ -77,6 +77,10 @@ SUBDIR+= 	bluetooth
 SUBDIR+= 	bsnmpd
 .endif
 
+.if ${MK_FTP} != "no"
+SUBDIR+= 	ftp-proxy
+.endif
+
 .if ${MK_INET_SUPPORT} != "no"
 SUBDIR+= 	arp
 SUBDIR+= 	rarpd
@@ -96,10 +100,8 @@ SUBDIR+= 	traceroute6
     ${MK_INET6_SUPPORT} != "no"
 SUBDIR+= 	dhcpd
 SUBDIR+= 	flowctl
-SUBDIR+= 	ftp-proxy
 SUBDIR+= 	fwcontrol
 SUBDIR+= 	httpd
-SUBDIR+= 	inetd
 SUBDIR+= 	nscd
 SUBDIR+= 	ntp
 SUBDIR+= 	phttpget
@@ -139,6 +141,10 @@ SUBDIR+= 	ypset
 
 .if ${MK_OPENSSH} != "no"
 SUBDIR+=sshd
+.endif
+
+.if ${MK_MAIL} != "no"
+SUBDIR+= 	smtpd
 .endif
 
 .if ${MK_NAND} != "no"

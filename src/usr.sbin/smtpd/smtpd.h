@@ -18,6 +18,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#ifndef _SMTPD_H
+#define _SMTPD_H
+
 #ifndef nitems
 #define nitems(_a) (sizeof((_a)) / sizeof((_a)[0]))
 #endif
@@ -1523,3 +1526,4 @@ int runq_delay(struct runq *, unsigned int, void (*)(struct runq *, void *), voi
 int runq_cancel(struct runq *, void (*)(struct runq *, void *), void *);
 int runq_pending(struct runq *, void (*)(struct runq *, void *), void *, time_t *);
 int runq_next(struct runq *, void (**)(struct runq *, void *), void **, time_t *);
+#endif /* _SMTPD_H */

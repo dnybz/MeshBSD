@@ -16,6 +16,9 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#ifndef _PARSER_H
+#define _PARSER_H
+
 enum {
 	P_TOKEN,
 	P_STR,
@@ -41,3 +44,4 @@ struct parameter {
 int cmd_install(const char *, int (*)(int, struct parameter *));
 int cmd_run(int, char **);
 int cmd_show_params(int argc, struct parameter *argv);
+#endif /* _PARSER_H */
