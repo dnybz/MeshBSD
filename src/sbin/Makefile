@@ -94,6 +94,9 @@ SUBDIR+= 	iked
 .if ${MK_KERBEROS} != "no"
 SUBDIR+= 	kinkd
 .endif
+
+SUBDIR+= 	spmd
+SUBDIR+= 	spmdctl
 .endif
 
 .include <bsd.arch.inc.mk>

@@ -5,7 +5,7 @@ PACKAGE= 	kinkd
 PROG= 	kinkd
 
 RACOONDIR= 	${.CURDIR}/../../external/racoon2
-RACOON2_CONFIG_DIR= 	/etc/c/racoon2
+RACOON2_CONFIG_DIR= 	/etc/racoon2
 
 .PATH: 	${RACOONDIR}/kinkd
 SRCS= 	main.c \
@@ -19,9 +19,7 @@ SRCS= 	main.c \
 	etchosts.c \
 	sched_select.c utils.c
 
-
 MAN=	kinkd.8
-
 
 LIBADD= 	racoon
 LIBADD+= 	krb5
