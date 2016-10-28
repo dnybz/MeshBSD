@@ -143,9 +143,13 @@ SUBDIR+= 	ypset
 SUBDIR+=sshd
 .endif
 
-.if ${MK_MAIL} != "no"
-SUBDIR+= 	smtpd
-.endif
+#
+# XXX: stalled op. until asr is subset of libc(3).
+#
+#.if ${MK_MAIL} != "no"
+#SUBDIR+= 	smtpd
+#.endif
+#
 
 .if ${MK_NAND} != "no"
 SUBDIR+= 	nandsim

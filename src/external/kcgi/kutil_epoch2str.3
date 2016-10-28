@@ -1,0 +1,103 @@
+.\"	$Id: kutil_epoch2str.3,v 1.3 2016/10/10 20:50:57 kristaps Exp $
+.\"
+.\" Copyright (c) 2016 Kristaps Dzonsons <kristaps@bsd.lv>
+.\"
+.\" Permission to use, copy, modify, and distribute this software for any
+.\" purpose with or without fee is hereby granted, provided that the above
+.\" copyright notice and this permission notice appear in all copies.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+.\" WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+.\" MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+.\" ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+.\" WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+.\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+.\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\"
+.Dd $Mdocdate: October 10 2016 $
+.Dt KUTIL_EPOCH2STR 3
+.Os
+.Sh NAME
+.Nm kutil_epoch2str ,
+.Nm kutil_date2epoch
+.Nd format and parse time for HTTP operations
+.Sh LIBRARY
+.Lb libkcgi
+.Sh SYNOPSIS
+.In stdint.h
+.In kcgi.h
+.Ft "void"
+.Fo kutil_epoch2str
+.Fa "int64_t epoch"
+.Fa "char *buf"
+.Fa "size_t sz"
+.Fc
+.Ft "int64_t"
+.Fo kutil_date2epoch
+.Fa "int64_t day"
+.Fa "int64_t mon"
+.Fa "int64_t year"
+.Fc
+.Ft "int64_t"
+.Fo kutil_datetime2epoch
+.Fa "int64_t day"
+.Fa "int64_t mon"
+.Fa "int64_t year"
+.Fa "int64_t hour"
+.Fa "int64_t min"
+.Fa "int64_t sec"
+.Fc
+.Sh DESCRIPTION
+The
+.Nm kutil_epoch2str
+function formats an
+.Fa epoch
+value
+.Pq seconds since Jan 1, 1970, 00:00:00 UTC
+into the buffer
+.Fa buf
+of size
+.Fa sz ,
+which should be greater than or equal to 30 bytes for the date and
+trailing nil terminator.
+The format conforms to RFC 822.
+This will truncate all values before the zeroth epoch to zero (Jan 1 as
+given).
+This function is useful for properly setting date-time header values:
+.Dv KRESP_SET_COOKIE ,
+.Dv KRESP_LAST_MODIFIED ,
+.Dv KRESP_DATE ,
+etc.
+.Pp
+The
+.Nm kutil_date2epoch
+function converts a day, month, and year into an epoch (at time 00:00:00).
+If the year is before 1970 or any values are negative, this returns zero.
+The behaviour for invalid dates (e.g., a
+.Fn mon
+value of 14) is undefined.
+The
+.Nm kutil_datetime2epoch
+is similar, but acts upon time values as well.
+The same rules regarding negative numbers and undefinedness apply.
+.Pp
+All of these date functions are designed to avoid how native
+.Xr gmtime 3
+and time formatting functions access time-zone files, which may
+unwittingly crash given some operating system's sandbox mechanisms.
+.Sh AUTHORS
+The
+.Nm kutil_epoch2str
+and
+.Nm kutil_date2epoch
+functions were written by
+.An Kristaps Dzonsons Aq Mt kristaps@bsd.lv .
+.Sh CAVEATS
+The
+.Vt time_t
+type is not used for the epoch to avoid expanding header requirements
+for
+.In kcgi.h
+and because the
+.Vt int64_t
+type is used consistently for integral values.

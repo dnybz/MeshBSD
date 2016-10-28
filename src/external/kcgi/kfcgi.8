@@ -1,0 +1,167 @@
+.Dd $Mdocdate: March 15 2016 $
+.Dt KFCGI 8
+.Os
+.Sh NAME
+.Nm kfcgi
+.Nd FastCGI server for kcgi applications
+.\" .Sh LIBRARY
+.\" For sections 2, 3, and 9 only.
+.\" Not used in OpenBSD.
+.Sh SYNOPSIS
+.Nm kfcgi
+.Op Fl drv
+.Op Fl l Ar backlog
+.Op Fl n Ar workers
+.Op Fl N Ar maxworkers
+.Op Fl p Ar chroot
+.Op Fl s Ar sockpath
+.Op Fl u Ar sockuser
+.Op Fl U Ar procuser
+.Op Fl w Ar waittime
+.Ar prog Op arg0...
+.Sh DESCRIPTION
+The
+.Nm
+server starts up
+.Ar workers
+processes of
+.Ar prog
+to handle FastCGI connections.
+It can handle any FastCGI worker implementing the FastCGI v1.0
+Specification as well as those implementing the FastCGI Extensions for
+Management Control (see
+.Fl r ,
+.Fl N ,
+and
+.Fl w ) .
+.Pp
+By default, it opens the socket
+.Pa /var/www/run/httpd.sock
+in mode 0660 under the current user and group, changes to a file-system
+jail in
+.Pa /var/www ,
+daemonises and opens its system log,
+then starts 3 workers executing
+.Ar prog ,
+which must exist relative to the file-system jail root.
+The back-log is twice the worker pool size
+.Pq Fl n
+or, in the event of variable-sized pools, twice the maximum worker size
+.Pq Fl N .
+.Pp
+The arguments are as follows:
+.Bl -tag -width Ds
+.It Fl d
+Do not daemonise and, in addition to syslog, print messages to standard
+error.
+.It Fl v
+Be more verbose in output.
+This can produce a
+.Em lot
+of output.
+.It Fl l Ar backlog
+The connection backlog.
+If this is too small, connections will be refused and cause the request
+to error out.
+The operating system will usually truncate this.
+.It Fl n Ar workers
+The initial number of workers >1.
+.It Fl N Ar maxworkers
+The maximum number of workers in a variable-sized pool.
+By default, this is twice
+.Fl n .
+.It Fl p Ar chroot
+Location of file-system jail.
+This is mandatory: use the root directory if you insist on being
+insecure.
+.It Fl r
+Use a variable-sized pool of workers.
+This can
+.Em only
+be used for workers implementing the FastCGI Extensions for Management
+Control.
+The pool will be at least (and initially) size
+.Fl n ,
+maximum size
+.Fl N
+with a release policy dictated by
+.Fl w .
+.It Fl s Ar sockpath
+Alternative socket path.
+.It Fl u Ar sockuser
+The user in whose name (user and group) the socket is created.
+.It Fl U Ar procuser
+The user in whose name the process is dropped.
+.It Fl w Ar waittime
+The amount of time in seconds a worker must be idle before being
+released from a variable-sized pool.
+By default, this is five minutes.
+.El
+.Pp
+To properly stop a
+.Nm
+server, send it a
+.Dv SIGTERM .
+If you send a
+.Dv SIGHUP
+to the process, it will restart all workers.
+.\" .Sh CONTEXT
+.\" For section 9 functions only.
+.\" .Sh IMPLEMENTATION NOTES
+.\" Not used in OpenBSD.
+.\" .Sh RETURN VALUES
+.\" For sections 2, 3, and 9 function return values only.
+.\" .Sh ENVIRONMENT
+.\" For sections 1, 6, 7, and 8 only.
+.\" .Sh FILES
+.Sh EXIT STATUS
+.Ex -std
+.\" For sections 1, 6, and 8 only.
+.Sh EXAMPLES
+On OpenBSD, the default user for the web server is
+.Dq www .
+Assuming we have a server that doesn't need any files, we can run the
+following to keep it in a safe jail:
+.Pp
+.D1 # kfcgi -u www -U www -- /fcgi-bin/prog
+.Pp
+This will execute
+.Pa /fcgi-bin/prog
+within the default file-system jail of
+.Pa /var/www
+as user
+.Dq www .
+It will create the default socket
+.Pa /var/www/run/httpd.sock
+in mode 0660 as user
+.Dq www .
+.Pp
+This can also be extended to run a variable-sized pool of workers that
+responds to system load.
+.Pp
+.D1 # kfcgi -r -n 2 -N 100 -w 10 -u www -U www -- /fcgi-bin/prog
+.Pp
+This will start with only two servers, but scale it to 100 in the event
+of a burst of communication.
+Workers started to handle the burst will be terminated after 10 seconds.
+.\" .Sh DIAGNOSTICS
+.\" For sections 1, 4, 6, 7, 8, and 9 printf/stderr messages only.
+.\" .Sh ERRORS
+.\" For sections 2, 3, 4, and 9 errno settings only.
+.Sh SEE ALSO
+.Xr kcgi 3
+.Sh STANDARDS
+.Nm
+implements the
+.Dq FastCGI Specification ,
+version 1.0, published 29 April 1996, for properly passing connections
+to the workers.
+It also implements the
+.Lk http://kristaps.bsd.lv/kcgi/extending01.html "FastCGI Extensions for Management Control"
+for variable-sized worker pools.
+.\" .Sh HISTORY
+.\" .Sh AUTHORS
+.\" .Sh CAVEATS
+.\" .Sh BUGS
+.\" .Sh SECURITY CONSIDERATIONS
+.\" Not used in OpenBSD.

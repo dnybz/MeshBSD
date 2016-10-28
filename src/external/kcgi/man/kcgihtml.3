@@ -1,0 +1,284 @@
+.\"	$Id: kcgihtml.3,v 1.10 2016/10/04 20:05:27 kristaps Exp $
+.\"
+.\" Copyright (c) 2014, 2015 Kristaps Dzonsons <kristaps@bsd.lv>
+.\"
+.\" Permission to use, copy, modify, and distribute this software for any
+.\" purpose with or without fee is hereby granted, provided that the above
+.\" copyright notice and this permission notice appear in all copies.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+.\" WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+.\" MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+.\" ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+.\" WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+.\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+.\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\"
+.Dd $Mdocdate: October 4 2016 $
+.Dt KCGIHTML 3
+.Os
+.Sh NAME
+.Nm kcgihtml ,
+.Nm khtml_attr ,
+.Nm khtml_attrx ,
+.Nm khtml_close ,
+.Nm khtml_closeelem ,
+.Nm khtml_closeto ,
+.Nm khtml_double ,
+.Nm khtml_elem ,
+.Nm khtml_elemat ,
+.Nm khtml_entity ,
+.Nm khtml_int ,
+.Nm khtml_ncr ,
+.Nm khtml_open ,
+.Nm khtml_putc ,
+.Nm khtml_puts ,
+.Nm khtml_write
+.Nd HTML handling functions for kcgi
+.Sh LIBRARY
+.Lb libkcgihtml
+.Sh SYNOPSIS
+.In stdint.h
+.In kcgi.h
+.In kcgihtml.h
+.Ft void
+.Fo khtml_attr
+.Fa "struct khtmlreq *req"
+.Fa "enum kelem elem"
+.Fa "..."
+.Fc
+.Ft void
+.Fo khtml_attrx
+.Fa "struct khtmlreq *req"
+.Fa "enum kelem elem"
+.Fa "..."
+.Fc
+.Ft int
+.Fo khtml_close
+.Fa "struct khtmlreq *req"
+.Fc
+.Ft int
+.Fo khtml_closeelem
+.Fa "struct khtmlreq *req"
+.Fa "size_t count"
+.Fc
+.Ft int
+.Fo khtml_closeto
+.Fa "struct khtmlreq *req"
+.Fa "size_t pos"
+.Fc
+.Ft void
+.Fo khtml_double
+.Fa "struct khtmlreq *req"
+.Fa "double val"
+.Fc
+.Ft void
+.Fo khtml_elem
+.Fa "struct khtmlreq *req"
+.Fa "enum kelem elem"
+.Fc
+.Ft size_t
+.Fo khtml_elemat
+.Fa "struct khtmlreq *req"
+.Fc
+.Ft void
+.Fo khtml_entity
+.Fa "struct khtmlreq *req"
+.Fa "enum entity entity"
+.Fc
+.Ft void
+.Fo khtml_int
+.Fa "struct khtmlreq *req"
+.Fa "int64_t val"
+.Fc
+.Ft void
+.Fo khtml_ncr
+.Fa "struct khtmlreq *req"
+.Fa "uint16_t ncr"
+.Fc
+.Ft void
+.Fo khtml_open
+.Fa "struct khtmlreq *req"
+.Fa "struct kreq *r"
+.Fa "int opts"
+.Fc
+.Ft void
+.Fo khtml_putc
+.Fa "struct khtmlreq *req"
+.Fa "char c"
+.Fc
+.Ft void
+.Fo khtml_puts
+.Fa "struct khtmlreq *req"
+.Fa "const char *cp"
+.Fc
+.Ft int
+.Fo khtml_write
+.Fa "const char *cp"
+.Fa "size_t sz"
+.Fa "void *arg"
+.Fc
+.Sh DESCRIPTION
+The
+.Nm kcgihtml
+functions extend
+.Xr kcgi 3
+output with HTML elements, attributes, and text for contexts allocated with
+.Xr khttp_parse 3 .
+None of these functions may be called before
+.Xr khttp_body 3 .
+.Pp
+To use these functions, you must include the
+.In kcgihtml.h
+header and compile with
+.Lb kcgihtml ,
+for example,
+.Bd -literal
+% cc -I/usr/local/include -c -o sample.o sample.c
+% cc -L/usr/local/lib -o sample -lkcgihtml -lkcgi -lz
+.Ed
+.Pp
+All of the
+.Nm kcgihtml
+functions accept a
+.Vt "struct khtmlreq"
+object.
+To use this properly, open a context with
+.Fn khtml_open ,
+then use whichever functions you wish, then close the context with
+.Fn khtml_close .
+.Bl -tag -width Ds
+.It Fn khtml_attr
+Open the scope of element
+.Fa elem
+with matching key-value pairs in the varargs for its attributes.
+The maximum number of nested scopes is fixed at 128.
+The terminating attribute key must be
+.Dv ATTR__MAX.
+.It Fn khtml_attrx
+Like
+.Fn khtml_attr ,
+but accepts an addition parameter
+.Ft "enum attrx"
+following the
+.Ft "enum attr"
+that specifies the attribute type.
+This is useful for non-string attributes, for example, invoking with
+.Dv KATTR_WIDTH ,
+.Dv KATTRX_INT ,
+and
+.Li 100
+will properly render the integer type.
+The types route through to
+.Fn khtml_puts
+for
+.Dv KATTRX_STRING ,
+.Fn khtml_int
+for
+.Dv KATTRX_INT ,
+.Fn khtml_double
+for
+.Dv KATTRX_DOUBLE .
+.It Fn khtml_close
+Close an HTML context as opened with
+.Fn khtml_open .
+This will also close any open elements.
+You should not use the object after invoking this function.
+.It Fn khtml_closeelem
+Close the last
+.Fa count
+scopes.
+This will call
+.Xr abort 3
+if
+.Fa count
+exceeds the number of open scopes.
+If
+.Fa count
+is zero, this will close all scopes.
+.Em \&Do not
+close HTML
+.Qq void
+elements such as
+.Aq meta .
+.It Fn khtml_closeto
+Close until a certain level
+.Fa pos
+in the HTML tree, which must be at or above the current level.
+Usually used with
+.Fn khtml_elemat .
+If there are fewer open contexts than the requested, this will only
+close the available open contexts.
+.It Fn khtml_double
+Wrapper over
+.Fn khtml_puts
+for formatting a double-precision floating point.
+This uses a buffer of size
+.Li 256
+and the
+.Li %g
+to
+.Xr snprintf 3 ,
+which may not be what you want.
+.It Fn khtml_elem
+Invokes
+.Fn khtml_attr
+with no attributes.
+.It Fn khtml_elemat
+Save the current point in the HTML tree.
+Useful for saving a
+.Fn khtml_closeto
+rollback point.
+.It Fn khtml_entity
+Emit the numeric character reference for
+.Fa entity .
+.It Fn khtml_int
+Wrapper over
+.Fn khtml_puts
+for formatting a 64-bit signed integer.
+.It Fn khtml_ncr
+Emit the numeric character reference
+.Fa ncr .
+.It Fn khtml_putc
+Emit the text
+.Fa c ,
+escaping it (e.g.,
+.Sq \&> )
+for HTML if necessary.
+.It Fn khtml_open
+Initialise an HTML output context.
+This accepts the underlying request as well as a bit-mask of options
+.Fa opts .
+This can be set to
+.Dv KHTML_PRETTY ,
+in which case the output is lightly
+.Dq pretty-printed
+with newlines and indentation spaces.
+By default, output is all on one line.
+.It Fn khtml_puts
+Invokes
+.Fn khtml_putc
+for each character of the nil-terminated string
+.Fa cp .
+.It Fn khtml_write
+Like
+.Fn khtml_puts ,
+but working with a sized buffer.
+This is generally for use with
+.Xr khttp_template 3 .
+.El
+.Sh RETURN VALUES
+The
+.Fn khtml_close ,
+.Fn khtml_closeelem ,
+and
+.Fn khtml_closeat
+return zero if the requested statement overruns (or underruns) the stack
+of open elements.
+.Sh STANDARDS
+HTML5 compatible with the draft standard of February 2014.
+.Sh AUTHORS
+The
+.Nm kcgihtml
+library was written by
+.An Kristaps Dzonsons Aq Mt kristaps@bsd.lv .

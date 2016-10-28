@@ -1,0 +1,171 @@
+.\"	$Id: khttp_template.3,v 1.5 2015/07/16 22:34:59 kristaps Exp $
+.\"
+.\" Copyright (c) 2014 Kristaps Dzonsons <kristaps@bsd.lv>
+.\"
+.\" Permission to use, copy, modify, and distribute this software for any
+.\" purpose with or without fee is hereby granted, provided that the above
+.\" copyright notice and this permission notice appear in all copies.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+.\" WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+.\" MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+.\" ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+.\" WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+.\" ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+.\" OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+.\"
+.Dd $Mdocdate: July 16 2015 $
+.Dt KHTTP_TEMPLATE 3
+.Os
+.Sh NAME
+.Nm khttp_template ,
+.Nm khttp_templatex ,
+.Nm khttp_template_buf ,
+.Nm khttp_templatex_buf
+.Nd emit filled-in templates for kcgi
+.Sh LIBRARY
+.Lb libkcgi
+.Sh SYNOPSIS
+.In stdint.h
+.In kcgi.h
+.Ft int
+.Fo khttp_template
+.Fa "struct kreq *req"
+.Fa "const struct ktemplate *t"
+.Fa "const char *fname"
+.Fc
+.Ft int
+.Fo khttp_templatex
+.Fa "const struct ktemplate *t"
+.Fa "const char *fname"
+.Fa "ktemplate_writef fp"
+.Fa "void *arg"
+.Fc
+.Ft int
+.Fo khttp_template_buf
+.Fa "struct kreq *req"
+.Fa "const struct ktemplate *t"
+.Fa "const char *buf"
+.Fa "size_t sz"
+.Fc
+.Ft int
+.Fo khttp_templatex_buf
+.Fa "const struct ktemplate *t"
+.Fa "const char *buf"
+.Fa "size_t sz"
+.Fa "ktemplate_writef fp"
+.Fa "void *arg"
+.Fc
+.Sh DESCRIPTION
+The
+.Nm khttp_template ,
+.Nm khttp_templatex ,
+.Nm khttp_template_buf ,
+and
+.Nm khttp_templatex_buf
+functions comprise a template system for a
+.Xr kcgi 3
+context allocated with
+.Xr khttp_parse 3 .
+They may only be called after
+.Xr khttp_body 3 ,
+else behaviour is undefined.
+.Pp
+.Fn khttp_template
+and
+.Fn khttp_templatex
+memory-map the regular file
+.Fa fname
+and pass the string into
+.Fn khttp_template_buf
+and
+.Fn khttp_templatex_buf .
+.Fn khttp_template
+uses the
+.Xr khttp_write 3
+family of functions for writing data, while
+.Fn khttp_templatex
+uses a function callback
+.Fa fp
+and opaque pointer
+.Fa arg
+for applications to override this behaviour.
+Passing
+.Dv NULL
+as
+.Fa fp
+causes undefined behaviour.
+.Pp
+.Fn khttp_template_buf
+and
+.Fn khttp_templatex_buf
+template an input buffer directly using
+.Xr khttp_write 3
+and friends for
+.Fn khttp_template_buf
+or
+.Fa fp
+and opaque pointer
+.Fa arg
+for
+.Fn khttp_templatex_buf .
+The buffer is emitted until a
+.Li @@foo@@
+sequence (two
+.Qq at
+signs followed by a key, followed by a trailing pair of
+.Qq at
+signs) is encountered.
+The key is then looked up in the
+.Fa t
+argument's
+.Va key
+array of size
+.Va keysz .
+If found, the callback
+.Va cb
+is invoked with the key index and the optional
+argument
+.Va arg .
+Callbacks may continue to process, emit HTML trees, and so on.
+If it returns 0,
+.Nm khttp_template_buf
+fails.
+If the key is not found, it is emitted as opaque text via
+.Xr khttp_write 3
+and friends.
+.Pp
+If
+.Fa t
+is
+.Dv NULL ,
+the buffer (or file) is emitted without any processing.
+.Sh RETURN VALUES
+.Nm khttp_template
+returns 0 if the
+.Xr fstat 2 ,
+.Xr open 2 ,
+or
+.Xr mmap 2
+functions fail on the file, or the file is too large to map.
+.Pp
+Both
+.Nm khttp_template
+and
+.Nm khttp_template_buf
+fail if the callback function returns 0.
+The
+.Nm khttp_templatex
+and
+.Nm khttp_atemplatex_buf
+functions may also return 0 if the write functions return 0.
+.Sh SEE ALSO
+.Xr kcgi 3 ,
+.Xr khttp_body 3 ,
+.Xr khttp_parse 3 ,
+.Xr khttp_write 3
+.Sh AUTHORS
+The
+.Nm
+library was written by
+.An Kristaps Dzonsons Aq Mt kristaps@bsd.lv .

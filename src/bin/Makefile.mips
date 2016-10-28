@@ -1,0 +1,3 @@
+
+SUBDIR+= 	cfg_load
+SUBDIR+= 	cfg_safe
