@@ -26,9 +26,9 @@
 struct sockaddr_isdn {
 	uint8_t 	sisdn_len; 	/* length */
 	sa_family_t 	sisdn_family; 	/* AF_ISDN */
-	uint32_t 	sisdn_ctlr;
-	uint32_t 	sisdn_chan;	
-	uint32_t 	sisdn_sapi; 	
-	uint32_t 	sisdn_tei;				
+	uint16_t 	sisdn_ctlr; 	/* Index of Ethernet Controller */
+	uint16_t 	sisdn_chan;	
+	uint16_t 	sisdn_sapi; 	
+	uint16_t 	sisdn_tei;				
 };
 #define SISDN_LEN 	(sizeof(struct sockaddr_isdn))
