@@ -26,7 +26,8 @@
 struct sockaddr_isdn {
 	uint8_t 	sisdn_len; 	/* length */
 	sa_family_t 	sisdn_family; 	/* AF_ISDN */
-	uint16_t 	sisdn_channel;	
+	uint32_t 	sisdn_ctlr;
+	uint32_t 	sisdn_chan;	
 	uint32_t 	sisdn_sapi; 	
 	uint32_t 	sisdn_tei;				
 };
