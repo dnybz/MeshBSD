@@ -38,12 +38,9 @@
 #include <sys/cdefs.h>
 __KERNEL_RCSID(0, "$NetBSD: i4b_l2fsm.c,v 1.13 2009/03/14 14:46:11 dsl Exp $");
 
-#ifdef __FreeBSD__
 #include "i4bq921.h"
-#else
-#define	NI4BQ921	1
-#endif
-#if NI4BQ921 > 0
+
+#if NI4BQ921
 
 #include <sys/param.h>
 #include <sys/kernel.h>
@@ -52,17 +49,10 @@ __KERNEL_RCSID(0, "$NetBSD: i4b_l2fsm.c,v 1.13 2009/03/14 14:46:11 dsl Exp $");
 #include <sys/socket.h>
 #include <net/if.h>
 
-#if defined(__NetBSD__) && __NetBSD_Version__ >= 104230000
-#include <sys/callout.h>
-#endif
+#include <netisdn/i4b.h>
 
-#ifdef __FreeBSD__
-#include <machine/i4b_debug.h>
-#include <machine/i4b_ioctl.h>
-#else
 #include <netisdn/i4b_debug.h>
 #include <netisdn/i4b_ioctl.h>
-#endif
 
 #include <netisdn/i4b_global.h>
 #include <netisdn/i4b_l2.h>
@@ -73,7 +63,7 @@ __KERNEL_RCSID(0, "$NetBSD: i4b_l2fsm.c,v 1.13 2009/03/14 14:46:11 dsl Exp $");
 #include <netisdn/i4b_l2fsm.h>
 
 
-#if DO_I4B_DEBUG
+#if I4B_DEBUG
 static const char *l2state_text[N_STATES] = {
 	"ST_TEI_UNAS",
 	"ST_ASG_AW_TEI",
@@ -215,53 +205,356 @@ struct l2state_tab {
 	int newstate;				/* next state */
 } l2state_tab[N_EVENTS][N_STATES] = {
 
-/* STATE:	ST_TEI_UNAS,			ST_ASG_AW_TEI,			ST_EST_AW_TEI,			ST_TEI_ASGD,		ST_AW_EST,		ST_AW_REL,		ST_MULTIFR,		ST_TIMREC,		ST_SUBSET,		ILLEGAL STATE	*/
-/* -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-/*EV_DLESTRQ*/{	{F_TU01, ST_EST_AW_TEI},	{F_NCNA, ST_EST_AW_TEI},	{F_ILL,	ST_ILL},		{F_T01,	ST_AW_EST},     {F_AE01, ST_AW_EST},	{F_ILL,	ST_ILL},	{F_MF01, ST_AW_EST},	{F_TR01, ST_AW_EST},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_DLUDTRQ*/{	{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_MDASGRQ*/{	{F_TU03, ST_TEI_ASGD},		{F_TA03, ST_TEI_ASGD},		{F_TE03, ST_AW_EST},		{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_MDERRRS*/{	{F_ILL,	ST_ILL},		{F_TA04, ST_TEI_UNAS},		{F_TE04, ST_TEI_UNAS},		{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_PSDEACT*/{	{F_ILL,	ST_ILL},		{F_TA05, ST_TEI_UNAS},		{F_TE05, ST_TEI_UNAS},		{F_T05,	ST_TEI_ASGD},	{F_AE05, ST_TEI_ASGD},	{F_AR05, ST_TEI_ASGD},	{F_MF05, ST_TEI_ASGD},	{F_TR05, ST_TEI_ASGD},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_MDREMRQ*/{	{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_T06,	ST_TEI_UNAS},	{F_AE06, ST_TEI_UNAS},	{F_AR06, ST_TEI_UNAS},	{F_MF06, ST_TEI_UNAS},	{F_TR06, ST_TEI_UNAS},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_RXSABME*/{	{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_T07,	ST_SUBSET},	{F_AE07, ST_AW_EST},	{F_AR07, ST_AW_REL},	{F_MF07, ST_MULTIFR},	{F_TR07, ST_MULTIFR},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_RXDISC */{	{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_T08,	ST_TEI_ASGD},	{F_AE08, ST_AW_EST},	{F_AR08, ST_AW_REL},	{F_MF08, ST_TEI_ASGD},	{F_TR08, ST_TEI_ASGD},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_RXUA   */{	{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_T09,	ST_TEI_ASGD},	{F_AE09, ST_SUBSET},	{F_AR09, ST_SUBSET},	{F_MF09, ST_MULTIFR},	{F_TR09, ST_TIMREC},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_RXDM   */{	{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_T10,	ST_SUBSET},	{F_AE10, ST_SUBSET},	{F_AR10, ST_SUBSET},	{F_MF10, ST_SUBSET},	{F_TR10, ST_AW_EST},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_T200EXP*/{	{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},	{F_AE11, ST_SUBSET},	{F_AR11, ST_SUBSET},	{F_MF11, ST_TIMREC},	{F_TR11, ST_SUBSET},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_DLDATRQ*/{	{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},	{F_AE12, ST_AW_EST},	{F_ILL,	ST_ILL},	{F_MF12, ST_MULTIFR},	{F_TR12, ST_TIMREC},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_DLRELRQ*/{	{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_T13,	ST_TEI_ASGD},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_MF13, ST_AW_REL},	{F_TR13, ST_AW_REL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_T203EXP*/{	{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_MF14, ST_TIMREC},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_OWNBUSY*/{	{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_MF15, ST_MULTIFR},	{F_TR15, ST_TIMREC},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_OWNRDY */{	{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_MF16, ST_MULTIFR},	{F_TR16, ST_TIMREC},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_RXRR   */{	{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_MF17, ST_SUBSET},	{F_TR17, ST_SUBSET},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_RXREJ  */{	{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_MF18, ST_SUBSET},	{F_TR18, ST_SUBSET},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_RXRNR  */{	{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_MF19, ST_SUBSET},	{F_TR19, ST_SUBSET},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_RXFRMR */{	{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_MF20, ST_AW_EST},	{F_TR20, ST_AW_EST},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} },
-/*EV_ILL    */{	{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},		{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL},	{F_ILL,	ST_ILL} }
+/* STATE:	
+	ST_TEI_UNAS,			
+	ST_ASG_AW_TEI,			
+	ST_EST_AW_TEI,			
+	ST_TEI_ASGD,		
+	ST_AW_EST,		
+	ST_AW_REL,		
+	ST_MULTIFR,		
+	ST_TIMREC,		
+	ST_SUBSET,		
+	ILLEGAL STATE	*/
+
+	{	
+/*
+ * EV_DLESTRQ
+ */
+		{F_TU01, ST_EST_AW_TEI},	
+		{F_NCNA, ST_EST_AW_TEI},	
+		{F_ILL,	ST_ILL},		
+		{F_T01,	ST_AW_EST},     
+		{F_AE01, ST_AW_EST},	
+		{F_ILL,	ST_ILL},	
+		{F_MF01, ST_AW_EST},	
+		{F_TR01, ST_AW_EST},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/*
+ * EV_DLUDTRQ
+ */
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/*
+ * EV_MDASGRQ
+ */
+	{	
+		{F_TU03, ST_TEI_ASGD},		
+		{F_TA03, ST_TEI_ASGD},		
+		{F_TE03, ST_AW_EST},		
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/* 
+ * EV_MDERRRS
+ */
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_TA04, ST_TEI_UNAS},		
+		{F_TE04, ST_TEI_UNAS},		
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/*EV_PSDEACT*/
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_TA05, ST_TEI_UNAS},		
+		{F_TE05, ST_TEI_UNAS},		
+		{F_T05,	ST_TEI_ASGD},	
+		{F_AE05, ST_TEI_ASGD},	
+		{F_AR05, ST_TEI_ASGD},	
+		{F_MF05, ST_TEI_ASGD},	
+		{F_TR05, ST_TEI_ASGD},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/*
+ * EV_MDREMRQ
+ */
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_T06,	ST_TEI_UNAS},	
+		{F_AE06, ST_TEI_UNAS},	
+		{F_AR06, ST_TEI_UNAS},	
+		{F_MF06, ST_TEI_UNAS},	
+		{F_TR06, ST_TEI_UNAS},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/*
+ * EV_RXSABME
+ */
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_T07,	ST_SUBSET},	
+		{F_AE07, ST_AW_EST},	
+		{F_AR07, ST_AW_REL},	
+		{F_MF07, ST_MULTIFR},	
+		{F_TR07, ST_MULTIFR},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/* 
+ * EV_RXDISC 
+ */
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_T08,	ST_TEI_ASGD},	
+		{F_AE08, ST_AW_EST},	
+		{F_AR08, ST_AW_REL},	
+		{F_MF08, ST_TEI_ASGD},	
+		{F_TR08, ST_TEI_ASGD},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/* 
+ * EV_RXUA  
+ */
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_T09,	ST_TEI_ASGD},	
+		{F_AE09, ST_SUBSET},	
+		{F_AR09, ST_SUBSET},	
+		{F_MF09, ST_MULTIFR},	
+		{F_TR09, ST_TIMREC},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/*
+ * EV_RXDM  
+ */
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_T10,	ST_SUBSET},	
+		{F_AE10, ST_SUBSET},	
+		{F_AR10, ST_SUBSET},	
+		{F_MF10, ST_SUBSET},	
+		{F_TR10, ST_AW_EST},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/* 
+ * EV_T200EXP
+ */
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},	
+		{F_AE11, ST_SUBSET},	
+		{F_AR11, ST_SUBSET},	
+		{F_MF11, ST_TIMREC},	
+		{F_TR11, ST_SUBSET},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/* 
+ * EV_DLDATRQ
+ */
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},	
+		{F_AE12, ST_AW_EST},	
+		{F_ILL,	ST_ILL},	
+		{F_MF12, ST_MULTIFR},	
+		{F_TR12, ST_TIMREC},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/*
+ * EV_DLRELRQ
+ */
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_T13,	ST_TEI_ASGD},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_MF13, ST_AW_REL},	
+		{F_TR13, ST_AW_REL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/*
+ * EV_T203EXP
+ */
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_MF14, ST_TIMREC},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/* 
+ * EV_OWNBUSY
+ */
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_MF15, ST_MULTIFR},	
+		{F_TR15, ST_TIMREC},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/*
+ * EV_OWNRDY 
+ */
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_MF16, ST_MULTIFR},	
+		{F_TR16, ST_TIMREC},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/*
+ * EV_RXRR   
+ */
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_MF17, ST_SUBSET},	
+		{F_TR17, ST_SUBSET},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/* 
+ * EV_RXREJ  
+ */
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_MF18, ST_SUBSET},	
+		{F_TR18, ST_SUBSET},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/*
+ * EV_RXRNR  
+ */
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_MF19, ST_SUBSET},	
+		{F_TR19, ST_SUBSET},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/*
+ * EV_RXFRMR 
+ */
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_MF20, ST_AW_EST},	
+		{F_TR20, ST_AW_EST},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	},
+/* 
+ * EV_ILL    
+ */
+	{	
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},		
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL},	
+		{F_ILL,	ST_ILL} 
+	}
 };
 
 /*---------------------------------------------------------------------------*
  *	event handler, executes function and sets new state
  *---------------------------------------------------------------------------*/
-void i4b_next_l2state(l2_softc_t *l2sc, struct isdn_l3_driver *drv, int event)
+void 
+i4b_next_l2state(l2_softc_t *l2sc, struct isdn_l3_driver *drv, int event)
 {
 	int currstate, newstate;
 	int (*savpostfsmfunc)(struct isdn_l3_driver *) = NULL;
 
 	/* check event number */
-	if(event > N_EVENTS)
+	if (event > N_EVENTS)
 		panic("i4b_l2fsm.c: event > N_EVENTS");
 
 	/* get current state and check it */
-	if((currstate = l2sc->Q921_state) > N_STATES) 	/* failsafe */
+	if ((currstate = l2sc->Q921_state) > N_STATES) 	/* failsafe */
 		panic("i4b_l2fsm.c: currstate > N_STATES");
 
 	/* get new state and check it */
-	if((newstate = l2state_tab[event][currstate].newstate) > N_STATES)
+	if ((newstate = l2state_tab[event][currstate].newstate) > N_STATES)
 		panic("i4b_l2fsm.c: newstate > N_STATES");
 
 
-	if(newstate != ST_SUBSET)
+	if (newstate != ST_SUBSET)
 	{	/* state function does NOT set new state */
 		NDBGL2(L2_F_MSG, "FSM event [%s]: [%s/%d => %s/%d]",
 				l2event_text[event],
@@ -272,7 +565,7 @@ void i4b_next_l2state(l2_softc_t *l2sc, struct isdn_l3_driver *drv, int event)
 	/* execute state transition function */
         (*l2state_tab[event][currstate].func)(l2sc, drv);
 
-	if(newstate == ST_SUBSET)
+	if (newstate == ST_SUBSET)
 	{	/* state function DOES set new state */
 		NDBGL2(L2_F_MSG, "FSM S-event [%s]: [%s => %s]", l2event_text[event],
                                            l2state_text[currstate],
@@ -281,7 +574,7 @@ void i4b_next_l2state(l2_softc_t *l2sc, struct isdn_l3_driver *drv, int event)
 
 	/* check for illegal new state */
 
-	if(newstate == ST_ILL)
+	if (newstate == ST_ILL)
 	{
 		newstate = currstate;
 		NDBGL2(L2_F_ERR, "FSM illegal state, state = %s, event = %s!",
@@ -291,10 +584,10 @@ void i4b_next_l2state(l2_softc_t *l2sc, struct isdn_l3_driver *drv, int event)
 
 	/* check if state machine function has to set new state */
 
-	if(newstate != ST_SUBSET)
+	if (newstate != ST_SUBSET)
 		l2sc->Q921_state = newstate;        /* no, we set new state */
 
-	if(l2sc->postfsmfunc != NULL)
+	if (l2sc->postfsmfunc != NULL)
 	{
 		NDBGL2(L2_F_MSG, "FSM executing postfsmfunc!");
 		/* try to avoid an endless loop */
@@ -304,11 +597,12 @@ void i4b_next_l2state(l2_softc_t *l2sc, struct isdn_l3_driver *drv, int event)
         }
 }
 
-#if DO_I4B_DEBUG
+#if I4B_DEBUG
 /*---------------------------------------------------------------------------*
  *	return pointer to current state description
  *---------------------------------------------------------------------------*/
-const char *i4b_print_l2state(l2_softc_t *l2sc)
+const char *
+i4b_print_l2state(l2_softc_t *l2sc)
 {
 	return(l2state_text[l2sc->Q921_state]);
 }
@@ -433,8 +727,7 @@ F_T07(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 
 /* XXX */
 #ifdef NOTDEF
-	if(NOT able to establish)
-	{
+	if (NOT able to establish) {
 		i4b_tx_dm(l2sc, l2sc->rxd_PF);
 		l2sc->Q921_state = ST_TEI_ASGD;
 		return;
@@ -489,15 +782,11 @@ F_T10(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_T10 executing");
 
-	if(l2sc->rxd_PF)
-	{
+	if (l2sc->rxd_PF) 
 		l2sc->Q921_state = ST_TEI_ASGD;
-	}
-	else
-	{
+	else {
 #ifdef NOTDEF
-		if(NOT able_to_etablish)
-		{
+		if (NOT able_to_etablish) {
 			l2sc->Q921_state = ST_TEI_ASGD;
 			return;
 		}
@@ -597,30 +886,22 @@ F_AE09(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_AE09 executing");
 
-	if(l2sc->rxd_PF == 0)
-	{
+	if (l2sc->rxd_PF == 0) {
 		i4b_mdl_error_ind(l2sc, "F_AE09", MDL_ERR_D);
 		l2sc->Q921_state = ST_AW_EST;
-	}
-	else
-	{
-		if(l2sc->l3initiated)
-		{
+	} else {
+		if (l2sc->l3initiated) {
 			l2sc->l3initiated = 0;
 			l2sc->vr = 0;
 			l2sc->postfsmarg = l2sc->drv;
 			l2sc->postfsmfunc = i4b_dl_establish_cnf;
-		}
-		else
-		{
-			if(l2sc->vs != l2sc->va)
-			{
+		} else {
+			if (l2sc->vs != l2sc->va) {
 				i4b_Dcleanifq(&l2sc->i_queue);
 				l2sc->postfsmarg = l2sc->drv;
 				l2sc->postfsmfunc = i4b_dl_establish_ind;
 			}
 		}
-
 		i4b_mdl_status_ind(l2sc->drv, STI_L2STAT, LAYER_ACTIVE);
 
 		i4b_T200_stop(l2sc);
@@ -641,12 +922,9 @@ F_AE10(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_AE10 executing");
 
-	if(l2sc->rxd_PF == 0)
-	{
+	if (l2sc->rxd_PF == 0) 
 		l2sc->Q921_state = ST_AW_EST;
-	}
-	else
-	{
+	else {
 		i4b_Dcleanifq(&l2sc->i_queue);
 
 		l2sc->postfsmarg = l2sc->drv;
@@ -666,8 +944,7 @@ F_AE11(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_AE11 executing");
 
-	if(l2sc->RC >= N200)
-	{
+	if (l2sc->RC >= N200) {
 		i4b_Dcleanifq(&l2sc->i_queue);
 
 		i4b_mdl_error_ind(l2sc, "F_AE11", MDL_ERR_G);
@@ -676,9 +953,7 @@ F_AE11(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 		l2sc->postfsmfunc = i4b_dl_release_ind;
 
 		l2sc->Q921_state = ST_TEI_ASGD;
-	}
-	else
-	{
+	} else {
 		l2sc->RC++;
 
 		i4b_tx_sabme(l2sc, P1);
@@ -697,10 +972,8 @@ F_AE12(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_AE12 executing");
 
-	if(l2sc->l3initiated == 0)
-	{
+	if (l2sc->l3initiated == 0) 
 		i4b_i_frame_queued_up(l2sc);
-	}
 }
 
 /*---------------------------------------------------------------------------*
@@ -762,17 +1035,14 @@ F_AR09(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_AR09 executing");
 
-	if(l2sc->rxd_PF)
-	{
+	if (l2sc->rxd_PF) {
 		l2sc->postfsmarg = l2sc->drv;
 		l2sc->postfsmfunc = i4b_dl_release_cnf;
 
 		i4b_T200_stop(l2sc);
 
 		l2sc->Q921_state = ST_TEI_ASGD;
-	}
-	else
-	{
+	} else {
 		i4b_mdl_error_ind(l2sc, "F_AR09", MDL_ERR_D);
 
 		l2sc->Q921_state = ST_AW_REL;
@@ -787,19 +1057,15 @@ F_AR10(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_AR10 executing");
 
-	if(l2sc->rxd_PF)
-	{
+	if (l2sc->rxd_PF) {
 		l2sc->postfsmarg = l2sc->drv;
 		l2sc->postfsmfunc = i4b_dl_release_cnf;
 
 		i4b_T200_stop(l2sc);
 
 		l2sc->Q921_state = ST_TEI_ASGD;
-	}
-	else
-	{
+	} else 
 		l2sc->Q921_state = ST_AW_REL;
-	}
 }
 
 /*---------------------------------------------------------------------------*
@@ -810,17 +1076,14 @@ F_AR11(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_AR11 executing");
 
-	if(l2sc->RC >= N200)
-	{
+	if (l2sc->RC >= N200) {
 		i4b_mdl_error_ind(l2sc, "F_AR11", MDL_ERR_H);
 
 		l2sc->postfsmarg = l2sc->drv;
 		l2sc->postfsmfunc = i4b_dl_release_cnf;
 
 		l2sc->Q921_state = ST_TEI_ASGD;
-	}
-	else
-	{
+	} else {
 		l2sc->RC++;
 
 		i4b_tx_disc(l2sc, P1);
@@ -898,8 +1161,7 @@ F_MF07(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 
 	i4b_mdl_error_ind(l2sc, "F_MF07", MDL_ERR_F);
 
-	if(l2sc->vs != l2sc->va)
-	{
+	if (l2sc->vs != l2sc->va) {
 		i4b_Dcleanifq(&l2sc->i_queue);
 
 		l2sc->postfsmarg = l2sc->drv;
@@ -940,7 +1202,7 @@ static void
 F_MF09(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_MF09 executing");
-	if(l2sc->rxd_PF)
+	if (l2sc->rxd_PF)
 		i4b_mdl_error_ind(l2sc, "F_MF09", MDL_ERR_C);
 	else
 		i4b_mdl_error_ind(l2sc, "F_MF09", MDL_ERR_D);
@@ -954,14 +1216,11 @@ F_MF10(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_MF10 executing");
 
-	if(l2sc->rxd_PF)
-	{
+	if (l2sc->rxd_PF) {
 		i4b_mdl_error_ind(l2sc, "F_MF10", MDL_ERR_B);
 
 		l2sc->Q921_state = ST_MULTIFR;
-	}
-	else
-	{
+	} else {
 		i4b_mdl_error_ind(l2sc, "F_MF10", MDL_ERR_E);
 
 		i4b_establish_data_link(l2sc);
@@ -1037,8 +1296,7 @@ F_MF15(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_MF15 executing");
 
-	if(l2sc->own_busy == 0)
-	{
+	if (l2sc->own_busy == 0) {
 		l2sc->own_busy = 1;
 
 		i4b_tx_rnr_response(l2sc, F0); /* wrong in Q.921 03/93 p 64 */
@@ -1055,8 +1313,7 @@ F_MF16(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_MF16 executing");
 
-	if(l2sc->own_busy != 0)
-	{
+	if (l2sc->own_busy != 0) {
 		l2sc->own_busy = 0;
 
 		i4b_tx_rr_response(l2sc, F0); /* wrong in Q.921 03/93 p 64 */
@@ -1075,38 +1332,26 @@ F_MF17(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 
 	l2sc->peer_busy = 0;
 
-	if(l2sc->rxd_CR == CR_CMD_FROM_NT)
-	{
-		if(l2sc->rxd_PF == 1)
-		{
+	if (l2sc->rxd_CR == CR_CMD_FROM_NT) {
+		if (l2sc->rxd_PF == 1) 
 			i4b_enquiry_response(l2sc);
-		}
-	}
-	else
-	{
-		if(l2sc->rxd_PF == 1)
-		{
+		
+	} else {
+		if (l2sc->rxd_PF == 1) 
 			i4b_mdl_error_ind(l2sc, "F_MF17", MDL_ERR_A);
-		}
 	}
 
-	if(i4b_l2_nr_ok(l2sc->rxd_NR, l2sc->va, l2sc->vs))
-	{
-		if(l2sc->rxd_NR == l2sc->vs)
-		{
+	if (i4b_l2_nr_ok(l2sc->rxd_NR, l2sc->va, l2sc->vs)) {
+		if (l2sc->rxd_NR == l2sc->vs) {
 			l2sc->va = l2sc->rxd_NR;
 			i4b_T200_stop(l2sc);
 			i4b_T203_restart(l2sc);
-		}
-		else if(l2sc->rxd_NR != l2sc->va)
-		{
+		} else if (l2sc->rxd_NR != l2sc->va) {
 			l2sc->va = l2sc->rxd_NR;
 			i4b_T200_restart(l2sc);
 		}
 		l2sc->Q921_state = ST_MULTIFR;
-	}
-	else
-	{
+	} else {
 		i4b_nr_error_recovery(l2sc);
 		l2sc->Q921_state = ST_AW_EST;
 	}
@@ -1122,31 +1367,21 @@ F_MF18(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 
 	l2sc->peer_busy = 0;
 
-	if(l2sc->rxd_CR == CR_CMD_FROM_NT)
-	{
-		if(l2sc->rxd_PF == 1)
-		{
-			i4b_enquiry_response(l2sc);
-		}
-	}
-	else
-	{
-		if(l2sc->rxd_PF == 1)
-		{
+	if (l2sc->rxd_CR == CR_CMD_FROM_NT) {
+		if (l2sc->rxd_PF == 1) 
+			i4b_enquiry_response(l2sc);	
+	} else {
+		if (l2sc->rxd_PF == 1) 
 			i4b_mdl_error_ind(l2sc, "F_MF18", MDL_ERR_A);
-		}
 	}
 
-	if(i4b_l2_nr_ok(l2sc->rxd_NR, l2sc->va, l2sc->vs))
-	{
+	if (i4b_l2_nr_ok(l2sc->rxd_NR, l2sc->va, l2sc->vs)) {
 		l2sc->va = l2sc->rxd_NR;
 		i4b_T200_stop(l2sc);
 		i4b_T203_start(l2sc);
 		i4b_invoke_retransmission(l2sc, l2sc->rxd_NR);
 		l2sc->Q921_state = ST_MULTIFR;
-	}
-	else
-	{
+	} else {
 		i4b_nr_error_recovery(l2sc);
 		l2sc->Q921_state = ST_AW_EST;
 	}
@@ -1162,33 +1397,23 @@ F_MF19(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 
 	l2sc->peer_busy = 1;
 
-	if(l2sc->rxd_CR == CR_CMD_FROM_NT)
-	{
-		if(l2sc->rxd_PF == 1)
-		{
+	if (l2sc->rxd_CR == CR_CMD_FROM_NT) {
+		if (l2sc->rxd_PF == 1) 
 			i4b_enquiry_response(l2sc);
-		}
-	}
-	else
-	{
-		if(l2sc->rxd_PF == 1)
-		{
+	} else {
+		if (l2sc->rxd_PF == 1)
 			i4b_mdl_error_ind(l2sc, "F_MF19", MDL_ERR_A);
-                }
-        }
+	}
 
-	if(i4b_l2_nr_ok(l2sc->rxd_NR, l2sc->va, l2sc->vs))
-        {
-                l2sc->va = l2sc->rxd_NR;
-                i4b_T203_stop(l2sc);
-                i4b_T200_restart(l2sc);
+	if (i4b_l2_nr_ok(l2sc->rxd_NR, l2sc->va, l2sc->vs)) {
+		l2sc->va = l2sc->rxd_NR;
+		i4b_T203_stop(l2sc);
+        i4b_T200_restart(l2sc);
 		l2sc->Q921_state = ST_MULTIFR;
-        }
-        else
-        {
-                i4b_nr_error_recovery(l2sc);
+	} else {
+		i4b_nr_error_recovery(l2sc);
 		l2sc->Q921_state = ST_AW_EST;
-        }
+    }
 }
 
 /*---------------------------------------------------------------------------*
@@ -1271,7 +1496,7 @@ F_TR07(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 
 	i4b_mdl_error_ind(l2sc, "F_TR07", MDL_ERR_F);
 
-	if(l2sc->vs != l2sc->va)
+	if (l2sc->vs != l2sc->va)
 	{
 		i4b_Dcleanifq(&l2sc->i_queue);
 
@@ -1312,7 +1537,7 @@ static void
 F_TR09(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_TR09 executing");
-	if(l2sc->rxd_PF)
+	if (l2sc->rxd_PF)
 		i4b_mdl_error_ind(l2sc, "F_TR09", MDL_ERR_C);
 	else
 		i4b_mdl_error_ind(l2sc, "F_TR09", MDL_ERR_D);
@@ -1326,14 +1551,10 @@ F_TR10(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_TR10 executing");
 
-	if(l2sc->rxd_PF)
-	{
+	if (l2sc->rxd_PF) 
 		i4b_mdl_error_ind(l2sc, "F_TR10", MDL_ERR_B);
-	}
-	else
-	{
+	else 
 		i4b_mdl_error_ind(l2sc, "F_TR10", MDL_ERR_E);
-	}
 
 	i4b_establish_data_link(l2sc);
 
@@ -1348,8 +1569,7 @@ F_TR11(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_TR11 executing");
 
-	if(l2sc->RC >= N200)
-	{
+	if (l2sc->RC >= N200) {
 		i4b_mdl_error_ind(l2sc, "F_TR11", MDL_ERR_I);
 
 		i4b_establish_data_link(l2sc);
@@ -1357,9 +1577,7 @@ F_TR11(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 		l2sc->l3initiated = 0;
 
 		l2sc->Q921_state = ST_AW_EST;
-	}
-	else
-	{
+	} else {
 		i4b_transmit_enquire(l2sc);
 
 		l2sc->RC++;
@@ -1404,8 +1622,7 @@ F_TR15(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_TR15 executing");
 
-	if(l2sc->own_busy == 0)
-	{
+	if (l2sc->own_busy == 0) {
 		l2sc->own_busy = 1;
 
 		i4b_tx_rnr_response(l2sc, F0);
@@ -1422,8 +1639,7 @@ F_TR16(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_TR16 executing");
 
-	if(l2sc->own_busy != 0)
-	{
+	if (l2sc->own_busy != 0) {
 		l2sc->own_busy = 0;
 
 		i4b_tx_rr_response(l2sc, F0);	/* this is wrong	 */
@@ -1442,28 +1658,20 @@ F_TR17(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 
 	l2sc->peer_busy = 0;
 
-	if(l2sc->rxd_CR == CR_CMD_FROM_NT)
-	{
-		if(l2sc->rxd_PF == 1)
-		{
+	if (l2sc->rxd_CR == CR_CMD_FROM_NT) {
+		if (l2sc->rxd_PF == 1)
 			i4b_enquiry_response(l2sc);
-		}
-	}
-	else
-	{
-		if(l2sc->rxd_PF == 1)
-		{
-			if(i4b_l2_nr_ok(l2sc->rxd_NR, l2sc->va, l2sc->vs))
-			{
+		
+	} else {
+		if (l2sc->rxd_PF == 1) {
+			if (i4b_l2_nr_ok(l2sc->rxd_NR, l2sc->va, l2sc->vs)) {
 				l2sc->va = l2sc->rxd_NR;
 				i4b_T200_stop(l2sc);
 				i4b_T203_start(l2sc);
 				i4b_invoke_retransmission(l2sc, l2sc->rxd_NR);
 				l2sc->Q921_state = ST_MULTIFR;
 				return;
-			}
-			else
-			{
+			} else {
 				i4b_nr_error_recovery(l2sc);
 				l2sc->Q921_state = ST_AW_EST;
 				return;
@@ -1471,13 +1679,10 @@ F_TR17(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 		}
 	}
 
-	if(i4b_l2_nr_ok(l2sc->rxd_NR, l2sc->va, l2sc->vs))
-	{
+	if (i4b_l2_nr_ok(l2sc->rxd_NR, l2sc->va, l2sc->vs)) {
 		l2sc->va = l2sc->rxd_NR;
 		l2sc->Q921_state = ST_TIMREC;
-	}
-	else
-	{
+	} else {
 		i4b_nr_error_recovery(l2sc);
 		l2sc->Q921_state = ST_AW_EST;
 	}
@@ -1493,28 +1698,19 @@ F_TR18(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 
 	l2sc->peer_busy = 0;
 
-	if(l2sc->rxd_CR == CR_CMD_FROM_NT)
-	{
-		if(l2sc->rxd_PF == 1)
-		{
+	if (l2sc->rxd_CR == CR_CMD_FROM_NT) {
+		if (l2sc->rxd_PF == 1) 
 			i4b_enquiry_response(l2sc);
-		}
-	}
-	else
-	{
-		if(l2sc->rxd_PF == 1)
-		{
-			if(i4b_l2_nr_ok(l2sc->rxd_NR, l2sc->va, l2sc->vs))
-			{
+	} else {
+		if (l2sc->rxd_PF == 1) {
+			if (i4b_l2_nr_ok(l2sc->rxd_NR, l2sc->va, l2sc->vs)) {
 				l2sc->va = l2sc->rxd_NR;
 				i4b_T200_stop(l2sc);
 				i4b_T203_start(l2sc);
 				i4b_invoke_retransmission(l2sc, l2sc->rxd_NR);
 				l2sc->Q921_state = ST_MULTIFR;
 				return;
-			}
-			else
-			{
+			} else {
 				i4b_nr_error_recovery(l2sc);
 				l2sc->Q921_state = ST_AW_EST;
 				return;
@@ -1522,13 +1718,10 @@ F_TR18(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 		}
 	}
 
-	if(i4b_l2_nr_ok(l2sc->rxd_NR, l2sc->va, l2sc->vs))
-	{
+	if (i4b_l2_nr_ok(l2sc->rxd_NR, l2sc->va, l2sc->vs)) {
 		l2sc->va = l2sc->rxd_NR;
 		l2sc->Q921_state = ST_TIMREC;
-	}
-	else
-	{
+	} else {
 		i4b_nr_error_recovery(l2sc);
 		l2sc->Q921_state = ST_AW_EST;
 	}
@@ -1544,27 +1737,18 @@ F_TR19(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 
 	l2sc->peer_busy = 0;
 
-	if(l2sc->rxd_CR == CR_CMD_FROM_NT)
-	{
-		if(l2sc->rxd_PF == 1)
-		{
+	if (l2sc->rxd_CR == CR_CMD_FROM_NT) {
+		if (l2sc->rxd_PF == 1) 
 			i4b_enquiry_response(l2sc);
-		}
-	}
-	else
-	{
-		if(l2sc->rxd_PF == 1)
-		{
-			if(i4b_l2_nr_ok(l2sc->rxd_NR, l2sc->va, l2sc->vs))
-			{
+	} else {
+		if (l2sc->rxd_PF == 1) {
+			if (i4b_l2_nr_ok(l2sc->rxd_NR, l2sc->va, l2sc->vs)) {
 				l2sc->va = l2sc->rxd_NR;
 				i4b_T200_restart(l2sc);
 				i4b_invoke_retransmission(l2sc, l2sc->rxd_NR);
 				l2sc->Q921_state = ST_MULTIFR;
 				return;
-			}
-			else
-			{
+			} else {
 				i4b_nr_error_recovery(l2sc);
 				l2sc->Q921_state = ST_AW_EST;
 				return;
@@ -1572,13 +1756,10 @@ F_TR19(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 		}
 	}
 
-	if(i4b_l2_nr_ok(l2sc->rxd_NR, l2sc->va, l2sc->vs))
-	{
+	if (i4b_l2_nr_ok(l2sc->rxd_NR, l2sc->va, l2sc->vs)) {
 		l2sc->va = l2sc->rxd_NR;
 		l2sc->Q921_state = ST_TIMREC;
-	}
-	else
-	{
+	} else {
 		i4b_nr_error_recovery(l2sc);
 		l2sc->Q921_state = ST_AW_EST;
 	}
@@ -1599,4 +1780,4 @@ F_TR20(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 	l2sc->l3initiated = 0;
 }
 
-#endif /* NI4BQ921 > 0 */
+#endif /* NI4BQ921 */
