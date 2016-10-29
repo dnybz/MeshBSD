@@ -139,7 +139,9 @@ typedef struct call_desc
 #define DIR_INCOMING	1
 
 	int	timeout_active;		/* idle timeout() active flag	*/
-
+/*
+ * XXX: I'll refactor it by rplacment of callout_handle(9)
+ */
 	struct	callout	idle_timeout_handle;
 	struct	callout	T303_callout;
 	struct	callout	T305_callout;
@@ -193,6 +195,8 @@ struct isdn_l4_bchannel_functions {
 
 /*
  * Functions a layer 4 application driver exports
+ *
+ * XXX: well... I'll map those into AF_ISDN on socket-layer 
  */
 struct isdn_l4_driver_functions {
 	/*
@@ -230,7 +234,7 @@ struct isdn_diagnostic_request;
 struct isdn_dr_prot;
 
 /*
- * functions exported by a layer 3 driver to layer 4
+ * functions exported by a layer 3 driver to layer 4 
  */
 struct isdn_l3_driver_functions {
 	isdn_link_t* (*get_linktab)(void*, int channel);
@@ -240,8 +244,6 @@ struct isdn_l3_driver_functions {
 	void	(*N_CONNECT_RESPONSE)	(struct call_desc *cd, int, int);
 	void	(*N_DISCONNECT_REQUEST)	(struct call_desc *cd, int);
 	void	(*N_ALERT_REQUEST)	(struct call_desc *cd);
-	int     (*N_DOWNLOAD)		(void*, int numprotos, struct isdn_dr_prot *protocols);
-	int     (*N_DIAGNOSTICS)	(void*, struct isdn_diagnostic_request*);
 	void	(*N_MGMT_COMMAND)	(struct isdn_l3_driver *, int cmd, void *);
 };
 
@@ -262,8 +264,8 @@ struct isdn_l3_driver {
 					 * the softc there) */
 	int	isdnif;			/* ISDN id assigned to this */
 	char *devname;			/* pointer to autoconf identifier */
-					/* e.g. "isic0" or "daic0 port 2" */
-	char *card_name;		/* type of card */
+					/* e.g. "re0" or "ath0", etc.pp */
+	char *card_name;		/* XXX: type of card ??? */
 
 	int	protocol;		/* D-channel protocol type */
 

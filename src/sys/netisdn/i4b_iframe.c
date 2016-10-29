@@ -58,7 +58,6 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <sys/cdefs.h>
 
 #include "i4bq921.h"
 
@@ -109,7 +108,7 @@ i4b_rxd_i_frame(l2_softc_t *l2sc, struct isdn_l3_driver *drv, struct mbuf *m)
 		return;
 	}
 
-	mtx_lock(&i4b_mtx):
+	mtx_lock(&i4b_mtx);
 
 	l2sc->stat.rx_i++;		/* update frame count */
 
@@ -182,7 +181,7 @@ i4b_rxd_i_frame(l2_softc_t *l2sc, struct isdn_l3_driver *drv, struct mbuf *m)
 		if (l2sc->Q921_state == ST_TIMREC) {
 			l2sc->va = nr;
 
-			mtx_unlock(&i4b_mtx):
+			mtx_unlock(&i4b_mtx);
 
 			return;
 		}
@@ -215,7 +214,7 @@ i4b_rxd_i_frame(l2_softc_t *l2sc, struct isdn_l3_driver *drv, struct mbuf *m)
 		l2sc->Q921_state = ST_AW_EST;
 	}
 
-	mtx_unlock(&i4b_mtx):
+	mtx_unlock(&i4b_mtx);
 }
 
 /*---------------------------------------------------------------------------*
@@ -226,9 +225,8 @@ i4b_i_frame_queued_up(l2_softc_t *l2sc)
 {
 	struct mbuf *m;
 	u_char *ptr;
-	int s;
 
-	mtx_lock(&i4b_mtx):
+	mtx_lock(&i4b_mtx);
 
 	if ((l2sc->peer_busy) || 
 		(l2sc->vs == ((l2sc->va + MAX_K_VALUE) & 127))) {
@@ -250,7 +248,7 @@ i4b_i_frame_queued_up(l2_softc_t *l2sc)
 			START_TIMER(l2sc->IFQU_callout, 
 			i4b_i_frame_queued_up, l2sc, IFQU_DLY);
 		}
-		mtx_unlock(&i4b_mtx):
+		mtx_unlock(&i4b_mtx);
 		return;
 	}
 
@@ -258,7 +256,7 @@ i4b_i_frame_queued_up(l2_softc_t *l2sc)
 
 	if (!m) {
 		NDBGL2(L2_I_ERR, "ERROR, mbuf NULL after IF_DEQUEUE");
-		mtx_unlock(&i4b_mtx):
+		mtx_unlock(&i4b_mtx);
 		return;
 	}
 
@@ -296,7 +294,7 @@ i4b_i_frame_queued_up(l2_softc_t *l2sc)
 
 	l2sc->ack_pend = 0;
 
-	mtx_unlock(&i4b_mtx):
+	mtx_unlock(&i4b_mtx);
 
 	if (l2sc->T200 == TIMER_IDLE) {
 		i4b_T203_stop(l2sc);
@@ -304,4 +302,4 @@ i4b_i_frame_queued_up(l2_softc_t *l2sc)
 	}
 }
 
-#endif /* NI4BQ921 > 0 */
+#endif /* NI4BQ921 */

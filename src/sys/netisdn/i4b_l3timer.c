@@ -34,16 +34,34 @@
  *      last edit-date: [Fri Jan  5 11:33:47 2001]
  *
  *---------------------------------------------------------------------------*/
+/*-
+ * Copyright (c) 2016 Henning Matyschok
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
 
-#include <sys/cdefs.h>
-__KERNEL_RCSID(0, "$NetBSD: i4b_l3timer.c,v 1.6 2005/12/11 12:25:06 christos Exp $");
-
-#ifdef __FreeBSD__
 #include "i4bq931.h"
-#else
-#define	NI4BQ931	1
-#endif
-#if NI4BQ931 > 0
+
+#if NI4BQ931
 
 #include <sys/param.h>
 #include <sys/kernel.h>
@@ -52,17 +70,10 @@ __KERNEL_RCSID(0, "$NetBSD: i4b_l3timer.c,v 1.6 2005/12/11 12:25:06 christos Exp
 #include <sys/socket.h>
 #include <net/if.h>
 
-#if defined(__NetBSD__) && __NetBSD_Version__ >= 104230000
-#include <sys/callout.h>
-#endif
+#include <netisdn/i4b.h>
 
-#ifdef __FreeBSD__
-#include <machine/i4b_debug.h>
-#include <machine/i4b_ioctl.h>
-#else
 #include <netisdn/i4b_debug.h>
 #include <netisdn/i4b_ioctl.h>
-#endif
 
 #include <netisdn/i4b_global.h>
 #include <netisdn/i4b_isdnq931.h>
@@ -78,7 +89,8 @@ __KERNEL_RCSID(0, "$NetBSD: i4b_l3timer.c,v 1.6 2005/12/11 12:25:06 christos Exp
 /*---------------------------------------------------------------------------*
  *	stop all layer 3 timers
  *---------------------------------------------------------------------------*/
-void i4b_l3_stop_all_timers(call_desc_t *cd)
+void 
+i4b_l3_stop_all_timers(call_desc_t *cd)
 {
 	T303_stop(cd);
 	T305_stop(cd);
@@ -119,15 +131,13 @@ T303_start(call_desc_t *cd)
 void
 T303_stop(call_desc_t *cd)
 {
-	int s;
-	s = splnet();
+	mtx_lock(&i4b_mtx);
 
-	if(cd->T303 != TIMER_IDLE)
-	{
+	if (cd->T303 != TIMER_IDLE) {
 		STOP_TIMER(cd->T303_callout, T303_timeout, cd);
 		cd->T303 = TIMER_IDLE;
 	}
-	splx(s);
+	mtx_unlock(&i4b_mtx);
 	NDBGL3(L3_T_MSG, "cr = %d", cd->cr);
 }
 
@@ -162,15 +172,14 @@ T305_start(call_desc_t *cd)
 void
 T305_stop(call_desc_t *cd)
 {
-	int s;
-	s = splnet();
+	mtx_lock(&i4b_mtx);
 
-	if(cd->T305 != TIMER_IDLE)
+	if (cd->T305 != TIMER_IDLE)
 	{
 		STOP_TIMER(cd->T305_callout, T305_timeout, cd);
 		cd->T305 = TIMER_IDLE;
 	}
-	splx(s);
+	mtx_unlock(&i4b_mtx);
 
 	NDBGL3(L3_T_MSG, "cr = %d", cd->cr);
 }
@@ -191,7 +200,7 @@ T308_timeout(call_desc_t *cd)
 void
 T308_start(call_desc_t *cd)
 {
-	if(cd->T308 == TIMER_ACTIVE)
+	if (cd->T308 == TIMER_ACTIVE)
 		return;
 
 	NDBGL3(L3_T_MSG, "cr = %d", cd->cr);
@@ -206,15 +215,13 @@ T308_start(call_desc_t *cd)
 void
 T308_stop(call_desc_t *cd)
 {
-	int s;
-	s = splnet();
+	mtx_lock(&i4b_mtx);
 
-	if(cd->T308 != TIMER_IDLE)
-	{
+	if (cd->T308 != TIMER_IDLE) {
 		STOP_TIMER(cd->T308_callout, T308_timeout, cd);
 		cd->T308 = TIMER_IDLE;
 	}
-	splx(s);
+	mtx_unlock(&i4b_mtx);
 
 	NDBGL3(L3_T_MSG, "cr = %d", cd->cr);
 }
@@ -250,15 +257,13 @@ T309_start(call_desc_t *cd)
 void
 T309_stop(call_desc_t *cd)
 {
-	int s;
-	s = splnet();
+	mtx_lock(&i4b_mtx);
 
-	if(cd->T309 != TIMER_IDLE)
-	{
+	if (cd->T309 != TIMER_IDLE) {
 		STOP_TIMER(cd->T309_callout, T309_timeout, cd);
 		cd->T309 = TIMER_IDLE;
 	}
-	splx(s);
+	mtx_unlock(&i4b_mtx);
 
 	NDBGL3(L3_T_MSG, "cr = %d", cd->cr);
 }
@@ -294,15 +299,13 @@ T310_start(call_desc_t *cd)
 void
 T310_stop(call_desc_t *cd)
 {
-	int s;
-	s = splnet();
+	mtx_lock(&i4b_mtx);
 
-	if(cd->T310 != TIMER_IDLE)
-	{
+	if (cd->T310 != TIMER_IDLE) {
 		STOP_TIMER(cd->T310_callout, T310_timeout, cd);
 		cd->T310 = TIMER_IDLE;
 	}
-	splx(s);
+	mtx_unlock(&i4b_mtx);
 
 	NDBGL3(L3_T_MSG, "cr = %d", cd->cr);
 }
@@ -338,15 +341,13 @@ T313_start(call_desc_t *cd)
 void
 T313_stop(call_desc_t *cd)
 {
-	int s;
-	s = splnet();
+	mtx_lock(&i4b_mtx);
 
-	if(cd->T313 != TIMER_IDLE)
-	{
+	if (cd->T313 != TIMER_IDLE) {
 		cd->T313 = TIMER_IDLE;
 		STOP_TIMER(cd->T313_callout, T313_timeout, cd);
 	}
-	splx(s);
+	mtx_unlock(&i4b_mtx);
 
 	NDBGL3(L3_T_MSG, "cr = %d", cd->cr);
 }

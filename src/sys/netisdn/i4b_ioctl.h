@@ -594,35 +594,4 @@ typedef struct {
 
 #define I4B_L4DRIVER_LOOKUP	_IOWR('4', 11, msg_l4driver_lookup_t)
 
-/*---------------------------------------------------------------------------*
- *	Protocol download to active cards
- *---------------------------------------------------------------------------*/
-struct isdn_dr_prot {
-	size_t bytecount;	/* length of code */
-	u_int8_t *microcode;	/* pointer to microcode */
-};
-
-struct isdn_download_request {
-	int controller;		/* controller number */
-	int numprotos;		/* number of protocols in 'protocols' */
-	struct isdn_dr_prot *protocols;
-};
-
-#define	I4B_CTRL_DOWNLOAD	_IOW('4', 100, struct isdn_download_request)
-
-/*---------------------------------------------------------------------------*
- *	Generic diagnostic interface for active cards
- *---------------------------------------------------------------------------*/
-struct isdn_diagnostic_request {
-	int controller;		/* controller number */
-	u_int32_t cmd;		/* diagnostic command to execute */
-	size_t in_param_len;	/* length of additional input parameter */
-#define I4B_ACTIVE_DIAGNOSTIC_MAXPARAMLEN	65536
-	void *in_param;		/* optional input parameter */
-	size_t out_param_len;	/* available output space */
-	void *out_param;	/* output data goes here */
-};
-
-#define	I4B_ACTIVE_DIAGNOSTIC	_IOW('4', 102, struct isdn_diagnostic_request)
-
 #endif /* !_NETISDN_I4B_IOCTL_H_ */

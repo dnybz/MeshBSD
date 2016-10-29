@@ -35,9 +35,6 @@
  *
  *---------------------------------------------------------------------------*/
 
-#include <sys/cdefs.h>
-__KERNEL_RCSID(0, "$NetBSD: i4b_l2fsm.c,v 1.13 2009/03/14 14:46:11 dsl Exp $");
-
 #include "i4bq921.h"
 
 #if NI4BQ921
@@ -61,7 +58,6 @@ __KERNEL_RCSID(0, "$NetBSD: i4b_l2fsm.c,v 1.13 2009/03/14 14:46:11 dsl Exp $");
 #include <netisdn/i4b_mbuf.h>
 
 #include <netisdn/i4b_l2fsm.h>
-
 
 #if I4B_DEBUG
 static const char *l2state_text[N_STATES] = {
@@ -201,8 +197,14 @@ F_NCNA(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
  *	layer 2 state transition table
  *---------------------------------------------------------------------------*/
 struct l2state_tab {
-	void (*func)(l2_softc_t *, struct isdn_l3_driver *);	/* function to execute */
-	int newstate;				/* next state */
+/* 
+ * function to execute 
+ */
+	void (*func)(l2_softc_t *, struct isdn_l3_driver *);	
+/* 
+ * next state 
+ */
+	int newstate;
 } l2state_tab[N_EVENTS][N_STATES] = {
 
 /* STATE:	
@@ -554,47 +556,56 @@ i4b_next_l2state(l2_softc_t *l2sc, struct isdn_l3_driver *drv, int event)
 		panic("i4b_l2fsm.c: newstate > N_STATES");
 
 
-	if (newstate != ST_SUBSET)
-	{	/* state function does NOT set new state */
-		NDBGL2(L2_F_MSG, "FSM event [%s]: [%s/%d => %s/%d]",
-				l2event_text[event],
-                                l2state_text[currstate], currstate,
-                                l2state_text[newstate], newstate);
-        }
-
-	/* execute state transition function */
-        (*l2state_tab[event][currstate].func)(l2sc, drv);
-
-	if (newstate == ST_SUBSET)
-	{	/* state function DOES set new state */
-		NDBGL2(L2_F_MSG, "FSM S-event [%s]: [%s => %s]", l2event_text[event],
-                                           l2state_text[currstate],
-                                           l2state_text[l2sc->Q921_state]);
-        }
-
-	/* check for illegal new state */
-
-	if (newstate == ST_ILL)
-	{
-		newstate = currstate;
-		NDBGL2(L2_F_ERR, "FSM illegal state, state = %s, event = %s!",
-                                l2state_text[currstate],
-				l2event_text[event]);
+	if (newstate != ST_SUBSET) {	
+/* 
+ * state function does NOT set new state 
+ */
+		NDBGL2(L2_F_MSG, "FSM event [%s]: [%s/%d => %s/%d]", 
+			l2event_text[event], 
+			l2state_text[currstate], 
+			currstate, 
+			l2state_text[newstate], 
+			newstate);
 	}
+/* 
+ * execute state transition function 
+ */
+	(*l2state_tab[event][currstate].func)(l2sc, drv);
 
-	/* check if state machine function has to set new state */
-
+	if (newstate == ST_SUBSET) {	
+/* 
+ * state function DOES set new state 
+ */
+		NDBGL2(L2_F_MSG, "FSM S-event [%s]: [%s => %s]", 
+			l2event_text[event], 
+			l2state_text[currstate], 
+			l2state_text[l2sc->Q921_state]);
+	}
+/* 
+ * check for illegal new state 
+ */
+	if (newstate == ST_ILL) {
+		newstate = currstate;
+		NDBGL2(L2_F_ERR, "FSM illegal state, state = %s, event = %s!", 
+		l2state_text[currstate], 
+		l2event_text[event]);
+	}
+/* 
+ * check if state machine function has to set new state 
+ */
 	if (newstate != ST_SUBSET)
 		l2sc->Q921_state = newstate;        /* no, we set new state */
 
-	if (l2sc->postfsmfunc != NULL)
-	{
+	if (l2sc->postfsmfunc != NULL) {
 		NDBGL2(L2_F_MSG, "FSM executing postfsmfunc!");
-		/* try to avoid an endless loop */
+/* 
+ * try to avoid an endless loop 
+ */
 		savpostfsmfunc = l2sc->postfsmfunc;
 		l2sc->postfsmfunc = NULL;
-        	(*savpostfsmfunc)(l2sc->postfsmarg);
-        }
+        
+        (*savpostfsmfunc)(l2sc->postfsmarg);
+	}
 }
 
 #if I4B_DEBUG
@@ -714,7 +725,10 @@ static void
 F_T06(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_T06 executing");
-/*XXX*/	i4b_mdl_assign_ind(l2sc);
+/*
+ * XXX
+ */	
+	i4b_mdl_assign_ind(l2sc);
 }
 
 /*---------------------------------------------------------------------------*
@@ -853,8 +867,10 @@ F_AE06(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 	l2sc->postfsmfunc = i4b_dl_release_ind;
 
 	i4b_T200_stop(l2sc);
-
-/*XXX*/	i4b_mdl_assign_ind(l2sc);
+/*
+ * XXX
+ */		
+	i4b_mdl_assign_ind(l2sc);
 }
 
 /*---------------------------------------------------------------------------*
@@ -1002,8 +1018,10 @@ F_AR06(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 	l2sc->postfsmfunc = i4b_dl_release_cnf;
 
 	i4b_T200_stop(l2sc);
-
-/*XXX*/	i4b_mdl_assign_ind(l2sc);
+/*
+ * XXX
+ */	
+	i4b_mdl_assign_ind(l2sc);
 }
 
 /*---------------------------------------------------------------------------*
@@ -1141,8 +1159,10 @@ F_MF06(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 
 	i4b_T200_stop(l2sc);
 	i4b_T203_stop(l2sc);
-
-/*XXX*/	i4b_mdl_assign_ind(l2sc);
+/*
+ * XXX
+ */	
+	i4b_mdl_assign_ind(l2sc);
 }
 
 /*---------------------------------------------------------------------------*
@@ -1202,6 +1222,7 @@ static void
 F_MF09(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_MF09 executing");
+	
 	if (l2sc->rxd_PF)
 		i4b_mdl_error_ind(l2sc, "F_MF09", MDL_ERR_C);
 	else

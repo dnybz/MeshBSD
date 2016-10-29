@@ -90,8 +90,7 @@
 
 /* this layers debug level */
 
-unsigned int 
-i4b_l2_debug = L2_DEBUG_DEFAULT;
+unsigned int i4b_l2_debug = L2_DEBUG_DEFAULT;
 
 /*---------------------------------------------------------------------------*
  *	DL_ESTABLISH_REQ from layer 3
@@ -144,7 +143,7 @@ i4b_dl_data_req(l2_softc_t *l2sc, struct isdn_l3_driver *drv, struct mbuf *m)
 			NDBGL2(L2_ERROR, "i_queue full!!");
 		    i4b_Dfreembuf(m);
 		} else {
-			mtx_lock(&i4b_mtx):
+			mtx_lock(&i4b_mtx);
 			IF_ENQUEUE(&l2sc->i_queue, m);
 			mtx_unlock(&i4b_mtx);
 
@@ -168,11 +167,11 @@ int
 isdn_layer2_activate_ind(struct l2_softc *l2sc, 
 	struct isdn_l3_driver *drv, int event_activate)
 {
-	if (event_activate) {
+	if (event_activate) 
 		l2sc->ph_active = PH_ACTIVE;
-	} else {
+	else 
 		l2sc->ph_active = PH_INACTIVE;
-	}
+
 	return (0);
 }
 
@@ -182,7 +181,7 @@ isdn_layer2_activate_ind(struct l2_softc *l2sc,
 static void
 i4b_l2_unit_init(l2_softc_t *l2sc)
 {
-	mtx_lock(&i4b_mtx):
+	mtx_lock(&i4b_mtx);
 	l2sc->Q921_state = ST_TEI_UNAS;
 	l2sc->tei_valid = TEI_INVALID;
 	l2sc->vr = 0;
@@ -202,18 +201,17 @@ i4b_l2_unit_init(l2_softc_t *l2sc)
 
 	l2sc->postfsmfunc = NULL;
 
-	if (l2sc->ua_num != UA_EMPTY)
-	{
+	if (l2sc->ua_num != UA_EMPTY) {
 		i4b_Dfreembuf(l2sc->ua_frame);
 		l2sc->ua_num = UA_EMPTY;
 		l2sc->ua_frame = NULL;
 	}
-
+	
 	i4b_T200_stop(l2sc);
 	i4b_T202_stop(l2sc);
 	i4b_T203_stop(l2sc);
 
-	mtx_unlock(&i4b_mtx):
+	mtx_unlock(&i4b_mtx);
 }
 
 /*---------------------------------------------------------------------------*
@@ -225,7 +223,7 @@ isdn_layer2_status_ind(l2_softc_t *l2sc, struct isdn_l3_driver *drv,
 {
 	int sendup = 1;
 
-	mtx_lock(&i4b_mtx):;
+	mtx_lock(&i4b_mtx);;
 
 	NDBGL2(L2_PRIM, "isdnif %d, status=%d, parm=%d", 
 		l2sc->drv->isdnif, status, parm);
@@ -263,8 +261,7 @@ isdn_layer2_status_ind(l2_softc_t *l2sc, struct isdn_l3_driver *drv,
  * XXX
  */			
  		if ((l2sc->Q921_state >= ST_AW_EST) &&
-			   (l2sc->Q921_state <= ST_TIMREC))
-			{
+			   (l2sc->Q921_state <= ST_TIMREC)) {
 			NDBGL2(L2_ERROR, "isdnif %d, persistent deactivation!", 
 				l2sc->drv->isdnif);
 			i4b_l2_unit_init(l2sc);
@@ -287,7 +284,7 @@ isdn_layer2_status_ind(l2_softc_t *l2sc, struct isdn_l3_driver *drv,
 	if (sendup)
 		i4b_mdl_status_ind(l2sc->drv, status, parm);  /* send up to layer 3 */
 
-	mtx_unlock(&i4b_mtx):
+	mtx_unlock(&i4b_mtx);
 
 	return (0);
 }
@@ -412,8 +409,8 @@ isdn_bchan_silence(unsigned char *data, int len)
 
 	if (j < (TEL_IDLE_MIN))
 		return (0);
-	else
-		return (1);
+	
+	return (1);
 }
 
 #endif /* NI4BQ921  */

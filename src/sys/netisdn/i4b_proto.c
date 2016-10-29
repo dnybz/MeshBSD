@@ -41,9 +41,9 @@
 
 static struct pr_usrreqs nousrreqs;
 
-#include <netisdn/i4b.h>
+#include <neti4b/i4b.h>
 
-FEATURE(isdn, "ISDN over Ethernet");
+FEATURE(i4b, "ISDN over Ethernet");
 
 extern void	i4b_init(void);
 
@@ -51,28 +51,28 @@ extern void	i4b_init(void);
  * ISDN protocol family.
  */
  
-struct protosw isdnsw[] = {
+struct protosw i4bsw[] = {
 { 
 	.pr_type =		0,			
-	.pr_domain =	&isdndomain,		
+	.pr_domain =	&i4bdomain,		
 	.pr_init =		i4b_init,
 	.pr_usrreqs	=	&nousrreqs,
 },
 { 
 	.pr_type =		SOCK_RAW,			
-	.pr_domain =	&isdndomain,		
+	.pr_domain =	&i4bdomain,		
 	.pr_init =		i4b_init,
 	.pr_usrreqs	=	&nousrreqs,
 },
 { /* control socket */
 	.pr_type =		SOCK_DGRAM,		
-	.pr_domain =	&isdndomain,	
+	.pr_domain =	&i4bdomain,	
 	.pr_flags =		PR_ATOMIC|PR_ADDR,	
   	.pr_usrreqs = 	&i4b_raw_usrreqs,
 },
 { /* raw wildcard */
 	.pr_type =		SOCK_RAW,		
-	.pr_domain =	&isdndomain,	
+	.pr_domain =	&i4bdomain,	
 	.pr_flags =		PR_ATOMIC|PR_ADDR,
   	.pr_usrreqs = 	&i4b_raw_usrreqs,
 },
@@ -85,16 +85,16 @@ extern void	i4b_domifdetach(struct ifnet *, void *);
  * Defines ISDN domain.
  */
 
-struct domain isdndomain = {
+struct domain i4bdomain = {
 	.dom_family = 		AF_ISDN, 
 	.dom_name = 		"isdn", 
-	.dom_protosw =		isdnsw,
+	.dom_protosw =		i4bsw,
 	
 	.dom_protoswNPROTOSW =	
-		&isdnsw[sizeof(isdnsw)/sizeof(isdnsw[0])],
+		&i4bsw[sizeof(i4bsw)/sizeof(i4bsw[0])],
 	
 	.dom_ifattach =		i4b_domifattach,
 	.dom_ifdetach = 	i4b_domifdetach
 };
-DOMAIN_SET(isdn);
+DOMAIN_SET(i4b);
 

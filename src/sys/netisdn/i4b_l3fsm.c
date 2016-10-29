@@ -35,15 +35,9 @@
  *
  *---------------------------------------------------------------------------*/
 
-#include <sys/cdefs.h>
-__KERNEL_RCSID(0, "$NetBSD: i4b_l3fsm.c,v 1.14 2006/11/16 01:33:49 christos Exp $");
-
-#ifdef __FreeBSD__
 #include "i4bq931.h"
-#else
-#define	NI4BQ931	1
-#endif
-#if NI4BQ931 > 0
+
+#if NI4BQ931 
 
 #include <sys/param.h>
 #include <sys/kernel.h>
@@ -52,19 +46,9 @@ __KERNEL_RCSID(0, "$NetBSD: i4b_l3fsm.c,v 1.14 2006/11/16 01:33:49 christos Exp 
 #include <sys/socket.h>
 #include <net/if.h>
 
-#if defined(__NetBSD__) && __NetBSD_Version__ >= 104230000
-#include <sys/callout.h>
-#endif
-
-#ifdef __FreeBSD__
-#include <machine/i4b_debug.h>
-#include <machine/i4b_ioctl.h>
-#include <machine/i4b_cause.h>
-#else
 #include <netisdn/i4b_debug.h>
 #include <netisdn/i4b_ioctl.h>
 #include <netisdn/i4b_cause.h>
-#endif
 
 #include <netisdn/i4b_isdnq931.h>
 #include <netisdn/i4b_l2.h>
@@ -77,45 +61,107 @@ __KERNEL_RCSID(0, "$NetBSD: i4b_l3fsm.c,v 1.14 2006/11/16 01:33:49 christos Exp 
 #include <netisdn/i4b_q931.h>
 #include <netisdn/i4b_l4.h>
 
+static void 
+F_00A(call_desc_t *cd), 
+	F_00H(call_desc_t *cd), 
+	F_00I(call_desc_t *cd);
 
-static void F_00A(call_desc_t *cd), F_00H(call_desc_t *cd), F_00I(call_desc_t *cd);
-static void F_00J(call_desc_t *cd);
+static void 
+F_00J(call_desc_t *cd);
 
-static void F_01B(call_desc_t *cd), F_01K(call_desc_t *cd), F_01L(call_desc_t *cd);
-static void F_01M(call_desc_t *cd), F_01N(call_desc_t *cd), F_01U(call_desc_t *cd);
-static void F_01O(call_desc_t *cd);
+static void 
+F_01B(call_desc_t *cd), 
+	F_01K(call_desc_t *cd), 
+	F_01L(call_desc_t *cd);
+static void 
+F_01M(call_desc_t *cd), 
+	F_01N(call_desc_t *cd), 
+	F_01U(call_desc_t *cd);
+static void 
+F_01O(call_desc_t *cd);
 
-static void F_03C(call_desc_t *cd), F_03N(call_desc_t *cd), F_03O(call_desc_t *cd);
-static void F_03P(call_desc_t *cd), F_03Y(call_desc_t *cd);
+static void 
+F_03C(call_desc_t *cd), 
+	F_03N(call_desc_t *cd), 
+	F_03O(call_desc_t *cd);
+static void 
+F_03P(call_desc_t *cd), 
+	F_03Y(call_desc_t *cd);
 
-static void F_04O(call_desc_t *cd);
+static void 
+F_04O(call_desc_t *cd);
 
-static void F_06D(call_desc_t *cd), F_06E(call_desc_t *cd), F_06F(call_desc_t *cd);
-static void F_06G(call_desc_t *cd), F_06J(call_desc_t *cd), F_06Q(call_desc_t *cd);
+static void 
+F_06D(call_desc_t *cd), 
+	F_06E(call_desc_t *cd), 
+	F_06F(call_desc_t *cd);
+static void 
+F_06G(call_desc_t *cd), 
+	F_06J(call_desc_t *cd), 
+	F_06Q(call_desc_t *cd);
 
-static void F_07E(call_desc_t *cd), F_07F(call_desc_t *cd), F_07G(call_desc_t *cd);
+static void 
+F_07E(call_desc_t *cd), 
+	F_07F(call_desc_t *cd), 
+	F_07G(call_desc_t *cd);
 
-static void F_08R(call_desc_t *cd), F_08Z(call_desc_t *cd);
+static void 
+F_08R(call_desc_t *cd), 
+	F_08Z(call_desc_t *cd);
 
-static void F_09D(call_desc_t *cd), F_09E(call_desc_t *cd), F_09F(call_desc_t *cd);
-static void F_09G(call_desc_t *cd);
+static void 
+F_09D(call_desc_t *cd), 
+	F_09E(call_desc_t *cd), 
+	F_09F(call_desc_t *cd);
+static void 
+F_09G(call_desc_t *cd);
 
-static void F_11J(call_desc_t *cd), F_11Q(call_desc_t *cd), F_11V(call_desc_t *cd);
+static void 
+F_11J(call_desc_t *cd), 
+	F_11Q(call_desc_t *cd), 
+	F_11V(call_desc_t *cd);
 
-static void F_12C(call_desc_t *cd), F_12J(call_desc_t *cd);
+static void 
+F_12C(call_desc_t *cd), 
+	F_12J(call_desc_t *cd);
 
-static void F_19I(call_desc_t *cd), F_19J(call_desc_t *cd), F_19K(call_desc_t *cd);
-static void F_19W(call_desc_t *cd);
+static void 
+F_19I(call_desc_t *cd), 
+	F_19J(call_desc_t *cd), 
+	F_19K(call_desc_t *cd);
+static void 
+F_19W(call_desc_t *cd);
 
-static void F_NCNA(call_desc_t *cd), F_STENQ(call_desc_t *cd), F_STAT(call_desc_t *cd);
-static void F_INFO(call_desc_t *cd), F_RELCP(call_desc_t *cd), F_REL(call_desc_t *cd);
-static void F_DISC(call_desc_t *cd), F_DCRQ(call_desc_t *cd), F_UEM(call_desc_t *cd);
-static void F_SIGN(call_desc_t *cd), F_DLEI(call_desc_t *cd), F_ILL(call_desc_t *cd);
-static void F_309TO(call_desc_t *cd), F_DECF(call_desc_t *cd), F_FCTY(call_desc_t *cd);
-static void F_DECF1(call_desc_t *cd), F_DECF2(call_desc_t *cd), F_DECF3(call_desc_t *cd);
-static void F_DLRI(call_desc_t *cd), F_DLRIA(call_desc_t *cd), F_DECF4(call_desc_t *cd);
+static void 
+F_NCNA(call_desc_t *cd), 
+	F_STENQ(call_desc_t *cd), 
+	F_STAT(call_desc_t *cd);
+static void 
+F_INFO(call_desc_t *cd), 
+	F_RELCP(call_desc_t *cd), 
+	F_REL(call_desc_t *cd);
+static void 
+F_DISC(call_desc_t *cd), 
+	F_DCRQ(call_desc_t *cd), 
+	F_UEM(call_desc_t *cd);
+static void 
+F_SIGN(call_desc_t *cd), 
+	F_DLEI(call_desc_t *cd), 
+	F_ILL(call_desc_t *cd);
+static void 
+F_309TO(call_desc_t *cd), 
+	F_DECF(call_desc_t *cd), 
+	F_FCTY(call_desc_t *cd);
+static void 
+F_DECF1(call_desc_t *cd), 
+	F_DECF2(call_desc_t *cd), 
+	F_DECF3(call_desc_t *cd);
+static void 
+F_DLRI(call_desc_t *cd), 
+	F_DLRIA(call_desc_t *cd), 
+	F_DECF4(call_desc_t *cd);
 
-#if DO_I4B_DEBUG
+#if I4B_DEBUG
 static const char *l3state_text[N_STATES] = {
 	 "ST_U0 - Null",
 	 "ST_U1 - Out Init",
@@ -184,118 +230,903 @@ static const char *l3event_text[N_EVENTS] = {
  *	layer 3 state transition table
  *---------------------------------------------------------------------------*/
 struct l3state_tab {
-	void (*func) (call_desc_t *);	/* function to execute */
-	int newstate;				/* next state */
+/* 
+ * function to execute 
+ */
+	void (*func) (call_desc_t *);
+/* 
+ * next state 
+ */
+	int newstate;
 } l3state_tab[N_EVENTS][N_STATES] = {
 
-/* STATE:	ST_U0			ST_U1			ST_U3			ST_U4			ST_U6			ST_U7			ST_U8			ST_U9			ST_U10			ST_U11			ST_U12			ST_U19			ST_IWA			ST_IWR			ST_OW			ST_IWL			ST_SUBSET		ST_ILL	      */
-/* ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-/*EV_SETUPRQ*/	{{F_00A,  ST_SUSE},	{F_ILL,	 ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL, ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_DISCRQ */	{{F_ILL,  ST_ILL},	{F_01B,	 ST_U11},	{F_DCRQ, ST_U11},	{F_DCRQ, ST_U11},	{F_ILL,  ST_ILL},	{F_DCRQ, ST_U11},	{F_DCRQ, ST_U11},	{F_DCRQ, ST_U11},	{F_DCRQ, ST_U11},	{F_ILL,	 ST_ILL},	{F_NCNA, ST_U12},	{F_ILL,	 ST_ILL},	{F_DCRQ, ST_U11},	{F_DCRQ, ST_U11},	{F_DCRQ, ST_U11},	{F_DCRQ, ST_U11},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_RELRQ  */	{{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_03C,  ST_U19},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_12C,	 ST_U19},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_ALERTRQ*/	{{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_06D,  ST_SUSE},	{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_09D,	 ST_U7},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_SETACRS*/	{{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_06E,  ST_SUSE},	{F_07E,	 ST_U8},	{F_ILL,	 ST_ILL},	{F_09E,	 ST_U8},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_SETRJRS*/	{{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_06F,  ST_SUSE},	{F_07F,	 ST_U0},	{F_ILL,	 ST_ILL},	{F_09F,	 ST_U0},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_SETDCRS*/	{{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_06G,  ST_U0},	{F_07G,	 ST_U0},	{F_ILL,	 ST_ILL},	{F_09G,	 ST_U0},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/* STATE:	ST_U0			ST_U1			ST_U3			ST_U4			ST_U6			ST_U7			ST_U8			ST_U9			ST_U10			ST_U11			ST_U12			ST_U19			ST_IWA			ST_IWR			ST_OW			ST_IWL			ST_SUBSET		ST_ILL	      */
-/* ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-/*EV_SETUP  */	{{F_00H,  ST_U6},	{F_SIGN, ST_U1},	{F_SIGN, ST_U3},	{F_SIGN, ST_U4},	{F_SIGN, ST_U6},	{F_SIGN, ST_U7},	{F_SIGN, ST_U8},	{F_SIGN, ST_U9},	{F_SIGN, ST_U10},	{F_SIGN, ST_U11},	{F_SIGN, ST_U12},	{F_SIGN, ST_U19},	{F_SIGN, ST_IWA},	{F_SIGN, ST_IWR},	{F_SIGN, ST_OW},	{F_SIGN, ST_IWL},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_STATUS */	{{F_00I,  ST_SUSE},	{F_STAT, ST_SUSE},	{F_STAT, ST_SUSE},	{F_STAT, ST_SUSE},	{F_STAT, ST_SUSE},	{F_STAT, ST_SUSE},	{F_STAT, ST_SUSE},	{F_STAT, ST_SUSE},	{F_STAT, ST_SUSE},	{F_STAT, ST_SUSE},	{F_STAT, ST_SUSE},	{F_19I,	 ST_SUSE},	{F_STAT, ST_SUSE},	{F_STAT, ST_SUSE},	{F_STAT, ST_SUSE},	{F_STAT, ST_SUSE},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_RELEASE*/	{{F_00J,  ST_U0},	{F_UEM,	 ST_SUSE},	{F_REL,  ST_U0},	{F_REL,  ST_U0},	{F_06J,	 ST_U0},	{F_REL,	 ST_U0},	{F_REL,	 ST_U0},	{F_REL,	 ST_U0},	{F_REL,	 ST_U0},	{F_11J,	 ST_U0},	{F_12J,	 ST_U0},	{F_19J,	 ST_U0},	{F_REL,	 ST_U0},	{F_REL,	 ST_U0},	{F_REL,	 ST_U0},	{F_REL,  ST_U0},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_RELCOMP*/	{{F_NCNA, ST_U0},	{F_01K,	 ST_U0},	{F_RELCP,ST_U0},	{F_RELCP,ST_U0},	{F_RELCP,ST_U0},	{F_RELCP,ST_U0},	{F_RELCP,ST_U0},	{F_RELCP,ST_U0},	{F_RELCP,ST_U0},	{F_RELCP,ST_U0},	{F_RELCP,ST_U0},	{F_19K,	 ST_U0},	{F_RELCP,ST_U0},	{F_RELCP,ST_U0},	{F_RELCP,ST_U0},	{F_RELCP,ST_U0},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_SETUPAK*/	{{F_UEM,  ST_SUSE},	{F_01L,	 ST_U3},	{F_UEM,  ST_SUSE},	{F_UEM,  ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,  ST_SUSE},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_CALLPRC*/	{{F_UEM,  ST_SUSE},	{F_01M,	 ST_U3},	{F_NCNA, ST_U3},	{F_UEM,  ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,  ST_SUSE},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_ALERT  */	{{F_UEM,  ST_SUSE},	{F_01N,	 ST_U4},	{F_03N,  ST_U4},	{F_UEM,  ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,  ST_SUSE},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_CONNECT*/	{{F_UEM,  ST_SUSE},	{F_01O,	 ST_U10},	{F_03O,  ST_U10},	{F_04O,  ST_U10},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,  ST_SUSE},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_PROGIND*/	{{F_UEM,  ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_03P,  ST_U3},	{F_UEM,  ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,  ST_SUSE},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_DISCONN*/	{{F_UEM,  ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_DISC, ST_U12},	{F_DISC, ST_U12},	{F_06Q,	 ST_U12},	{F_DISC, ST_U12},	{F_DISC, ST_U12},	{F_DISC, ST_U12},	{F_DISC, ST_U12},	{F_11Q,	 ST_U19},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_DISC, ST_U12},	{F_DISC, ST_U12},	{F_DISC, ST_U12},	{F_DISC, ST_U12},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_CONACK */	{{F_UEM,  ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,  ST_SUSE},	{F_UEM,  ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_08R,	 ST_U10},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,	 ST_SUSE},	{F_UEM,  ST_SUSE},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_STATENQ*/	{{F_STENQ,ST_U0},	{F_STENQ,ST_U1},	{F_STENQ,ST_U3},	{F_STENQ,ST_U4},	{F_STENQ,ST_U6},	{F_STENQ,ST_U7},	{F_STENQ,ST_U8},	{F_STENQ,ST_U9},	{F_STENQ,ST_U10},	{F_STENQ,ST_U11},	{F_STENQ,ST_U12},	{F_STENQ,ST_U19},	{F_STENQ,ST_IWA},	{F_STENQ,ST_IWR},	{F_STENQ,ST_OW},	{F_STENQ,ST_OW},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_INFO   */	{{F_UEM,  ST_SUSE},	{F_UEM,  ST_SUSE},	{F_INFO, ST_U3},	{F_INFO, ST_U4},	{F_UEM,	 ST_SUSE},	{F_INFO, ST_U7},	{F_INFO, ST_U8},	{F_INFO, ST_U9},	{F_INFO, ST_U10},	{F_INFO, ST_U11},	{F_INFO, ST_U12},	{F_UEM,  ST_SUSE},	{F_INFO, ST_IWA},	{F_INFO, ST_IWR},	{F_INFO, ST_OW},	{F_INFO, ST_OW},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_FACILITY*/	{{F_FCTY, ST_SUSE},	{F_FCTY, ST_SUSE},	{F_FCTY, ST_SUSE},	{F_FCTY, ST_SUSE},	{F_FCTY, ST_SUSE},	{F_FCTY, ST_SUSE},	{F_FCTY, ST_SUSE},	{F_FCTY, ST_SUSE},	{F_FCTY, ST_SUSE},	{F_FCTY, ST_SUSE},	{F_FCTY, ST_SUSE},	{F_FCTY, ST_SUSE},	{F_FCTY, ST_SUSE},	{F_FCTY, ST_SUSE},	{F_FCTY, ST_SUSE},	{F_FCTY, ST_SUSE},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/* STATE:	ST_U0			ST_U1			ST_U3			ST_U4			ST_U6			ST_U7			ST_U8			ST_U9			ST_U10			ST_U11			ST_U12			ST_U19			ST_IWA			ST_IWR			ST_OW			ST_IWL			ST_SUBSET		ST_ILL	      */
-/* ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-/*EV_T303EXP*/	{{F_ILL,  ST_ILL},	{F_01U,	 ST_SUSE},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_T305EXP*/	{{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_11V,	 ST_U19},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_T308EXP*/	{{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_19W,	 ST_SUSE},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_T309EXP*/	{{F_309TO,ST_U0},	{F_309TO,ST_U0},	{F_309TO,ST_U0},	{F_309TO,ST_U0},	{F_309TO,ST_U0},	{F_309TO,ST_U0},	{F_309TO,ST_U0},	{F_309TO,ST_U0},	{F_309TO,ST_U0},	{F_309TO,ST_U0},	{F_309TO,ST_U0},	{F_309TO,ST_U0},	{F_309TO,ST_U0},	{F_309TO,ST_U0},	{F_309TO,ST_U0},	{F_309TO,ST_U0},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_T310EXP*/	{{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_03Y,  ST_U11},	{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_T313EXP*/	{{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_08Z,	 ST_U11},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/* STATE:	ST_U0			ST_U1			ST_U3			ST_U4			ST_U6			ST_U7			ST_U8			ST_U9			ST_U10			ST_U11			ST_U12			ST_U19			ST_IWA			ST_IWR			ST_OW			ST_IWL			ST_SUBSET		ST_ILL	      */
-/* ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-/*EV_DLESTIN*/	{{F_ILL,  ST_ILL},	{F_DLEI, ST_U1},	{F_DLEI, ST_U3},	{F_DLEI, ST_U4},	{F_DLEI, ST_U1},	{F_DLEI, ST_U1},	{F_DLEI, ST_U1},	{F_DLEI, ST_U1},	{F_DLEI, ST_U1},	{F_DLEI, ST_U1},	{F_DLEI, ST_U1},	{F_DLEI, ST_U1},	{F_DLEI, ST_U1},	{F_DLEI, ST_U1},	{F_DLEI, ST_U1},	{F_DLEI, ST_U1},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_DLRELIN*/	{{F_NCNA, ST_U0},	{F_DLRI, ST_U0},	{F_DLRI, ST_U0},	{F_DLRI, ST_U0},	{F_DLRI, ST_U0},	{F_DLRI, ST_U0},	{F_DLRI, ST_U0},	{F_DLRI, ST_U0},	{F_DLRIA,ST_U10},	{F_DLRI, ST_U0},	{F_DLRI, ST_U0},	{F_DLRI, ST_U0},	{F_DLRI, ST_U0},	{F_DLRI, ST_U0},	{F_DLRI, ST_U0},	{F_DLRI, ST_U0},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_DLESTCF*/	{{F_DECF, ST_SUSE},	{F_DECF, ST_SUSE},	{F_DECF, ST_SUSE},	{F_DECF, ST_SUSE},	{F_DECF, ST_SUSE},	{F_DECF, ST_SUSE},	{F_DECF, ST_SUSE},	{F_DECF, ST_SUSE},	{F_DECF, ST_SUSE},	{F_DECF, ST_SUSE},	{F_DECF, ST_SUSE},	{F_DECF, ST_SUSE},	{F_DECF2,ST_U8},	{F_DECF3,ST_U0},	{F_DECF1,ST_U1},	{F_DECF4,ST_U7},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_DLRELCF*/	{{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}},
-/*EV_ILL    */	{{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,  ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	 ST_ILL},	{F_ILL,	ST_ILL},        {F_ILL, ST_ILL}}
+/* STATE:	
+	
+	ST_U0			
+	ST_U1			
+	ST_U3			
+	ST_U4			
+	ST_U6			
+	ST_U7			
+	ST_U8			
+	ST_U9			
+	ST_U10			
+	ST_U11			
+	ST_U12			
+	ST_U19			
+	ST_IWA			
+	ST_IWR			
+	ST_OW			
+	ST_IWL			
+	ST_SUBSET		
+	ST_ILL	      
+*/
+	{
+/*
+ * EV_SETUPRQ
+ */			
+		{F_00A,  ST_SUSE},	
+		{F_ILL,	 ST_ILL},	
+		{F_ILL,  ST_ILL},	
+		{F_ILL,  ST_ILL},	
+		{F_ILL,  ST_ILL},	
+		{F_ILL,  ST_ILL},	
+		{F_ILL,	 ST_ILL},	
+		{F_ILL,	 ST_ILL},	
+		{F_ILL,	 ST_ILL},	
+		{F_ILL,	 ST_ILL},	
+		{F_ILL,	 ST_ILL},	
+		{F_ILL,	 ST_ILL},	
+		{F_ILL,  ST_ILL},	
+		{F_ILL,  ST_ILL},	
+		{F_ILL,  ST_ILL},	
+		{F_ILL,  ST_ILL},	
+		{F_ILL, ST_ILL},        
+		{F_ILL, ST_ILL}
+	},
+/*
+ * EV_DISCRQ 
+ */	
+ 	{
+ 		{F_ILL,  ST_ILL},	
+ 		{F_01B,	 ST_U11},	
+ 		{F_DCRQ, ST_U11},	
+ 		{F_DCRQ, ST_U11},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_DCRQ, ST_U11},	
+ 		{F_DCRQ, ST_U11},	
+ 		{F_DCRQ, ST_U11},	
+ 		{F_DCRQ, ST_U11},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_NCNA, ST_U12},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_DCRQ, ST_U11},	
+ 		{F_DCRQ, ST_U11},	
+ 		{F_DCRQ, ST_U11},	
+ 		{F_DCRQ, ST_U11},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_RELRQ  
+ */	
+ 	{
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_03C,  ST_U19},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_12C,	 ST_U19},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/* 
+ * EV_ALERTRQ
+ */	
+ 	{
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_06D,  ST_SUSE},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_09D,	 ST_U7},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/* 
+ * EV_SETACRS
+ */	
+ 	{
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_06E,  ST_SUSE},	
+ 		{F_07E,	 ST_U8},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_09E,	 ST_U8},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/* 
+ * EV_SETRJRS
+ */	
+ 	{
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_06F,  ST_SUSE},	
+ 		{F_07F,	 ST_U0},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_09F,	 ST_U0},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_SETDCRS
+ */	
+ 	{
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_06G,  ST_U0},	
+ 		{F_07G,	 ST_U0},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_09G,	 ST_U0},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/* STATE:	
+
+	ST_U0			
+	ST_U1			
+	ST_U3			
+	ST_U4			
+	ST_U6			
+	ST_U7			
+	ST_U8			
+	ST_U9			
+	ST_U10			
+	ST_U11			
+	ST_U12			
+	ST_U19			
+	ST_IWA			
+	ST_IWR			
+	ST_OW			
+	ST_IWL			
+	ST_SUBSET		
+	ST_ILL	     
+*/	
+	{
+/*
+ * EV_SETUP  
+ */		
+		{F_00H,  ST_U6},	
+ 		{F_SIGN, ST_U1},	
+ 		{F_SIGN, ST_U3},	
+ 		{F_SIGN, ST_U4},	
+ 		{F_SIGN, ST_U6},	
+ 		{F_SIGN, ST_U7},	
+ 		{F_SIGN, ST_U8},	
+ 		{F_SIGN, ST_U9},	
+ 		{F_SIGN, ST_U10},	
+ 		{F_SIGN, ST_U11},	
+ 		{F_SIGN, ST_U12},	
+ 		{F_SIGN, ST_U19},	
+ 		{F_SIGN, ST_IWA},	
+ 		{F_SIGN, ST_IWR},	
+ 		{F_SIGN, ST_OW},	
+ 		{F_SIGN, ST_IWL},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_STATUS 
+ */	
+	{
+		{F_00I,  ST_SUSE},	
+ 		{F_STAT, ST_SUSE},	
+ 		{F_STAT, ST_SUSE},	
+ 		{F_STAT, ST_SUSE},	
+ 		{F_STAT, ST_SUSE},	
+ 		{F_STAT, ST_SUSE},	
+ 		{F_STAT, ST_SUSE},	
+ 		{F_STAT, ST_SUSE},	
+ 		{F_STAT, ST_SUSE},	
+ 		{F_STAT, ST_SUSE},	
+ 		{F_STAT, ST_SUSE},	
+ 		{F_19I,	 ST_SUSE},	
+ 		{F_STAT, ST_SUSE},	
+ 		{F_STAT, ST_SUSE},	
+ 		{F_STAT, ST_SUSE},	
+ 		{F_STAT, ST_SUSE},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_RELEASE
+ */	
+ 	{
+ 		{F_00J,  ST_U0},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_REL,  ST_U0},	
+ 		{F_REL,  ST_U0},	
+ 		{F_06J,	 ST_U0},	
+ 		{F_REL,	 ST_U0},	
+ 		{F_REL,	 ST_U0},	
+ 		{F_REL,	 ST_U0},	
+ 		{F_REL,	 ST_U0},	
+ 		{F_11J,	 ST_U0},	
+ 		{F_12J,	 ST_U0},	
+ 		{F_19J,	 ST_U0},	
+ 		{F_REL,	 ST_U0},	
+ 		{F_REL,	 ST_U0},	
+ 		{F_REL,	 ST_U0},	
+ 		{F_REL,  ST_U0},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_RELCOMP
+ */	
+	{
+		{F_NCNA, ST_U0},	
+ 		{F_01K,	 ST_U0},	
+ 		{F_RELCP,ST_U0},	
+ 		{F_RELCP,ST_U0},	
+ 		{F_RELCP,ST_U0},	
+ 		{F_RELCP,ST_U0},	
+ 		{F_RELCP,ST_U0},	
+ 		{F_RELCP,ST_U0},	
+ 		{F_RELCP,ST_U0},	
+ 		{F_RELCP,ST_U0},	
+ 		{F_RELCP,ST_U0},	
+ 		{F_19K,	 ST_U0},	
+ 		{F_RELCP,ST_U0},	
+ 		{F_RELCP,ST_U0},	
+ 		{F_RELCP,ST_U0},	
+ 		{F_RELCP,ST_U0},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_SETUPAK
+ */	
+ 	{
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_01L,	 ST_U3},	
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_CALLPRC
+ */	
+ 	{
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_01M,	 ST_U3},	
+ 		{F_NCNA, ST_U3},	
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_ALERT  
+ */	
+ 	{
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_01N,	 ST_U4},	
+ 		{F_03N,  ST_U4},	
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_CONNECT
+ */	
+ 	{
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_01O,	 ST_U10},	
+ 		{F_03O,  ST_U10},	
+ 		{F_04O,  ST_U10},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/* 
+ * EV_PROGIND
+ */	
+ 	{
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_03P,  ST_U3},	
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_DISCONN
+ */	
+ 	{
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_DISC, ST_U12},	
+ 		{F_DISC, ST_U12},	
+ 		{F_06Q,	 ST_U12},	
+ 		{F_DISC, ST_U12},	
+ 		{F_DISC, ST_U12},	
+ 		{F_DISC, ST_U12},	
+ 		{F_DISC, ST_U12},	
+ 		{F_11Q,	 ST_U19},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_DISC, ST_U12},	
+ 		{F_DISC, ST_U12},	
+ 		{F_DISC, ST_U12},	
+ 		{F_DISC, ST_U12},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_CONACK 
+ */	
+ 	{
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_08R,	 ST_U10},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_STATENQ
+ */	
+ 	{
+ 		{F_STENQ,ST_U0},	
+ 		{F_STENQ,ST_U1},	
+ 		{F_STENQ,ST_U3},	
+ 		{F_STENQ,ST_U4},	
+ 		{F_STENQ,ST_U6},	
+ 		{F_STENQ,ST_U7},	
+ 		{F_STENQ,ST_U8},	
+ 		{F_STENQ,ST_U9},	
+ 		{F_STENQ,ST_U10},	
+ 		{F_STENQ,ST_U11},	
+ 		{F_STENQ,ST_U12},	
+ 		{F_STENQ,ST_U19},	
+ 		{F_STENQ,ST_IWA},	
+ 		{F_STENQ,ST_IWR},	
+ 		{F_STENQ,ST_OW},	
+ 		{F_STENQ,ST_OW},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/* 
+ * EV_INFO   
+ */	
+ 	{
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_INFO, ST_U3},	
+ 		{F_INFO, ST_U4},	
+ 		{F_UEM,	 ST_SUSE},	
+ 		{F_INFO, ST_U7},	
+ 		{F_INFO, ST_U8},	
+ 		{F_INFO, ST_U9},	
+ 		{F_INFO, ST_U10},	
+ 		{F_INFO, ST_U11},	
+ 		{F_INFO, ST_U12},	
+ 		{F_UEM,  ST_SUSE},	
+ 		{F_INFO, ST_IWA},	
+ 		{F_INFO, ST_IWR},	
+ 		{F_INFO, ST_OW},	
+ 		{F_INFO, ST_OW},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_FACILITY
+ */	
+ 	{
+ 		{F_FCTY, ST_SUSE},	
+ 		{F_FCTY, ST_SUSE},	
+ 		{F_FCTY, ST_SUSE},	
+ 		{F_FCTY, ST_SUSE},	
+ 		{F_FCTY, ST_SUSE},	
+ 		{F_FCTY, ST_SUSE},	
+ 		{F_FCTY, ST_SUSE},	
+ 		{F_FCTY, ST_SUSE},	
+ 		{F_FCTY, ST_SUSE},	
+ 		{F_FCTY, ST_SUSE},	
+ 		{F_FCTY, ST_SUSE},	
+ 		{F_FCTY, ST_SUSE},	
+ 		{F_FCTY, ST_SUSE},	
+ 		{F_FCTY, ST_SUSE},	
+ 		{F_FCTY, ST_SUSE},	
+ 		{F_FCTY, ST_SUSE},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}},
+/* 
+	STATE:	
+		
+		ST_U0			
+		ST_U1			
+		ST_U3			
+		ST_U4			
+		ST_U6			
+		ST_U7			
+		ST_U8			
+		ST_U9			
+		ST_U10			
+		ST_U11			
+		ST_U12			
+		ST_U19			
+		ST_IWA			
+		ST_IWR			
+		ST_OW			
+		ST_IWL			
+		ST_SUBSET		
+		ST_ILL	      
+*/
+	{
+/*
+ * EV_T303EXP
+ */		
+		{F_ILL,  ST_ILL},	
+ 		{F_01U,	 ST_SUSE},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_T305EXP
+ */	
+ 	{
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_11V,	 ST_U19},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_T308EXP
+ */	
+ 	{
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_19W,	 ST_SUSE},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/* 
+ * EV_T309EXP
+ */	
+ 	{
+ 		{F_309TO,ST_U0},	
+ 		{F_309TO,ST_U0},	
+ 		{F_309TO,ST_U0},	
+ 		{F_309TO,ST_U0},	
+ 		{F_309TO,ST_U0},	
+ 		{F_309TO,ST_U0},	
+ 		{F_309TO,ST_U0},	
+ 		{F_309TO,ST_U0},	
+ 		{F_309TO,ST_U0},	
+ 		{F_309TO,ST_U0},	
+ 		{F_309TO,ST_U0},	
+ 		{F_309TO,ST_U0},	
+ 		{F_309TO,ST_U0},	
+ 		{F_309TO,ST_U0},	
+ 		{F_309TO,ST_U0},	
+ 		{F_309TO,ST_U0},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_T310EXP
+ */	
+ 	{
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_03Y,  ST_U11},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_T313EXP
+ */	
+ 	{
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_08Z,	 ST_U11},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/* STATE:	
+		
+		ST_U0			
+		ST_U1			
+		ST_U3			
+		ST_U4			
+		ST_U6			
+		ST_U7			
+		ST_U8			
+		ST_U9			
+		ST_U10			
+		ST_U11			
+		ST_U12			
+		ST_U19			
+		ST_IWA			
+		ST_IWR			
+		ST_OW			
+		ST_IWL			
+		ST_SUBSET		
+		ST_ILL	      
+*/	
+	{
+/*
+ * EV_DLESTIN
+ */		
+		{F_ILL,  ST_ILL},	
+ 		{F_DLEI, ST_U1},	
+ 		{F_DLEI, ST_U3},	
+ 		{F_DLEI, ST_U4},	
+ 		{F_DLEI, ST_U1},	
+ 		{F_DLEI, ST_U1},	
+ 		{F_DLEI, ST_U1},	
+ 		{F_DLEI, ST_U1},	
+ 		{F_DLEI, ST_U1},	
+ 		{F_DLEI, ST_U1},	
+ 		{F_DLEI, ST_U1},	
+ 		{F_DLEI, ST_U1},	
+ 		{F_DLEI, ST_U1},	
+ 		{F_DLEI, ST_U1},	
+ 		{F_DLEI, ST_U1},	
+ 		{F_DLEI, ST_U1},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_DLRELIN
+ */	
+ 	{
+ 		{F_NCNA, ST_U0},	
+ 		{F_DLRI, ST_U0},	
+ 		{F_DLRI, ST_U0},	
+ 		{F_DLRI, ST_U0},	
+ 		{F_DLRI, ST_U0},	
+ 		{F_DLRI, ST_U0},	
+ 		{F_DLRI, ST_U0},	
+ 		{F_DLRI, ST_U0},	
+ 		{F_DLRIA,ST_U10},	
+ 		{F_DLRI, ST_U0},	
+ 		{F_DLRI, ST_U0},	
+ 		{F_DLRI, ST_U0},	
+ 		{F_DLRI, ST_U0},	
+ 		{F_DLRI, ST_U0},	
+ 		{F_DLRI, ST_U0},	
+ 		{F_DLRI, ST_U0},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_DLESTCF
+ */	
+ 	{
+ 		{F_DECF, ST_SUSE},	
+ 		{F_DECF, ST_SUSE},	
+ 		{F_DECF, ST_SUSE},	
+ 		{F_DECF, ST_SUSE},	
+ 		{F_DECF, ST_SUSE},	
+ 		{F_DECF, ST_SUSE},	
+ 		{F_DECF, ST_SUSE},	
+ 		{F_DECF, ST_SUSE},	
+ 		{F_DECF, ST_SUSE},	
+ 		{F_DECF, ST_SUSE},	
+ 		{F_DECF, ST_SUSE},	
+ 		{F_DECF, ST_SUSE},	
+ 		{F_DECF2,ST_U8},	
+ 		{F_DECF3,ST_U0},	
+ 		{F_DECF1,ST_U1},	
+ 		{F_DECF4,ST_U7},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_DLRELCF
+ */	
+ 	{
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	},
+/*
+ * EV_ILL    
+ */	
+ 	{
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,  ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	 ST_ILL},	
+ 		{F_ILL,	ST_ILL},        
+ 		{F_ILL, ST_ILL}
+ 	}
 };
 
 /*---------------------------------------------------------------------------*
  *	event handler
  *---------------------------------------------------------------------------*/
-void next_l3state(call_desc_t *cd, int event)
+void 
+next_l3state(call_desc_t *cd, int event)
 {
 	int currstate, newstate;
 
-	if(event > N_EVENTS)
+	if (event > N_EVENTS)
 		panic("i4b_l3fsm.c: event > N_EVENTS");
 
 	currstate = cd->Q931state;
 
-	if(currstate > N_STATES)
+	if (currstate > N_STATES)
 		panic("i4b_l3fsm.c: currstate > N_STATES");
 
 	newstate = l3state_tab[event][currstate].newstate;
 
-	if(newstate > N_STATES)
+	if (newstate > N_STATES)
 		panic("i4b_l3fsm.c: newstate > N_STATES");
 
 	NDBGL3(L3_F_MSG, "L3 FSM event [%s]: [%s => %s]",
-				l3event_text[event],
-                                l3state_text[currstate],
-                                l3state_text[newstate]);
+		l3event_text[event],
+		l3state_text[currstate],
+		l3state_text[newstate]);
+/* 
+ * execute function 
+ */
+ 	(*l3state_tab[event][currstate].func)(cd);
 
-	/* execute function */
-
-        (*l3state_tab[event][currstate].func)(cd);
-
-	if(newstate == ST_ILL)
-	{
+	if (newstate == ST_ILL) {
 		newstate = currstate;
 		NDBGL3(L3_F_ERR, "FSM illegal state, state = %s, event = %s!",
 				l3state_text[newstate],
 				l3event_text[event]);
 	}
 
-	if(newstate != ST_SUSE)
+	if (newstate != ST_SUSE)
 		cd->Q931state = newstate;
 }
 
-#if DO_I4B_DEBUG
+#if I4B_DEBUG
 /*---------------------------------------------------------------------------*
  *	return pointer to current state description
  *---------------------------------------------------------------------------*/
-const char *print_l3state(call_desc_t *cd)
+const char *
+print_l3state(call_desc_t *cd)
 {
-	return(l3state_text[cd->Q931state]);
+	return (l3state_text[cd->Q931state]);
 }
 #endif
 
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U0 event L4 setup req
  *---------------------------------------------------------------------------*/
-static void F_00A(call_desc_t *cd)
+static void 
+F_00A(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_00A executing");
 
-	if(i4b_get_dl_stat(cd) == DL_DOWN)
-	{
+	if (i4b_get_dl_stat(cd) == DL_DOWN) {
 		struct l2_softc * l2sc = (l2_softc_t*)cd->l3drv->l1_token;
 		i4b_dl_establish_req(l2sc, l2sc->drv);
 		cd->Q931state = ST_OW;
-	}
-	else
-	{
+	} else {
 		i4b_l3_tx_setup(cd);
 		cd->Q931state = ST_U1;
 	}
@@ -307,7 +1138,8 @@ static void F_00A(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U0 event SETUP from L2
  *---------------------------------------------------------------------------*/
-static void F_00H(call_desc_t *cd)
+static void 
+F_00H(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_00H executing");
 	i4b_l4_connect_ind(cd);	/* tell l4 we have an incoming setup */
@@ -316,12 +1148,12 @@ static void F_00H(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U0 event STATUS from L2
  *---------------------------------------------------------------------------*/
-static void F_00I(call_desc_t *cd)
+static void 
+F_00I(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_00I executing");
 
-	if(cd->call_state != 0)
-	{
+	if (cd->call_state != 0) {
 		cd->cause_out = 101;
 		i4b_l3_tx_release_complete(cd, 1);	/* 1 = send cause */
 	}
@@ -331,7 +1163,8 @@ static void F_00I(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U0 event RELEASE from L2
  *---------------------------------------------------------------------------*/
-static void F_00J(call_desc_t *cd)
+static void 
+F_00J(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_00J executing");
 	i4b_l3_tx_release_complete(cd, 0);	/* 0 = don't send cause */
@@ -340,7 +1173,8 @@ static void F_00J(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U1 event disconnect req from L4
  *---------------------------------------------------------------------------*/
-static void F_01B(call_desc_t *cd)
+static void 
+F_01B(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_01B executing");
 	/* cause from L4 */
@@ -352,7 +1186,8 @@ static void F_01B(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U1 event RELEASE COMPLETE from L2
  *---------------------------------------------------------------------------*/
-static void F_01K(call_desc_t *cd)
+static void 
+F_01K(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_01K executing");
 	T303_stop(cd);
@@ -363,7 +1198,8 @@ static void F_01K(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U1 event SETUP ACK from L2
  *---------------------------------------------------------------------------*/
-static void F_01L(call_desc_t *cd)
+static void 
+F_01L(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_01L executing");
 	T303_stop(cd);
@@ -383,7 +1219,8 @@ static void F_01L(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U1 event CALL PROCEEDING from L2
  *---------------------------------------------------------------------------*/
-static void F_01M(call_desc_t *cd)
+static void 
+F_01M(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_01M executing");
 	T303_stop(cd);
@@ -394,7 +1231,8 @@ static void F_01M(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U1 event ALERT from L2  (XXX !)
  *---------------------------------------------------------------------------*/
-static void F_01N(call_desc_t *cd)
+static void 
+F_01N(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_01N executing");
 	T303_stop(cd);
@@ -404,7 +1242,8 @@ static void F_01N(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U1 event CONNECT from L2 (XXX !)
  *---------------------------------------------------------------------------*/
-static void F_01O(call_desc_t *cd)
+static void 
+F_01O(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_01O executing");
 	T303_stop(cd);
@@ -415,18 +1254,17 @@ static void F_01O(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U1 event T303 timeout
  *---------------------------------------------------------------------------*/
-static void F_01U(call_desc_t *cd)
+static void 
+F_01U(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_01U executing");
-	if(cd->T303_first_to == 1)
-	{
+	
+	if (cd->T303_first_to == 1) {
 		cd->T303_first_to = 0;
 		i4b_l3_tx_setup(cd);
 		T303_start(cd);
 		cd->Q931state = ST_U1;
-	}
-	else
-	{
+	} else {
 		i4b_l4_disconnect_ind(cd);
 		freecd_by_cd(cd);
 		cd->Q931state = ST_U0;
@@ -436,7 +1274,8 @@ static void F_01U(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U3 event release req from L4
  *---------------------------------------------------------------------------*/
-static void F_03C(call_desc_t *cd)
+static void 
+F_03C(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_03C executing");
 	T310_stop(cd);
@@ -449,7 +1288,8 @@ static void F_03C(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U3 event ALERT from L2
  *---------------------------------------------------------------------------*/
-static void F_03N(call_desc_t *cd)
+static void 
+F_03N(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_03N executing");
 	T310_stop(cd);
@@ -459,7 +1299,8 @@ static void F_03N(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U3 event CONNECT from L2
  *---------------------------------------------------------------------------*/
-static void F_03O(call_desc_t *cd)
+static void 
+F_03O(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_03O executing");
 	T310_stop(cd);
@@ -470,7 +1311,8 @@ static void F_03O(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U3 event PROGESS IND from L2
  *---------------------------------------------------------------------------*/
-static void F_03P(call_desc_t *cd)
+static void 
+F_03P(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_03P executing");
 	T310_stop(cd);
@@ -482,7 +1324,8 @@ static void F_03P(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U3 event T310 timeout
  *---------------------------------------------------------------------------*/
-static void F_03Y(call_desc_t *cd)
+static void 
+F_03Y(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_03Y executing");
 	cd->cause_out = 102;	/* recovery on timer expiry */
@@ -494,7 +1337,8 @@ static void F_03Y(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U4 event CONNECT from L2
  *---------------------------------------------------------------------------*/
-static void F_04O(call_desc_t *cd)
+static void 
+F_04O(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_04O executing");
 	i4b_l3_tx_connect_ack(cd);	/* CONNECT ACK to network */
@@ -504,18 +1348,16 @@ static void F_04O(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U6 event alert req from L4
  *---------------------------------------------------------------------------*/
-static void F_06D(call_desc_t *cd)
+static void 
+F_06D(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_06D executing");
 
-	if(i4b_get_dl_stat(cd) == DL_DOWN)
-	{
+	if (i4b_get_dl_stat(cd) == DL_DOWN) {
 		struct l2_softc * l2sc = (l2_softc_t*)cd->l3drv->l1_token;
 		i4b_dl_establish_req(l2sc, l2sc->drv);
 		cd->Q931state = ST_IWL;
-	}
-	else
-	{
+	} else {
 		i4b_l3_tx_alert(cd);
 		cd->Q931state = ST_U7;
 	}
@@ -524,18 +1366,16 @@ static void F_06D(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U6 event incoming setup accept from L4
  *---------------------------------------------------------------------------*/
-static void F_06E(call_desc_t *cd)
+static void 
+F_06E(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_06E executing");
 
-	if(i4b_get_dl_stat(cd) == DL_DOWN)
-	{
+	if (i4b_get_dl_stat(cd) == DL_DOWN) {
 		struct l2_softc * l2sc = (l2_softc_t*)cd->l3drv->l1_token;
 		i4b_dl_establish_req(l2sc, l2sc->drv);
 		cd->Q931state = ST_IWA;
-	}
-	else
-	{
+	} else {
 		i4b_l3_tx_connect(cd);
 		cd->Q931state = ST_U8;
 	}
@@ -545,18 +1385,16 @@ static void F_06E(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U6 event incoming setup reject from L4
  *---------------------------------------------------------------------------*/
-static void F_06F(call_desc_t *cd)
+static void 
+F_06F(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_06F executing");
 
-	if(i4b_get_dl_stat(cd) == DL_DOWN)
-	{
+	if (i4b_get_dl_stat(cd) == DL_DOWN) {
 		struct l2_softc * l2sc = (l2_softc_t*)cd->l3drv->l1_token;
 		i4b_dl_establish_req(l2sc, l2sc->drv);
 		cd->Q931state = ST_IWR;
-	}
-	else
-	{
+	} else {
 		int s = splnet();
 		i4b_l3_tx_release_complete(cd, 1);
 		cd->Q931state = ST_U0;
@@ -568,7 +1406,8 @@ static void F_06F(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U6 event incoming setup ignore from L4
  *---------------------------------------------------------------------------*/
-static void F_06G(call_desc_t *cd)
+static void 
+F_06G(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_06G executing");
 	freecd_by_cd(cd);
@@ -577,7 +1416,8 @@ static void F_06G(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U6 event RELEASE from L2
  *---------------------------------------------------------------------------*/
-static void F_06J(call_desc_t *cd)
+static void 
+F_06J(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_06J executing");
 	i4b_l3_tx_release_complete(cd, 0);
@@ -588,7 +1428,8 @@ static void F_06J(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U6 event DISCONNECT from L2
  *---------------------------------------------------------------------------*/
-static void F_06Q(call_desc_t *cd)
+static void 
+F_06Q(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_06Q executing");
 	i4b_l4_disconnect_ind(cd);
@@ -597,7 +1438,8 @@ static void F_06Q(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U7 event setup response accept from L4
  *---------------------------------------------------------------------------*/
-static void F_07E(call_desc_t *cd)
+static void 
+F_07E(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_07E executing");
 	i4b_l3_tx_connect(cd);
@@ -607,7 +1449,8 @@ static void F_07E(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U7 event setup response reject from L4
  *---------------------------------------------------------------------------*/
-static void F_07F(call_desc_t *cd)
+static void 
+F_07F(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_07F executing");
 	i4b_l3_tx_release_complete(cd, 1);
@@ -617,7 +1460,8 @@ static void F_07F(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U7 event setup response ignore from L4
  *---------------------------------------------------------------------------*/
-static void F_07G(call_desc_t *cd)
+static void 
+F_07G(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_07G executing");
 	freecd_by_cd(cd);
@@ -626,7 +1470,8 @@ static void F_07G(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U8 event CONNECT ACK from L2
  *---------------------------------------------------------------------------*/
-static void F_08R(call_desc_t *cd)
+static void 
+F_08R(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_08R executing");
 	T313_stop(cd);
@@ -636,7 +1481,8 @@ static void F_08R(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U8 event T313 timeout
  *---------------------------------------------------------------------------*/
-static void F_08Z(call_desc_t *cd)
+static void 
+F_08Z(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_08Z executing");
 	cd->cause_out = 102;	/* recovery on timer expiry */
@@ -648,7 +1494,8 @@ static void F_08Z(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U9 event alert req from L4
  *---------------------------------------------------------------------------*/
-static void F_09D(call_desc_t *cd)
+static void 
+F_09D(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_09D executing");
 	i4b_l3_tx_alert(cd);
@@ -657,7 +1504,8 @@ static void F_09D(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U9 event setup response accept from L4
  *---------------------------------------------------------------------------*/
-static void F_09E(call_desc_t *cd)
+static void 
+F_09E(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_09E executing");
 	i4b_l3_tx_connect(cd);
@@ -667,7 +1515,8 @@ static void F_09E(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U9 event setup response reject from L4
  *---------------------------------------------------------------------------*/
-static void F_09F(call_desc_t *cd)
+static void 
+F_09F(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_09F executing");
 	i4b_l3_tx_release_complete(cd, 1);
@@ -676,7 +1525,8 @@ static void F_09F(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U9 event setup response ignore from L4
  *---------------------------------------------------------------------------*/
-static void F_09G(call_desc_t *cd)
+static void 
+F_09G(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_09G executing");
 	freecd_by_cd(cd);
@@ -685,7 +1535,8 @@ static void F_09G(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U11 event RELEASE from L2
  *---------------------------------------------------------------------------*/
-static void F_11J(call_desc_t *cd)
+static void 
+F_11J(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_11J executing");
 	T305_stop(cd);
@@ -697,7 +1548,8 @@ static void F_11J(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U11 event DISCONNECT from L2
  *---------------------------------------------------------------------------*/
-static void F_11Q(call_desc_t *cd)
+static void 
+F_11Q(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_11Q executing");
 	T305_stop(cd);
@@ -709,7 +1561,8 @@ static void F_11Q(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U11 event T305 timeout
  *---------------------------------------------------------------------------*/
-static void F_11V(call_desc_t *cd)
+static void 
+F_11V(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_11V executing");
 	cd->cause_out = 102;
@@ -721,7 +1574,8 @@ static void F_11V(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U12 event release req from L4
  *---------------------------------------------------------------------------*/
-static void F_12C(call_desc_t *cd)
+static void 
+F_12C(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_12C executing");
 	i4b_l3_tx_release(cd, 1);
@@ -732,7 +1586,8 @@ static void F_12C(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U12 event RELEASE from L2
  *---------------------------------------------------------------------------*/
-static void F_12J(call_desc_t *cd)
+static void 
+F_12J(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_12J executing");
 	i4b_l3_tx_release_complete(cd, 0);
@@ -743,26 +1598,24 @@ static void F_12J(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U19 event STATUS from L2
  *---------------------------------------------------------------------------*/
-static void F_19I(call_desc_t *cd)
+static void 
+F_19I(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_19I executing");
 
-	if(cd->call_state == 0)
-	{
+	if (cd->call_state == 0) {
 		i4b_l4_status_ind(cd);
 		freecd_by_cd(cd);
 		cd->Q931state = ST_U0;
-	}
-	else
-	{
+	} else 
 		cd->Q931state = ST_U19;
-	}
 }
 
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U19 event RELEASE from L2
  *---------------------------------------------------------------------------*/
-static void F_19J(call_desc_t *cd)
+static void 
+F_19J(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_19J executing");
 	T308_stop(cd);
@@ -773,7 +1626,8 @@ static void F_19J(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U19 event RELEASE COMPLETE from L2
  *---------------------------------------------------------------------------*/
-static void F_19K(call_desc_t *cd)
+static void 
+F_19K(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_19K executing");
 	T308_stop(cd);
@@ -784,18 +1638,17 @@ static void F_19K(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U19 event T308 timeout
  *---------------------------------------------------------------------------*/
-static void F_19W(call_desc_t *cd)
+static void 
+F_19W(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_19W executing");
-	if(cd->T308_first_to == 0)
-	{
+	
+	if (cd->T308_first_to == 0) {
 		cd->T308_first_to = 1;
 		i4b_l3_tx_release(cd, 0);
 		T308_start(cd);
 		cd->Q931state = ST_U19;
-	}
-	else
-	{
+	} else {
 		cd->T308_first_to = 0;
 		i4b_l4_disconnect_ind(cd);
 		freecd_by_cd(cd);
@@ -806,14 +1659,17 @@ static void F_19W(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM routine no change no action
  *---------------------------------------------------------------------------*/
-static void F_NCNA(call_desc_t *cd)
+static void 
+F_NCNA(call_desc_t *cd)
 {
+
 }
 
 /*---------------------------------------------------------------------------*
  *	L3 FSM any state event STATUS ENQ from L2
  *---------------------------------------------------------------------------*/
-static void F_STENQ(call_desc_t *cd)
+static void 
+F_STENQ(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_STENQ executing");
 	i4b_l3_tx_status(cd, CAUSE_Q850_STENQRSP); /* 30, resonse to stat enq */
@@ -822,19 +1678,19 @@ static void F_STENQ(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM any state except 0 & 19 event STATUS from L2
  *---------------------------------------------------------------------------*/
-static void F_STAT(call_desc_t *cd)
+static void 
+F_STAT(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_STAT executing");
-	if(cd->call_state == 0)
-	{
+	
+	if (cd->call_state == 0) {
 		i4b_l4_status_ind(cd);
 		cd->Q931state = ST_U0;
 		freecd_by_cd(cd);
-	}
-	else
-	{
-		/* XXX !!!!!!!!!!!!!!!!!! */
-
+	} else {		
+/* 
+ * XXX !!!!!!!!!!!!!!!!!! 
+ */
 		i4b_l4_status_ind(cd);
 		cd->cause_out = 101;	/* message not compatible with call state */
 		i4b_l3_tx_disconnect(cd);
@@ -846,7 +1702,8 @@ static void F_STAT(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM some states event INFORMATION from L2
  *---------------------------------------------------------------------------*/
-static void F_INFO(call_desc_t *cd)
+static void 
+F_INFO(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_INFO executing");
 	i4b_l4_info_ind(cd);
@@ -856,7 +1713,8 @@ static void F_INFO(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM some states event RELEASE COMPLETE from L2
  *---------------------------------------------------------------------------*/
-static void F_RELCP(call_desc_t *cd)
+static void 
+F_RELCP(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_RELCP executing");
 	i4b_l3_stop_all_timers(cd);
@@ -867,7 +1725,8 @@ static void F_RELCP(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM some states event RELEASE from L2
  *---------------------------------------------------------------------------*/
-static void F_REL(call_desc_t *cd)
+static void 
+F_REL(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_REL executing");
 	i4b_l3_stop_all_timers(cd);
@@ -879,7 +1738,8 @@ static void F_REL(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM some states event DISCONNECT from L2
  *---------------------------------------------------------------------------*/
-static void F_DISC(call_desc_t *cd)
+static void 
+F_DISC(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_DISC executing");
 	i4b_l3_stop_all_timers(cd);
@@ -898,14 +1758,15 @@ static void F_DISC(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM some states event disconnect request from L4
  *---------------------------------------------------------------------------*/
-static void F_DCRQ(call_desc_t *cd)
+static void 
+F_DCRQ(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_DCRQ executing");
 
 	/* stop T310 in case this is the result of an incoming call for a */
 	/* calledback connection */
 
-	if(cd->T310 == TIMER_ACTIVE)
+	if (cd->T310 == TIMER_ACTIVE)
 		T310_stop(cd);
 
 	/* cause from L4 */
@@ -917,16 +1778,23 @@ static void F_DCRQ(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM any state except 0 event unexpected message from L2
  *---------------------------------------------------------------------------*/
-static void F_UEM(call_desc_t *cd)
+static void 
+F_UEM(call_desc_t *cd)
 {
-	NDBGL3(L3_F_ERR, "FSM function F_UEM executing, state = %s", print_l3state(cd));
-	i4b_l3_tx_status(cd, CAUSE_Q850_MSGNCWCS); /* 101, message not compatible with call state */
+	NDBGL3(L3_F_ERR, 
+		"FSM function F_UEM executing, state = %s", 
+		print_l3state(cd));
+/* 
+ * 101, message not compatible with call state 
+ */		
+	i4b_l3_tx_status(cd, CAUSE_Q850_MSGNCWCS); 
 }
 
 /*---------------------------------------------------------------------------*
  *	L3 FSM any state except 0 event SETUP from L2
  *---------------------------------------------------------------------------*/
-static void F_SIGN(call_desc_t *cd)
+static void 
+F_SIGN(call_desc_t *cd)
 {
 	NDBGL3(L3_F_ERR, "FSM function F_SIGN executing");
 
@@ -937,7 +1805,8 @@ static void F_SIGN(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM relevant states event DL ESTABLISH IND from L2
  *---------------------------------------------------------------------------*/
-static void F_DLEI(call_desc_t *cd)
+static void 
+F_DLEI(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_DLEI executing");
 
@@ -949,7 +1818,8 @@ static void F_DLEI(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM any state event illegal event occurred
  *---------------------------------------------------------------------------*/
-static void F_ILL(call_desc_t *cd)
+static void 
+F_ILL(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_ILL executing");
 }
@@ -957,7 +1827,8 @@ static void F_ILL(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM any state event T309 timeout
  *---------------------------------------------------------------------------*/
-static void F_309TO(call_desc_t *cd)
+static void 
+F_309TO(call_desc_t *cd)
 {
 	NDBGL3(L3_F_ERR, "FSM function F_309TO executing");
 
@@ -973,7 +1844,8 @@ static void F_309TO(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM any state event FACILITY message received
  *---------------------------------------------------------------------------*/
-static void F_FCTY(call_desc_t *cd)
+static void 
+F_FCTY(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_FCTY executing");
 	/* ST_SUSE, no change in state ! */
@@ -982,7 +1854,8 @@ static void F_FCTY(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state ST_OW event DL ESTABLISH CONF from L2
  *---------------------------------------------------------------------------*/
-static void F_DECF1(call_desc_t *cd)
+static void 
+F_DECF1(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_DECF1 executing");
 	i4b_l3_tx_setup(cd);
@@ -991,7 +1864,8 @@ static void F_DECF1(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state ST_IWA event DL ESTABLISH CONF from L2
  *---------------------------------------------------------------------------*/
-static void F_DECF2(call_desc_t *cd)
+static void 
+F_DECF2(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_DECF2 executing");
 	i4b_l3_tx_connect(cd);
@@ -1000,7 +1874,8 @@ static void F_DECF2(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state ST_IWR event DL ESTABLISH CONF from L2
  *---------------------------------------------------------------------------*/
-static void F_DECF3(call_desc_t *cd)
+static void 
+F_DECF3(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_DECF3 executing");
 	i4b_l3_tx_release_complete(cd, 1);
@@ -1010,7 +1885,8 @@ static void F_DECF3(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state ST_IWL event DL ESTABLISH CONF from L2
  *---------------------------------------------------------------------------*/
-static void F_DECF4(call_desc_t *cd)
+static void 
+F_DECF4(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_DECF4 executing");
 	i4b_l3_tx_alert(cd);
@@ -1020,7 +1896,8 @@ static void F_DECF4(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM any state event DL ESTABLISH CONF from L2
  *---------------------------------------------------------------------------*/
-static void F_DECF(call_desc_t *cd)
+static void 
+F_DECF(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_DECF executing");
 	T309_stop(cd);
@@ -1030,7 +1907,8 @@ static void F_DECF(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM any state except U10 event DL RELEASE IND from L2
  *---------------------------------------------------------------------------*/
-static void F_DLRI(call_desc_t *cd)
+static void 
+F_DLRI(call_desc_t *cd)
 {
 	NDBGL3(L3_F_MSG, "FSM function F_DLRI executing");
 	i4b_l3_stop_all_timers(cd);
@@ -1041,15 +1919,16 @@ static void F_DLRI(call_desc_t *cd)
 /*---------------------------------------------------------------------------*
  *	L3 FSM state U10 event DL RELEASE IND from L2
  *---------------------------------------------------------------------------*/
-static void F_DLRIA(call_desc_t *cd)
+static void 
+F_DLRIA(call_desc_t *cd)
 {
 	struct l2_softc * l2sc = (l2_softc_t*)cd->l3drv->l1_token;
 	NDBGL3(L3_F_MSG, "FSM function F_DLRIA executing");
 
-	if(cd->T309 == TIMER_IDLE)
+	if (cd->T309 == TIMER_IDLE)
 		T309_start(cd);
 
 	i4b_dl_establish_req(l2sc, l2sc->drv);
 }
 
-#endif /* NI4BQ931 > 0 */
+#endif /* NI4BQ931 */

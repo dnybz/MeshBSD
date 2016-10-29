@@ -53,13 +53,13 @@
 SYSCTL_DECL(_net_isdn);
 SYSCTL_NODE(_net, AF_ISDN, isdn, CTLFLAG_RW, 0, "ISDN Family");
 
-u_long isdn_raw_sendspace = ISDN_RAW_SNDQ;
-u_long isdn_raw_recvspace = ISDN_RAW_RCVQ;
+u_long i4b_raw_sendspace = ISDN_RAW_SNDQ;
+u_long i4b_raw_recvspace = ISDN_RAW_RCVQ;
 
 SYSCTL_ULONG(_net_isdn, OID_AUTO, sendspace, CTLFLAG_RW,
-    &isdn_raw_sendspace, 0, "Maximum outgoing raw ISDN PDU size");
+    &i4b_raw_sendspace, 0, "Maximum outgoing raw ISDN PDU size");
 SYSCTL_ULONG(_net_isdn, OID_AUTO, recvspace, CTLFLAG_RW,
-    &isdn_raw_recvspace, 0, "Maximum space for incoming ISDN PDU");
+    &i4b_raw_recvspace, 0, "Maximum space for incoming ISDN PDU");
 
 extern int	i4b_control(struct socket *, u_long, caddr_t, struct ifnet *,
     struct thread *);
@@ -71,7 +71,7 @@ extern int	i4b_control(struct socket *, u_long, caddr_t, struct ifnet *,
 static int
 i4b_attach(struct socket *so, int proto, struct thread *td)
 {
-	return (soreserve(so, isdn_raw_sendspace, isdn_raw_recvspace));
+	return (soreserve(so, i4b_raw_sendspace, i4b_raw_recvspace));
 }
 
 struct pr_usrreqs i4b_raw_usrreqs = {
