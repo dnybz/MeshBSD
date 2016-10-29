@@ -339,6 +339,9 @@ struct ether_vlan_header {
 #define	ETHERTYPE_AXIS		0x8856	/* Axis Communications AB proprietary bootstrap/config */
 #define	ETHERTYPE_PPPOEDISC	0x8863	/* PPP Over Ethernet Discovery Stage */
 #define	ETHERTYPE_PPPOE		0x8864	/* PPP Over Ethernet Session Stage */
+
+#define	ETHERTYPE_ISDN		0x8865	/* ISDN Over Ethernet */
+
 #define	ETHERTYPE_LANPROBE	0x8888	/* HP LanProbe test? */
 #define	ETHERTYPE_PAE		0x888e	/* EAPOL PAE/802.1x */
 #define	ETHERTYPE_LOOPBACK	0x9000	/* Loopback: used to test interfaces */

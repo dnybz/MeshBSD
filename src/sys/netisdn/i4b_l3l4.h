@@ -140,7 +140,7 @@ typedef struct call_desc
 
 	int	timeout_active;		/* idle timeout() active flag	*/
 /*
- * XXX: I'll refactor it by rplacment of callout_handle(9)
+ * XXX: I'll refactor it by rplacment of callout_handle(9).
  */
 	struct	callout	idle_timeout_handle;
 	struct	callout	T303_callout;

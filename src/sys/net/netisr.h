@@ -60,6 +60,8 @@
 #define	NETISR_IP_DIRECT	9	/* direct-dispatch IPv4 */
 #define	NETISR_IPV6_DIRECT	10	/* direct-dispatch IPv6 */
 
+#define NETISR_ISDN 11 /* AF_ISDN */
+
 /*
  * Protocol ordering and affinity policy constants.  See the detailed
  * discussion of policies later in the file.

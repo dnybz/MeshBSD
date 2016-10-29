@@ -29,7 +29,30 @@
  *	@(#)if_ethersubr.c	8.1 (Berkeley) 6/10/93
  * $FreeBSD: head/sys/net/if_ethersubr.c 298985 2016-05-03 16:01:53Z bz $
  */
-
+/*-
+ * Copyright (c) 2016 Henning Matyschok
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
 #include "opt_inet.h"
 #include "opt_inet6.h"
 #include "opt_netgraph.h"
@@ -243,6 +266,24 @@ ether_resolve_addr(struct ifnet *ifp, struct mbuf *m,
 		}
 		break;
 #endif
+#ifdef ISDN
+	case AF_ISDN:
+		if ((m->m_flags & (M_BCAST | M_MCAST)) == 0)
+			error = isdn_arpresolve(ifp, 0, m, dst, phdr, &lleflags);
+		else {
+			if (m->m_flags & M_BCAST)
+				memcpy(eh->ether_dhost, ifp->if_broadcastaddr,
+				    ETHER_ADDR_LEN);
+			else {
+				const struct in_addr *a;
+				a = &(((const struct sockaddr_in *)dst)->sin_addr);
+				ETHER_MAP_IP_MULTICAST(a, eh->ether_dhost);
+			}
+			etype = htons(ETHERTYPE_IP);
+			memcpy(&eh->ether_type, &etype, sizeof(etype));
+			memcpy(eh->ether_shost, IF_LLADDR(ifp), ETHER_ADDR_LEN);
+		}
+#endif /* ISDN */
 	default:
 		if_printf(ifp, "can't handle af%d\n", dst->sa_family);
 		if (m != NULL)
@@ -793,6 +834,11 @@ ether_demux(struct ifnet *ifp, struct mbuf *m)
 		isr = NETISR_IPV6;
 		break;
 #endif
+#ifdef ISDN
+	case ETHERTYPE_ISDN:
+		isr = NETISR_ISDN;
+		break;
+#endif /* ISDN */
 	default:
 		goto discard;
 	}
