@@ -34,10 +34,31 @@
  *      last edit-date: [Fri Jan  5 11:33:47 2001]
  *
  *---------------------------------------------------------------------------*/
-
-#include <sys/cdefs.h>
-__KERNEL_RCSID(0, "$NetBSD: i4b_mbuf.c,v 1.6 2010/01/18 16:29:51 pooka Exp $");
-
+/*-
+ * Copyright (c) 2016 Henning Matyschok
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE. 
+ */
+ 
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/mbuf.h>
@@ -58,17 +79,8 @@ __KERNEL_RCSID(0, "$NetBSD: i4b_mbuf.c,v 1.6 2010/01/18 16:29:51 pooka Exp $");
 
 #ifdef I4B_MBUF_TYPE_DEBUG
 
-#ifdef  __FreeBSD__
-
-#define MT_DCHAN	42
-#define MT_BCHAN	43
-
-#else /* NetBSD */
-
 #define MT_DCHAN        MT_DATA
 #define MT_BCHAN        MT_DATA
-
-#endif
 
 #define MT_I4B_D	MT_DCHAN
 #define MT_I4B_B	MT_BCHAN
@@ -88,37 +100,37 @@ i4b_Dgetmbuf(int len)
 {
 	struct mbuf *m;
 
-	if(len > MCLBYTES)	/* if length > max extension size */
+	if (len > MCLBYTES)	
 	{
-
+/* 
+ * if length > max extension size 
+ */
 #ifdef I4B_MBUF_DEBUG
-		printf("i4b_getmbuf: error - len(%d) > MCLBYTES(%d)\n",
+		(void)printf("i4b_getmbuf: error - len(%d) > MCLBYTES(%d)\n",
 					len, MCLBYTES);
 #endif
 
-		return(NULL);
+		return (NULL);
 	}
 
 	MGETHDR(m, M_DONTWAIT, MT_I4B_D);	/* get mbuf with pkthdr */
+/* 
+ * did we actually get the mbuf? 
+ */
 
-	/* did we actually get the mbuf ? */
-
-	if(!m)
-	{
+	if (!m) {
 
 #ifdef I4B_MBUF_DEBUG
 		printf("i4b_getbuf: error - MGETHDR failed!\n");
 #endif
 
-		return(NULL);
+		return (NULL);
 	}
 
-	if(len >= MHLEN)
-	{
+	if (len >= MHLEN) {
 		MCLGET(m, M_DONTWAIT);
 
-		if(!(m->m_flags & M_EXT))
-		{
+		if (!(m->m_flags & M_EXT)) {
 			m_freem(m);
 
 #ifdef I4B_MBUF_DEBUG
@@ -131,7 +143,7 @@ i4b_Dgetmbuf(int len)
 
 	m->m_len = len;
 
-	return(m);
+	return (m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -140,8 +152,7 @@ i4b_Dgetmbuf(int len)
 void
 i4b_Dfreembuf(struct mbuf *m)
 {
-	if(m)
-		m_freem(m);
+	m_freem(m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -151,15 +162,15 @@ void
 i4b_Dcleanifq(struct ifqueue *ifq)
 {
 	struct mbuf *m;
-	int x = splnet();
+	
+	mtx_lock(&i4b_mtx);
 
-	while(!IF_QEMPTY(ifq))
-	{
+	while (!IF_QEMPTY(ifq)) {
 		IF_DEQUEUE(ifq, m);
 		i4b_Dfreembuf(m);
 	}
 
-	splx(x);
+	mtx_unlock(&i4b_mtx);
 }
 
 /*---------------------------------------------------------------------------*
@@ -170,37 +181,36 @@ i4b_Bgetmbuf(int len)
 {
 	struct mbuf *m;
 
-	if(len > MCLBYTES)	/* if length > max extension size */
-	{
+	if (len > MCLBYTES)	{
+/* 
+ * if length > max extension size 
+ */
 
 #ifdef I4B_MBUF_DEBUG
 		printf("i4b_getmbuf: error - len(%d) > MCLBYTES(%d)\n",
 					len, MCLBYTES);
 #endif
 
-		return(NULL);
+		return (NULL);
 	}
 
 	MGETHDR(m, M_DONTWAIT, MT_I4B_B);	/* get mbuf with pkthdr */
-
-	/* did we actually get the mbuf ? */
-
-	if(!m)
-	{
+/* 
+ * did we actually get the mbuf? 
+ */
+	if (!m) {
 
 #ifdef I4B_MBUF_DEBUG
 		printf("i4b_getbuf: error - MGETHDR failed!\n");
 #endif
 
-		return(NULL);
+		return (NULL);
 	}
 
-	if(len >= MHLEN)
-	{
+	if (len >= MHLEN) {
 		MCLGET(m, M_DONTWAIT);
 
-		if(!(m->m_flags & M_EXT))
-		{
+		if (!(m->m_flags & M_EXT)) {
 			m_freem(m);
 
 #ifdef I4B_MBUF_DEBUG
@@ -213,7 +223,7 @@ i4b_Bgetmbuf(int len)
 
 	m->m_len = len;
 
-	return(m);
+	return (m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -222,8 +232,7 @@ i4b_Bgetmbuf(int len)
 void
 i4b_Bfreembuf(struct mbuf *m)
 {
-	if(m)
-		m_freem(m);
+	m_freem(m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -233,15 +242,16 @@ void
 i4b_Bcleanifq(struct ifqueue *ifq)
 {
 	struct mbuf *m;
-	int x = splnet();
+	
+	mtx_lock(&i4b_mtx);
 
-	while(!IF_QEMPTY(ifq))
+	while (!IF_QEMPTY(ifq))
 	{
 		IF_DEQUEUE(ifq, m);
 		i4b_Bfreembuf(m);
 	}
 
-	splx(x);
+	mtx_unlock(&i4b_mtx);
 }
 
 /* EOF */

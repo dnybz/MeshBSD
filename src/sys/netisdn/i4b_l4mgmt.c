@@ -36,13 +36,34 @@
  *      last edit-date: [Fri Jan  5 11:33:47 2001]
  *
  *---------------------------------------------------------------------------*/
-
-#include <sys/cdefs.h>
-__KERNEL_RCSID(0, "$NetBSD: i4b_l4mgmt.c,v 1.18 2010/01/18 16:37:41 pooka Exp $");
+/*-
+ * Copyright (c) 2016 Henning Matyschok
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE. 
+ */
 
 #include "isdn.h"
 
-#if NISDN > 0
+#if NISDN
 
 #include <sys/param.h>
 #include <sys/kernel.h>
@@ -51,25 +72,10 @@ __KERNEL_RCSID(0, "$NetBSD: i4b_l4mgmt.c,v 1.18 2010/01/18 16:37:41 pooka Exp $"
 #include <sys/socket.h>
 #include <net/if.h>
 
-#if defined(__NetBSD__) && __NetBSD_Version__ >= 104230000
-#include <sys/callout.h>
-#endif
-
-#if defined(__FreeBSD__)
-#if defined (__FreeBSD_version) && __FreeBSD_version <= 400000
-#include <machine/random.h>
-#else
 #include <sys/random.h>
-#endif
-#endif
 
-#ifdef __FreeBSD__
-#include <machine/i4b_debug.h>
-#include <machine/i4b_ioctl.h>
-#else
 #include <netisdn/i4b_debug.h>
 #include <netisdn/i4b_ioctl.h>
-#endif
 
 #include <netisdn/i4b_l3l4.h>
 #include <netisdn/i4b_mbuf.h>
@@ -80,10 +86,10 @@ __KERNEL_RCSID(0, "$NetBSD: i4b_l4mgmt.c,v 1.18 2010/01/18 16:37:41 pooka Exp $"
 #include <netisdn/i4b_l1l2.h>
 #include <netisdn/i4b_l4.h>
 
-static unsigned int get_cdid(void);
+static unsigned int 	get_cdid(void);
 
-static void i4b_init_callout(call_desc_t *);
-static void i4b_stop_callout(call_desc_t *cd);
+static void 	i4b_init_callout(call_desc_t *);
+static void 	i4b_stop_callout(call_desc_t *);
 
 call_desc_t call_desc[N_CALL_DESC];	/* call descriptor array */
 int num_call_desc = 0;
@@ -100,34 +106,31 @@ get_cdid(void)
 {
 	static unsigned int cdid_count = 0;
 	int i;
-	int x;
 
-	x = splnet();
-
-	/* get next id */
-
+	mtx_lock(&i4b_mtx);
+/* 
+ * get next id 
+ */
 	cdid_count++;
 
 again:
-	if(cdid_count == CDID_UNUSED)		/* zero is invalid */
+	if (cdid_count == CDID_UNUSED)		/* zero is invalid */
 		cdid_count++;
-	else if(cdid_count > CDID_MAX)		/* wraparound ? */
+	else if (cdid_count > CDID_MAX)		/* wraparound ? */
 		cdid_count = 1;
-
-	/* check if id already in use */
-
-	for(i=0; i < num_call_desc; i++)
-	{
-		if(call_desc[i].cdid == cdid_count)
-		{
+/* 
+ * check if id already in use 
+ */
+	for (i = 0; i < num_call_desc; i++) {
+		if (call_desc[i].cdid == cdid_count) {
 			cdid_count++;
 			goto again;
 		}
 	}
 
-	splx(x);
+	mtx_unlock(&i4b_mtx);
 
-	return(cdid_count);
+	return (cdid_count);
 }
 
 /*---------------------------------------------------------------------------*
@@ -142,42 +145,47 @@ call_desc_t *
 reserve_cd(void)
 {
 	call_desc_t *cd;
-	int x;
 	int i;
 
-	x = splnet();
+	mtx_lock(&i4b_mtx);
 
 	cd = NULL;
 
-	for(i=0; i < num_call_desc; i++)
-	{
-		if(call_desc[i].cdid == CDID_UNUSED)
-		{
-			cd = &(call_desc[i]);	/* get pointer to descriptor */
+	for (i = 0; i < num_call_desc; i++) {
+		if (call_desc[i].cdid == CDID_UNUSED) {
+/* 
+ * get pointer to descriptor 
+ */
+			cd = &(call_desc[i]);	
 			NDBGL4(L4_MSG, "found free cd - index=%d cdid=%u",
 				 i, call_desc[i].cdid);
 			break;
 		}
 	}
+	
 	if (cd == NULL && num_call_desc < N_CALL_DESC) {
+/* 
+ * get pointer to descriptor 
+ */
 		i = num_call_desc++;
-		cd = &(call_desc[i]);	/* get pointer to descriptor */
+		cd = &(call_desc[i]);
 		NDBGL4(L4_MSG, "found free cd - index=%d cdid=%u",
 			 i, call_desc[i].cdid);
 	}
+	
 	if (cd != NULL) {
 		memset(cd, 0, sizeof(call_desc_t)); /* clear it */
 		cd->cdid = get_cdid();	/* fill in new cdid */
 	}
 
-	splx(x);
+	mtx_unlock(&i4b_mtx);
 
-	if(cd == NULL)
+	if (cd == NULL)
 		panic("reserve_cd: no free call descriptor available!");
 
 	i4b_init_callout(cd);
 
-	return(cd);
+	return (cd);
 }
 
 /*---------------------------------------------------------------------------*
@@ -190,13 +198,12 @@ void
 freecd_by_cd(call_desc_t *cd)
 {
 	int i;
-	int x = splnet();
+	
+	mtx_lock(&i4b_mtx);
 
-	for(i=0; i < num_call_desc; i++)
-	{
-		if( (call_desc[i].cdid != CDID_UNUSED) &&
-		    (&(call_desc[i]) == cd) )
-		{
+	for (i = 0; i < num_call_desc; i++) {
+		if ((call_desc[i].cdid != CDID_UNUSED) &&
+		    (&(call_desc[i]) == cd) ) {
 			NDBGL4(L4_MSG, "releasing cd - index=%d cdid=%u cr=%d",
 				i, call_desc[i].cdid, cd->cr);
 			call_desc[i].cdid = CDID_UNUSED;
@@ -204,23 +211,24 @@ freecd_by_cd(call_desc_t *cd)
 		}
 	}
 
-	if(i == N_CALL_DESC)
+	if (i == N_CALL_DESC)
 		panic("freecd_by_cd: ERROR, cd not found, cr = %d", cd->cr);
 
-	splx(x);
+	mtx_unlock(&i4b_mtx);
 }
 
 /*
  * ISDN is gone, get rid of all CDs for it
  */
-void free_all_cd_of_isdnif(int isdnif)
+void 
+free_all_cd_of_isdnif (int isdnif)
 {
 	int i;
-	int x = splnet();
+	
+	mtx_lock(&i4b_mtx);
 
-	for(i=0; i < num_call_desc; i++)
-	{
-		if( (call_desc[i].cdid != CDID_UNUSED) &&
+	for (i = 0; i < num_call_desc; i++) {
+		if ((call_desc[i].cdid != CDID_UNUSED) &&
 		    call_desc[i].isdnif == isdnif) {
 			NDBGL4(L4_MSG, "releasing cd - index=%d cdid=%u cr=%d",
 				i, call_desc[i].cdid, call_desc[i].cr);
@@ -231,8 +239,7 @@ void free_all_cd_of_isdnif(int isdnif)
 			call_desc[i].l3drv = NULL;
 		}
 	}
-
-	splx(x);
+	mtx_unlock(&i4b_mtx);
 }
 
 /*---------------------------------------------------------------------------*
@@ -247,17 +254,15 @@ cd_by_cdid(unsigned int cdid)
 {
 	int i;
 
-	for(i=0; i < num_call_desc; i++)
-	{
-		if(call_desc[i].cdid == cdid)
-		{
+	for (i = 0; i < num_call_desc; i++) {
+		if (call_desc[i].cdid == cdid) {
 			NDBGL4(L4_MSG, "found cdid - index=%d cdid=%u cr=%d",
 					i, call_desc[i].cdid, call_desc[i].cr);
 			i4b_init_callout(&call_desc[i]);
-			return(&(call_desc[i]));
+			return (&(call_desc[i]));
 		}
 	}
-	return(NULL);
+	return (NULL);
 }
 
 /*---------------------------------------------------------------------------*
@@ -272,7 +277,7 @@ cd_by_isdnifcr(int isdnif, int cr, int crf)
 {
 	int i;
 
-	for(i=0; i < num_call_desc; i++) {
+	for (i = 0; i < num_call_desc; i++) {
 		if (call_desc[i].cdid != CDID_UNUSED
 		    && call_desc[i].isdnif == isdnif
 		    && call_desc[i].cr == cr
@@ -280,10 +285,10 @@ cd_by_isdnifcr(int isdnif, int cr, int crf)
 			NDBGL4(L4_MSG, "found cd, index=%d cdid=%u cr=%d",
 			    i, call_desc[i].cdid, call_desc[i].cr);
 			i4b_init_callout(&call_desc[i]);
-			return(&(call_desc[i]));
+			return (&(call_desc[i]));
 		}
 	}
-	return(NULL);
+	return (NULL);
 }
 
 /*---------------------------------------------------------------------------*
@@ -299,46 +304,28 @@ get_rand_cr(int unit)
 
 	val += ++called;
 
-	for(i=0; i < 50 ; i++, val++)
-	{
+	for (i = 0; i < 50 ; i++, val++) {
 		int found = 1;
 
-#if defined(__FreeBSD__)
-
-#ifdef RANDOMDEV
-		read_random((char *)&val, sizeof(val));
-#else
-		val = (u_char)random();
-#endif /* RANDOMDEV */
-
-#else
-		getmicrotime(&t);
-		val |= unit+i;
-		val <<= i;
-		val ^= (t.tv_sec >> 8) ^ t.tv_usec;
-		val <<= i;
-		val ^= t.tv_sec ^ (t.tv_usec >> 8);
-#endif
+		(void)read_random((char *)&val, sizeof(val));
 
 		retval = val & 0x7f;
 
-		if(retval == 0 || retval == 0x7f)
+		if (retval == 0 || retval == 0x7f)
 			continue;
 
-		for(j=0; j < num_call_desc; j++)
-		{
-			if( (call_desc[j].cdid != CDID_UNUSED) &&
-			    (call_desc[j].cr == retval) )
-			{
+		for (j = 0; j < num_call_desc; j++) {
+			if ((call_desc[j].cdid != CDID_UNUSED) &&
+			    (call_desc[j].cr == retval)) {
 				found = 0;
 				break;
 			}
 		}
 
-		if(found)
-			return(retval);
+		if (found)
+			return (retval);
 	}
-	return(0);	/* XXX */
+	return (0);	/* XXX */
 }
 
 static void
@@ -363,8 +350,7 @@ i4b_stop_callout(call_desc_t *cd)
 void
 i4b_init_callout(call_desc_t *cd)
 {
-	if(cd->callouts_inited == 0)
-	{
+	if (cd->callouts_inited == 0) {
 		callout_init(&cd->idle_timeout_handle, 0);
 		callout_init(&cd->T303_callout, 0);
 		callout_init(&cd->T305_callout, 0);
@@ -377,4 +363,4 @@ i4b_init_callout(call_desc_t *cd)
 	}
 }
 
-#endif /* NISDN > 0 */
+#endif /* NISDN */

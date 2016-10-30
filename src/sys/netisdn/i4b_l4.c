@@ -616,8 +616,6 @@ i4b_l4_connect_active_ind(call_desc_t *cd)
 
 	i4b_link_bchandrvr(cd);
 
-	update_controller_leds(cd->l3drv);
-
 	if (cd->l4_driver != NULL && cd->l4_driver_softc != NULL)
 		(*cd->l4_driver->line_connected)(cd->l4_driver_softc, cd);
 
@@ -676,7 +674,6 @@ i4b_l4_disconnect_ind(call_desc_t *cd)
  */
 		NDBGL4(L4_MSG, "invalid channel %d for ISDN!", cd->channelid);
 	}
-	update_controller_leds(d);
 
 	if ((m = i4b_Dgetmbuf(sizeof(msg_disconnect_ind_t))) != NULL) {
 		msg_disconnect_ind_t *mp = (msg_disconnect_ind_t *)m->m_data;

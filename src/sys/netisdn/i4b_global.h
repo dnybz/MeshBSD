@@ -38,87 +38,24 @@
 #ifndef _NETISDN_I4B_GLOBAL_H_
 #define _NETISDN_I4B_GLOBAL_H_
 
-/*---------------------------------------------------------------------------*
- *	hiding OS differences in the kernel
- *---------------------------------------------------------------------------*/
-
 /*---------------*/
 /* time handling */
 /*---------------*/
 
-#ifdef __FreeBSD__
 #include <sys/param.h>
-
-#if defined(__FreeBSD_version) && __FreeBSD_version >= 400000 && __FreeBSD_version < 400011
-#error "Unsupported FreeBSD-current version,"
-#error "you need a FreeBSD-current >= 400011"
-#endif
-
-#if defined(__FreeBSD_version) && __FreeBSD_version >= 300001
 
 #define TIMEOUT_FUNC_T	timeout_t *
 #define SECOND		time_second
 #define MICROTIME(x)	getmicrotime(&(x))
 
-#else /* FreeBSD < 3 */
-
-#define TIMEOUT_FUNC_T  timeout_func_t
-#define SECOND		time.tv_sec
-#define MICROTIME(x)	microtime(&(x))
-
-#endif /* >= 3 */
-#endif /* __FreeBSD__ */
-
-#if defined(__NetBSD__) /* after timecounter merge */
-
-#define TIMEOUT_FUNC_T	void *
-#define SECOND		time_uptime
-#define MICROTIME(x)	getmicrotime(&(x))
-
-#endif /* __NetBSD__ */
-
-#if defined (__OpenBSD__) || defined(__bsdi__)
-
-#define TIMEOUT_FUNC_T	void *
-#define SECOND		time.tv_sec
-#define MICROTIME(x)	microtime(&(x))
-
-#endif /* __OpenBSD__ */
-
 /*----------------*/
 /* timer handling */
 /*----------------*/
 
-#if defined(__NetBSD__)
-
-#if __NetBSD_Version__ >= 104230000
-#define START_TIMER(XHANDLE, XF, XSC, XTIME) callout_reset(&XHANDLE, XTIME, (TIMEOUT_FUNC_T)XF, (void*)XSC)
-#define STOP_TIMER(XHANDLE, XF, XSC) callout_stop(&XHANDLE)
-#else
-#define START_TIMER(XHANDLE, XF, XSC, XTIME) timeout((TIMEOUT_FUNC_T)XF, (void*)XSC, XTIME)
-#define STOP_TIMER(XHANDLE, XF, XSC)    untimeout((TIMEOUT_FUNC_T)XF, (void*)XSC)
-#endif
-
-#else
-#define START_TIMER(XHANDLE, XF, XSC, XTIME) XHANDLE = timeout((TIMEOUT_FUNC_T)XF, (void*)XSC, XTIME)
-#ifdef __FreeBSD__
-#define	STOP_TIMER(XHANDLE, XF, XSC)	untimeout((TIMEOUT_FUNC_T)XF, (void*)XSC, XHANDLE)
-#else
-#define STOP_TIMER(XHANDLE, XF, XSC)	untimeout((TIMEOUT_FUNC_T)XF, (void*)XSC)
-#endif
-#endif
-
-/*----------------------*/
-/* poll/select handling */
-/*----------------------*/
-
-#if (defined(__FreeBSD__) && \
-        (!defined(__FreeBSD_version) || (__FreeBSD_version < 300001))) \
-                || defined (__OpenBSD__) || defined(__bsdi__)
-#define OS_USES_SELECT
-#else
-#define OS_USES_POLL
-#endif
+#define START_TIMER(XHANDLE, XF, XSC, XTIME) \
+	XHANDLE = timeout((TIMEOUT_FUNC_T)XF, (void*)XSC, XTIME)
+#define	STOP_TIMER(XHANDLE, XF, XSC)	\
+	untimeout((TIMEOUT_FUNC_T)XF, (void*)XSC, XHANDLE)
 
 /*---------------------------------------------------------------------------*
  *	misc globally used things in the kernel
@@ -140,18 +77,8 @@
 
 /* definitions for the COMMAND requests L3 -> L2 -> L1 */
 
-#define CMR_DOPEN	0	/* daemon opened /dev/i4b		*/
-#define CMR_DCLOSE	1	/* daemon closed /dev/i4b		*/
+#define CMR_DOPEN	0	/* daemon opened /dev/i4b	XXX	*/
+#define CMR_DCLOSE	1	/* daemon closed /dev/i4b	XXX	*/
 #define CMR_SETTRACE	2	/* set D-channel and B-channel trace	*/
-#define CMR_GCST	3	/* get chipset statistics		*/
-#define CMR_CCST	4	/* clear chipset statistics		*/
-#define	CMR_SETLEDS	5	/* set LEDs (if available)		*/
-
-/* param for CMR_SETLEDS: */
-#define	CMRLEDS_TEI	1	/* this controller has a TEI */
-#define	CMRLEDS_B0	2	/* first B channel is in use */
-#define	CMRLEDS_B0_IN	4	/* first B channel handles an incoming call */
-#define	CMRLEDS_B1	8	/* second B channel is in use */
-#define	CMRLEDS_B1_IN	16	/* second B channel handles an incoming call */
 
 #endif /* !_NETISDN_I4B_GLOBAL_H_ */

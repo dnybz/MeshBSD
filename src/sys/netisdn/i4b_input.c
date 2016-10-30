@@ -43,8 +43,7 @@
  * XXX ...
  */
 
-
-static void mpls_input(struct mbuf *m)
+static void i4b_input(struct mbuf *m)
 
 extern struct protosw i4bsw[];
 
@@ -80,8 +79,6 @@ void
 i4b_init(void)
 {
 	TAILQ_INIT(&i4b_ifaddrhead);
-	EVENTHANDLER_REGISTER(i4b_bridge_event, i4b_bridge_if, 
-		NULL, EVENTHANDLER_PRI_ANY);
 	netisr_register(&i4b_nh);
 }
 
@@ -89,29 +86,15 @@ i4b_init(void)
  * Input processing.
  */
 static void
-mpls_input(struct mbuf *m)
+i4b_input(struct mbuf *m)
 {	
 	struct ifnet *ifp;
 
-	M_ASSERTPKTHDR(m);
-	
-	if (m->m_flags & (M_BCAST|M_MCAST)) 
-		goto bad;
-		
-	if (m->m_pkthdr.len < I4B_HDRLEN) 
-		goto bad;
-
-	if (m->m_len < I4B_HDRLEN) {
-		if ((m = m_pullup(m, I4B_HDRLEN)) == NULL)
-			return;
-	}
-	
 	if ((ifp = m->m_pkthdr.rcvif) == NULL)
 		goto bad;
 	
 	if ((ifp->if_flags & IFF_ISDN) == 0)
 		goto bad;
-
 /*
  * XXX; be patient... well I'll map some callback fn here...
  */

@@ -35,15 +35,9 @@
  *
  *---------------------------------------------------------------------------*/
 
-#include <sys/cdefs.h>
-__KERNEL_RCSID(0, "$NetBSD: i4b_lme.c,v 1.9 2005/12/11 12:25:06 christos Exp $");
-
-#ifdef __FreeBSD__
 #include "i4bq921.h"
-#else
-#define	NI4BQ921	1
-#endif
-#if NI4BQ921 > 0
+
+#if NI4BQ921
 
 #include <sys/param.h>
 #include <sys/kernel.h>
@@ -52,17 +46,8 @@ __KERNEL_RCSID(0, "$NetBSD: i4b_lme.c,v 1.9 2005/12/11 12:25:06 christos Exp $")
 #include <sys/socket.h>
 #include <net/if.h>
 
-#if defined(__NetBSD__) && __NetBSD_Version__ >= 104230000
-#include <sys/callout.h>
-#endif
-
-#ifdef __FreeBSD__
-#include <machine/i4b_debug.h>
-#include <machine/i4b_ioctl.h>
-#else
 #include <netisdn/i4b_debug.h>
 #include <netisdn/i4b_ioctl.h>
-#endif
 
 #include <netisdn/i4b_l2.h>
 #include <netisdn/i4b_l1l2.h>
@@ -81,14 +66,11 @@ i4b_mdl_assign_ind(l2_softc_t *l2sc)
 
 	i4b_l1_activate(l2sc);
 
-	if(l2sc->tei_valid == TEI_VALID)
-	{
+	if (l2sc->tei_valid == TEI_VALID) {
 		l2sc->T202func = (void(*)(void*))i4b_tei_verify;
 		l2sc->N202 = N202DEF;
 		i4b_tei_verify(l2sc);
-	}
-	else
-	{
+	} else {
 		l2sc->T202func = (void(*)(void*))i4b_tei_assign;
 		l2sc->N202 = N202DEF;
 		i4b_tei_assign(l2sc);
@@ -101,7 +83,7 @@ i4b_mdl_assign_ind(l2_softc_t *l2sc)
 void
 i4b_mdl_error_ind(l2_softc_t *l2sc, const char *where, int errorcode)
 {
-#if DO_I4B_DEBUG
+#if I4B_DEBUG
 	static const char *error_text[] = {
 		"MDL_ERR_A: rx'd unsolicited response - supervisory (F=1)",
 		"MDL_ERR_B: rx'd unsolicited response - DM (F=1)",
@@ -122,45 +104,39 @@ i4b_mdl_error_ind(l2_softc_t *l2sc, const char *where, int errorcode)
 	};
 #endif
 
-	if(errorcode > MDL_ERR_MAX)
+	if (errorcode > MDL_ERR_MAX)
 		errorcode = MDL_ERR_MAX;
 
 	NDBGL2(L2_ERROR, "isdnif = %d, location = %s",
 	    l2sc->drv->isdnif, where);
 	NDBGL2(L2_ERROR, "error = %s", error_text[errorcode]);
 
-	switch(errorcode)
-	{
-		case MDL_ERR_A:
-		case MDL_ERR_B:
-			break;
-
-		case MDL_ERR_C:
-		case MDL_ERR_D:
-			i4b_tei_verify(l2sc);
-			break;
-
-		case MDL_ERR_E:
-		case MDL_ERR_F:
-			break;
-
-		case MDL_ERR_G:
-		case MDL_ERR_H:
-			i4b_tei_verify(l2sc);
-			break;
-
-		case MDL_ERR_I:
-		case MDL_ERR_J:
-		case MDL_ERR_K:
-		case MDL_ERR_L:
-		case MDL_ERR_M:
-		case MDL_ERR_N:
-		case MDL_ERR_O:
-			break;
-
-		default:
-			break;
+	switch (errorcode) {
+	case MDL_ERR_A:
+	case MDL_ERR_B:
+		break;
+	case MDL_ERR_C:
+	case MDL_ERR_D:
+		i4b_tei_verify(l2sc);
+		break;
+	case MDL_ERR_E:
+	case MDL_ERR_F:
+		break;
+	case MDL_ERR_G:
+	case MDL_ERR_H:
+		i4b_tei_verify(l2sc);
+		break;
+	case MDL_ERR_I:
+	case MDL_ERR_J:
+	case MDL_ERR_K:
+	case MDL_ERR_L:
+	case MDL_ERR_M:
+	case MDL_ERR_N:
+	case MDL_ERR_O:
+		break;
+	default:
+		break;
 	}
 }
 
-#endif /* NI4BQ921 > 0 */
+#endif /* NI4BQ921 */
