@@ -91,19 +91,19 @@ unsigned int i4b_l4_debug = L4_DEBUG_DEFAULT;
  * may have multiple BRIs, for example daic QUAD cards attach four BRIs.
  * An ISDN may also be a PRI (30 B channels).
  */
-static SLIST_HEAD(, isdn_l3_driver) isdnif_list = 
+static SLIST_HEAD(, isdn_l3) isdnif_list = 
 	SLIST_HEAD_INITIALIZER(isdnif_list);
 static int next_isdnif = 0;
 
 /*
  * Attach a new L3 driver instance and return its ISDN identifier
  */
-struct isdn_l3_driver *
+struct isdn_l3 *
 isdn_attach_isdnif(const char *devname, const char *cardname,
-    void *l1_token, const struct isdn_l3_driver_functions *l3driver, int nbch)
+    void *l1_token, const struct isdn_l3_funcs *l3driver, int nbch)
 {
 	int i, l, isdnif;
-	struct isdn_l3_driver *new_ctrl;
+	struct isdn_l3 *new_ctrl;
 
 	mtx_lock(&i4b_mtx);
 	 
@@ -141,9 +141,9 @@ isdn_attach_isdnif(const char *devname, const char *cardname,
  * Detach a L3 driver instance
  */
 int
-isdn_detach_isdnif(struct isdn_l3_driver *l3drv)
+isdn_detach_isdnif(struct isdn_l3 *l3drv)
 {
-	struct isdn_l3_driver *sc;
+	struct isdn_l3 *sc;
 	int isdnif;
 	int maxidx;
 
@@ -152,7 +152,7 @@ isdn_detach_isdnif(struct isdn_l3_driver *l3drv)
 	isdnif = l3drv->isdnif;
 
 	i4b_l4_contr_ev_ind(isdnif, 0);
-	SLIST_REMOVE(&isdnif_list, l3drv, isdn_l3_driver, l3drvq);
+	SLIST_REMOVE(&isdnif_list, l3drv, isdn_l3, l3drvq);
 
 	maxidx = -1;
 	SLIST_FOREACH(sc, &isdnif_list, l3drvq) 
@@ -169,10 +169,10 @@ isdn_detach_isdnif(struct isdn_l3_driver *l3drv)
 	return (1);
 }
 
-struct isdn_l3_driver *
+struct isdn_l3 *
 isdn_find_l3_by_isdnif(int isdnif)
 {
-	struct isdn_l3_driver *sc;
+	struct isdn_l3 *sc;
 
 	SLIST_FOREACH(sc, &isdnif_list, l3drvq) {
 		if (sc->isdnif == isdnif)
@@ -187,7 +187,7 @@ isdn_find_l3_by_isdnif(int isdnif)
 int 
 isdn_count_isdnif(int *misdnif)
 {
-	struct isdn_l3_driver *sc;
+	struct isdn_l3 *sc;
 	int count = 0;
 	int max_isdnif = -1;
 
@@ -206,7 +206,7 @@ isdn_count_isdnif(int *misdnif)
 void *
 isdn_find_softc_by_isdnif(int isdnif)
 {
-	struct isdn_l3_driver *sc = isdn_find_l3_by_isdnif(isdnif);
+	struct isdn_l3 *sc = isdn_find_l3_by_isdnif(isdnif);
 	if (sc == NULL)
 		return (NULL);
 		
@@ -219,7 +219,7 @@ isdn_find_softc_by_isdnif(int isdnif)
 void
 i4b_l4_daemon_attached(void)
 {
-	struct isdn_l3_driver *d;
+	struct isdn_l3 *d;
 
 	mtx_lock(&i4b_mtx);
 	SLIST_FOREACH(d, &isdnif_list, l3drvq) {
@@ -234,7 +234,7 @@ i4b_l4_daemon_attached(void)
 void
 i4b_l4_daemon_detached(void)
 {
-	struct isdn_l3_driver *d;
+	struct isdn_l3 *d;
 
 	mtx_lock(&i4b_mtx);
 	SLIST_FOREACH(d, &isdnif_list, l3drvq) {
@@ -267,7 +267,7 @@ struct l4_driver_desc {
 	SLIST_ENTRY(l4_driver_desc) l4drvq;
 	char name[L4DRIVER_NAME_SIZ];
 	int driver_id;
-	const struct isdn_l4_driver_functions *driver;
+	const struct isdn_l4_funcs *driver;
 	int units;
 };
 static SLIST_HEAD(, l4_driver_desc) l4_driver_registry
@@ -277,8 +277,8 @@ static SLIST_HEAD(, l4_driver_desc) l4_driver_registry
  * Attach interface on L4 as morphism in e. g. socket-layer.
  */
 int 
-isdn_l4_driver_attach(const char *name, int units, 
-	const struct isdn_l4_driver_functions *driver)
+isdn_l4_attach(const char *name, int units, 
+	const struct isdn_l4_funcs *driver)
 {
 	struct l4_driver_desc *new_driver;
 /*
@@ -303,7 +303,7 @@ isdn_l4_driver_attach(const char *name, int units,
  * Release by interface bound resources.
  */
 int 
-isdn_l4_driver_detatch(const char *name)
+isdn_l4_detatch(const char *name)
 {
 	struct l4_driver_desc *d;
 	
@@ -327,7 +327,7 @@ isdn_l4_driver_detatch(const char *name)
 /*
  * Get interface (set containing callback fn's) by its name.
  */
-const struct isdn_l4_driver_functions *
+const struct isdn_l4_funcs *
 isdn_l4_find_driver(const char *name, int unit)
 {
 	struct l4_driver_desc *d;
@@ -360,7 +360,7 @@ isdn_l4_find_driverid(const char *name)
 /*
  * Get interface (callback fn) by its id.
  */
-const struct isdn_l4_driver_functions *
+const struct isdn_l4_funcs *
 isdn_l4_get_driver(int driver_id, int unit)
 {
 	struct l4_driver_desc * d;
@@ -376,7 +376,7 @@ isdn_l4_get_driver(int driver_id, int unit)
  *	send MSG_PDEACT_IND message to userland
  *---------------------------------------------------------------------------*/
 void
-i4b_l4_pdeact(struct isdn_l3_driver *d, int numactive)
+i4b_l4_pdeact(struct isdn_l3 *d, int numactive)
 {
 	struct mbuf *m;
 	int i;
@@ -424,7 +424,7 @@ i4b_l4_pdeact(struct isdn_l3_driver *d, int numactive)
  *	send MSG_L12STAT_IND message to userland
  *---------------------------------------------------------------------------*/
 void
-i4b_l4_l12stat(struct isdn_l3_driver *d, int layer, int state)
+i4b_l4_l12stat(struct isdn_l3 *d, int layer, int state)
 {
 	struct mbuf *m;
 
@@ -446,7 +446,7 @@ i4b_l4_l12stat(struct isdn_l3_driver *d, int layer, int state)
  *	send MSG_TEIASG_IND message to userland
  *---------------------------------------------------------------------------*/
 void
-i4b_l4_teiasg(struct isdn_l3_driver *d, int tei)
+i4b_l4_teiasg(struct isdn_l3 *d, int tei)
 {
 	struct mbuf *m;
 
@@ -686,7 +686,7 @@ i4b_l4_connect_active_ind(call_desc_t *cd)
 void
 i4b_l4_disconnect_ind(call_desc_t *cd)
 {
-	struct isdn_l3_driver *d;
+	struct isdn_l3 *d;
 	struct mbuf *m;
 
 	if (cd->timeout_active)
@@ -874,7 +874,7 @@ i4b_l4_contr_ev_ind(int controller, int attach)
 static int
 i4b_link_bchandrvr(call_desc_t *cd)
 {
-	struct isdn_l3_driver *d = cd->l3drv;
+	struct isdn_l3 *d = cd->l3drv;
 
 	if ((d == NULL) || (d->l3driver == NULL) 
 		|| (d->l3driver->get_linktab == NULL)) {
@@ -919,7 +919,7 @@ i4b_link_bchandrvr(call_desc_t *cd)
 static void
 i4b_unlink_bchandrvr(call_desc_t *cd)
 {
-	struct isdn_l3_driver *d = cd->l3drv;
+	struct isdn_l3 *d = cd->l3drv;
 
 	/*
 	 * XXX - what's this *cd manipulation for? Shouldn't we
@@ -1118,7 +1118,7 @@ i4b_l4_setup_timeout_var_unit(call_desc_t *cd)
 void
 i4b_idle_check(call_desc_t *cd)
 {
-	struct isdn_l3_driver *d;
+	struct isdn_l3 *d;
 	
 	if (cd->cdid == CDID_UNUSED)
 		return;
@@ -1183,7 +1183,7 @@ i4b_idle_check(call_desc_t *cd)
 static void
 i4b_idle_check_fix_unit(call_desc_t *cd)
 {
-	struct isdn_l3_driver *d = cd->l3drv;
+	struct isdn_l3 *d = cd->l3drv;
 
 	/* simple idletime calculation */
 
@@ -1300,7 +1300,7 @@ i4b_idle_check_fix_unit(call_desc_t *cd)
 static void
 i4b_idle_check_var_unit(call_desc_t *cd)
 {
-	struct isdn_l3_driver *d = cd->l3drv;
+	struct isdn_l3 *d = cd->l3drv;
 /* 
  * see if there has been any activity 
  * within the last idle_time seconds 

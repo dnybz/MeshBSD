@@ -60,7 +60,7 @@
  *	process s frame
  *---------------------------------------------------------------------------*/
 void
-i4b_rxd_s_frame(l2_softc_t *l2sc, struct isdn_l3_driver *drv, struct mbuf *m)
+i4b_rxd_s_frame(l2_softc_t *l2sc, struct isdn_l3 *drv, struct mbuf *m)
 {
 	u_char *ptr = m->m_data;
 

@@ -51,26 +51,26 @@
 #define MAX_BCHAN	2
 #define N_CALL_DESC	(20*(MAX_BCHAN)) /* XXX: make resizable */
 
-typedef struct bchan_statistics {
+typedef struct bchan_stats {
 	int outbytes;
 	int inbytes;
-} bchan_statistics_t;
+} bchan_stats_t;
 
 /*---------------------------------------------------------------------------*
  * table of things the driver needs to know about the b channel
  * it is connected to for data transfer
  *---------------------------------------------------------------------------*/
 typedef struct i4b_isdn_bchan_linktab {
-	void* l1token;
+	void * l1token;
 	int channel;
-	const struct isdn_l4_bchannel_functions *bchannel_driver;
+	const struct isdn_l4_bchan_funcs *bchan_driver;
 	struct ifqueue *tx_queue;
 	struct ifqueue *rx_queue;	/* data xfer for NON-HDLC traffic   */
 	struct mbuf **rx_mbuf;		/* data xfer for HDLC based traffic */
 } isdn_link_t;
 
-struct isdn_l4_driver_functions;
-struct isdn_l3_driver;
+struct isdn_l4_funcs;
+struct isdn_l3;
 
 /*---------------------------------------------------------------------------*
  *	this structure describes one call/connection on one B-channel
@@ -80,7 +80,7 @@ typedef struct call_desc
 {
 	u_int	cdid;			/* call descriptor id		*/
 	int	isdnif;			/* isdn interface number	*/
-	struct isdn_l3_driver *l3drv;
+	struct isdn_l3 *l3drv;
 	int	cr;			/* call reference value		*/
 
 	int	crflag;			/* call reference flag		*/
@@ -131,7 +131,7 @@ typedef struct call_desc
 	int	T400;			/* L4 timeout */
 
 	isdn_link_t	*ilt;		/* isdn B channel driver/state	*/
-	const struct isdn_l4_driver_functions *l4_driver;		/* layer 4 driver		*/
+	const struct isdn_l4_funcs *l4_driver;		/* layer 4 driver		*/
 	void	*l4_driver_softc;					/* layer 4 driver instance	*/
 
 	int	dir;			/* outgoing or incoming call	*/
@@ -184,13 +184,13 @@ extern call_desc_t call_desc[];
 extern int num_call_desc;
 
 /*
- * Set of functions layer 4 drivers calls to manipulate the B channel
+ * Set of funcs layer 4 drivers calls to manipulate the B channel
  * they are using.
  */
-struct isdn_l4_bchannel_functions {
-	void (*bch_config)(void*, int channel, int bprot, int updown);
-	void (*bch_tx_start)(void*, int channel);
-	void (*bch_stat)(void*, int channel, bchan_statistics_t *bsp);
+struct isdn_l4_bchan_funcs {
+	void (*bch_config)(void *, int, int, int);
+	void (*bch_tx_start)(void *, int);
+	void (*bch_stat)(void *, int, bchan_stats_t *);
 };
 
 /*
@@ -198,53 +198,56 @@ struct isdn_l4_bchannel_functions {
  *
  * XXX: well... I'll map those into AF_ISDN on socket-layer 
  */
-struct isdn_l4_driver_functions {
+struct isdn_l4_funcs {
 	/*
 	 * Functions for use by the B channel driver
 	 */
-	void (*bch_rx_data_ready)(void *softc);
-	void (*bch_tx_queue_empty)(void *softc);
-	void (*bch_activity)(void *softc, int rxtx);
+	void (*bch_rx_data_ready)(void *);
+	void (*bch_tx_queue_empty)(void *);
+	void (*bch_activity)(void *, int);
 #define ACT_RX 0
 #define ACT_TX 1
-	void (*line_connected)(void *softc, void *cde);
-	void (*line_disconnected)(void *softc, void *cde);
-	void (*dial_response)(void *softc, int stat, cause_t cause);
-	void (*updown_ind)(void *softc, int updown);
+	void (*line_connected)(void *, void *);
+	void (*line_disconnected)(void *, void *);
+	void (*dial_response)(void *, int, cause_t);
+	void (*updown_ind)(void *, int);
 	/*
 	 * Functions used by the ISDN management system
 	 */
-	void* (*get_softc)(int unit);
-	void (*set_linktab)(void *softc, isdn_link_t *ilt);
+	void * (*get_softc)(int);
+	void (*set_linktab)(void *, isdn_link_t *);
 	/*
 	 * Optional accounting function
 	 */
-	time_t (*get_idletime)(void* softc);
+	time_t (*get_idletime)(void *);
 };
 
 /* global registry of layer 4 drivers */
-int isdn_l4_driver_attach(const char *name, int units, const struct isdn_l4_driver_functions *driver);
-int isdn_l4_driver_detatch(const char *name);
-int isdn_l4_find_driverid(const char *name);
-const struct isdn_l4_driver_functions *isdn_l4_find_driver(const char *name, int unit);
-const struct isdn_l4_driver_functions *isdn_l4_get_driver(int driver_id, int unit);
+int 	isdn_l4_attach(const char *, int, const struct isdn_l4_funcs *);
+int 	isdn_l4_detatch(const char *);
+int 	isdn_l4_find_driverid(const char *);
+const struct isdn_l4_funcs * 	isdn_l4_find_driver(const char *, int);
+const struct isdn_l4_funcs * 	isdn_l4_get_driver(int, int);
 
 /* forward decl. */
 struct isdn_diagnostic_request;
 struct isdn_dr_prot;
 
 /*
- * functions exported by a layer 3 driver to layer 4 
+ * funcs exported by a layer 3 driver to layer 4 
  */
-struct isdn_l3_driver_functions {
-	isdn_link_t* (*get_linktab)(void*, int channel);
-	void (*set_l4_driver)(void*, int channel, const struct isdn_l4_driver_functions *l4_driver, void *l4_driver_softc);
+struct isdn_l3_funcs {
+	
+	isdn_link_t* (*get_linktab)(void *, int);
+	
+	void (*set_l4_driver)(void *, int, 
+		const struct isdn_l4_funcs *, void *);
 
-	void	(*N_CONNECT_REQUEST)	(struct call_desc *cd);
-	void	(*N_CONNECT_RESPONSE)	(struct call_desc *cd, int, int);
-	void	(*N_DISCONNECT_REQUEST)	(struct call_desc *cd, int);
-	void	(*N_ALERT_REQUEST)	(struct call_desc *cd);
-	void	(*N_MGMT_COMMAND)	(struct isdn_l3_driver *, int cmd, void *);
+	void	(*N_CONNECT_REQUEST)	(struct call_desc *);
+	void	(*N_CONNECT_RESPONSE)	(struct call_desc *, int, int);
+	void	(*N_DISCONNECT_REQUEST)	(struct call_desc *, int);
+	void	(*N_ALERT_REQUEST)	(struct call_desc *
+	void	(*N_MGMT_COMMAND)	(struct isdn_l3 *, int, void *);
 };
 
 /*---------------------------------------------------------------------------*
@@ -255,9 +258,9 @@ struct isdn_l3_driver_functions {
  *	An ISDN can be either a Basic Rate Interface (BRI, 2 B channels)
  *	or a Primary Rate Interface (PRI, 30 B channels).
  *---------------------------------------------------------------------------*/
-struct isdn_l3_driver {
-	SLIST_ENTRY(isdn_l3_driver) l3drvq;
-	void*	l1_token;		/* softc of hardware driver, actually
+struct isdn_l3 {
+	SLIST_ENTRY(isdn_l3) l3drvq;
+	void *	l1_token;		/* softc of hardware driver, actually
 					 * this is the l2_softc (!!) for
 					 * passive cards, and something else
 					 * for active cards (maybe actually
@@ -281,20 +284,20 @@ struct isdn_l3_driver {
 
 	int	tei;			/* current tei or -1 if invalid */
 
-	/* pointers to functions to be called from L4 */
-	const struct isdn_l3_driver_functions * l3driver;
+	/* pointers to funcs to be called from L4 */
+	const struct isdn_l3_funcs * l3driver;
 };
 
 #define NBCH_BRI 2
 #define NBCH_PRI 30
 
-void i4b_l4_contr_ev_ind(int controller, int attach);
-struct isdn_l3_driver * isdn_attach_isdnif(const char *devname,
-    const char *cardname, void *l1_token,
-    const struct isdn_l3_driver_functions * l3driver, int nbch);
-int isdn_detach_isdnif(struct isdn_l3_driver *);
-void isdn_isdnif_ready(int isdnif);
-struct isdn_l3_driver *isdn_find_l3_by_isdnif(int isdnif);
-int isdn_count_isdnif(int *max_isdnif);
+void 	i4b_l4_contr_ev_ind(int , int);
+struct isdn_l3 * 	isdn_attach_isdnif(const char *,
+    const char *, void *,
+    const struct isdn_l3_funcs *, int);
+int 	isdn_detach_isdnif(struct isdn_l3 *);
+void 	isdn_isdnif_ready(int);
+struct isdn_l3 * 	isdn_find_l3_by_isdnif(int);
+int 	isdn_count_isdnif(int *);
 
 #endif /* !_NETISDN_I4B_Q931_H_ */

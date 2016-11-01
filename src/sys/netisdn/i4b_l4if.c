@@ -67,13 +67,13 @@ void 	n_connect_request(struct call_desc *);
 void 	n_connect_response(struct call_desc *, int, int);
 void 	n_disconnect_request(struct call_desc *, int);
 void 	n_alert_request(struct call_desc *);
-void 	n_mgmt_command(struct isdn_l3_driver *, int, void *);
+void 	n_mgmt_command(struct isdn_l3 *, int, void *);
 
 /*---------------------------------------------------------------------------*
  *	i4b_mdl_status_ind - status indication from lower layers
  *---------------------------------------------------------------------------*/
 int
-i4b_mdl_status_ind(struct isdn_l3_driver *d, int status, int parm)
+i4b_mdl_status_ind(struct isdn_l3 *d, int status, int parm)
 {
 	int sendup, i;
 
@@ -183,7 +183,7 @@ i4b_mdl_status_ind(struct isdn_l3_driver *d, int status, int parm)
  *	send command to the lower layers
  *---------------------------------------------------------------------------*/
 void
-n_mgmt_command(struct isdn_l3_driver *d, int cmd, void *parm)
+n_mgmt_command(struct isdn_l3 *d, int cmd, void *parm)
 {
 	int i;
 
@@ -229,7 +229,7 @@ n_connect_request(struct call_desc *cd)
 void
 n_connect_response(struct call_desc *cd, int response, int cause)
 {
-	struct isdn_l3_driver *d = cd->l3drv;
+	struct isdn_l3 *d = cd->l3drv;
 	int chstate;
 
 	T400_stop(cd);

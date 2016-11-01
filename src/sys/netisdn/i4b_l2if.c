@@ -117,7 +117,7 @@ make_q931_cause(cause_t cause)
 int
 i4b_get_dl_stat(call_desc_t *cd)
 {
-	const struct isdn_l3_driver * drv = cd->l3drv;
+	const struct isdn_l3 * drv = cd->l3drv;
 	return (drv->dl_est);
 }
 
@@ -125,7 +125,7 @@ i4b_get_dl_stat(call_desc_t *cd)
  *	DL ESTABLISH INDICATION from Layer 2
  *---------------------------------------------------------------------------*/
 int
-i4b_dl_establish_ind(struct isdn_l3_driver * drv)
+i4b_dl_establish_ind(struct isdn_l3 * drv)
 {
 	int i, found;
 	NDBGL2(L2_PRIM, "DL-ESTABLISH-IND isdnif %d", drv->isdnif);
@@ -160,7 +160,7 @@ i4b_dl_establish_ind(struct isdn_l3_driver * drv)
  *	DL ESTABLISH CONFIRM from Layer 2
  *---------------------------------------------------------------------------*/
 int
-i4b_dl_establish_cnf(struct isdn_l3_driver * drv)
+i4b_dl_establish_cnf(struct isdn_l3 * drv)
 {
 	int i;
 	int found = 0;
@@ -189,7 +189,7 @@ i4b_dl_establish_cnf(struct isdn_l3_driver * drv)
  *	DL RELEASE INDICATION from Layer 2
  *---------------------------------------------------------------------------*/
 int
-i4b_dl_release_ind(struct isdn_l3_driver * drv)
+i4b_dl_release_ind(struct isdn_l3 * drv)
 {
 	int i;
 	int found = 0;
@@ -225,7 +225,7 @@ i4b_dl_release_ind(struct isdn_l3_driver * drv)
  *	DL RELEASE CONFIRM from Layer 2
  *---------------------------------------------------------------------------*/
 int
-i4b_dl_release_cnf(struct isdn_l3_driver * drv)
+i4b_dl_release_cnf(struct isdn_l3 * drv)
 {
 	NDBGL2(L2_PRIM, "DL-RELEASE-CONF isdnif %d", drv->isdnif);
 
@@ -237,7 +237,7 @@ i4b_dl_release_cnf(struct isdn_l3_driver * drv)
  *	i4b_dl_data_ind - process a rx'd I-frame got from layer 2
  *---------------------------------------------------------------------------*/
 int
-i4b_dl_data_ind(struct isdn_l3_driver *drv, struct mbuf *m)
+i4b_dl_data_ind(struct isdn_l3 *drv, struct mbuf *m)
 {
 	i4b_decode_q931(drv->isdnif, m->m_len, m->m_data);
 	i4b_Dfreembuf(m);
@@ -248,7 +248,7 @@ i4b_dl_data_ind(struct isdn_l3_driver *drv, struct mbuf *m)
  *	dl_unit_data_ind - process a rx'd U-frame got from layer 2
  *---------------------------------------------------------------------------*/
 int
-i4b_dl_unit_data_ind(struct isdn_l3_driver *drv, struct mbuf *m)
+i4b_dl_unit_data_ind(struct isdn_l3 *drv, struct mbuf *m)
 {
 	i4b_decode_q931(drv->isdnif, m->m_len, m->m_data);
 	i4b_Dfreembuf(m);

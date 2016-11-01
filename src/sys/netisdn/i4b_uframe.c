@@ -75,7 +75,7 @@ __KERNEL_RCSID(0, "$NetBSD: i4b_uframe.c,v 1.8 2007/01/24 13:08:15 hubertf Exp $
  *	process a received U-frame
  *---------------------------------------------------------------------------*/
 void
-i4b_rxd_u_frame(l2_softc_t *l2sc, struct isdn_l3_driver *drv, struct mbuf *m)
+i4b_rxd_u_frame(l2_softc_t *l2sc, struct isdn_l3 *drv, struct mbuf *m)
 {
 	u_char *ptr = m->m_data;
 

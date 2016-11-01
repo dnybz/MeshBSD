@@ -96,7 +96,7 @@ unsigned int i4b_l2_debug = L2_DEBUG_DEFAULT;
  *	DL_ESTABLISH_REQ from layer 3
  *---------------------------------------------------------------------------*/
 int 
-i4b_dl_establish_req(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
+i4b_dl_establish_req(l2_softc_t *l2sc, struct isdn_l3 *drv)
 {
 	NDBGL2(L2_PRIM, "isdnif %d", l2sc->drv->isdnif);
 	i4b_l1_activate(l2sc);
@@ -108,7 +108,7 @@ i4b_dl_establish_req(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
  *	DL_RELEASE_REQ from layer 3
  *---------------------------------------------------------------------------*/
 int 
-i4b_dl_release_req(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
+i4b_dl_release_req(l2_softc_t *l2sc, struct isdn_l3 *drv)
 {
 	NDBGL2(L2_PRIM, "isdnif %d", l2sc->drv->isdnif);
 	i4b_next_l2state(l2sc, drv, EV_DLRELRQ);
@@ -119,7 +119,7 @@ i4b_dl_release_req(l2_softc_t *l2sc, struct isdn_l3_driver *drv)
  *	DL UNIT DATA REQUEST from Layer 3
  *---------------------------------------------------------------------------*/
 int 
-i4b_dl_unit_data_req(l2_softc_t *l2sc, struct isdn_l3_driver *drv, 
+i4b_dl_unit_data_req(l2_softc_t *l2sc, struct isdn_l3 *drv, 
 	struct mbuf *m)
 {
 #ifdef NOTDEF
@@ -132,7 +132,7 @@ i4b_dl_unit_data_req(l2_softc_t *l2sc, struct isdn_l3_driver *drv,
  *	DL DATA REQUEST from Layer 3
  *---------------------------------------------------------------------------*/
 int 
-i4b_dl_data_req(l2_softc_t *l2sc, struct isdn_l3_driver *drv, struct mbuf *m)
+i4b_dl_data_req(l2_softc_t *l2sc, struct isdn_l3 *drv, struct mbuf *m)
 {
 	switch(l2sc->Q921_state) {
 	case ST_AW_EST:
@@ -165,7 +165,7 @@ i4b_dl_data_req(l2_softc_t *l2sc, struct isdn_l3_driver *drv, struct mbuf *m)
  *---------------------------------------------------------------------------*/
 int
 isdn_layer2_activate_ind(struct l2_softc *l2sc, 
-	struct isdn_l3_driver *drv, int event_activate)
+	struct isdn_l3 *drv, int event_activate)
 {
 	if (event_activate) 
 		l2sc->ph_active = PH_ACTIVE;
@@ -218,7 +218,7 @@ i4b_l2_unit_init(l2_softc_t *l2sc)
  *	isdn_layer2_status_ind - status indication upward
  *---------------------------------------------------------------------------*/
 int
-isdn_layer2_status_ind(l2_softc_t *l2sc, struct isdn_l3_driver *drv, 
+isdn_layer2_status_ind(l2_softc_t *l2sc, struct isdn_l3 *drv, 
 	int status, int parm)
 {
 	int sendup = 1;
@@ -293,7 +293,7 @@ isdn_layer2_status_ind(l2_softc_t *l2sc, struct isdn_l3_driver *drv,
  *	MDL_COMMAND_REQ from layer 3
  *---------------------------------------------------------------------------*/
 int 
-i4b_mdl_command_req(struct isdn_l3_driver *drv, int command, void *parm)
+i4b_mdl_command_req(struct isdn_l3 *drv, int command, void *parm)
 {
 	struct l2_softc *sc = (l2_softc_t*)drv->l1_token;
 
@@ -321,7 +321,7 @@ i4b_mdl_command_req(struct isdn_l3_driver *drv, int command, void *parm)
  * isdn_layer2_data_ind - process a rx'd frame got from layer 1
  *---------------------------------------------------------------------------*/
 int
-isdn_layer2_data_ind(l2_softc_t *l2sc, struct isdn_l3_driver *drv, 
+isdn_layer2_data_ind(l2_softc_t *l2sc, struct isdn_l3 *drv, 
 	struct mbuf *m)
 {
 	u_char *ptr = m->m_data;
@@ -370,13 +370,13 @@ out:
 }
 
 int 
-i4b_l2_channel_get_state(struct isdn_l3_driver *drv, int b_chanid)
+i4b_l2_channel_get_state(struct isdn_l3 *drv, int b_chanid)
 {
 	l2_softc_t *sc = drv->l1_token;
 	return (sc->bchan_state[b_chanid]);
 }
 
-void i4b_l2_channel_set_state(struct isdn_l3_driver *drv, 
+void i4b_l2_channel_set_state(struct isdn_l3 *drv, 
 	int b_chanid, int state)
 {
 	l2_softc_t *sc = drv->l1_token;

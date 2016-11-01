@@ -206,7 +206,7 @@ i4b_decode_q931(int isdnif, int msg_len, u_char *msg_ptr)
 	if ((cd = cd_by_isdnifcr(isdnif, crval,
 			crflag == CRF_DEST ? CRF_ORIG : CRF_DEST)) == NULL) {
 		if (*msg_ptr == SETUP) {
-			struct isdn_l3_driver *drv;
+			struct isdn_l3 *drv;
 
 			drv = isdn_find_l3_by_isdnif(isdnif);
 /* 
@@ -427,7 +427,7 @@ i4b_decode_q931_cs0_ie(call_desc_t *cd, int msg_len, u_char *msg_ptr)
 				
 				if ((cd->channelid == CHAN_B1) || 
 					(cd->channelid == CHAN_B2)) {
-					struct isdn_l3_driver *d = cd->l3drv;
+					struct isdn_l3 *d = cd->l3drv;
 
 					if (i4b_l2_channel_get_state(d, 
 						cd->channelid) == BCH_ST_FREE) {

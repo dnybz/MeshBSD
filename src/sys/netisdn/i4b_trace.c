@@ -148,7 +148,7 @@ isdntrcattach(void)
  *	device's queue the data is put into.
  *---------------------------------------------------------------------------*/
 int
-isdn_layer2_trace_ind(struct l2_softc *sc, struct isdn_l3_driver *drv, i4b_trace_hdr *hdr, size_t len, unsigned char *buf)
+isdn_layer2_trace_ind(struct l2_softc *sc, struct isdn_l3 *drv, i4b_trace_hdr *hdr, size_t len, unsigned char *buf)
 {
 	struct mbuf *m;
 	int isdnif, x;

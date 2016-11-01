@@ -263,7 +263,7 @@ i4b_print_l2var(l2_softc_t *l2sc)
  *	got s or i frame, check if valid ack for last sent frame
  *---------------------------------------------------------------------------*/
 void
-i4b_rxd_ack(l2_softc_t *l2sc, struct isdn_l3_driver *drv, int nr)
+i4b_rxd_ack(l2_softc_t *l2sc, struct isdn_l3 *drv, int nr)
 {
 
 #ifdef NOTDEF
