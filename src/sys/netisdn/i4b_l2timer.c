@@ -85,7 +85,7 @@
  *	Q.921 timer T200 timeout function
  *---------------------------------------------------------------------------*/
 static void
-i4b_T200_timeout(l2_softc_t *l2sc)
+i4b_T200_timeout(isdn_l2_t *l2sc)
 {
 	NDBGL2(L2_T_ERR, "isdnif %d, RC = %d", l2sc->drv->isdnif, l2sc->RC);
 	i4b_next_l2state(l2sc, l2sc->drv, EV_T200EXP);
@@ -95,7 +95,7 @@ i4b_T200_timeout(l2_softc_t *l2sc)
  *	Q.921 timer T200 start
  *---------------------------------------------------------------------------*/
 void
-i4b_T200_start(l2_softc_t *l2sc)
+i4b_T200_start(isdn_l2_t *l2sc)
 {
 	if (l2sc->T200 == TIMER_ACTIVE)
 		return;
@@ -110,7 +110,7 @@ i4b_T200_start(l2_softc_t *l2sc)
  *	Q.921 timer T200 stop
  *---------------------------------------------------------------------------*/
 void
-i4b_T200_stop(l2_softc_t *l2sc)
+i4b_T200_stop(isdn_l2_t *l2sc)
 {
 	mtx_lock(&i4b_mtx);
 	
@@ -128,7 +128,7 @@ i4b_T200_stop(l2_softc_t *l2sc)
  *	Q.921 timer T200 restart
  *---------------------------------------------------------------------------*/
 void
-i4b_T200_restart(l2_softc_t *l2sc)
+i4b_T200_restart(isdn_l2_t *l2sc)
 {
 	mtx_lock(&i4b_mtx);
 	
@@ -149,7 +149,7 @@ i4b_T200_restart(l2_softc_t *l2sc)
  *	Q.921 timer T202 timeout function
  *---------------------------------------------------------------------------*/
 static void
-i4b_T202_timeout(l2_softc_t *l2sc)
+i4b_T202_timeout(isdn_l2_t *l2sc)
 {
 	NDBGL2(L2_T_ERR, "isdnif %d, N202 = %d", l2sc->drv->isdnif, l2sc->N202);
 
@@ -161,7 +161,7 @@ i4b_T202_timeout(l2_softc_t *l2sc)
  *	Q.921 timer T202 start
  *---------------------------------------------------------------------------*/
 void
-i4b_T202_start(l2_softc_t *l2sc)
+i4b_T202_start(isdn_l2_t *l2sc)
 {
 	if (l2sc->N202 == TIMER_ACTIVE)
 		return;
@@ -178,7 +178,7 @@ i4b_T202_start(l2_softc_t *l2sc)
  *	Q.921 timer T202 stop
  *---------------------------------------------------------------------------*/
 void
-i4b_T202_stop(l2_softc_t *l2sc)
+i4b_T202_stop(isdn_l2_t *l2sc)
 {
 	mtx_lock(&i4b_mtx);
 	
@@ -196,7 +196,7 @@ i4b_T202_stop(l2_softc_t *l2sc)
  *---------------------------------------------------------------------------*/
 #if I4B_T203_ACTIVE
 static void
-i4b_T203_timeout(l2_softc_t *l2sc)
+i4b_T203_timeout(isdn_l2_t *l2sc)
 {
 	NDBGL2(L2_T_ERR, "isdnif %d", l2sc->isdnif);
 	i4b_next_l2state(l2sc, EV_T203EXP);
@@ -207,7 +207,7 @@ i4b_T203_timeout(l2_softc_t *l2sc)
  *	Q.921 timer T203 start
  *---------------------------------------------------------------------------*/
 void
-i4b_T203_start(l2_softc_t *l2sc)
+i4b_T203_start(isdn_l2_t *l2sc)
 {
 #if I4B_T203_ACTIVE
 	if (l2sc->T203 == TIMER_ACTIVE)
@@ -224,7 +224,7 @@ i4b_T203_start(l2_softc_t *l2sc)
  *	Q.921 timer T203 stop
  *---------------------------------------------------------------------------*/
 void
-i4b_T203_stop(l2_softc_t *l2sc)
+i4b_T203_stop(isdn_l2_t *l2sc)
 {
 #if I4B_T203_ACTIVE
 	mtx_lock(&i4b_mtx);
@@ -243,7 +243,7 @@ i4b_T203_stop(l2_softc_t *l2sc)
  *	Q.921 timer T203 restart
  *---------------------------------------------------------------------------*/
 void
-i4b_T203_restart(l2_softc_t *l2sc)
+i4b_T203_restart(isdn_l2_t *l2sc)
 {
 #if I4B_T203_ACTIVE
 	mtx_lock(&i4b_mtx);

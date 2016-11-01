@@ -61,7 +61,7 @@
  * SUCH DAMAGE.
  */
 
-#include "i4bq921.h"
+#include "opt_i4bq921.h"
 
 #if NI4BQ921
 
@@ -96,11 +96,11 @@ unsigned int i4b_l2_debug = L2_DEBUG_DEFAULT;
  *	DL_ESTABLISH_REQ from layer 3
  *---------------------------------------------------------------------------*/
 int 
-i4b_dl_establish_req(l2_softc_t *l2sc, struct isdn_l3 *drv)
+i4b_dl_establish_req(struct isdn_l2 *l2, struct isdn_l3 *l3)
 {
-	NDBGL2(L2_PRIM, "isdnif %d", l2sc->drv->isdnif);
-	i4b_l1_activate(l2sc);
-	i4b_next_l2state(l2sc, drv, EV_DLESTRQ);
+	NDBGL2(L2_PRIM, "isdnif %d", l2->l3->isdnif);
+	i4b_l1_activate(l2);
+	i4b_next_l2state(l2, l3, EV_DLESTRQ);
 	return (0);
 }
 
@@ -108,10 +108,10 @@ i4b_dl_establish_req(l2_softc_t *l2sc, struct isdn_l3 *drv)
  *	DL_RELEASE_REQ from layer 3
  *---------------------------------------------------------------------------*/
 int 
-i4b_dl_release_req(l2_softc_t *l2sc, struct isdn_l3 *drv)
+i4b_dl_release_req(struct isdn_l2 *l2, struct isdn_l3 *l3)
 {
-	NDBGL2(L2_PRIM, "isdnif %d", l2sc->drv->isdnif);
-	i4b_next_l2state(l2sc, drv, EV_DLRELRQ);
+	NDBGL2(L2_PRIM, "isdnif %d", l2->l3->isdnif);
+	i4b_next_l2state(l2, l3, EV_DLRELRQ);
 	return (0);
 }
 
@@ -119,11 +119,11 @@ i4b_dl_release_req(l2_softc_t *l2sc, struct isdn_l3 *drv)
  *	DL UNIT DATA REQUEST from Layer 3
  *---------------------------------------------------------------------------*/
 int 
-i4b_dl_unit_data_req(l2_softc_t *l2sc, struct isdn_l3 *drv, 
+i4b_dl_unit_data_req(struct isdn_l2 *l2, struct isdn_l3 *l3, 
 	struct mbuf *m)
 {
 #ifdef NOTDEF
-	NDBGL2(L2_PRIM, "isdnif %d", l2sc->isdnif);
+	NDBGL2(L2_PRIM, "isdnif %d", l2->isdnif);
 #endif
 	return (0);
 }
@@ -132,27 +132,27 @@ i4b_dl_unit_data_req(l2_softc_t *l2sc, struct isdn_l3 *drv,
  *	DL DATA REQUEST from Layer 3
  *---------------------------------------------------------------------------*/
 int 
-i4b_dl_data_req(l2_softc_t *l2sc, struct isdn_l3 *drv, struct mbuf *m)
+i4b_dl_data_req(struct isdn_l2 *l2, struct isdn_l3 *l3, struct mbuf *m)
 {
-	switch(l2sc->Q921_state) {
+	switch(l2->Q921_state) {
 	case ST_AW_EST:
 	case ST_MULTIFR:
 	case ST_TIMREC:
 
-		if (IF_QFULL(&l2sc->i_queue)) {
+		if (IF_QFULL(&l2->i_queue)) {
 			NDBGL2(L2_ERROR, "i_queue full!!");
 		    i4b_Dfreembuf(m);
 		} else {
 			mtx_lock(&i4b_mtx);
-			IF_ENQUEUE(&l2sc->i_queue, m);
+			IF_ENQUEUE(&l2->i_queue, m);
 			mtx_unlock(&i4b_mtx);
 
-			i4b_i_frame_queued_up(l2sc);
+			i4b_i_frame_queued_up(l2);
 		}
 		break;
 	default:
 		NDBGL2(L2_ERROR, "isdnif %d ERROR in state [%s], "
-			"freeing mbuf", l2sc->drv->isdnif, i4b_print_l2state(l2sc));
+			"freeing mbuf", l2->l3->isdnif, i4b_print_l2state(l2));
 		i4b_Dfreembuf(m);
 		break;
 	}
@@ -164,13 +164,13 @@ i4b_dl_data_req(l2_softc_t *l2sc, struct isdn_l3 *drv, struct mbuf *m)
  *  layer 1
  *---------------------------------------------------------------------------*/
 int
-isdn_layer2_activate_ind(struct l2_softc *l2sc, 
-	struct isdn_l3 *drv, int event_activate)
+isdn_layer2_activate_ind(struct isdn_l2 *l2, 
+	struct isdn_l3 *l3, int event_activate)
 {
 	if (event_activate) 
-		l2sc->ph_active = PH_ACTIVE;
+		l2->ph_active = PH_ACTIVE;
 	else 
-		l2sc->ph_active = PH_INACTIVE;
+		l2->ph_active = PH_INACTIVE;
 
 	return (0);
 }
@@ -179,37 +179,37 @@ isdn_layer2_activate_ind(struct l2_softc *l2sc,
  *	i4b_l2_unit_init - place layer 2 unit into known state
  *---------------------------------------------------------------------------*/
 static void
-i4b_l2_unit_init(l2_softc_t *l2sc)
+i4b_l2_unit_init(struct isdn_l2 *l2)
 {
 	mtx_lock(&i4b_mtx);
-	l2sc->Q921_state = ST_TEI_UNAS;
-	l2sc->tei_valid = TEI_INVALID;
-	l2sc->vr = 0;
-	l2sc->vs = 0;
-	l2sc->va = 0;
-	l2sc->ack_pend = 0;
-	l2sc->rej_excpt = 0;
-	l2sc->peer_busy = 0;
-	l2sc->own_busy = 0;
-	l2sc->l3initiated = 0;
+	l2->Q921_state = ST_TEI_UNAS;
+	l2->tei_valid = TEI_INVALID;
+	l2->vr = 0;
+	l2->vs = 0;
+	l2->va = 0;
+	l2->ack_pend = 0;
+	l2->rej_excpt = 0;
+	l2->peer_busy = 0;
+	l2->own_busy = 0;
+	l2->l3initiated = 0;
 
-	l2sc->rxd_CR = 0;
-	l2sc->rxd_PF = 0;
-	l2sc->rxd_NR = 0;
-	l2sc->RC = 0;
-	l2sc->iframe_sent = 0;
+	l2->rxd_CR = 0;
+	l2->rxd_PF = 0;
+	l2->rxd_NR = 0;
+	l2->RC = 0;
+	l2->iframe_sent = 0;
 
-	l2sc->postfsmfunc = NULL;
+	l2->postfsmfunc = NULL;
 
-	if (l2sc->ua_num != UA_EMPTY) {
-		i4b_Dfreembuf(l2sc->ua_frame);
-		l2sc->ua_num = UA_EMPTY;
-		l2sc->ua_frame = NULL;
+	if (l2->ua_num != UA_EMPTY) {
+		i4b_Dfreembuf(l2->ua_frame);
+		l2->ua_num = UA_EMPTY;
+		l2->ua_frame = NULL;
 	}
 	
-	i4b_T200_stop(l2sc);
-	i4b_T202_stop(l2sc);
-	i4b_T203_stop(l2sc);
+	i4b_T200_stop(l2);
+	i4b_T202_stop(l2);
+	i4b_T203_stop(l2);
 
 	mtx_unlock(&i4b_mtx);
 }
@@ -218,7 +218,7 @@ i4b_l2_unit_init(l2_softc_t *l2sc)
  *	isdn_layer2_status_ind - status indication upward
  *---------------------------------------------------------------------------*/
 int
-isdn_layer2_status_ind(l2_softc_t *l2sc, struct isdn_l3 *drv, 
+isdn_layer2_status_ind(struct isdn_l2 *l2, struct isdn_l3 *l3, 
 	int status, int parm)
 {
 	int sendup = 1;
@@ -226,7 +226,7 @@ isdn_layer2_status_ind(l2_softc_t *l2sc, struct isdn_l3 *drv,
 	mtx_lock(&i4b_mtx);;
 
 	NDBGL2(L2_PRIM, "isdnif %d, status=%d, parm=%d", 
-		l2sc->drv->isdnif, status, parm);
+		l2->l3->isdnif, status, parm);
 
 	switch(status) {
 	case STI_ATTACH:
@@ -234,25 +234,25 @@ isdn_layer2_status_ind(l2_softc_t *l2sc, struct isdn_l3 *drv,
 /* 
  * detach 
  */
-			callout_stop(&l2sc->T200_callout);
-			callout_stop(&l2sc->T202_callout);
-			callout_stop(&l2sc->T203_callout);
-			callout_stop(&l2sc->IFQU_callout);
+			callout_stop(&l2->T200_callout);
+			callout_stop(&l2->T202_callout);
+			callout_stop(&l2->T203_callout);
+			callout_stop(&l2->IFQU_callout);
 			break;
 		}
-		l2sc->i_queue.ifq_maxlen = IQUEUE_MAXLEN;
-		l2sc->ua_frame = NULL;
+		l2->i_queue.ifq_maxlen = IQUEUE_MAXLEN;
+		l2->ua_frame = NULL;
 
-		(void)memset(&l2sc->stat, 0, sizeof(lapdstat_t));
+		(void)memset(&l2->stat, 0, sizeof(lapdstat_t));
 /* 
  * initialize the callout handles for timeout routines 
  */
-		callout_init(&l2sc->T200_callout, 0);
-		callout_init(&l2sc->T202_callout, 0);
-		callout_init(&l2sc->T203_callout, 0);
-		callout_init(&l2sc->IFQU_callout, 0);
+		callout_init(&l2->T200_callout, 0);
+		callout_init(&l2->T202_callout, 0);
+		callout_init(&l2->T203_callout, 0);
+		callout_init(&l2->IFQU_callout, 0);
 
-		i4b_l2_unit_init(l2sc);
+		i4b_l2_unit_init(l2);
 		break;
 	case STI_L1STAT:	/* state of layer 1 */
 		break;
@@ -260,29 +260,29 @@ isdn_layer2_status_ind(l2_softc_t *l2sc, struct isdn_l3 *drv,
 /*
  * XXX
  */			
- 		if ((l2sc->Q921_state >= ST_AW_EST) &&
-			   (l2sc->Q921_state <= ST_TIMREC)) {
+ 		if ((l2->Q921_state >= ST_AW_EST) &&
+			   (l2->Q921_state <= ST_TIMREC)) {
 			NDBGL2(L2_ERROR, "isdnif %d, persistent deactivation!", 
-				l2sc->drv->isdnif);
-			i4b_l2_unit_init(l2sc);
+				l2->l3->isdnif);
+			i4b_l2_unit_init(l2);
 			parm = -1;	/* this is passed as the new
 						 * TEI to upper layers */
 		} else 
 			sendup = 0;
 		break;
 	case STI_NOL1ACC:
-		i4b_l2_unit_init(l2sc);
+		i4b_l2_unit_init(l2);
 		NDBGL2(L2_ERROR, "isdnif %d, cannot access S0 bus!", 
-			l2sc->drv->isdnif);
+			l2->l3->isdnif);
 		break;
 	default:
 		NDBGL2(L2_ERROR, "ERROR, isdnif %d, unknown status message!", 
-			l2sc->drv->isdnif);
+			l2->l3->isdnif);
 		break;
 	}
 
 	if (sendup)
-		i4b_mdl_status_ind(l2sc->drv, status, parm);  /* send up to layer 3 */
+		i4b_mdl_status_ind(l2->l3, status, parm);  /* send up to layer 3 */
 
 	mtx_unlock(&i4b_mtx);
 
@@ -293,12 +293,12 @@ isdn_layer2_status_ind(l2_softc_t *l2sc, struct isdn_l3 *drv,
  *	MDL_COMMAND_REQ from layer 3
  *---------------------------------------------------------------------------*/
 int 
-i4b_mdl_command_req(struct isdn_l3 *drv, int command, void *parm)
+i4b_mdl_command_req(struct isdn_l3 *l3, int command, void *parm)
 {
-	struct l2_softc *sc = (l2_softc_t*)drv->l1_token;
+	struct isdn_l2 *sc = (struct isdn_l2*)l3->l1_token;
 
 	NDBGL2(L2_PRIM, "isdnif %d, command=%d, parm=%p",
-		 drv->isdnif, command, parm);
+		 l3->isdnif, command, parm);
 
 	switch(command) {
 	case CMR_DOPEN:
@@ -321,7 +321,7 @@ i4b_mdl_command_req(struct isdn_l3 *drv, int command, void *parm)
  * isdn_layer2_data_ind - process a rx'd frame got from layer 1
  *---------------------------------------------------------------------------*/
 int
-isdn_layer2_data_ind(l2_softc_t *l2sc, struct isdn_l3 *drv, 
+isdn_layer2_data_ind(struct isdn_l2 *l2, struct isdn_l3 *l3, 
 	struct mbuf *m)
 {
 	u_char *ptr = m->m_data;
@@ -331,36 +331,36 @@ isdn_layer2_data_ind(l2_softc_t *l2sc, struct isdn_l3 *drv,
  * 6 oct - 2 chksum oct 
  */
 		if (m->m_len < 4) {
-			l2sc->stat.err_rx_len++;
+			l2->stat.err_rx_len++;
 			NDBGL2(L2_ERROR, "ERROR, I-frame < 6 octetts!");
 			i4b_Dfreembuf(m);
 			goto out;
 		}
-		i4b_rxd_i_frame(l2sc, drv, m);
+		i4b_rxd_i_frame(l2, l3, m);
 	} else if ((*(ptr + OFF_CNTL) & 0x03) == 0x01 ) {
 /* 
  * 6 oct - 2 chksum oct 
  */
 		if (m->m_len < 4) {
-			l2sc->stat.err_rx_len++;
+			l2->stat.err_rx_len++;
 			NDBGL2(L2_ERROR, "ERROR, S-frame < 6 octetts!");
 			i4b_Dfreembuf(m);
 			goto out;
 		}
-		i4b_rxd_s_frame(l2sc, drv, m);
+		i4b_rxd_s_frame(l2, l3, m);
 	} else if ((*(ptr + OFF_CNTL) & 0x03) == 0x03 ) {
 /* 
  * 5 oct - 2 chksum oct 
  */
 		if (m->m_len < 3) {
-			l2sc->stat.err_rx_len++;
+			l2->stat.err_rx_len++;
 			NDBGL2(L2_ERROR, "ERROR, U-frame < 5 octetts!");
 			i4b_Dfreembuf(m);
 			goto out;
 		}
-		i4b_rxd_u_frame(l2sc, drv, m);
+		i4b_rxd_u_frame(l2, l3, m);
 	} else {
-		l2sc->stat.err_rx_badf++;
+		l2->stat.err_rx_badf++;
 		NDBGL2(L2_ERROR, "ERROR, bad frame rx'd - ");
 		i4b_print_frame(m->m_len, m->m_data);
 		i4b_Dfreembuf(m);
@@ -370,16 +370,16 @@ out:
 }
 
 int 
-i4b_l2_channel_get_state(struct isdn_l3 *drv, int b_chanid)
+i4b_l2_channel_get_state(struct isdn_l3 *l3, int b_chanid)
 {
-	l2_softc_t *sc = drv->l1_token;
+	struct isdn_l2 *sc = l3->l1_token;
 	return (sc->bchan_state[b_chanid]);
 }
 
-void i4b_l2_channel_set_state(struct isdn_l3 *drv, 
+void i4b_l2_channel_set_state(struct isdn_l3 *l3, 
 	int b_chanid, int state)
 {
-	l2_softc_t *sc = drv->l1_token;
+	struct isdn_l2 *sc = l3->l1_token;
 	sc->bchan_state[b_chanid] = state;
 }
 

@@ -36,14 +36,40 @@
  *      last edit-date: [Sat Mar 18 10:28:22 2000]
  *
  *---------------------------------------------------------------------------*/
+/*-
+ * Copyright (c) 2016 Henning Matyschok
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
 
 #ifndef _NETISDN_I4B_L2_H_
 #define _NETISDN_I4B_L2_H_
 
-typedef struct l2_softc {
+struct isdn_l2 {
 	const struct isdn_layer1_isdnif_driver * driver;
-	void*	l1_token;
-	struct isdn_l3 *drv;
+	
+	
+	void *	l1_token;
+	struct isdn_l3 *l3;
 
 	int	Q921_state;	/* state according to Q.921 */
 
@@ -106,14 +132,13 @@ typedef struct l2_softc {
 
 	int	iframe_sent;	/* check if i frame acked by another i frame */
 
-	int (*postfsmfunc)(struct isdn_l3 *drv);/* function to be called at fsm exit */
+	int (*postfsmfunc)(struct isdn_l3 *);/* function to be called at fsm exit */
 	struct isdn_l3 *postfsmarg;	/* argument for above function */
 
 	/* statistics */
 
 	lapdstat_t	stat;	/* lapd protocol statistics */
-
-} l2_softc_t;
+};
 
 /* Q.912 system parameters (Q.921 03/93 pp 43) */
 
@@ -298,57 +323,57 @@ enum MDL_ERROR_CODES {
 
 /* forward decl */
 struct isdn_l3;
-extern void i4b_acknowledge_pending ( l2_softc_t *l2sc );
-extern struct mbuf * i4b_build_s_frame ( l2_softc_t *l2sc, crbit_to_nt_t crbit, pbit_t pbit, u_char type );
-extern struct mbuf * i4b_build_u_frame ( l2_softc_t *l2sc, crbit_to_nt_t crbit, pbit_t pbit, u_char type );
-extern void i4b_clear_exception_conditions ( l2_softc_t *l2sc );
-extern int i4b_dl_data_req ( l2_softc_t*, struct isdn_l3 *drv, struct mbuf *m );
-extern int i4b_dl_establish_req ( l2_softc_t*, struct isdn_l3 *drv );
-extern int i4b_dl_release_req ( l2_softc_t*, struct isdn_l3 *drv );
-extern int i4b_dl_unit_data_req ( l2_softc_t*, struct isdn_l3 *drv, struct mbuf *m );
-extern void i4b_enquiry_response ( l2_softc_t *l2sc );
-extern void i4b_establish_data_link ( l2_softc_t *l2sc );
-extern void i4b_invoke_retransmission ( l2_softc_t *l2sc, int nr );
-extern void i4b_i_frame_queued_up ( l2_softc_t *l2sc );
-extern void i4b_l1_activate ( l2_softc_t *l2sc );
+extern void i4b_acknowledge_pending ( struct isdn_l2 *l2sc );
+extern struct mbuf * i4b_build_s_frame ( struct isdn_l2 *l2sc, crbit_to_nt_t crbit, pbit_t pbit, u_char type );
+extern struct mbuf * i4b_build_u_frame ( struct isdn_l2 *l2sc, crbit_to_nt_t crbit, pbit_t pbit, u_char type );
+extern void i4b_clear_exception_conditions ( struct isdn_l2 *l2sc );
+extern int i4b_dl_data_req ( struct isdn_l2*, struct isdn_l3 *drv, struct mbuf *m );
+extern int i4b_dl_establish_req ( struct isdn_l2*, struct isdn_l3 *drv );
+extern int i4b_dl_release_req ( struct isdn_l2*, struct isdn_l3 *drv );
+extern int i4b_dl_unit_data_req ( struct isdn_l2*, struct isdn_l3 *drv, struct mbuf *m );
+extern void i4b_enquiry_response ( struct isdn_l2 *l2sc );
+extern void i4b_establish_data_link ( struct isdn_l2 *l2sc );
+extern void i4b_invoke_retransmission ( struct isdn_l2 *l2sc, int nr );
+extern void i4b_i_frame_queued_up ( struct isdn_l2 *l2sc );
+extern void i4b_l1_activate ( struct isdn_l2 *l2sc );
 extern int i4b_l2_nr_ok ( int nr, int va, int vs );
-extern void i4b_make_rand_ri ( l2_softc_t *l2sc );
-extern void i4b_mdl_assign_ind ( l2_softc_t *l2sc );
-extern void i4b_mdl_error_ind ( l2_softc_t *l2sc, const char *where, int errorcode );
-extern void i4b_next_l2state ( l2_softc_t *l2sc, struct isdn_l3 *drv, int event );
-extern void i4b_nr_error_recovery ( l2_softc_t *l2sc );
-extern int i4b_ph_activate_ind ( l2_softc_t* );
-extern int i4b_ph_deactivate_ind ( l2_softc_t* );
+extern void i4b_make_rand_ri ( struct isdn_l2 *l2sc );
+extern void i4b_mdl_assign_ind ( struct isdn_l2 *l2sc );
+extern void i4b_mdl_error_ind ( struct isdn_l2 *l2sc, const char *where, int errorcode );
+extern void i4b_next_l2state ( struct isdn_l2 *l2sc, struct isdn_l3 *drv, int event );
+extern void i4b_nr_error_recovery ( struct isdn_l2 *l2sc );
+extern int i4b_ph_activate_ind ( struct isdn_l2* );
+extern int i4b_ph_deactivate_ind ( struct isdn_l2* );
 extern void i4b_print_frame ( int len, u_char *buf );
-extern const char *i4b_print_l2state ( l2_softc_t *l2sc );
-extern void i4b_print_l2var ( l2_softc_t *l2sc );
-extern void i4b_rxd_ack(l2_softc_t *l2sc, struct isdn_l3 *drv, int nr);
-extern void i4b_rxd_i_frame ( l2_softc_t *, struct isdn_l3 *drv, struct mbuf *m );
-extern void i4b_rxd_s_frame ( l2_softc_t *, struct isdn_l3 *drv, struct mbuf *m );
-extern void i4b_rxd_u_frame ( l2_softc_t *, struct isdn_l3 *drv, struct mbuf *m );
-extern void i4b_T200_restart ( l2_softc_t *l2sc );
-extern void i4b_T200_start ( l2_softc_t *l2sc );
-extern void i4b_T200_stop ( l2_softc_t *l2sc );
-extern void i4b_T202_start ( l2_softc_t *l2sc );
-extern void i4b_T202_stop ( l2_softc_t *l2sc );
-extern void i4b_T203_restart ( l2_softc_t *l2sc );
-extern void i4b_T203_start ( l2_softc_t *l2sc );
-extern void i4b_T203_stop ( l2_softc_t *l2sc );
-extern void i4b_tei_assign ( l2_softc_t *l2sc );
-extern void i4b_tei_chkresp ( l2_softc_t *l2sc );
-extern void i4b_tei_rxframe ( l2_softc_t *, struct isdn_l3 *, struct mbuf *m );
-extern void i4b_tei_verify ( l2_softc_t *l2sc );
-extern void i4b_transmit_enquire ( l2_softc_t *l2sc );
-extern void i4b_tx_disc ( l2_softc_t *l2sc, pbit_t pbit );
-extern void i4b_tx_dm ( l2_softc_t *l2sc, fbit_t fbit );
-extern void i4b_tx_frmr ( l2_softc_t *l2sc, fbit_t fbit );
-extern void i4b_tx_rej_response ( l2_softc_t *l2sc, fbit_t fbit );
-extern void i4b_tx_rnr_command ( l2_softc_t *l2sc, pbit_t pbit );
-extern void i4b_tx_rnr_response ( l2_softc_t *l2sc, fbit_t fbit );
-extern void i4b_tx_rr_command ( l2_softc_t *l2sc, pbit_t pbit );
-extern void i4b_tx_rr_response ( l2_softc_t *l2sc, fbit_t fbit );
-extern void i4b_tx_sabme ( l2_softc_t *l2sc, pbit_t pbit );
-extern void i4b_tx_ua ( l2_softc_t *l2sc, fbit_t fbit );
+extern const char *i4b_print_l2state ( struct isdn_l2 *l2sc );
+extern void i4b_print_l2var ( struct isdn_l2 *l2sc );
+extern void i4b_rxd_ack(struct isdn_l2 *l2sc, struct isdn_l3 *drv, int nr);
+extern void i4b_rxd_i_frame ( struct isdn_l2 *, struct isdn_l3 *drv, struct mbuf *m );
+extern void i4b_rxd_s_frame ( struct isdn_l2 *, struct isdn_l3 *drv, struct mbuf *m );
+extern void i4b_rxd_u_frame ( struct isdn_l2 *, struct isdn_l3 *drv, struct mbuf *m );
+extern void i4b_T200_restart ( struct isdn_l2 *l2sc );
+extern void i4b_T200_start ( struct isdn_l2 *l2sc );
+extern void i4b_T200_stop ( struct isdn_l2 *l2sc );
+extern void i4b_T202_start ( struct isdn_l2 *l2sc );
+extern void i4b_T202_stop ( struct isdn_l2 *l2sc );
+extern void i4b_T203_restart ( struct isdn_l2 *l2sc );
+extern void i4b_T203_start ( struct isdn_l2 *l2sc );
+extern void i4b_T203_stop ( struct isdn_l2 *l2sc );
+extern void i4b_tei_assign ( struct isdn_l2 *l2sc );
+extern void i4b_tei_chkresp ( struct isdn_l2 *l2sc );
+extern void i4b_tei_rxframe ( struct isdn_l2 *, struct isdn_l3 *, struct mbuf *m );
+extern void i4b_tei_verify ( struct isdn_l2 *l2sc );
+extern void i4b_transmit_enquire ( struct isdn_l2 *l2sc );
+extern void i4b_tx_disc ( struct isdn_l2 *l2sc, pbit_t pbit );
+extern void i4b_tx_dm ( struct isdn_l2 *l2sc, fbit_t fbit );
+extern void i4b_tx_frmr ( struct isdn_l2 *l2sc, fbit_t fbit );
+extern void i4b_tx_rej_response ( struct isdn_l2 *l2sc, fbit_t fbit );
+extern void i4b_tx_rnr_command ( struct isdn_l2 *l2sc, pbit_t pbit );
+extern void i4b_tx_rnr_response ( struct isdn_l2 *l2sc, fbit_t fbit );
+extern void i4b_tx_rr_command ( struct isdn_l2 *l2sc, pbit_t pbit );
+extern void i4b_tx_rr_response ( struct isdn_l2 *l2sc, fbit_t fbit );
+extern void i4b_tx_sabme ( struct isdn_l2 *l2sc, pbit_t pbit );
+extern void i4b_tx_ua ( struct isdn_l2 *l2sc, fbit_t fbit );
 
 struct isdn_l3;
 extern int i4b_l2_channel_get_state(struct isdn_l3 *drv, int b_chanid);

@@ -88,21 +88,21 @@
  *	implements the routine "I COMMAND" Q.921 03/93 pp 68 and pp 77
  *---------------------------------------------------------------------------*/
 void
-i4b_rxd_i_frame(l2_softc_t *l2sc, struct isdn_l3 *drv, struct mbuf *m)
+i4b_rxd_i_frame(struct isdn_l2 *l2, struct isdn_l3 *l3, struct mbuf *m)
 {
 	u_char *ptr = m->m_data;
 	int nr;
 	int ns;
 	int p;
 
-	if (!((l2sc->tei_valid == TEI_VALID) &&
-	     (l2sc->tei == GETTEI(*(ptr+OFF_TEI))))) {
+	if (!((l2->tei_valid == TEI_VALID) &&
+	     (l2->tei == GETTEI(*(ptr+OFF_TEI))))) {
 		i4b_Dfreembuf(m);
 		return;
 	}
 
-	if ((l2sc->Q921_state != ST_MULTIFR) && 
-		(l2sc->Q921_state != ST_TIMREC)) {
+	if ((l2->Q921_state != ST_MULTIFR) && 
+		(l2->Q921_state != ST_TIMREC)) {
 		i4b_Dfreembuf(m);
 		NDBGL2(L2_I_ERR, "ERROR, state != (MF || TR)!");
 		return;
@@ -110,43 +110,43 @@ i4b_rxd_i_frame(l2_softc_t *l2sc, struct isdn_l3 *drv, struct mbuf *m)
 
 	mtx_lock(&i4b_mtx);
 
-	l2sc->stat.rx_i++;		/* update frame count */
+	l2->stat.rx_i++;		/* update frame count */
 
 	nr = GETINR(*(ptr + OFF_INR));
 	ns = GETINS(*(ptr + OFF_INS));
 	p = GETIP(*(ptr + OFF_INR));
 
-	i4b_rxd_ack(l2sc, drv, nr);		/* last packet ack */
+	i4b_rxd_ack(l2, l3, nr);		/* last packet ack */
 /* 
  * own receiver busy ? 
  */
-	if (l2sc->own_busy)	{
+	if (l2->own_busy)	{
 		i4b_Dfreembuf(m);	/* yes, discard information */
 /* 
  * P bit == 1 ? 
  */
 		if (p == 1)	{
-			i4b_tx_rnr_response(l2sc, p); /* yes, tx RNR */
-			l2sc->ack_pend = 0;	/* clear ACK pending */
+			i4b_tx_rnr_response(l2, p); /* yes, tx RNR */
+			l2->ack_pend = 0;	/* clear ACK pending */
 		}
 	} else {
 /* 
  * own receiver ready, where if /* expected sequence number ?  
  */	
-		if (ns == l2sc->vr)	{
-			M128INC(l2sc->vr);	/* yes, update */
+		if (ns == l2->vr)	{
+			M128INC(l2->vr);	/* yes, update */
 
-			l2sc->rej_excpt = 0;	/* clr reject exception */
+			l2->rej_excpt = 0;	/* clr reject exception */
 
 			m_adj(m, I_HDR_LEN);	/* strip i frame header */
 
-			l2sc->iframe_sent = 0;	/* reset i acked already */
+			l2->iframe_sent = 0;	/* reset i acked already */
 
-			i4b_dl_data_ind(drv, m);	/* pass data up */
+			i4b_dl_data_ind(l3, m);	/* pass data up */
 
-			if (!l2sc->iframe_sent) {
-				i4b_tx_rr_response(l2sc, p); /* yes, tx RR */
-				l2sc->ack_pend = 0;	/* clr ACK pending */
+			if (!l2->iframe_sent) {
+				i4b_tx_rr_response(l2, p); /* yes, tx RR */
+				l2->ack_pend = 0;	/* clr ACK pending */
 			}
 		} else {
 /* 
@@ -156,30 +156,30 @@ i4b_rxd_i_frame(l2_softc_t *l2sc, struct isdn_l3 *drv, struct mbuf *m)
 /* 
  * already exception ? 
  */
-			if (l2sc->rej_excpt == 1) {
+			if (l2->rej_excpt == 1) {
 /* 
  * immediate response ? 
  */
 				if (p == 1)	{
-					i4b_tx_rr_response(l2sc, p); /* yes, tx RR */
-					l2sc->ack_pend = 0; /* clr ack pend */
+					i4b_tx_rr_response(l2, p); /* yes, tx RR */
+					l2->ack_pend = 0; /* clr ack pend */
 				}
 			} else {
 /* 
  * not in exception cond 
  */			
-				l2sc->rej_excpt = 1;	/* set exception */
-				i4b_tx_rej_response(l2sc, p);	/* tx REJ */
-				l2sc->ack_pend = 0;	/* clr ack pending */
+				l2->rej_excpt = 1;	/* set exception */
+				i4b_tx_rej_response(l2, p);	/* tx REJ */
+				l2->ack_pend = 0;	/* clr ack pending */
 			}
 		}
 	}
 /* 
  * sequence number ranges as expected ? 
  */
-	if (i4b_l2_nr_ok(nr, l2sc->va, l2sc->vs)) {
-		if (l2sc->Q921_state == ST_TIMREC) {
-			l2sc->va = nr;
+	if (i4b_l2_nr_ok(nr, l2->va, l2->vs)) {
+		if (l2->Q921_state == ST_TIMREC) {
+			l2->va = nr;
 
 			mtx_unlock(&i4b_mtx);
 
@@ -188,30 +188,30 @@ i4b_rxd_i_frame(l2_softc_t *l2sc, struct isdn_l3 *drv, struct mbuf *m)
 /* 
  * yes, other side busy ? 
  */
-		if (l2sc->peer_busy) {
-			l2sc->va = nr;	/* yes, update ack count */
+		if (l2->peer_busy) {
+			l2->va = nr;	/* yes, update ack count */
 		} else {
 /* 
  * other side ready 
  */		
-			if (nr == l2sc->vs) {
+			if (nr == l2->vs) {
 /* 
  * count expected ? 
  */			
 						
-				l2sc->va = nr;	/* update ack */
-				i4b_T200_stop(l2sc);
-				i4b_T203_restart(l2sc);
+				l2->va = nr;	/* update ack */
+				i4b_T200_stop(l2);
+				i4b_T203_restart(l2);
 			} else {
-				if (nr != l2sc->va) {
-					l2sc->va = nr;
-					i4b_T200_restart(l2sc);
+				if (nr != l2->va) {
+					l2->va = nr;
+					i4b_T200_restart(l2);
 				}
 			}
 		}
 	} else {
-		i4b_nr_error_recovery(l2sc);	/* sequence error */
-		l2sc->Q921_state = ST_AW_EST;
+		i4b_nr_error_recovery(l2);	/* sequence error */
+		l2->Q921_state = ST_AW_EST;
 	}
 
 	mtx_unlock(&i4b_mtx);
@@ -221,20 +221,20 @@ i4b_rxd_i_frame(l2_softc_t *l2sc, struct isdn_l3 *drv, struct mbuf *m)
  *	internal I FRAME QUEUED UP routine (Q.921 03/93 p 61)
  *---------------------------------------------------------------------------*/
 void
-i4b_i_frame_queued_up(l2_softc_t *l2sc)
+i4b_i_frame_queued_up(struct isdn_l2 *l2)
 {
 	struct mbuf *m;
 	u_char *ptr;
 
 	mtx_lock(&i4b_mtx);
 
-	if ((l2sc->peer_busy) || 
-		(l2sc->vs == ((l2sc->va + MAX_K_VALUE) & 127))) {
-		if (l2sc->peer_busy) {
+	if ((l2->peer_busy) || 
+		(l2->vs == ((l2->va + MAX_K_VALUE) & 127))) {
+		if (l2->peer_busy) {
 			NDBGL2(L2_I_MSG, "regen IFQUP, cause: peer busy!");
 		}
 
-		if (l2sc->vs == ((l2sc->va + MAX_K_VALUE) & 127)) {
+		if (l2->vs == ((l2->va + MAX_K_VALUE) & 127)) {
 			NDBGL2(L2_I_MSG, "regen IFQUP, cause: vs=va+k!");
 		}
 
@@ -243,16 +243,16 @@ i4b_i_frame_queued_up(l2_softc_t *l2sc)
 		 * frame ...", shall we retransmit the last i frame ?
 		 */
 
-		if (!(IF_QEMPTY(&l2sc->i_queue))) {
+		if (!(IF_QEMPTY(&l2->i_queue))) {
 			NDBGL2(L2_I_MSG, "re-scheduling IFQU call!");
-			START_TIMER(l2sc->IFQU_callout, 
-			i4b_i_frame_queued_up, l2sc, IFQU_DLY);
+			START_TIMER(l2->IFQU_callout, 
+			i4b_i_frame_queued_up, l2, IFQU_DLY);
 		}
 		mtx_unlock(&i4b_mtx);
 		return;
 	}
 
-	IF_DEQUEUE(&l2sc->i_queue, m);    /* fetch next frame to tx */
+	IF_DEQUEUE(&l2->i_queue, m);    /* fetch next frame to tx */
 
 	if (!m) {
 		NDBGL2(L2_I_ERR, "ERROR, mbuf NULL after IF_DEQUEUE");
@@ -263,42 +263,42 @@ i4b_i_frame_queued_up(l2_softc_t *l2sc)
 	ptr = m->m_data;
 
 	PUTSAPI(SAPI_CCP, CR_CMD_TO_NT, *(ptr + OFF_SAPI));
-	PUTTEI(l2sc->tei, *(ptr + OFF_TEI));
+	PUTTEI(l2->tei, *(ptr + OFF_TEI));
 
-	*(ptr + OFF_INS) = (l2sc->vs << 1) & 0xfe; /* bit 0 = 0 */
-	*(ptr + OFF_INR) = (l2sc->vr << 1) & 0xfe; /* P bit = 0 */
+	*(ptr + OFF_INS) = (l2->vs << 1) & 0xfe; /* bit 0 = 0 */
+	*(ptr + OFF_INR) = (l2->vr << 1) & 0xfe; /* P bit = 0 */
 
-	l2sc->stat.tx_i++;	/* update frame counter */
+	l2->stat.tx_i++;	/* update frame counter */
 /* 
  * free'd when ack'd ! 
  */
-	l2sc->driver->ph_data_req(l2sc->l1_token, m, MBUF_DONTFREE); 
+	l2->driver->ph_data_req(l2->l1_token, m, MBUF_DONTFREE); 
 /*
  * in case we ack an I frame with another I frame 
  */		
-	l2sc->iframe_sent = 1;		
+	l2->iframe_sent = 1;		
 
-	if (l2sc->ua_num != UA_EMPTY) {
+	if (l2->ua_num != UA_EMPTY) {
 /* 
  * failsafe 
  */	
-		NDBGL2(L2_I_ERR, "ERROR, l2sc->ua_num: %d != UA_EMPTY", l2sc->ua_num);
-		i4b_print_l2var(l2sc);
-		i4b_Dfreembuf(l2sc->ua_frame);
+		NDBGL2(L2_I_ERR, "ERROR, l2->ua_num: %d != UA_EMPTY", l2->ua_num);
+		i4b_print_l2var(l2);
+		i4b_Dfreembuf(l2->ua_frame);
 	}
 
-	l2sc->ua_frame = m;		/* save unacked frame */
-	l2sc->ua_num = l2sc->vs;	/* save frame number */
+	l2->ua_frame = m;		/* save unacked frame */
+	l2->ua_num = l2->vs;	/* save frame number */
 
-	M128INC(l2sc->vs);
+	M128INC(l2->vs);
 
-	l2sc->ack_pend = 0;
+	l2->ack_pend = 0;
 
 	mtx_unlock(&i4b_mtx);
 
-	if (l2sc->T200 == TIMER_IDLE) {
-		i4b_T203_stop(l2sc);
-		i4b_T200_start(l2sc);
+	if (l2->T200 == TIMER_IDLE) {
+		i4b_T203_stop(l2);
+		i4b_T200_start(l2);
 	}
 }
 

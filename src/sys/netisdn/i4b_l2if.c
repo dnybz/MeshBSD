@@ -261,7 +261,7 @@ i4b_dl_unit_data_ind(struct isdn_l3 *drv, struct mbuf *m)
 void
 i4b_l3_tx_connect(call_desc_t *cd)
 {
-	struct l2_softc *l2sc = (l2_softc_t*)cd->l3drv->l1_token;
+	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3drv->l1_token;
 	struct mbuf *m;
 	u_char *ptr;
 
@@ -286,7 +286,7 @@ i4b_l3_tx_connect(call_desc_t *cd)
 void
 i4b_l3_tx_release_complete(call_desc_t *cd, int send_cause_flag)
 {
-	struct l2_softc *l2sc = (l2_softc_t*)cd->l3drv->l1_token;
+	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3drv->l1_token;
 	struct mbuf *m;
 	u_char *ptr;
 	int len = I_FRAME_HDRLEN + MSG_RELEASE_COMPLETE_LEN;
@@ -326,7 +326,7 @@ i4b_l3_tx_release_complete(call_desc_t *cd, int send_cause_flag)
 void
 i4b_l3_tx_disconnect(call_desc_t *cd)
 {
-	struct l2_softc *l2sc = (l2_softc_t*)cd->l3drv->l1_token;
+	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3drv->l1_token;
 	struct mbuf *m;
 	u_char *ptr;
 
@@ -356,7 +356,7 @@ i4b_l3_tx_disconnect(call_desc_t *cd)
 void
 i4b_l3_tx_setup(call_desc_t *cd)
 {
-	struct l2_softc *l2sc = (l2_softc_t*)cd->l3drv->l1_token;
+	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3drv->l1_token;
 	struct mbuf *m;
 	u_char *ptr;
 	int slen = strlen(cd->src_telno);
@@ -464,7 +464,7 @@ i4b_l3_tx_setup(call_desc_t *cd)
 void
 i4b_l3_tx_connect_ack(call_desc_t *cd)
 {
-	struct l2_softc *l2sc = (l2_softc_t*)cd->l3drv->l1_token;
+	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3drv->l1_token;
 	struct mbuf *m;
 	u_char *ptr;
 
@@ -489,7 +489,7 @@ i4b_l3_tx_connect_ack(call_desc_t *cd)
 void
 i4b_l3_tx_status(call_desc_t *cd, u_char q850cause)
 {
-	struct l2_softc *l2sc = (l2_softc_t*)cd->l3drv->l1_token;
+	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3drv->l1_token;
 	struct mbuf *m;
 	u_char *ptr;
 
@@ -523,7 +523,7 @@ i4b_l3_tx_status(call_desc_t *cd, u_char q850cause)
 void
 i4b_l3_tx_release(call_desc_t *cd, int send_cause_flag)
 {
-	struct l2_softc *l2sc = (l2_softc_t*)cd->l3drv->l1_token;
+	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3drv->l1_token;
 	struct mbuf *m;
 	u_char *ptr;
 	int len = I_FRAME_HDRLEN + MSG_RELEASE_LEN;
@@ -559,7 +559,7 @@ i4b_l3_tx_release(call_desc_t *cd, int send_cause_flag)
 void
 i4b_l3_tx_alert(call_desc_t *cd)
 {
-	struct l2_softc *l2sc = (l2_softc_t*)cd->l3drv->l1_token;
+	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3drv->l1_token;
 	struct mbuf *m;
 	u_char *ptr;
 

@@ -60,40 +60,40 @@
  *	process s frame
  *---------------------------------------------------------------------------*/
 void
-i4b_rxd_s_frame(l2_softc_t *l2sc, struct isdn_l3 *drv, struct mbuf *m)
+i4b_rxd_s_frame(struct isdn_l2 *l2, struct isdn_l3 *l3, struct mbuf *m)
 {
 	u_char *ptr = m->m_data;
 
-	if(!((l2sc->tei_valid == TEI_VALID) &&
-	     (l2sc->tei == GETTEI(*(ptr+OFF_TEI))))) {
+	if(!((l2->tei_valid == TEI_VALID) &&
+	     (l2->tei == GETTEI(*(ptr+OFF_TEI))))) {
 		i4b_Dfreembuf(m);
 		return;
 	}
 
-	l2sc->rxd_CR = GETCR(*(ptr + OFF_SAPI));
-	l2sc->rxd_PF = GETSPF(*(ptr + OFF_SNR));
-	l2sc->rxd_NR = GETSNR(*(ptr + OFF_SNR));
+	l2->rxd_CR = GETCR(*(ptr + OFF_SAPI));
+	l2->rxd_PF = GETSPF(*(ptr + OFF_SNR));
+	l2->rxd_NR = GETSNR(*(ptr + OFF_SNR));
 
-	i4b_rxd_ack(l2sc, drv, l2sc->rxd_NR);
+	i4b_rxd_ack(l2, l3, l2->rxd_NR);
 
 	switch(*(ptr + OFF_SRCR)) {
 	case RR:
-		l2sc->stat.rx_rr++; /* update statistics */
-		NDBGL2(L2_S_MSG, "rx'd RR, N(R) = %d", l2sc->rxd_NR);
-		i4b_next_l2state(l2sc, drv, EV_RXRR);
+		l2->stat.rx_rr++; /* update statistics */
+		NDBGL2(L2_S_MSG, "rx'd RR, N(R) = %d", l2->rxd_NR);
+		i4b_next_l2state(l2, l3, EV_RXRR);
 		break;
 	case RNR:
-		l2sc->stat.rx_rnr++; /* update statistics */
-		NDBGL2(L2_S_MSG, "rx'd RNR, N(R) = %d", l2sc->rxd_NR);
-		i4b_next_l2state(l2sc, drv, EV_RXRNR);
+		l2->stat.rx_rnr++; /* update statistics */
+		NDBGL2(L2_S_MSG, "rx'd RNR, N(R) = %d", l2->rxd_NR);
+		i4b_next_l2state(l2, l3, EV_RXRNR);
 		break;
 	case REJ:
-		l2sc->stat.rx_rej++; /* update statistics */
-		NDBGL2(L2_S_MSG, "rx'd REJ, N(R) = %d", l2sc->rxd_NR);
-		i4b_next_l2state(l2sc, drv, EV_RXREJ);
+		l2->stat.rx_rej++; /* update statistics */
+		NDBGL2(L2_S_MSG, "rx'd REJ, N(R) = %d", l2->rxd_NR);
+		i4b_next_l2state(l2, l3, EV_RXREJ);
 		break;
 	default:
-		l2sc->stat.err_rx_bads++; /* update statistics */
+		l2->stat.err_rx_bads++; /* update statistics */
 		NDBGL2(L2_S_ERR, "ERROR, unknown code, frame = ");
 		i4b_print_frame(m->m_len, m->m_data);
 		break;
@@ -105,92 +105,92 @@ i4b_rxd_s_frame(l2_softc_t *l2sc, struct isdn_l3 *drv, struct mbuf *m)
  *	transmit RR command
  *---------------------------------------------------------------------------*/
 void
-i4b_tx_rr_command(l2_softc_t *l2sc, pbit_t pbit)
+i4b_tx_rr_command(struct isdn_l2 *l2, pbit_t pbit)
 {
 	struct mbuf *m;
 
-	NDBGL2(L2_S_MSG, "tx RR, isdnif = %d", l2sc->drv->isdnif);
+	NDBGL2(L2_S_MSG, "tx RR, isdnif = %d", l2->l3->isdnif);
 
-	m = i4b_build_s_frame(l2sc, CR_CMD_TO_NT, pbit, RR);
+	m = i4b_build_s_frame(l2, CR_CMD_TO_NT, pbit, RR);
 
-	l2sc->driver->ph_data_req(l2sc->l1_token, m, MBUF_FREE);
+	l2->driver->ph_data_req(l2->l1_token, m, MBUF_FREE);
 
-	l2sc->stat.tx_rr++; /* update statistics */
+	l2->stat.tx_rr++; /* update statistics */
 }
 
 /*---------------------------------------------------------------------------*
  *	transmit RR response
  *---------------------------------------------------------------------------*/
 void
-i4b_tx_rr_response(l2_softc_t *l2sc, fbit_t fbit)
+i4b_tx_rr_response(struct isdn_l2 *l2, fbit_t fbit)
 {
 	struct mbuf *m;
 
-	NDBGL2(L2_S_MSG, "tx RR, isdnif = %d", l2sc->drv->isdnif);
+	NDBGL2(L2_S_MSG, "tx RR, isdnif = %d", l2->l3->isdnif);
 
-	m = i4b_build_s_frame(l2sc, CR_RSP_TO_NT, fbit, RR);
+	m = i4b_build_s_frame(l2, CR_RSP_TO_NT, fbit, RR);
 
-	l2sc->driver->ph_data_req(l2sc->l1_token, m, MBUF_FREE);
+	l2->driver->ph_data_req(l2->l1_token, m, MBUF_FREE);
 
-	l2sc->stat.tx_rr++; /* update statistics */
+	l2->stat.tx_rr++; /* update statistics */
 }
 
 /*---------------------------------------------------------------------------*
  *	transmit RNR command
  *---------------------------------------------------------------------------*/
 void
-i4b_tx_rnr_command(l2_softc_t *l2sc, pbit_t pbit)
+i4b_tx_rnr_command(struct isdn_l2 *l2, pbit_t pbit)
 {
 	struct mbuf *m;
 
-	NDBGL2(L2_S_MSG, "tx RNR, isdnif = %d", l2sc->drv->isdnif);
+	NDBGL2(L2_S_MSG, "tx RNR, isdnif = %d", l2->l3->isdnif);
 
-	m = i4b_build_s_frame(l2sc, CR_CMD_TO_NT, pbit, RNR);
+	m = i4b_build_s_frame(l2, CR_CMD_TO_NT, pbit, RNR);
 
-	l2sc->driver->ph_data_req(l2sc->l1_token, m, MBUF_FREE);
+	l2->driver->ph_data_req(l2->l1_token, m, MBUF_FREE);
 
-	l2sc->stat.tx_rnr++; /* update statistics */
+	l2->stat.tx_rnr++; /* update statistics */
 }
 
 /*---------------------------------------------------------------------------*
  *	transmit RNR response
  *---------------------------------------------------------------------------*/
 void
-i4b_tx_rnr_response(l2_softc_t *l2sc, fbit_t fbit)
+i4b_tx_rnr_response(struct isdn_l2 *l2, fbit_t fbit)
 {
 	struct mbuf *m;
 
-	NDBGL2(L2_S_MSG, "tx RNR, isdnif = %d", l2sc->drv->isdnif);
+	NDBGL2(L2_S_MSG, "tx RNR, isdnif = %d", l2->l3->isdnif);
 
-	m = i4b_build_s_frame(l2sc, CR_RSP_TO_NT, fbit, RNR);
+	m = i4b_build_s_frame(l2, CR_RSP_TO_NT, fbit, RNR);
 
-	l2sc->driver->ph_data_req(l2sc->l1_token, m, MBUF_FREE);
+	l2->driver->ph_data_req(l2->l1_token, m, MBUF_FREE);
 
-	l2sc->stat.tx_rnr++; /* update statistics */
+	l2->stat.tx_rnr++; /* update statistics */
 }
 
 /*---------------------------------------------------------------------------*
  *	transmit REJ response
  *---------------------------------------------------------------------------*/
 void
-i4b_tx_rej_response(l2_softc_t *l2sc, fbit_t fbit)
+i4b_tx_rej_response(struct isdn_l2 *l2, fbit_t fbit)
 {
 	struct mbuf *m;
 
-	NDBGL2(L2_S_MSG, "tx REJ, isdnif = %d", l2sc->drv->isdnif);
+	NDBGL2(L2_S_MSG, "tx REJ, isdnif = %d", l2->l3->isdnif);
 
-	m = i4b_build_s_frame(l2sc, CR_RSP_TO_NT, fbit, REJ);
+	m = i4b_build_s_frame(l2, CR_RSP_TO_NT, fbit, REJ);
 
-	l2sc->driver->ph_data_req(l2sc->l1_token, m, MBUF_FREE);
+	l2->driver->ph_data_req(l2->l1_token, m, MBUF_FREE);
 
-	l2sc->stat.tx_rej++; /* update statistics */
+	l2->stat.tx_rej++; /* update statistics */
 }
 
 /*---------------------------------------------------------------------------*
  *	build S-frame for sending
  *---------------------------------------------------------------------------*/
 struct mbuf *
-i4b_build_s_frame(l2_softc_t *l2sc, crbit_to_nt_t crbit, 
+i4b_build_s_frame(struct isdn_l2 *l2, crbit_to_nt_t crbit, 
 	pbit_t pbit, u_char type)
 {
 	struct mbuf *m;
@@ -200,11 +200,11 @@ i4b_build_s_frame(l2_softc_t *l2sc, crbit_to_nt_t crbit,
 
 	PUTSAPI(SAPI_CCP, crbit, m->m_data[OFF_SAPI]);
 
-	PUTTEI(l2sc->tei, m->m_data[OFF_TEI]);
+	PUTTEI(l2->tei, m->m_data[OFF_TEI]);
 
 	m->m_data[OFF_SRCR] = type;
 
-	m->m_data[OFF_SNR] = (l2sc->vr << 1) | (pbit & 0x01);
+	m->m_data[OFF_SNR] = (l2->vr << 1) | (pbit & 0x01);
 
 	return (m);
 }

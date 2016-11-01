@@ -70,16 +70,16 @@ struct isdn_layer1_isdnif_driver {
  */
 
 /* Process a rx'd frame */
-int isdn_layer2_data_ind(struct l2_softc * t, struct isdn_l3 *, struct mbuf *m);
+int isdn_layer2_data_ind(struct isdn_l2 * t, struct isdn_l3 *, struct mbuf *m);
 
 /* Pass a layer 1 activation/deactivation to layer 2. */
-int isdn_layer2_activate_ind(struct l2_softc *, struct isdn_l3 *, int);
+int isdn_layer2_activate_ind(struct isdn_l2 *, struct isdn_l3 *, int);
 
 /* Pass trace data to layer 2. */
 struct i4b_trace_hdr;	/* from i4b_trace.h */
-int isdn_layer2_trace_ind(struct l2_softc *, struct isdn_l3 *, struct i4b_trace_hdr *, size_t, unsigned char *);
+int isdn_layer2_trace_ind(struct isdn_l2 *, struct isdn_l3 *, struct i4b_trace_hdr *, size_t, unsigned char *);
 
 /* Pass status informations to layer 2. */
-int isdn_layer2_status_ind(struct l2_softc *, struct isdn_l3 *, int, int);
+int isdn_layer2_status_ind(struct isdn_l2 *, struct isdn_l3 *, int, int);
 
 #endif /* !_NETISDN_I4B_L1L2_H_ */
