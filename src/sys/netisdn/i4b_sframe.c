@@ -35,15 +35,9 @@
  *
  *---------------------------------------------------------------------------*/
 
-#include <sys/cdefs.h>
-__KERNEL_RCSID(0, "$NetBSD: i4b_sframe.c,v 1.8 2005/12/11 12:25:06 christos Exp $");
-
-#ifdef __FreeBSD__
 #include "i4bq921.h"
-#else
-#define	NI4BQ921	1
-#endif
-#if NI4BQ921 > 0
+
+#define	NI4BQ921
 
 #include <sys/param.h>
 #include <sys/kernel.h>
@@ -52,17 +46,8 @@ __KERNEL_RCSID(0, "$NetBSD: i4b_sframe.c,v 1.8 2005/12/11 12:25:06 christos Exp 
 #include <sys/socket.h>
 #include <net/if.h>
 
-#if defined(__NetBSD__) && __NetBSD_Version__ >= 104230000
-#include <sys/callout.h>
-#endif
-
-#ifdef __FreeBSD__
-#include <machine/i4b_debug.h>
-#include <machine/i4b_ioctl.h>
-#else
 #include <netisdn/i4b_debug.h>
 #include <netisdn/i4b_ioctl.h>
-#endif
 
 #include <netisdn/i4b_l2.h>
 #include <netisdn/i4b_l1l2.h>
@@ -80,8 +65,7 @@ i4b_rxd_s_frame(l2_softc_t *l2sc, struct isdn_l3_driver *drv, struct mbuf *m)
 	u_char *ptr = m->m_data;
 
 	if(!((l2sc->tei_valid == TEI_VALID) &&
-	     (l2sc->tei == GETTEI(*(ptr+OFF_TEI)))))
-	{
+	     (l2sc->tei == GETTEI(*(ptr+OFF_TEI))))) {
 		i4b_Dfreembuf(m);
 		return;
 	}
@@ -92,31 +76,27 @@ i4b_rxd_s_frame(l2_softc_t *l2sc, struct isdn_l3_driver *drv, struct mbuf *m)
 
 	i4b_rxd_ack(l2sc, drv, l2sc->rxd_NR);
 
-	switch(*(ptr + OFF_SRCR))
-	{
-		case RR:
-			l2sc->stat.rx_rr++; /* update statistics */
-			NDBGL2(L2_S_MSG, "rx'd RR, N(R) = %d", l2sc->rxd_NR);
-			i4b_next_l2state(l2sc, drv, EV_RXRR);
-			break;
-
-		case RNR:
-			l2sc->stat.rx_rnr++; /* update statistics */
-			NDBGL2(L2_S_MSG, "rx'd RNR, N(R) = %d", l2sc->rxd_NR);
-			i4b_next_l2state(l2sc, drv, EV_RXRNR);
-			break;
-
-		case REJ:
-			l2sc->stat.rx_rej++; /* update statistics */
-			NDBGL2(L2_S_MSG, "rx'd REJ, N(R) = %d", l2sc->rxd_NR);
-			i4b_next_l2state(l2sc, drv, EV_RXREJ);
-			break;
-
-		default:
-			l2sc->stat.err_rx_bads++; /* update statistics */
-			NDBGL2(L2_S_ERR, "ERROR, unknown code, frame = ");
-			i4b_print_frame(m->m_len, m->m_data);
-			break;
+	switch(*(ptr + OFF_SRCR)) {
+	case RR:
+		l2sc->stat.rx_rr++; /* update statistics */
+		NDBGL2(L2_S_MSG, "rx'd RR, N(R) = %d", l2sc->rxd_NR);
+		i4b_next_l2state(l2sc, drv, EV_RXRR);
+		break;
+	case RNR:
+		l2sc->stat.rx_rnr++; /* update statistics */
+		NDBGL2(L2_S_MSG, "rx'd RNR, N(R) = %d", l2sc->rxd_NR);
+		i4b_next_l2state(l2sc, drv, EV_RXRNR);
+		break;
+	case REJ:
+		l2sc->stat.rx_rej++; /* update statistics */
+		NDBGL2(L2_S_MSG, "rx'd REJ, N(R) = %d", l2sc->rxd_NR);
+		i4b_next_l2state(l2sc, drv, EV_RXREJ);
+		break;
+	default:
+		l2sc->stat.err_rx_bads++; /* update statistics */
+		NDBGL2(L2_S_ERR, "ERROR, unknown code, frame = ");
+		i4b_print_frame(m->m_len, m->m_data);
+		break;
 	}
 	i4b_Dfreembuf(m);
 }
@@ -210,12 +190,13 @@ i4b_tx_rej_response(l2_softc_t *l2sc, fbit_t fbit)
  *	build S-frame for sending
  *---------------------------------------------------------------------------*/
 struct mbuf *
-i4b_build_s_frame(l2_softc_t *l2sc, crbit_to_nt_t crbit, pbit_t pbit, u_char type)
+i4b_build_s_frame(l2_softc_t *l2sc, crbit_to_nt_t crbit, 
+	pbit_t pbit, u_char type)
 {
 	struct mbuf *m;
 
 	if((m = i4b_Dgetmbuf(S_FRAME_LEN)) == NULL)
-		return(NULL);
+		return (NULL);
 
 	PUTSAPI(SAPI_CCP, crbit, m->m_data[OFF_SAPI]);
 
@@ -225,7 +206,7 @@ i4b_build_s_frame(l2_softc_t *l2sc, crbit_to_nt_t crbit, pbit_t pbit, u_char typ
 
 	m->m_data[OFF_SNR] = (l2sc->vr << 1) | (pbit & 0x01);
 
-	return(m);
+	return (m);
 }
 
-#endif /* NI4BQ921 > 0 */
+#endif /* NI4BQ921 */

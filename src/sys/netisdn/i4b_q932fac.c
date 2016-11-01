@@ -34,16 +34,34 @@
  *      last edit-date: [Fri Jan  5 11:33:47 2001]
  *
  *---------------------------------------------------------------------------*/
-
-#include <sys/cdefs.h>
-__KERNEL_RCSID(0, "$NetBSD: i4b_q932fac.c,v 1.5 2005/12/11 12:25:06 christos Exp $");
-
-#ifdef __FreeBSD__
+/*-
+ * Copyright (c) 2016 Henning Matyschok
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE. 
+ */
+ 
 #include "i4bq931.h"
-#else
-#define	NI4BQ931	1
-#endif
-#if NI4BQ931 > 0
+
+#if NI4BQ931
 
 #include <sys/param.h>
 #include <sys/kernel.h>
@@ -52,17 +70,8 @@ __KERNEL_RCSID(0, "$NetBSD: i4b_q932fac.c,v 1.5 2005/12/11 12:25:06 christos Exp
 #include <sys/socket.h>
 #include <net/if.h>
 
-#if defined(__NetBSD__) && __NetBSD_Version__ >= 104230000
-#include <sys/callout.h>
-#endif
-
-#ifdef __FreeBSD__
-#include <machine/i4b_debug.h>
-#include <machine/i4b_ioctl.h>
-#else
 #include <netisdn/i4b_debug.h>
 #include <netisdn/i4b_ioctl.h>
-#endif
 
 #include <netisdn/i4b_isdnq931.h>
 #include <netisdn/i4b_l3l4.h>
@@ -75,8 +84,8 @@ __KERNEL_RCSID(0, "$NetBSD: i4b_q932fac.c,v 1.5 2005/12/11 12:25:06 christos Exp
 
 #include <netisdn/i4b_l4.h>
 
-static int do_component(int length);
-static void next_state(int class, int form, int code, int val);
+static int 	do_component(int);
+static void 	next_state(int, int, int, int);
 
 static int byte_len;
 static unsigned char *byte_buf;
@@ -92,87 +101,82 @@ int
 i4b_aoc(unsigned char *buf, call_desc_t *cd)
 {
 	int len;
+	int rv;
 
 	cd->units_type = CHARGE_INVALID;
 	cd->units = -1;
 
-	buf++;		/* length */
-
+	buf++;		
+/* 
+ * length 
+ */
 	len = *buf;
 
-	buf++;		/* protocol profile */
-
-	switch(*buf & 0x1f)
-	{
-		case FAC_PROTO_ROP:
-			break;
-
-		case FAC_PROTO_CMIP:
-			NDBGL3(L3_A_MSG, "CMIP Protocol (Q.941), UNSUPPORTED");
-			return(-1);
-			break;
-
-		case FAC_PROTO_ACSE:
-			NDBGL3(L3_A_MSG, "ACSE Protocol (X.217/X.227), UNSUPPORTED!");
-			return(-1);
-			break;
-
-		default:
-			NDBGL3(L3_A_ERR, "Unknown Protocol, UNSUPPORTED!");
-			return(-1);
-			break;
+	buf++;		
+/* 
+ * protocol profile 
+ */
+	switch (*buf & 0x1f) {
+	case FAC_PROTO_ROP:
+		rv = 0;
+		break;
+	case FAC_PROTO_CMIP:
+		NDBGL3(L3_A_MSG, "CMIP Protocol (Q.941), UNSUPPORTED");
+		rv = -1;
+		break;
+	case FAC_PROTO_ACSE:
+		NDBGL3(L3_A_MSG, "ACSE Protocol (X.217/X.227), UNSUPPORTED!");
+		rv = -1;
+		break;
+	default:
+		NDBGL3(L3_A_ERR, "Unknown Protocol, UNSUPPORTED!");
+		rv = -1;
+		break;
 	}
 
-	NDBGL3(L3_A_MSG, "Remote Operations Protocol");
+	if (rv == 0) {
+		NDBGL3(L3_A_MSG, "Remote Operations Protocol");
+/* 
+ * next byte 
+ */
+		buf++;
+		len--;
+/* 
+ * initialize variables for do_component 
+ */
+		byte_len = 0;
+		byte_buf = buf;
+		state = ST_EXP_COMP_TYP;
+/* 
+ * decode facility 
+ */
+		do_component(len);
 
-	/* next byte */
-
-	buf++;
-	len--;
-
-	/* initialize variables for do_component */
-
-	byte_len = 0;
-	byte_buf = buf;
-	state = ST_EXP_COMP_TYP;
-
-	/* decode facility */
-
-	do_component(len);
-
-	switch(operation_value)
-	{
+		switch (operation_value) {
 		case FAC_OPVAL_AOC_D_CUR:
 			cd->units_type = CHARGE_AOCD;
 			cd->units = 0;
-			return(0);
 			break;
-
 		case FAC_OPVAL_AOC_D_UNIT:
 			cd->units_type = CHARGE_AOCD;
 			cd->units = units;
-			return(0);
 			break;
-
 		case FAC_OPVAL_AOC_E_CUR:
 			cd->units_type = CHARGE_AOCE;
 			cd->units = 0;
-			return(0);
 			break;
-
 		case FAC_OPVAL_AOC_E_UNIT:
 			cd->units_type = CHARGE_AOCE;
 			cd->units = units;
-			return(0);
 			break;
-
 		default:
 			cd->units_type = CHARGE_INVALID;
 			cd->units = -1;
-			return(-1);
+			rv = -1;
 			break;
-	}
-	return(-1);
+		}
+	}	
+	return (rv);
 }
 
 /*---------------------------------------------------------------------------*
@@ -192,49 +196,45 @@ again:
 	/* first component element: component tag */
 	/*----------------------------------------*/
 
-	/* tag class bits */
-
 	comp_tag_class = (*byte_buf & 0xc0) >> 6;
-
-	switch(comp_tag_class)
-	{
-		case FAC_TAGCLASS_UNI:
-			break;
-		case FAC_TAGCLASS_APW:
-			break;
-		case FAC_TAGCLASS_COS:
-			break;
-		case FAC_TAGCLASS_PRU:
-			break;
+/* 
+ * tag class bits 
+ */
+	switch (comp_tag_class) {
+	case FAC_TAGCLASS_UNI:
+		break;
+	case FAC_TAGCLASS_APW:
+		break;
+	case FAC_TAGCLASS_COS:
+		break;
+	case FAC_TAGCLASS_PRU:
+		break;
+	default:
+		break;
 	}
-
-	/* tag form bit */
-
+/* 
+ * tag form bit 
+ */
 	comp_tag_form = (*byte_buf & 0x20) > 5;
-
-	/* tag code bits */
-
+/* 
+ * tag code bits 
+ */
 	comp_tag_code = *byte_buf & 0x1f;
 
-	if(comp_tag_code == 0x1f)
-	{
+	if (comp_tag_code == 0x1f) {
 		comp_tag_code = 0;
 
 		byte_buf++;
 		byte_len++;
 
-		while(*byte_buf & 0x80)
-		{
+		while (*byte_buf & 0x80) {
 			comp_tag_code += (*byte_buf & 0x7f);
 			byte_buf++;
 			byte_len++;
 		}
 		comp_tag_code += (*byte_buf & 0x7f);
-	}
-	else
-	{
+	} else 
 		comp_tag_code = (*byte_buf & 0x1f);
-	}
 
 	byte_buf++;
 	byte_len++;
@@ -245,22 +245,17 @@ again:
 
 	comp_length = 0;
 
-	if(*byte_buf & 0x80)
-	{
+	if (*byte_buf & 0x80) {
 		int i = *byte_buf & 0x7f;
 
 		byte_len += i;
 
-		for(;i > 0;i++)
-		{
+		for (; i > 0; i++) {
 			byte_buf++;
 			comp_length += (*byte_buf * (i*256));
 		}
-	}
-	else
-	{
+	} else 
 		comp_length = *byte_buf & 0x7f;
-	}
 
 	next_state(comp_tag_class, comp_tag_form, comp_tag_code, -1);
 
@@ -271,55 +266,51 @@ again:
 	/* third component element: component contents */
 	/*---------------------------------------------*/
 
-	if(comp_tag_form)	/* == constructor */
-	{
+	if (comp_tag_form) {
+/* 
+ * == constructor 
+ */	
 		do_component(comp_length);
-	}
-	else
-	{
+	} else {
 		int val = 0;
-		if(comp_tag_class == FAC_TAGCLASS_UNI)
-		{
-			switch(comp_tag_code)
-			{
-				case FAC_CODEUNI_INT:
-				case FAC_CODEUNI_ENUM:
-				case FAC_CODEUNI_BOOL:
-					if(comp_length)
-					{
-						int i;
+		
+		if (comp_tag_class == FAC_TAGCLASS_UNI) {
+		
+			switch (comp_tag_code) {
+			case FAC_CODEUNI_INT:
+			case FAC_CODEUNI_ENUM:
+			case FAC_CODEUNI_BOOL:
+					
+				if (comp_length) {
+					int i;
 
-						for(i = comp_length-1; i >= 0; i--)
-						{
+					for (i = comp_length-1; i >= 0; i--) {
 							val += (*byte_buf + (i*255));
 							byte_buf++;
 							byte_len++;
-						}
 					}
-					break;
-				default:
-					if(comp_length)
-					{
-						int i;
+				}
+				break;
+			default:
+				
+				if (comp_length) {
+					int i;
 
-						for(i = comp_length-1; i >= 0; i--)
-						{
+					for (i = comp_length-1; i >= 0; i--) {
 							byte_buf++;
 							byte_len++;
-						}
 					}
-					break;
+				}
+				break;
 			}
-		}
-
-		else	/* comp_tag_class != FAC_TAGCLASS_UNI */
-		{
-			if(comp_length)
-			{
+		} else	{
+/* 
+ * comp_tag_class != FAC_TAGCLASS_UNI 
+ */		
+			if (comp_length) {
 				int i;
 
-				for(i = comp_length-1; i >= 0; i--)
-				{
+				for (i = comp_length-1; i >= 0; i--) {
 					val += (*byte_buf + (i*255));
 					byte_buf++;
 					byte_len++;
@@ -329,10 +320,10 @@ again:
 		next_state(comp_tag_class, comp_tag_form, comp_tag_code, val);
 	}
 
-	if(byte_len < length)
+	if (byte_len < length)
 		goto again;
 
-	return(byte_len);
+	return (byte_len);
 }
 
 /*---------------------------------------------------------------------------*
@@ -341,10 +332,8 @@ again:
 static void
 F_1_1(int val)
 {
-	if(val == -1)
-	{
+	if (val == -1) 
 		state = ST_EXP_INV_ID;
-	}
 }
 
 /*---------------------------------------------------------------------------*
@@ -353,7 +342,7 @@ F_1_1(int val)
 static void
 F_1_2(int val)
 {
-	if(val == -1)
+	if (val == -1)
 		state = ST_EXP_NIX;
 }
 /*---------------------------------------------------------------------------*
@@ -362,7 +351,7 @@ F_1_2(int val)
 static void
 F_1_3(int val)
 {
-	if(val == -1)
+	if (val == -1)
 		state = ST_EXP_NIX;
 }
 /*---------------------------------------------------------------------------*
@@ -371,7 +360,7 @@ F_1_3(int val)
 static void
 F_1_4(int val)
 {
-	if(val == -1)
+	if (val == -1)
 		state = ST_EXP_NIX;
 }
 
@@ -381,8 +370,7 @@ F_1_4(int val)
 static void
 F_2(int val)
 {
-	if(val != -1)
-	{
+	if (val != -1) {
 		NDBGL3(L3_A_MSG, "Invoke ID = %d", val);
 		state = ST_EXP_OP_VAL;
 	}
@@ -394,21 +382,17 @@ F_2(int val)
 static void
 F_3(int val)
 {
-	if(val != -1)
-	{
+	if (val != -1) {
 		NDBGL3(L3_A_MSG, "Operation Value = %d", val);
 
 		operation_value = val;
 
-		if((val == FAC_OPVAL_AOC_D_UNIT) || (val == FAC_OPVAL_AOC_E_UNIT))
-		{
+		if ((val == FAC_OPVAL_AOC_D_UNIT) || 
+			(val == FAC_OPVAL_AOC_E_UNIT)) {
 			units = 0;
 			state = ST_EXP_INFO;
-		}
-		else
-		{
+		} else 
 			state = ST_EXP_NIX;
-		}
 	}
 }
 
@@ -418,7 +402,7 @@ F_3(int val)
 static void
 F_4(int val)
 {
-	if(val == -1)
+	if (val == -1)
 		state = ST_EXP_RUL;
 }
 
@@ -428,10 +412,11 @@ F_4(int val)
 static void
 F_4_1(int val)
 {
-	if(val == -1)
-	{
+	if (val == -1) {
 		NDBGL3(L3_A_MSG, "Free of Charge");
-		/* units = 0; XXXX */
+/* 
+ *XXX: units = 0;
+ */
 		state = ST_EXP_NIX;
 	}
 }
@@ -442,10 +427,11 @@ F_4_1(int val)
 static void
 F_4_2(int val)
 {
-	if(val == -1)
-	{
+	if (val == -1) {
 		NDBGL3(L3_A_MSG, "Charge not available");
-		/* units = -1; 	XXXXXX ??? */
+/* 
+ *XXX: units = 0;
+ */		
 		state = ST_EXP_NIX;
 	}
 }
@@ -456,7 +442,7 @@ F_4_2(int val)
 static void
 F_5(int val)
 {
-	if(val == -1)
+	if (val == -1)
 		state = ST_EXP_RU;
 }
 
@@ -466,7 +452,7 @@ F_5(int val)
 static void
 F_6(int val)
 {
-	if(val == -1)
+	if (val == -1)
 		state = ST_EXP_RNOU;
 }
 
@@ -476,8 +462,7 @@ F_6(int val)
 static void
 F_7(int val)
 {
-	if(val != -1)
-	{
+	if (val != -1) {
 		NDBGL3(L3_A_MSG, "Number of Units = %d", val);
 		units = val;
 		state = ST_EXP_TOCI;
@@ -490,10 +475,11 @@ F_7(int val)
 static void
 F_8(int val)
 {
-	if(val != -1)
-	{
+	if (val != -1) {
 		NDBGL3(L3_A_MSG, "Subtotal/Total = %d", val);
-		/* type_of_charge = val; */
+/* 
+ * type_of_charge = val; 
+ */
 		state = ST_EXP_DBID;
 	}
 }
@@ -504,10 +490,11 @@ F_8(int val)
 static void
 F_9(int val)
 {
-	if(val != -1)
-	{
+	if (val != -1) {
 		NDBGL3(L3_A_MSG, "Billing ID = %d", val);
-		/* billing_id = val; */
+/* 
+ * billing_id = val; 
+ */
 		state = ST_EXP_NIX;
 	}
 }
@@ -523,23 +510,118 @@ static struct statetab {
 	void (*func)(int);	/* output: func to exec */
 } statetab[] = {
 
-/*	 current state		tag form		tag class		tag code		function	*/
-/*	 ---------------------  ----------------------  ----------------------  ---------------------- 	----------------*/
-	{ST_EXP_COMP_TYP,	FAC_TAGFORM_CON,	FAC_TAGCLASS_COS,	1,			F_1_1		},
-	{ST_EXP_COMP_TYP,	FAC_TAGFORM_CON,	FAC_TAGCLASS_COS,	2,			F_1_2		},
-	{ST_EXP_COMP_TYP,	FAC_TAGFORM_CON,	FAC_TAGCLASS_COS,	3,			F_1_3		},
-	{ST_EXP_COMP_TYP,	FAC_TAGFORM_CON,	FAC_TAGCLASS_COS,	4,			F_1_4		},
-	{ST_EXP_INV_ID,		FAC_TAGFORM_PRI,	FAC_TAGCLASS_UNI,	FAC_CODEUNI_INT,	F_2		},
-	{ST_EXP_OP_VAL,		FAC_TAGFORM_PRI,	FAC_TAGCLASS_UNI,	FAC_CODEUNI_INT,	F_3		},
-	{ST_EXP_INFO,		FAC_TAGFORM_CON,	FAC_TAGCLASS_UNI,	FAC_CODEUNI_SEQ,	F_4		},
-	{ST_EXP_INFO,		FAC_TAGFORM_PRI,	FAC_TAGCLASS_UNI,	FAC_CODEUNI_NULL,	F_4_1		},
-	{ST_EXP_INFO,		FAC_TAGFORM_PRI,	FAC_TAGCLASS_COS,	1,			F_4_2		},
-	{ST_EXP_RUL,		FAC_TAGFORM_CON,	FAC_TAGCLASS_COS,	1,			F_5		},
-	{ST_EXP_RU,		FAC_TAGFORM_CON,	FAC_TAGCLASS_UNI,	FAC_CODEUNI_SEQ,	F_6		},
-	{ST_EXP_RNOU,		FAC_TAGFORM_PRI,	FAC_TAGCLASS_UNI,	FAC_CODEUNI_INT,	F_7		},
-	{ST_EXP_TOCI,		FAC_TAGFORM_PRI,	FAC_TAGCLASS_COS,	2,			F_8		},
-	{ST_EXP_DBID,		FAC_TAGFORM_PRI,	FAC_TAGCLASS_COS,	3,			F_9		},
-	{-1,			-1,			-1,			-1,			NULL		}
+/*	 
+ * current state		
+ * tag form		
+ * tag class		
+ * tag code		
+ * function	
+ */
+	{
+		ST_EXP_COMP_TYP,	
+		FAC_TAGFORM_CON,	
+		FAC_TAGCLASS_COS,	
+		1,			
+		F_1_1		
+	},
+	{
+		ST_EXP_COMP_TYP,	
+		FAC_TAGFORM_CON,	
+		FAC_TAGCLASS_COS,	
+		2,			
+		F_1_2		
+	},
+	{
+		ST_EXP_COMP_TYP,	
+		FAC_TAGFORM_CON,	
+		FAC_TAGCLASS_COS,	
+		3,			
+		F_1_3		
+	},
+	{
+		ST_EXP_COMP_TYP,	
+		FAC_TAGFORM_CON,	
+		FAC_TAGCLASS_COS,	
+		4,			
+		F_1_4		
+	},
+	{
+		ST_EXP_INV_ID,		
+		FAC_TAGFORM_PRI,	
+		FAC_TAGCLASS_UNI,	
+		FAC_CODEUNI_INT,	
+		F_2		
+	},
+	{
+		ST_EXP_OP_VAL,		
+		FAC_TAGFORM_PRI,	
+		FAC_TAGCLASS_UNI,	
+		FAC_CODEUNI_INT,	
+		F_3		
+	},
+	{
+		ST_EXP_INFO,		
+		FAC_TAGFORM_CON,	
+		FAC_TAGCLASS_UNI,	
+		FAC_CODEUNI_SEQ,	
+		F_4		
+	},
+	{
+		ST_EXP_INFO,		
+		FAC_TAGFORM_PRI,	
+		FAC_TAGCLASS_UNI,	
+		FAC_CODEUNI_NULL,	
+		F_4_1		
+	},
+	{
+		ST_EXP_INFO,		
+		FAC_TAGFORM_PRI,	
+		FAC_TAGCLASS_COS,	
+		1,			
+		F_4_2		
+	},
+	{
+		ST_EXP_RUL,		
+		FAC_TAGFORM_CON,	
+		FAC_TAGCLASS_COS,	
+		1,			
+		F_5		
+	},
+	{
+		ST_EXP_RU,		
+		FAC_TAGFORM_CON,	
+		FAC_TAGCLASS_UNI,	
+		FAC_CODEUNI_SEQ,	
+		F_6		
+	},
+	{
+		ST_EXP_RNOU,		
+		FAC_TAGFORM_PRI,	
+		FAC_TAGCLASS_UNI,	
+		FAC_CODEUNI_INT,	
+		F_7		
+	},
+	{
+		ST_EXP_TOCI,		
+		FAC_TAGFORM_PRI,	
+		FAC_TAGCLASS_COS,	
+		2,			
+		F_8		
+	},
+	{
+		ST_EXP_DBID,		
+		FAC_TAGFORM_PRI,	
+		FAC_TAGCLASS_COS,	
+		3,			
+		F_9		
+	},
+	{
+		-1,			
+		-1,			
+		-1,			
+		-1,			
+		NULL		
+	}
 };
 
 /*---------------------------------------------------------------------------*
@@ -550,23 +632,21 @@ next_state(int class, int form, int code, int val)
 {
 	int i;
 
-	for(i=0; ; i++)
-	{
-		if((statetab[i].currstate > state) ||
-		   (statetab[i].currstate == -1))
-		{
+	for (i = 0;; i++) {
+		
+		if ((statetab[i].currstate > state) ||
+		   (statetab[i].currstate == -1)) {
 			break;
 		}
 
-		if((statetab[i].currstate == state) 	&&
+		if ((statetab[i].currstate == state) 	&&
 		   (statetab[i].form == form)		&&
 		   (statetab[i].class == class)		&&
-		   (statetab[i].code == code))
-		{
+		   (statetab[i].code == code)) {
 			(*statetab[i].func)(val);
 			break;
 		}
 	}
 }
 
-#endif /* NI4BQ931 > 0 */
+#endif /* NI4BQ931 */

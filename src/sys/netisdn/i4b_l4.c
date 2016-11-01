@@ -59,7 +59,7 @@
  * SUCH DAMAGE.
  */
  
-#include "isdn.h"
+#include "opt_isdn.h"
 
 #if NISDN
 
@@ -258,6 +258,11 @@ static time_t i4b_get_idletime(call_desc_t *cd);
 
 static int next_l4_driver_id = 0;
 
+/*
+ * A L4-driver denotes an interface for 
+ * set of callback-fn's implementing on
+ * e. g. socket-layer. 
+ */
 struct l4_driver_desc {
 	SLIST_ENTRY(l4_driver_desc) l4drvq;
 	char name[L4DRIVER_NAME_SIZ];
@@ -268,15 +273,22 @@ struct l4_driver_desc {
 static SLIST_HEAD(, l4_driver_desc) l4_driver_registry
     = SLIST_HEAD_INITIALIZER(l4_driver_registry);
 
+/*
+ * Attach interface on L4 as morphism in e. g. socket-layer.
+ */
 int 
 isdn_l4_driver_attach(const char *name, int units, 
 	const struct isdn_l4_driver_functions *driver)
 {
-	struct l4_driver_desc * new_driver;
-
+	struct l4_driver_desc *new_driver;
+/*
+ * XXX: M_I4B ??? 
+ */
 	new_driver = malloc(sizeof(struct l4_driver_desc), M_DEVBUF,
 	    M_WAITOK|M_ZERO);
-	strncpy(new_driver->name, name, L4DRIVER_NAME_SIZ);
+	
+	(void)strncpy(new_driver->name, name, L4DRIVER_NAME_SIZ);
+	
 	new_driver->name[L4DRIVER_NAME_SIZ-1] = 0;
 	new_driver->driver_id =	next_l4_driver_id++;
 	new_driver->driver = driver;
@@ -287,18 +299,39 @@ isdn_l4_driver_attach(const char *name, int units,
 	return (new_driver->driver_id);
 }
 
+/*
+ * Release by interface bound resources.
+ */
 int 
 isdn_l4_driver_detatch(const char *name)
 {
-	/* XXX - not yet implemented */
-	(void)name;
+	struct l4_driver_desc *d;
+	
+	SLIST_FOREACH(d, &l4_driver_registry, l4drvq) {
+		if (strcmp(d->name, name) == 0) {
+			break;	
+		}
+	}	
+/*
+ * If found, zero out and free(9).
+ */
+	if (d != NULL) {
+		next_l4_driver_id--;
+		SLIST_REMOVE(&l4_driver_registry, d, l4_driver_desc, l4drvq);
+		bzero(d, sizeof(*d));
+		free(d, M_DEVBUF);	
+	}
 	return (0);
 }
 
+/*
+ * Get interface (set containing callback fn's) by its name.
+ */
 const struct isdn_l4_driver_functions *
 isdn_l4_find_driver(const char *name, int unit)
 {
-	struct l4_driver_desc * d;
+	struct l4_driver_desc *d;
+	
 	SLIST_FOREACH(d, &l4_driver_registry, l4drvq) {
 		if (strcmp(d->name, name) == 0) {
 			return (d->driver);
@@ -308,25 +341,32 @@ isdn_l4_find_driver(const char *name, int unit)
 	return (NULL);
 }
 
+/*
+ * Get id of interface.
+ */
 int 
 isdn_l4_find_driverid(const char *name)
 {
 	struct l4_driver_desc * d;
+	
 	SLIST_FOREACH(d, &l4_driver_registry, l4drvq) {
 		if (strcmp(d->name, name) == 0) {
-			return d->driver_id;
+			return (d->driver_id);
 		}
 	}
 	return (-1);
 }
 
+/*
+ * Get interface (callback fn) by its id.
+ */
 const struct isdn_l4_driver_functions *
 isdn_l4_get_driver(int driver_id, int unit)
 {
 	struct l4_driver_desc * d;
 	SLIST_FOREACH(d, &l4_driver_registry, l4drvq) {
 		if (d->driver_id == driver_id) {
-			return d->driver;
+			return (d->driver);
 		}
 	}
 	return (NULL);

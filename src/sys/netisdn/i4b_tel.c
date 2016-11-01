@@ -34,26 +34,49 @@
  *	last edit-date: [Fri Jan  5 11:33:47 2001]
  *
  *---------------------------------------------------------------------------*/
+/*-
+ * Copyright (c) 2016 Henning Matyschok
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
 
-#include <sys/cdefs.h>
-__KERNEL_RCSID(0, "$NetBSD: i4b_tel.c,v 1.27 2014/07/25 08:10:40 dholland Exp $");
+/*
+ * XXX; Baustelle 3976 -- ISDN B-Channel socket
+ * XXX:
+ * XXX: I'll refactor this facility as socket_proto !!!
+ */
 
-#include "isdntel.h"
+#include "opt_devfs.h"
+#include "opt_isdntel.h"
 
-#if NISDNTEL > 0
+#if NISDNTEL
 
 #undef I4BTELDEBUG
 
 #include <sys/param.h>
 #include <sys/systm.h>
 
-#if (defined(__FreeBSD__) && __FreeBSD__ >= 3) || defined(__NetBSD__)
-#include <sys/ioccom.h>
-#include <sys/poll.h>
-#else
 #include <sys/ioctl.h>
 #include <sys/fcntl.h>
-#endif
 
 #include <sys/conf.h>
 #include <sys/uio.h>
@@ -64,31 +87,9 @@ __KERNEL_RCSID(0, "$NetBSD: i4b_tel.c,v 1.27 2014/07/25 08:10:40 dholland Exp $"
 #include <sys/proc.h>
 #include <sys/tty.h>
 
-#ifdef __FreeBSD__
-
-#if defined(__FreeBSD__) && __FreeBSD__ == 3
-#include "opt_devfs.h"
-#endif
-
-#ifdef DEVFS
-#include <sys/devfsext.h>
-#endif
-
-#endif /* __FreeBSD__ */
-
-#ifdef __bsdi__
-#include <sys/device.h>
-#endif
-
-#ifdef __FreeBSD__
-#include <machine/i4b_ioctl.h>
-#include <machine/i4b_tel_ioctl.h>
-#include <machine/i4b_debug.h>
-#else
 #include <netisdn/i4b_ioctl.h>
 #include <netisdn/i4b_tel_ioctl.h>
 #include <netisdn/i4b_debug.h>
-#endif
 
 #include <netisdn/i4b_global.h>
 #include <netisdn/i4b_mbuf.h>
@@ -111,6 +112,10 @@ __KERNEL_RCSID(0, "$NetBSD: i4b_tel.c,v 1.27 2014/07/25 08:10:40 dholland Exp $"
 
 #define NOFUNCS		2	/* number of device classes	*/
 
+
+/*
+ * XXX: I'll transform this into a control_block ...
+ */
 typedef struct tel_softc {
 
 	/* used only in func = FUNCTEL */
@@ -130,21 +135,20 @@ typedef struct tel_softc {
 
 	/* used in func = FUNCDIAL and func = FUNCTEL*/
 
-	int 			devstate;	/* state of this unit	*/
-#define ST_IDLE		0x00		/* idle */
-#define ST_CONNECTED	0x01		/* isdn connected state */
-#define ST_ISOPEN	0x02		/* userland opened */
-#define ST_RDWAITDATA	0x04		/* userland read waiting */
-#define ST_WRWAITEMPTY	0x08		/* userland write waiting */
-#define ST_TONE		0x10		/* tone generator */
+/*
+ * XXX: ... sys/socknuf.h
+ *
 
-	struct selinfo		selp;		/* select / poll */
+	int 			devstate;	/ * state of this unit	* /
+#define ST_IDLE		0x00		/ * idle * /
+#define ST_CONNECTED	0x01		/ * isdn connected state * /
+#define ST_ISOPEN	0x02		/ * userland opened * /
+#define ST_RDWAITDATA	0x04		/ * userland read waiting * /
+#define ST_WRWAITEMPTY	0x08		/ * userland write waiting * /
+#define ST_TONE		0x10		/ * tone generator * /
 
-#if defined(__FreeBSD__) && __FreeBSD__ == 3
-#ifdef DEVFS
-        void                    *devfs_token;   /* token for DEVFS */
-#endif
-#endif
+ */
+
 	struct i4b_tel_tones	tones;
 	int			toneidx;
 	int			toneomega;
@@ -173,149 +177,11 @@ static unsigned char u2a_tab[];
 static unsigned char bitreverse[];
 static u_char sinetab[];
 
-#ifndef __FreeBSD__
-#define	PDEVSTATIC	/* - not static - */
-PDEVSTATIC void isdntelattach(void);
-PDEVSTATIC int isdntelioctl(dev_t dev, u_long cmd, void *data, int flag, struct lwp *l);
+/*
+ * L4 Softc denotes Morphism in ISDN-L4.
+ */
 
-int isdntelopen(dev_t dev, int flag, int fmt, struct lwp *l);
-int isdntelclose(dev_t dev, int flag, int fmt, struct lwp *l);
-int isdntelread(dev_t dev, struct uio *uio, int ioflag);
-int isdntelwrite(dev_t dev, struct uio * uio, int ioflag);
-
-#ifdef OS_USES_POLL
-int isdntelpoll(dev_t dev, int events, struct lwp *l);
-int isdntelkqfilter(dev_t dev, struct knote *kn);
-#else
-int isdntelsel(dev_t dev, int rw, struct lwp *l);
-#endif
-
-#endif /* __FreeBSD__ */
-
-#ifdef __NetBSD__
-const struct cdevsw isdntel_cdevsw = {
-	.d_open = isdntelopen,
-	.d_close = isdntelclose,
-	.d_read = isdntelread,
-	.d_write = isdntelwrite,
-	.d_ioctl = isdntelioctl,
-	.d_stop = nostop,
-	.d_tty = notty,
-	.d_poll = isdntelpoll,
-	.d_mmap = nommap,
-	.d_kqfilter = isdntelkqfilter,
-	.d_discard = nodiscard,
-	.d_flag = D_OTHER
-};
-#endif /* __NetBSD__ */
-
-#if BSD > 199306 && defined(__FreeBSD__)
-
-#define PDEVSTATIC	static
-PDEVSTATIC d_open_t	i4btelopen;
-PDEVSTATIC d_close_t i4btelclose;
-PDEVSTATIC d_read_t i4btelread;
-PDEVSTATIC d_read_t i4btelwrite;
-PDEVSTATIC d_ioctl_t i4btelioctl;
-
-#ifdef OS_USES_POLL
-PDEVSTATIC d_poll_t i4btelpoll;
-#define POLLFIELD i4btelpoll
-#else
-PDEVSTATIC d_select_t i4btelsel;
-#define POLLFIELD i4btelsel
-#endif
-
-#define CDEV_MAJOR 56
-
-#if defined(__FreeBSD__) && __FreeBSD__ >= 4
-static struct cdevsw i4btel_cdevsw = {
-	/* open */      i4btelopen,
-	/* close */     i4btelclose,
-	/* read */      i4btelread,
-	/* write */     i4btelwrite,
-	/* ioctl */     i4btelioctl,
-	/* poll */      POLLFIELD,
-	/* mmap */      nommap,
-	/* strategy */  nostrategy,
-	/* name */      "i4btel",
-	/* maj */       CDEV_MAJOR,
-	/* dump */      nodump,
-	/* psize */     nopsize,
-	/* flags */     0,
-	/* bmaj */      -1
-};
-#else
-static struct cdevsw i4btel_cdevsw = {
-	i4btelopen,	i4btelclose,	i4btelread,	i4btelwrite,
-  	i4btelioctl,	nostop,		noreset,	nodevtotty,
-	POLLFIELD,	nommap, 	NULL, "i4btel", NULL, -1
-};
-#endif
-
-PDEVSTATIC void isdntelinit(void *unused);
-PDEVSTATIC void isdntelattach(void *);
-
-PSEUDO_SET(isdntelattach, i4b_tel);
-
-/*===========================================================================*
- *			DEVICE DRIVER ROUTINES
- *===========================================================================*/
-
-/*---------------------------------------------------------------------------*
- *	initialization at kernel load time
- *---------------------------------------------------------------------------*/
-PDEVSTATIC void
-isdntelinit(void *unused)
-{
-#if defined(__FreeBSD__) && __FreeBSD__ >= 4
-	cdevsw_add(&i4btel_cdevsw);
-#else
-	dev_t dev = makedev(CDEV_MAJOR, 0);
-	cdevsw_add(&dev, &i4btel_cdevsw, NULL);
-#endif
-}
-
-SYSINIT(i4bteldev, SI_SUB_DRIVERS,
-	SI_ORDER_MIDDLE+CDEV_MAJOR, &i4btelinit, NULL);
-
-#endif /* BSD > 199306 && defined(__FreeBSD__) */
-
-#ifdef __bsdi__
-
-int i4btelsel(dev_t dev, int rw, struct lwp *l);
-int i4btelmatch(device_t parent, cfdata_t cf, void *aux);
-void dummy_i4btelattach(struct device*, struct device *, void *);
-
-#define CDEV_MAJOR 62
-
-static struct cfdriver i4btelcd =
-	{ NULL, "i4btel", i4btelmatch, dummy_i4btelattach, DV_DULL,
-	  sizeof(struct cfdriver) };
-struct devsw i4btelsw =
-	{ &i4btelcd,
-	  i4btelopen,	i4btelclose,	i4btelread,	i4btelwrite,
-	  i4btelioctl,	i4btelsel,	nommap,		nostrat,
-	  nodump,	nopsize,	0,		nostop
-};
-
-int
-i4btelmatch(device_t parent, cfdata_t cf, void *aux)
-{
-	NDBGL4(L4_TELDBG, "aux=0x%x", aux);
-	return 1;
-}
-
-void
-dummy_i4btelattach(device_t parent, device_t self, void *aux)
-{
-	NDBGL4(L4_TELDBG, "aux=0x%x", aux);
-}
-
-#endif /* __bsdi__ */
-
-static const struct isdn_l4_driver_functions
-tel_driver = {
+static const struct isdn_l4_driver_functions tel_driver = {
 	tel_rx_data_rdy,
 	tel_tx_queue_empty,
 	tel_activity,
@@ -330,24 +196,41 @@ tel_driver = {
 
 static int isdntel_driver_id = -1;
 
-/*---------------------------------------------------------------------------*
- *	interface attach routine
- *---------------------------------------------------------------------------*/
-PDEVSTATIC void
-#ifdef __FreeBSD__
-isdntelattach(void *dummy)
-#else
-isdntelattach(void)
-#endif
+
+
+
+MTX_SYSINIT(i4b_telcb_mtx, &i4b_telcb_mtx, "i4b_telcb", MTX_DEF);
+	
+struct i4b_telcb {	
+	LIST_ENTRY(i4b_telcb) list;
+
+	struct	socket *itcb_socket;	/* back pointer to socket */
+	struct	sockproto itcb_proto;	/* protocol family, protocol */
+
+/*
+ * XXX...
+ */
+
+};
+LIST_HEAD(i4b_telcb_list_head, i4b_telcb) i4b_telcb_list
+
+void 
+i4b_tel_init(void) 
 {
-	int i, j;
+	
+   /*	
+	* XXX: Morphism in ISDN-L4
+	*/
 
-	isdntel_driver_id = isdn_l4_driver_attach("isdntel", NISDNTEL, &tel_driver);
+	isdntel_driver_id = 
+		isdn_l4_driver_attach("isdntel", NISDNTEL, &tel_driver);
 
-	for(i=0; i < NISDNTEL; i++)
-	{
-		for(j=0; j < NOFUNCS; j++)
-		{
+   /*	
+	* XXX: ...
+	*
+
+	for (i = 0; i < NISDNTEL; i++) {
+		for (j = 0; j < NOFUNCS; j++) {
 			selinit(&tel_sc[i][j].selp);
 
 			tel_sc[i][j].devstate = ST_IDLE;
@@ -360,47 +243,38 @@ isdntelattach(void)
 				tel_sc[i][FUNCTEL].dialer = &tel_sc[i][FUNCDIAL];
 			else
 				tel_sc[i][j].dialer = NULL;
-
-#if defined(__FreeBSD__)
-#if __FreeBSD__ == 3
-
-#ifdef DEVFS
-
-/* XXX */  		tel_sc[i][j].devfs_token
-		  		= devfs_add_devswf(&i4btel_cdevsw, i, DV_CHR,
-				     UID_ROOT, GID_WHEEL, 0600,
-				     "i4btel%d", i);
-#endif
-
-#else
-			switch(j)
-			{
-				case FUNCTEL:	/* normal i4btel device */
-				  	make_dev(&i4btel_cdevsw, i,
-						UID_ROOT, GID_WHEEL,
-						0600, "i4btel%d", i);
-					break;
-
-				case FUNCDIAL:	/* i4bteld dialout device */
-				  	make_dev(&i4btel_cdevsw, i+(1<<UNITBITS),
-						UID_ROOT, GID_WHEEL,
-						0600, "i4bteld%d", i);
-					break;
-			}
-#endif
-#endif
 		}
 	}
+	
+    *	
+	* XXX: ...
+	*/
+
 }
+
+
+
+/*
+ * Usrreqs.
+ */
 
 /*---------------------------------------------------------------------------*
  *	open tel device
  *---------------------------------------------------------------------------*/
-PDEVSTATIC int
-isdntelopen(dev_t dev, int flag, int fmt,
-	struct lwp *l)
+ 
+static int 
+i4b_tel_attach(struct socket *so, int proto, struct thread *td)
 {
-	int unit = UNIT(dev);
+	struct i4b_telcb *const itcb = sotoitcb(so);
+
+	KASSERT(so->so_pcb == NULL, 
+		("%s: so_pcb != NULL", __func__));
+
+/*
+ * XXX: ... Allocation and initialisation of control_block ...
+ *
+ 
+ 	int unit = UNIT(dev);
 	int func = FUNC(dev);
 
 	tel_sc_t *sc;
@@ -420,16 +294,27 @@ isdntelopen(dev_t dev, int flag, int fmt,
 		sc->result = 0;
 	}
 
-	return(0);
+ *
+ */
 }
+
 
 /*---------------------------------------------------------------------------*
  *	close tel device
  *---------------------------------------------------------------------------*/
-PDEVSTATIC int
-isdntelclose(dev_t dev, int flag, int fmt,
-	struct lwp *l)
+
+static void
+i4b_tel_detach(struct socket *so)
 {
+	struct i4b_telcb *const itcb = sotoitcb(so);
+
+	KASSERT(so->so_pcb == NULL, 
+		("%s: so_pcb != NULL", __func__));
+	
+/*
+ * XXX: ... Dtor of control_block ...
+ *
+ 	
 	int unit = UNIT(dev);
 	int func = FUNC(dev);
 	tel_sc_t *sc;
@@ -462,13 +347,21 @@ isdntelclose(dev_t dev, int flag, int fmt,
 	sc->devstate &= ~ST_ISOPEN;
 	splx(x);
 	wakeup((void *) &sc->tones);
-
-	return(error);
+	
+	*
+	*/
+		
 }
+
 
 /*---------------------------------------------------------------------------*
  *	i4btelioctl - device driver ioctl routine
  *---------------------------------------------------------------------------*/
+
+/*
+ * XXX: I'll merge it into i4b_control ...
+ *
+
 PDEVSTATIC int
 isdntelioctl(dev_t dev, u_long cmd, void *data, int flag,
 	struct lwp *l)
@@ -497,14 +390,14 @@ isdntelioctl(dev_t dev, u_long cmd, void *data, int flag,
 						sc->wcvttab = 0;
 						break;
 					case CVT_ALAW2ULAW:
-						/* ISDN: A-law */
-						/* user: mu-law */
+						/ * ISDN: A-law * /
+						/ * user: mu-law * /
 						sc->rcvttab = a2u_tab;
 						sc->wcvttab = u2a_tab;
 						break;
 					case CVT_ULAW2ALAW:
-						/* ISDN: mu-law */
-						/* user: A-law */
+						/ * ISDN: mu-law * /
+						/ * user: A-law * / 
 						sc->rcvttab = u2a_tab;
 						sc->wcvttab = a2u_tab;
 						break;
@@ -588,14 +481,53 @@ isdntelioctl(dev_t dev, u_long cmd, void *data, int flag,
 	}
 	return(error);
 }
-
+  
+  *
+  */
+  
 /*---------------------------------------------------------------------------*
  *	read from tel device
  *---------------------------------------------------------------------------*/
-PDEVSTATIC int
-isdntelread(dev_t dev, struct uio *uio, int ioflag)
+
+
+static int
+i4b_tel_append(struct i4b_telcb *xxx, ... , struct mbuf *n, int off,
+    struct sockaddr_isdn *sisdn)
 {
-	int unit = UNIT(dev);
+	struct sockaddr *append_sa;
+	struct socket *so;
+	struct mbuf *opts = NULL;
+
+	I4BP_LOCK_ASSERT(xxx);
+
+/*
+ * XXX: ....
+ */
+
+	so = xxx->xxx_socket;
+	SOCKBUF_LOCK(&so->so_rcv);
+	if (sbappendaddr_locked(&so->so_rcv, append_sa, n, opts) == 0) {
+		SOCKBUF_UNLOCK(&so->so_rcv);
+		m_freem(n);
+		if (opts)
+			m_freem(opts);
+		UDPSTAT_INC(i4b_tels_fullsock);
+	} else
+		sorwakeup_locked(so);
+	return (0);
+}
+
+
+int
+i4b_tel_input(struct mbuf **mp, int *offp, int proto) 
+{
+
+
+/*
+ * XXX; read..
+ *
+ 
+ 	int unit = UNIT(dev);
 	int func = FUNC(dev);
 
 	struct mbuf *m;
@@ -647,12 +579,12 @@ isdntelread(dev_t dev, struct uio *uio, int ioflag)
 		{
 			register int i;
 
-		        for(i = 0; i < m->m_len; i++)
+		        for (i = 0; i < m->m_len; i++)
 		        {
-		        	/* always reverse bit order from line */
+		        	/ * always reverse bit order from line * /
 				mtod(m,u_char *)[i] = bitreverse[mtod(m,u_char *)[i]];
 
-				/* convert if necessary */
+				/ * convert if necessary * /
 				if(sc->rcvttab)
 	                                mtod(m,u_char *)[i] = sc->rcvttab[mtod(m,u_char *)[i]];
 	                }
@@ -707,15 +639,35 @@ isdntelread(dev_t dev, struct uio *uio, int ioflag)
 		splx(s);
 	}
 	return(error);
+   *
+   * XXX; ... be patient.. I'll transform this into i4_tel_append_fn
+   * 
+   */
+   
+done:   
+   return (I4BPROTO_DONE);
+bad: 
+	m_freem(m);
+	goto done;	   
 }
+
+
 
 /*---------------------------------------------------------------------------*
  *	write to tel device
  *---------------------------------------------------------------------------*/
-PDEVSTATIC int
-isdntelwrite(dev_t dev, struct uio * uio, int ioflag)
+
+int
+i4b_tel_output(struct mbuf *m, struct socket *so)
 {
-	int unit = UNIT(dev);
+
+
+/*
+ * XXX; write..
+ *
+ 
+
+int unit = UNIT(dev);
 	int func = FUNC(dev);
 	struct mbuf *m;
 	int s;
@@ -771,13 +723,13 @@ isdntelwrite(dev_t dev, struct uio * uio, int ioflag)
 
 			error = uiomove(m->m_data, m->m_len, uio);
 
-		        for(i = 0; i < m->m_len; i++)
+		        for (i = 0; i < m->m_len; i++)
 		        {
-				/* convert if necessary */
+				/ * convert if necessary * /
 				if(sc->wcvttab)
 					mtod(m,u_char *)[i] = sc->wcvttab[mtod(m,u_char *)[i]];
 
-				/* always reverse bitorder to line */
+				/ * always reverse bitorder to line * /
 				mtod(m,u_char *)[i] = bitreverse[mtod(m,u_char *)[i]];
 			}
 
@@ -821,12 +773,40 @@ isdntelwrite(dev_t dev, struct uio * uio, int ioflag)
 	{
 		error = EIO;
 	}
+	
+	   * XXX; ... be patient.. I'll transform this... 
+   * 
+   */
+	
+done:
+	return (error);
+bad:
+	m_freem(m);
+	goto done;
+}	
 
-	return(error);
-}
+
+struct pr_usrreqs i4b_tel_usrreqs = {
+	.pru_abort =		i4b_tel_abort,
+	.pru_attach =		i4b_tel_attach,
+	.pru_connect =		i4b_tel_connect,
+	
+	.pru_control =		i4b_control,
+	
+	.pru_detach =		i4b_tel_detach,
+	.pru_disconnect =	i4b_tel_disconnect,
+	.pru_send =			i4b_tel_send,
+	
+	.pru_soreceive =	soreceive_dgram,
+	.pru_sosend =		sosend_dgram,
+	
+	
+	.pru_shutdown =		i4b_tel_shutdown,
+	.pru_close =		i4b_tel_close,
+};
 
 /*---------------------------------------------------------------------------*
- *
+ * Subr.
  *---------------------------------------------------------------------------*/
 #define NTONESAMP 32
 static void
@@ -876,277 +856,6 @@ tel_tone(tel_sc_t *sc)
 }
 
 
-#ifdef OS_USES_POLL
-/*---------------------------------------------------------------------------*
- *	device driver poll
- *---------------------------------------------------------------------------*/
-PDEVSTATIC int
-isdntelpoll(dev_t dev, int events, struct lwp *l)
-{
-	int revents = 0;	/* Events we found */
-	int s;
-	int unit = UNIT(dev);
-	int func = FUNC(dev);
-
-	tel_sc_t *sc = &tel_sc[unit][func];
-
-	s = splhigh();
-
-	if(!(sc->devstate & ST_ISOPEN))
-	{
-		NDBGL4(L4_TELDBG, "i4btel%d, !ST_ISOPEN", unit);
-		splx(s);
-		return(0);
-	}
-
-	if(func == FUNCTEL)
-	{
-		/*
-		 * Writes are OK if we are connected and the
-	         * transmit queue can take them
-		 */
-
-		if((events & (POLLOUT|POLLWRNORM))	&&
-			(sc->devstate & ST_CONNECTED)	&&
-			(sc->isdn_linktab != NULL)	&&
-			(!IF_QFULL(sc->isdn_linktab->tx_queue)))
-		{
-			NDBGL4(L4_TELDBG, "i4btel%d, POLLOUT", unit);
-			revents |= (events & (POLLOUT|POLLWRNORM));
-		}
-
-		/* ... while reads are OK if we have any data */
-
-		if((events & (POLLIN|POLLRDNORM))	&&
-			(sc->devstate & ST_CONNECTED)	&&
-			(sc->isdn_linktab != NULL)	&&
-			(!IF_QEMPTY(sc->isdn_linktab->rx_queue)))
-		{
-			NDBGL4(L4_TELDBG, "i4btel%d, POLLIN", unit);
-			revents |= (events & (POLLIN|POLLRDNORM));
-		}
-
-		if(revents == 0)
-		{
-			NDBGL4(L4_TELDBG, "i4btel%d, selrecord", unit);
-			selrecord(l, &sc->selp);
-		}
-	}
-	else if(func == FUNCDIAL)
-	{
-		if(events & (POLLOUT|POLLWRNORM))
-		{
-			NDBGL4(L4_TELDBG, "i4bteld%d,  POLLOUT", unit);
-			revents |= (events & (POLLOUT|POLLWRNORM));
-		}
-
-		if(events & (POLLIN|POLLRDNORM))
-		{
-			NDBGL4(L4_TELDBG, "i4bteld%d,  POLLIN, result = %d", unit, sc->result);
-			if(sc->result != 0)
-				revents |= (events & (POLLIN|POLLRDNORM));
-		}
-
-		if(revents == 0)
-		{
-			NDBGL4(L4_TELDBG, "i4bteld%d,  selrecord", unit);
-			selrecord(l, &sc->selp);
-		}
-	}
-	splx(s);
-	return(revents);
-}
-
-static void
-filt_i4btel_detach(struct knote *kn)
-{
-	tel_sc_t *sc = kn->kn_hook;
-	int s;
-
-	s = splhigh();
-	SLIST_REMOVE(&sc->selp.sel_klist, kn, knote, kn_selnext);
-	splx(s);
-}
-
-static int
-filt_i4btel_telread(struct knote *kn, long hint)
-{
-	tel_sc_t *sc = kn->kn_hook;
-
-	if ((sc->devstate & ST_CONNECTED) == 0)
-		return (0);
-	if (sc->isdn_linktab == NULL)
-		return (0);
-	if (IF_QEMPTY(sc->isdn_linktab->rx_queue))
-		return (0);
-
-	kn->kn_data = 0;	/* XXXLUKEM (thorpej): what to put here? */
-	return (1);
-}
-
-static const struct filterops i4btel_telread_filtops =
-	{ 1, NULL, filt_i4btel_detach, filt_i4btel_telread };
-
-static int
-filt_i4btel_telwrite(struct knote *kn, long hint)
-{
-	tel_sc_t *sc = kn->kn_hook;
-
-	if ((sc->devstate & ST_CONNECTED) == 0)
-		return (0);
-	if (sc->isdn_linktab == NULL)
-		return (0);
-	if (IF_QFULL(sc->isdn_linktab->tx_queue))
-		return (0);
-
-	kn->kn_data = 0;	/* XXXLUKEM (thorpej): what to put here? */
-	return (1);
-}
-
-static const struct filterops i4btel_telwrite_filtops =
-	{ 1, NULL, filt_i4btel_detach, filt_i4btel_telwrite };
-
-static int
-filt_i4btel_dialread(struct knote *kn, long hint)
-{
-	tel_sc_t *sc = kn->kn_hook;
-
-	if (sc->result == 0)
-		return (0);
-
-	kn->kn_data = 0;	/* XXXLUKEM (thorpej): what to put here? */
-	return (1);
-}
-
-static const struct filterops i4btel_dialread_filtops =
-	{ 1, NULL, filt_i4btel_detach, filt_i4btel_dialread };
-
-static const struct filterops i4btel_seltrue_filtops =
-	{ 1, NULL, filt_i4btel_detach, filt_seltrue };
-
-int
-isdntelkqfilter(dev_t dev, struct knote *kn)
-{
-	int s;
-	int unit = UNIT(dev);
-	int func = FUNC(dev);
-
-	struct klist *klist;
-	tel_sc_t *sc = &tel_sc[unit][func];
-
-	switch (kn->kn_filter) {
-	case EVFILT_READ:
-		klist = &sc->selp.sel_klist;
-		if (func == FUNCTEL)
-			kn->kn_fop = &i4btel_telread_filtops;
-		else if (func == FUNCDIAL)
-			kn->kn_fop = &i4btel_dialread_filtops;
-		else
-			return (ENXIO);
-		break;
-
-	case EVFILT_WRITE:
-		klist = &sc->selp.sel_klist;
-		if (func == FUNCTEL)
-			kn->kn_fop = &i4btel_telwrite_filtops;
-		else if (func == FUNCDIAL)
-			kn->kn_fop = &i4btel_seltrue_filtops;
-		else
-			return (ENXIO);
-		break;
-
-	default:
-		return (EINVAL);
-	}
-
-	kn->kn_hook = sc;
-
-	s = splhigh();
-	SLIST_INSERT_HEAD(klist, kn, kn_selnext);
-	splx(s);
-
-	return (0);
-}
-
-#else /* OS_USES_POLL */
-
-/*---------------------------------------------------------------------------*
- *	device driver select
- *---------------------------------------------------------------------------*/
-PDEVSTATIC int
-i4btelsel(dev_t dev, int rw, struct lwp *l)
-{
-	int s;
-	int unit = UNIT(dev);
-	int func = FUNC(dev);
-
-	tel_sc_t *sc = &tel_sc[unit][func];
-
-	s = splhigh();
-
-	if (!(sc->devstate & ST_ISOPEN))
-	{
-		NDBGL4(L4_TELDBG, "i4btel%d, !ST_ISOPEN", unit);
-		splx(s);
-		return(0);
-	}
-
-	if (func == FUNCTEL)
-	{
-		/* Don't even bother if we're not connected */
-		if (!(sc->devstate & ST_CONNECTED) || sc->isdn_linktab == NULL)
-		{
-			splx(s);
-			return 0;
-		}
-
-		if (rw == FREAD)
-		{
-			if (!IF_QEMPTY(sc->isdn_linktab->rx_queue))
-			{
-				NDBGL4(L4_TELDBG, "i4btel%d, FREAD", unit);
-				splx(s);
-				return 1;
-			}
-		}
-		else if (rw == FWRITE)
-		{
-			if (!IF_QFULL(sc->isdn_linktab->tx_queue))
-			{
-				NDBGL4(L4_TELDBG, "i4btel%d, FWRITE", unit);
-				splx(s);
-				return 1;
-			}
-		}
-	}
-	else if (func == FUNCDIAL)
-	{
-		if (rw == FWRITE)
-		{
-			NDBGL4(L4_TELDBG, "i4bteld%d,  FWRITE", unit);
-			splx(s);
-			return 1;
-		}
-
-		if (rw == FREAD)
-		{
-			NDBGL4(L4_TELDBG, "i4bteld%d,  FREAD, result = %d", unit, sc->result);
-			if (sc->result != 0)
-			{
-				splx(s);
-				return 1;
-			}
-		}
-	}
-
-	NDBGL4(L4_TELDBG, "i4bteld%d,  selrecord", unit);
-	selrecord(l, &sc->selp);
-	splx(s);
-	return 0;
-}
-
-#endif /* OS_USES_POLL */
-
 /*===========================================================================*
  *			ISDN INTERFACE ROUTINES
  *===========================================================================*/
@@ -1178,7 +887,11 @@ tel_connect(void *softc, void *cdp)
 			sc->devstate &= ~ST_RDWAITDATA;
 			wakeup((void *) &sc->result);
 		}
+	/*
+	 * XXX: *rofl*	
+	 *
 		selnotify(&sc->selp, 0, 0);
+	 */
 	}
 }
 
@@ -2026,4 +1739,4 @@ static u_char sinetab[8000] = { 213, 213, 213, 213, 213, 213, 213, 212,
 
 /*===========================================================================*/
 
-#endif /* NISDNTEL > 0 */
+#endif /* NISDNTEL */

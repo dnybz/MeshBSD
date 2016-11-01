@@ -58,11 +58,26 @@ struct protosw i4bsw[] = {
 	.pr_init =		i4b_init,
 	.pr_usrreqs	=	&nousrreqs,
 },
-{ 
-	.pr_type =		SOCK_RAW,			
-	.pr_domain =	&i4bdomain,		
-	.pr_init =		i4b_init,
-	.pr_usrreqs	=	&nousrreqs,
+{ /* DGRAM socket for ISDN Telephony */
+	.pr_type =		SOCK_DGRAM,		
+	.pr_domain =	&i4bdomain,
+	.pr_protocol =	I4BPROTO_TEL,		
+	.pr_flags =		PR_ATOMIC|PR_ADDR,
+  	
+  	.pr_input =		i4b_tel_input,
+/*	
+	.pr_ctlinput =		i4b_tel_ctlinput,
+	.pr_ctloutput =		i4b_tel_ctloutput,
+ */	
+	.pr_init =		i4b_tel_init,
+
+/*
+#ifdef VIMAGE
+	.pr_destroy =		i4b_tel_destroy,
+#endif
+ */
+
+	.pr_usrreqs =		&i4b_tel_usrreqs
 },
 { /* control socket */
 	.pr_type =		SOCK_DGRAM,		
