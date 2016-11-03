@@ -54,7 +54,7 @@ typedef void *isdn_layer1token;
  *
  * Layer 1 functions called from layer 2:
  */
-struct isdn_layer1_isdnif_driver {
+struct isdn_l1 {
 	/* Request to transmit data. */
 	int (*ph_data_req)(isdn_layer1token, struct mbuf *, int);
 

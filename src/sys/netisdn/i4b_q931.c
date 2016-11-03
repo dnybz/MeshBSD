@@ -217,8 +217,8 @@ i4b_decode_q931(int isdnif, int msg_len, u_char *msg_ptr)
 			cd->l3drv = drv;
 			cd->cr = crval;
 			cd->crflag = CRF_DEST;	/* we are the dest side */
-			cd->l4_driver = NULL;		/* reset link tab ptrs */
-			cd->l4_driver_softc = NULL;
+			cd->l4_sap = NULL;		/* reset link tab ptrs */
+			cd->l4_softc = NULL;
 		} else {
 /*
  * XXX

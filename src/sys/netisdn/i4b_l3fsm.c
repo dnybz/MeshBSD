@@ -1123,8 +1123,8 @@ F_00A(call_desc_t *cd)
 	NDBGL3(L3_F_MSG, "FSM function F_00A executing");
 
 	if (i4b_get_dl_stat(cd) == DL_DOWN) {
-		struct l2_softc * l2sc = (l2_softc_t*)cd->l3drv->l1_token;
-		i4b_dl_establish_req(l2sc, l2sc->drv);
+		struct isdn_l2 *l2 = (l2_softc_t *)cd->l3drv->l1_token;
+		i4b_dl_establish_req(l2, l2->drv);
 		cd->Q931state = ST_OW;
 	} else {
 		i4b_l3_tx_setup(cd);
@@ -1354,8 +1354,8 @@ F_06D(call_desc_t *cd)
 	NDBGL3(L3_F_MSG, "FSM function F_06D executing");
 
 	if (i4b_get_dl_stat(cd) == DL_DOWN) {
-		struct l2_softc * l2sc = (l2_softc_t*)cd->l3drv->l1_token;
-		i4b_dl_establish_req(l2sc, l2sc->drv);
+		struct isdn_l2 *l2 = (l2_softc_t*)cd->l3drv->l1_token;
+		i4b_dl_establish_req(l2, l2->drv);
 		cd->Q931state = ST_IWL;
 	} else {
 		i4b_l3_tx_alert(cd);
@@ -1372,8 +1372,8 @@ F_06E(call_desc_t *cd)
 	NDBGL3(L3_F_MSG, "FSM function F_06E executing");
 
 	if (i4b_get_dl_stat(cd) == DL_DOWN) {
-		struct l2_softc * l2sc = (l2_softc_t*)cd->l3drv->l1_token;
-		i4b_dl_establish_req(l2sc, l2sc->drv);
+		struct isdn_l2 * l2 = (l2_softc_t*)cd->l3drv->l1_token;
+		i4b_dl_establish_req(l2, l2->drv);
 		cd->Q931state = ST_IWA;
 	} else {
 		i4b_l3_tx_connect(cd);
@@ -1391,8 +1391,8 @@ F_06F(call_desc_t *cd)
 	NDBGL3(L3_F_MSG, "FSM function F_06F executing");
 
 	if (i4b_get_dl_stat(cd) == DL_DOWN) {
-		struct l2_softc * l2sc = (l2_softc_t*)cd->l3drv->l1_token;
-		i4b_dl_establish_req(l2sc, l2sc->drv);
+		struct isdn_l2 * l2 = (l2_softc_t*)cd->l3drv->l1_token;
+		i4b_dl_establish_req(l2, l2->drv);
 		cd->Q931state = ST_IWR;
 	} else {
 		int s = splnet();
@@ -1922,13 +1922,13 @@ F_DLRI(call_desc_t *cd)
 static void 
 F_DLRIA(call_desc_t *cd)
 {
-	struct l2_softc * l2sc = (l2_softc_t*)cd->l3drv->l1_token;
+	struct isdn_l2 * l2 = (l2_softc_t*)cd->l3drv->l1_token;
 	NDBGL3(L3_F_MSG, "FSM function F_DLRIA executing");
 
 	if (cd->T309 == TIMER_IDLE)
 		T309_start(cd);
 
-	i4b_dl_establish_req(l2sc, l2sc->drv);
+	i4b_dl_establish_req(l2, l2->drv);
 }
 
 #endif /* NI4BQ931 */

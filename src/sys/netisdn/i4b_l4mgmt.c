@@ -63,8 +63,6 @@
 
 #include "isdn.h"
 
-#if NISDN
-
 #include <sys/param.h>
 #include <sys/kernel.h>
 #include <sys/systm.h>
@@ -86,12 +84,12 @@
 #include <netisdn/i4b_l1l2.h>
 #include <netisdn/i4b_l4.h>
 
-static unsigned int 	get_cdid(void);
+static unsigned int 	get_cd_id(void);
 
-static void 	i4b_init_callout(call_desc_t *);
-static void 	i4b_stop_callout(call_desc_t *);
+static void 	i4b_init_callout(struct isdn_call_desc *);
+static void 	i4b_stop_callout(struct isdn_call_desc *);
 
-call_desc_t call_desc[N_CALL_DESC];	/* call descriptor array */
+struct isdn_call_desc call_desc[N_CALL_DESC];	/* call descriptor array */
 int num_call_desc = 0;
 
 /*---------------------------------------------------------------------------*
@@ -102,35 +100,35 @@ int num_call_desc = 0;
  *	this cdid is then used to associate a calldescriptor with an id.
  *---------------------------------------------------------------------------*/
 static unsigned int
-get_cdid(void)
+get_cd_id(void)
 {
-	static unsigned int cdid_count = 0;
+	static unsigned int cd_id_count = 0;
 	int i;
 
 	mtx_lock(&i4b_mtx);
 /* 
  * get next id 
  */
-	cdid_count++;
+	cd_id_count++;
 
 again:
-	if (cdid_count == CDID_UNUSED)		/* zero is invalid */
-		cdid_count++;
-	else if (cdid_count > CDID_MAX)		/* wraparound ? */
-		cdid_count = 1;
+	if (cd_id_count == CDID_UNUSED)		/* zero is invalid */
+		cd_id_count++;
+	else if (cd_id_count > CDID_MAX)		/* wraparound ? */
+		cd_id_count = 1;
 /* 
  * check if id already in use 
  */
 	for (i = 0; i < num_call_desc; i++) {
-		if (call_desc[i].cdid == cdid_count) {
-			cdid_count++;
+		if (call_desc[i].cd_id == cd_id_count) {
+			cd_id_count++;
 			goto again;
 		}
 	}
 
 	mtx_unlock(&i4b_mtx);
 
-	return (cdid_count);
+	return (cd_id_count);
 }
 
 /*---------------------------------------------------------------------------*
@@ -141,10 +139,10 @@ again:
  *      and reserves it by putting the id into the cdid field.
  *      returns pointer to the calldescriptor.
  *---------------------------------------------------------------------------*/
-call_desc_t *
+struct isdn_call_desc *
 reserve_cd(void)
 {
-	call_desc_t *cd;
+	struct isdn_call_desc *cd;
 	int i;
 
 	mtx_lock(&i4b_mtx);
@@ -152,30 +150,30 @@ reserve_cd(void)
 	cd = NULL;
 
 	for (i = 0; i < num_call_desc; i++) {
-		if (call_desc[i].cdid == CDID_UNUSED) {
+		if (call_desc[i].cd_id == CDID_UNUSED) {
 /* 
  * get pointer to descriptor 
  */
 			cd = &(call_desc[i]);	
 			NDBGL4(L4_MSG, "found free cd - index=%d cdid=%u",
-				 i, call_desc[i].cdid);
+				 i, call_desc[i].cd_id);
 			break;
 		}
 	}
 	
-	if (cd == NULL && num_call_desc < N_CALL_DESC) {
+	if ((cd == NULL) && (num_call_desc < N_CALL_DESC)) {
 /* 
  * get pointer to descriptor 
  */
 		i = num_call_desc++;
 		cd = &(call_desc[i]);
 		NDBGL4(L4_MSG, "found free cd - index=%d cdid=%u",
-			 i, call_desc[i].cdid);
+			 i, call_desc[i].cd_id);
 	}
 	
 	if (cd != NULL) {
-		memset(cd, 0, sizeof(call_desc_t)); /* clear it */
-		cd->cdid = get_cdid();	/* fill in new cdid */
+		(void)memset(cd, 0, sizeof(struct isdn_call_desc)); /* clear it */
+		cd->cd_id = get_cd_id();	/* fill in new cdid */
 	}
 
 	mtx_unlock(&i4b_mtx);
@@ -195,24 +193,24 @@ reserve_cd(void)
  *      and writing a 0 into the cdid field marking it as unused.
  *---------------------------------------------------------------------------*/
 void
-freecd_by_cd(call_desc_t *cd)
+freecd_by_cd(struct isdn_call_desc *cd)
 {
 	int i;
 	
 	mtx_lock(&i4b_mtx);
 
 	for (i = 0; i < num_call_desc; i++) {
-		if ((call_desc[i].cdid != CDID_UNUSED) &&
+		if ((call_desc[i].cd_id != CDID_UNUSED) &&
 		    (&(call_desc[i]) == cd) ) {
 			NDBGL4(L4_MSG, "releasing cd - index=%d cdid=%u cr=%d",
-				i, call_desc[i].cdid, cd->cr);
-			call_desc[i].cdid = CDID_UNUSED;
+				i, call_desc[i].cd_id, cd->cd_cr);
+			call_desc[i].cd_id = CDID_UNUSED;
 			break;
 		}
 	}
 
 	if (i == N_CALL_DESC)
-		panic("freecd_by_cd: ERROR, cd not found, cr = %d", cd->cr);
+		panic("freecd_by_cd: ERROR, cd not found, cr = %d", cd->cd_cr);
 
 	mtx_unlock(&i4b_mtx);
 }
@@ -221,22 +219,22 @@ freecd_by_cd(call_desc_t *cd)
  * ISDN is gone, get rid of all CDs for it
  */
 void 
-free_all_cd_of_isdnif (int isdnif)
+free_all_cd_of_isdnif(int l3_id)
 {
 	int i;
 	
 	mtx_lock(&i4b_mtx);
 
 	for (i = 0; i < num_call_desc; i++) {
-		if ((call_desc[i].cdid != CDID_UNUSED) &&
-		    call_desc[i].isdnif == isdnif) {
+		if ((call_desc[i].cd_id != CDID_UNUSED) &&
+		    call_desc[i].cd_l3_id == l3_id) {
 			NDBGL4(L4_MSG, "releasing cd - index=%d cdid=%u cr=%d",
-				i, call_desc[i].cdid, call_desc[i].cr);
+				i, call_desc[i].cd_id, call_desc[i].cd_cr);
 			if (call_desc[i].callouts_inited)
 				i4b_stop_callout(&call_desc[i]);
-			call_desc[i].cdid = CDID_UNUSED;
-			call_desc[i].isdnif = -1;
-			call_desc[i].l3drv = NULL;
+			call_desc[i].cd_id = CDID_UNUSED;
+			call_desc[i].cd_l3_id = -1;
+			call_desc[i].cd_l3 = NULL;
 		}
 	}
 	mtx_unlock(&i4b_mtx);
@@ -249,15 +247,15 @@ free_all_cd_of_isdnif (int isdnif)
  *      at the cdid field. return pointer to calldescriptor if found,
  *      else return NULL if not found.
  *---------------------------------------------------------------------------*/
-call_desc_t *
+struct isdn_call_desc *
 cd_by_cdid(unsigned int cdid)
 {
 	int i;
 
 	for (i = 0; i < num_call_desc; i++) {
-		if (call_desc[i].cdid == cdid) {
+		if (call_desc[i].cd_id == cdid) {
 			NDBGL4(L4_MSG, "found cdid - index=%d cdid=%u cr=%d",
-					i, call_desc[i].cdid, call_desc[i].cr);
+					i, call_desc[i].cd_id, call_desc[i].cd_cr);
 			i4b_init_callout(&call_desc[i]);
 			return (&(call_desc[i]));
 		}
@@ -272,18 +270,18 @@ cd_by_cdid(unsigned int cdid)
  *      given by unit number, callreference and callreference flag.
  *	It returns a pointer to the calldescriptor if found, else a NULL.
  *---------------------------------------------------------------------------*/
-call_desc_t *
+struct isdn_call_desc *
 cd_by_isdnifcr(int isdnif, int cr, int crf)
 {
 	int i;
 
 	for (i = 0; i < num_call_desc; i++) {
-		if (call_desc[i].cdid != CDID_UNUSED
-		    && call_desc[i].isdnif == isdnif
-		    && call_desc[i].cr == cr
-		    && call_desc[i].crflag == crf) {
+		if (call_desc[i].cd_id != CDID_UNUSED
+		    && call_desc[i].cd_l3_id == isdnif
+		    && call_desc[i].cd_cr == cr
+		    && call_desc[i].cd_crflag == crf) {
 			NDBGL4(L4_MSG, "found cd, index=%d cdid=%u cr=%d",
-			    i, call_desc[i].cdid, call_desc[i].cr);
+			    i, call_desc[i].cd_id, call_desc[i].cd_cr);
 			i4b_init_callout(&call_desc[i]);
 			return (&(call_desc[i]));
 		}
@@ -315,8 +313,8 @@ get_rand_cr(int unit)
 			continue;
 
 		for (j = 0; j < num_call_desc; j++) {
-			if ((call_desc[j].cdid != CDID_UNUSED) &&
-			    (call_desc[j].cr == retval)) {
+			if ((call_desc[j].cd_id != CDID_UNUSED) &&
+			    (call_desc[j].cd_cr == retval)) {
 				found = 0;
 				break;
 			}
@@ -329,38 +327,36 @@ get_rand_cr(int unit)
 }
 
 static void
-i4b_stop_callout(call_desc_t *cd)
+i4b_stop_callout(struct isdn_call_desc *cd)
 {
-	if (!cd->callouts_inited)
-		return;
-
-	callout_stop(&cd->idle_timeout_handle);
-	callout_stop(&cd->T303_callout);
-	callout_stop(&cd->T305_callout);
-	callout_stop(&cd->T308_callout);
-	callout_stop(&cd->T309_callout);
-	callout_stop(&cd->T310_callout);
-	callout_stop(&cd->T313_callout);
-	callout_stop(&cd->T400_callout);
+	if (cd->cd_callouts_inited) {
+		callout_stop(&cd->cd_idle_timeout_handle);
+		callout_stop(&cd->cd_T303_callout);
+		callout_stop(&cd->cd_T305_callout);
+		callout_stop(&cd->cd_T308_callout);
+		callout_stop(&cd->cd_T309_callout);
+		callout_stop(&cd->cd_T310_callout);
+		callout_stop(&cd->cd_T313_callout);
+		callout_stop(&cd->cd_T400_callout);
+	}
 }
 
 /*---------------------------------------------------------------------------*
  *	initialize the callout handles for FreeBSD
  *---------------------------------------------------------------------------*/
 void
-i4b_init_callout(call_desc_t *cd)
+i4b_init_callout(struct isdn_call_desc *cd)
 {
-	if (cd->callouts_inited == 0) {
-		callout_init(&cd->idle_timeout_handle, 0);
-		callout_init(&cd->T303_callout, 0);
-		callout_init(&cd->T305_callout, 0);
-		callout_init(&cd->T308_callout, 0);
-		callout_init(&cd->T309_callout, 0);
-		callout_init(&cd->T310_callout, 0);
-		callout_init(&cd->T313_callout, 0);
-		callout_init(&cd->T400_callout, 0);
-		cd->callouts_inited = 1;
+	if (cd->cd_callouts_inited == 0) {
+		callout_init(&cd->cd_idle_timeout_handle, 0);
+		callout_init(&cd->cd_T303_callout, 0);
+		callout_init(&cd->cd_T305_callout, 0);
+		callout_init(&cd->cd_T308_callout, 0);
+		callout_init(&cd->cd_T309_callout, 0);
+		callout_init(&cd->cd_T310_callout, 0);
+		callout_init(&cd->cd_T313_callout, 0);
+		callout_init(&cd->cd_T400_callout, 0);
+		cd->cd_callouts_inited = 1;
 	}
 }
 
-#endif /* NISDN */

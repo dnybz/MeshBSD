@@ -586,9 +586,9 @@ typedef struct {
 /*---------------------------------------------------------------------------*
  *	Query the identifier for a B channel driver
  *---------------------------------------------------------------------------*/
-#define	L4DRIVER_NAME_SIZ	16
+#define	L4IF_NAME_SIZ	16
 typedef struct {
-	char name[L4DRIVER_NAME_SIZ];	/* lookup this driver */
+	char name[L4IF_NAME_SIZ];	/* lookup this driver */
 	int  driver_id;			/* returned driver id */
 } msg_l4driver_lookup_t;
 

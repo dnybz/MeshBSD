@@ -65,7 +65,7 @@
 #define _NETISDN_I4B_L2_H_
 
 struct isdn_l2 {
-	const struct isdn_layer1_isdnif_driver * driver;
+	const struct isdn_l1 *l1;
 	
 	
 	void *	l1_token;

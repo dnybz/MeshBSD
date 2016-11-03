@@ -181,7 +181,7 @@ static u_char sinetab[];
  * L4 Softc denotes Morphism in ISDN-L4.
  */
 
-static const struct isdn_l4_funcs tel_driver = {
+static const struct isdn_l4_sap tel_driver = {
 	tel_rx_data_rdy,
 	tel_tx_queue_empty,
 	tel_activity,
