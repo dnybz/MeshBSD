@@ -103,7 +103,7 @@ static int next_isdnif = 0;
  * XXX: on IEEE802.{3,11} linklayer.
  */
 struct isdn_l3 *
-isdn_attach_isdnif(struct ifnet *ifp, void *l2, 
+i4b_attach(struct ifnet *ifp, void *l2, 
 		struct isdn_l3_sap *sap, int nbch)
 {
 	struct isdn_l3 *l3;
@@ -138,7 +138,7 @@ isdn_attach_isdnif(struct ifnet *ifp, void *l2,
  * Detach a L3 driver instance
  */
 int
-isdn_detach_isdnif(struct isdn_l3 *l3)
+i4b_detach(struct isdn_l3 *l3)
 {
 	struct isdn_l3 *sc;
 	int isdnif;
@@ -169,31 +169,31 @@ isdn_detach_isdnif(struct isdn_l3 *l3)
 }
 
 struct isdn_l3 *
-isdn_find_l3_by_isdnif(int isdnif)
+i4b_get_l3(int isdnif)
 {
-	struct isdn_l3 *sc;
+	struct isdn_l3 *l3;
 
-	SLIST_FOREACH(sc, &isdnif_list, l3_q) {
-		if (sc->l3_id == isdnif)
+	SLIST_FOREACH(l3, &isdnif_list, l3_q) {
+		if (l3->l3_id == isdnif)
 			break;
 	}
 /*
  * If not found, ptr denotes cursor maps to NULL implecitely.
  */			
-	return (sc);
+	return (l3);
 }
 
 int 
 isdn_count_isdnif(int *misdnif)
 {
-	struct isdn_l3 *sc;
+	struct isdn_l3 *l3;
 	int count = 0;
 	int max_isdnif = -1;
 
-	SLIST_FOREACH(sc, &isdnif_list, l3_q) {
+	SLIST_FOREACH(l3, &isdnif_list, l3_q) {
 		count++;
-		if (sc->l3_id > max_isdnif)
-			max_isdnif = sc->l3_id;
+		if (l3->l3_id > max_isdnif)
+			max_isdnif = l3->l3_id;
 	}
 
 	if (misdnif)
@@ -203,13 +203,13 @@ isdn_count_isdnif(int *misdnif)
 }
 
 void *
-isdn_find_softc_by_isdnif(int isdnif)
+i4b_get_l2(int isdnif)
 {
-	struct isdn_l3 *sc = isdn_find_l3_by_isdnif(isdnif);
-	if (sc == NULL)
+	struct isdn_l3 *l3 = i4b_get_l3(isdnif);
+	if (l3 == NULL)
 		return (NULL);
 		
-	return (sc->l3_l2);
+	return (l3->l3_l2);
 }
 
 /*---------------------------------------------------------------------------*
@@ -246,14 +246,14 @@ i4b_l4_daemon_detached(void)
  * B-channel layer 4 drivers and their registry.
  * (Application drivers connecting to a B-channel)
  */
-static int i4b_link_bchandrvr(struct isdn_call_desc *cd);
-static void i4b_unlink_bchandrvr(struct isdn_call_desc *cd);
-static void i4b_l4_setup_timeout(struct isdn_call_desc *cd);
-static void i4b_idle_check_fix_unit(struct isdn_call_desc *cd);
-static void i4b_idle_check_var_unit(struct isdn_call_desc *cd);
-static void i4b_l4_setup_timeout_fix_unit(struct isdn_call_desc *cd);
-static void i4b_l4_setup_timeout_var_unit(struct isdn_call_desc *cd);
-static time_t i4b_get_idletime(struct isdn_call_desc *cd);
+static int 	i4b_link_bchandrvr(struct isdn_call_desc *);
+static void 	i4b_unlink_bchandrvr(struct isdn_call_desc *);
+static void 	i4b_l4_setup_timeout(struct isdn_call_desc *);
+static void 	i4b_idle_check_fix_unit(struct isdn_call_desc *);
+static void 	i4b_idle_check_var_unit(struct isdn_call_desc *);
+static void 	i4b_l4_setup_timeout_fix_unit(struct isdn_call_desc *);
+static void 	i4b_l4_setup_timeout_var_unit(struct isdn_call_desc *);
+static time_t 	i4b_get_idletime(struct isdn_call_desc *);
 
 static int next_l4_sap_id = 0;
 

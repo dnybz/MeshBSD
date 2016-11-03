@@ -322,12 +322,12 @@ struct isdn_l3 {
 #define NBCH_PRI 30
 
 void 	i4b_l4_contr_ev_ind(int , int);
-struct isdn_l3 * 	isdn_attach_isdnif(const char *,
+struct isdn_l3 * 	i4b_attach(const char *,
     const char *, void *,
     struct isdn_l3_sap *, int);
-int 	isdn_detach_isdnif(struct isdn_l3 *);
+int 	i4b_detach(struct isdn_l3 *);
 void 	isdn_isdnif_ready(int);
-struct isdn_l3 * 	isdn_find_l3_by_isdnif(int);
+struct isdn_l3 * 	isdn_get_l3_by_id(int);
 int 	isdn_count_isdnif(int *);
 
 #endif /* !_NETISDN_I4B_Q931_H_ */

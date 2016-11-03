@@ -208,7 +208,7 @@ i4b_decode_q931(int isdnif, int msg_len, u_char *msg_ptr)
 		if (*msg_ptr == SETUP) {
 			struct isdn_l3 *drv;
 
-			drv = isdn_find_l3_by_isdnif(isdnif);
+			drv = isdn_get_l3_by_id(isdnif);
 /* 
  * get and init new calldescriptor 
  */

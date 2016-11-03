@@ -386,7 +386,7 @@ extern int i4b_dl_establish_cnf ( struct isdn_l3 *drv );
 extern int i4b_dl_unit_data_ind ( struct isdn_l3 *drv, struct mbuf *m );
 extern int i4b_dl_data_ind ( struct isdn_l3 *drv, struct mbuf *m );
 int i4b_mdl_command_req(struct isdn_l3 *drv, int, void *);
-void *isdn_find_softc_by_isdnif(int isdnif);
+void *i4b_get_l2(int isdnif);
 extern int isdn_bchan_silence( unsigned char *data, int len );
 
 #endif /* !_NETISDN_I4B_L2_H_ */

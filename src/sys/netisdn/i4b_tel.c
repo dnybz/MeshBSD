@@ -68,10 +68,6 @@
 #include "opt_devfs.h"
 #include "opt_isdntel.h"
 
-#if NISDNTEL
-
-#undef I4BTELDEBUG
-
 #include <sys/param.h>
 #include <sys/systm.h>
 
@@ -116,7 +112,7 @@
 /*
  * XXX: I'll transform this into a control_block ...
  */
-typedef struct tel_softc {
+struct tel_softc {
 
 	/* used only in func = FUNCTEL */
 
@@ -150,26 +146,27 @@ typedef struct tel_softc {
  */
 
 	struct i4b_tel_tones	tones;
+	
 	int			toneidx;
 	int			toneomega;
 	int			tonefreq;
 
-} tel_sc_t;
+};
 
-static tel_sc_t tel_sc[NISDNTEL][NOFUNCS];
+static struct tel_softc tel_sc[NISDNTEL][NOFUNCS];
 
 /* forward decl */
 
-static void tel_rx_data_rdy(void *softc);
-static void tel_tx_queue_empty(void *softc);
-static void tel_connect(void *softc, void *cdp);
-static void tel_disconnect(void *softc, void *cdp);
-static void tel_tone(tel_sc_t *sc);
-static void tel_activity(void *softc, int rxtx);
-static void tel_updown(void *softc, int updown);
-static void tel_dialresponse(void *softc, int status, cause_t cause);
-static void* tel_get_softc(int unit);
-static void tel_set_linktab(void *softc, isdn_link_t *ilt);
+static void 	tel_rx_data_rdy(void *);
+static void 	tel_tx_queue_empty(void *);
+static void 	tel_connect(void *, void *);
+static void 	tel_disconnect(void *, void *);
+static void 	tel_tone(struct tel_softc *);
+static void 	tel_activity(void *, int);
+static void 	tel_updown(void *, int);
+static void 	tel_dialresponse(void *, int, cause_t);
+static void * 	tel_get_softc(int unit);
+static void 	tel_set_linktab(void *, isdn_link_t *);
 
 /* audio format conversion tables */
 static unsigned char a2u_tab[];
@@ -277,7 +274,7 @@ i4b_tel_attach(struct socket *so, int proto, struct thread *td)
  	int unit = UNIT(dev);
 	int func = FUNC(dev);
 
-	tel_sc_t *sc;
+	struct tel_softc *sc;
 
 	if(unit >= NISDNTEL)
 		return(ENXIO);
@@ -317,7 +314,7 @@ i4b_tel_detach(struct socket *so)
  	
 	int unit = UNIT(dev);
 	int func = FUNC(dev);
-	tel_sc_t *sc;
+	struct tel_softc *sc;
 	int error = 0;
 	int x;
 
@@ -372,7 +369,7 @@ isdntelioctl(dev_t dev, u_long cmd, void *data, int flag,
         struct mbuf *m;
         int s;
 
-	tel_sc_t *sc = &tel_sc[unit][func];
+	struct tel_softc *sc = &tel_sc[unit][func];
 
 	if(func == FUNCTEL)
 	{
@@ -534,7 +531,7 @@ i4b_tel_input(struct mbuf **mp, int *offp, int proto)
 	int s;
 	int error = 0;
 
-	tel_sc_t *sc = &tel_sc[unit][func];
+	struct tel_softc *sc = &tel_sc[unit][func];
 
 	if(!(sc->devstate & ST_ISOPEN))
 		return(EIO);
@@ -672,7 +669,7 @@ int unit = UNIT(dev);
 	struct mbuf *m;
 	int s;
 	int error = 0;
-	tel_sc_t *sc = &tel_sc[unit][func];
+	struct tel_softc *sc = &tel_sc[unit][func];
 
 	if(!(sc->devstate & ST_ISOPEN))
 	{
@@ -749,7 +746,7 @@ int unit = UNIT(dev);
 	}
 	else if(func == FUNCDIAL)
 	{
-		tel_sc_t *telsc = &tel_sc[unit][FUNCTEL];
+		struct tel_softc *telsc = &tel_sc[unit][FUNCTEL];
 
 #define CMDBUFSIZ 80
 		char cmdbuf[CMDBUFSIZ];
@@ -810,7 +807,7 @@ struct pr_usrreqs i4b_tel_usrreqs = {
  *---------------------------------------------------------------------------*/
 #define NTONESAMP 32
 static void
-tel_tone(tel_sc_t *sc)
+tel_tone(struct tel_softc *sc)
 {
 	struct mbuf *m;
 	u_char *p;
@@ -866,7 +863,7 @@ tel_tone(tel_sc_t *sc)
 static void
 tel_connect(void *softc, void *cdp)
 {
-	tel_sc_t *sc = softc;
+	struct tel_softc *sc = softc;
 
 	/* audio device */
 
@@ -901,7 +898,7 @@ tel_connect(void *softc, void *cdp)
 static void
 tel_disconnect(void *softc, void *cdp)
 {
-	tel_sc_t *sc = softc;
+	struct tel_softc *sc = softc;
 
 	/* audio device */
 
@@ -947,7 +944,7 @@ tel_disconnect(void *softc, void *cdp)
 static void
 tel_dialresponse(void *softc, int status, cause_t cause)
 {
-	tel_sc_t *sc = ((struct tel_softc*)softc)->dialer;
+	struct tel_softc *sc = ((struct tel_softc*)softc)->dialer;
 
 	NDBGL4(L4_TELDBG, "status=%d, cause=0x%4x", status, cause);
 
@@ -980,7 +977,7 @@ tel_updown(void *softc, int updown)
 static void
 tel_rx_data_rdy(void *softc)
 {
-	tel_sc_t *sc = softc;
+	struct tel_softc *sc = softc;
 
 	if(sc->devstate & ST_RDWAITDATA)
 	{
@@ -998,7 +995,7 @@ tel_rx_data_rdy(void *softc)
 static void
 tel_tx_queue_empty(void *softc)
 {
-	tel_sc_t *sc = softc;
+	struct tel_softc *sc = softc;
 
 	if(sc->devstate & ST_WRWAITEMPTY)
 	{
@@ -1031,7 +1028,7 @@ tel_activity(void *softc, int rxtx)
 static void
 tel_set_linktab(void *softc, isdn_link_t *ilt)
 {
-	tel_sc_t *sc = softc;
+	struct tel_softc *sc = softc;
 	sc->isdn_linktab = ilt;
 }
 
