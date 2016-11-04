@@ -75,25 +75,27 @@
 #define MAX_BCHAN	2
 #define N_CALL_DESC	(20*(MAX_BCHAN)) /* XXX: make resizable */
 
-typedef struct bch_stats {
-	int outbytes;
-	int inbytes;
-} bch_stats_t;
+struct isdn_bch_stats {
+	int bch_obytes;
+	int bch_ibytes;
+};
 
 /*---------------------------------------------------------------------------*
  * table of things the driver needs to know about the b channel
  * it is connected to for data transfer
  *---------------------------------------------------------------------------*/
-typedef struct i4b_isdn_bch_linktab {
-	void *l1token;
-	int channel;
+struct isdn_bch_linktab {
+	void *bch_l1token;
+	int bch_channel;
 	
-	struct isdn_l4_bch *sap;
-	
-	struct ifqueue *tx_queue;
-	struct ifqueue *rx_queue;	/* data xfer for NON-HDLC traffic   */
+	struct isdn_l4_bch *bch_sap;
+/*
+ * XXX: ... 
+ */	
+	struct ifqueue *bch_tx_queue;
+	struct ifqueue *bch_rx_queue;	/* data xfer for NON-HDLC traffic   */
 	struct mbuf **rx_mbuf;		/* data xfer for HDLC based traffic */
-} isdn_link_t;
+};
 
 struct isdn_l4_sap;
 struct isdn_l3;
@@ -105,10 +107,8 @@ struct isdn_l3;
 struct isdn_call_desc {
 	u_int	cd_id;			/* call descriptor id		*/
 	
-	int 	cd_l3_id;	/* XXX: isdn interface number, redundancy	*/
-	
-	struct isdn_l3 *cd_l3; 	/* XXX: maps same id as (redundancy) above... */
-	
+	int 	cd_l3_id;
+	struct isdn_l3 *cd_l3;
 	
 	int	cd_cr;			/* call reference value		*/
 
@@ -128,7 +128,9 @@ struct isdn_call_desc {
 	cause_t	cd_cause_out;		/* cause value to NT	*/
 
 	int	cd_call_state;		/* from incoming SETUP	*/
-
+/*
+ * XXX; candidates for attributes on sockaddr_isdn{}
+ */
 	u_char	cd_dst_telno[TELNO_MAX];	/* destination number	*/
 	u_char	cd_src_telno[TELNO_MAX];	/* source number	*/
 	u_char	cd_src_subaddr[SUBADDR_MAX];
@@ -306,7 +308,7 @@ struct isdn_l3 {
 #define DL_UP	1
 
 	int	l3_nbch;			/* number of B-channels */
-	int	*l3_bch_state;		/* states of the nbch b channels */
+	int	l3_bch_state[NBCH_BRI];		/* states of the nbch b channels */
 #define BCH_ST_FREE	0		/* free to be used, idle */
 #define BCH_ST_RSVD	1		/* reserved, may become free or used */
 #define BCH_ST_USED	2		/* in use for data transfer */

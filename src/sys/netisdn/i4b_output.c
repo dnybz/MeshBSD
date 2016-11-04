@@ -20,43 +20,49 @@
  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
+ * SUCH DAMAGE. 
+ */
+#include <sys/param.h>
+#include <sys/systm.h>
+#include <sys/mbuf.h>
+#include <sys/lock.h>
+#include <sys/rwlock.h>
+#include <sys/socket.h>
+#include <sys/kernel.h>
+#include <sys/sysctl.h>
+
+#include <net/if.h>
+#include <net/if_types.h>
+#include <net/if_var.h>
+
+#include <netisdn/i4b.h>
+#include <netisdn/i4b_var.h>
+
+/*
+ * XXX ...
  */
 
-#ifndef _NETISDN_I4B_H_
-#define _NETISDN_I4B_H_
+int
+i4b_output(struct isdn_l2 *l2, struct mbuf *m, int flags)
+{	
+	struct sockadd_isdn sisdn;
+	struct ifnet *ifp;
+	int error;
 
-struct sockaddr_isdn {
-	uint8_t 	sisdn_len; 	/* length */
-	sa_family_t 	sisdn_family; 	/* AF_ISDN */
-	uint16_t 	sisdn_ctlr; 	/* Index of Ethernet Controller */
-	uint16_t 	sisdn_chan;	
-	uint16_t 	sisdn_sapi; 	
-	uint16_t 	sisdn_tei;				
-};
-#define SISDN_LEN 	(sizeof(struct sockaddr_isdn))
-
-#ifdef _KERNEL
-
-struct isdn_bchan {
-
+	bzero(&sisdn, sizeof(sisdn));
 	
-};
-
-struct i4b_ifinfo {
-	struct lltable		*iii_llt;	/* isdn_arp cache */
+	sisdn.sisdn_family = AF_ISDN;
+	sisdn.sisdn_len = SISDN_LEN;
+	sisdn.sisdn_tei = l2->tei;
 	
-	struct isdn_bchan 	iii_bchan[2];
+	ifp = l2->l2_ifp;
+/*
+ * XXX ...
+ */
+	error = (*ifp->if_output)
+		(ifp, m, (const struct sockaddr *)&sisdn, NULL);
 	
-	struct isdn_l2 	iii_l2;
-	struct isdn_l3 	iii_l3;
+	return (error);
+}
 
-};
-#define ISDN_LLTABLE(ifp)	\
-	(((struct isdn_ifinfo *)(ifp)->if_afdata[AF_ISDN])->mii_llt)
-#define ISDN_IFINFO(ifp) \
-	((struct isdn_ifinfo *)(ifp)->if_afdata[AF_ISDN])
 
-#endif /* _KERNEL */
-	
-#endif /* _NETISDN_I4B_H_ */

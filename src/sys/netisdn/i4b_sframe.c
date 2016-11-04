@@ -64,9 +64,9 @@ i4b_rxd_s_frame(struct isdn_l2 *l2, struct isdn_l3 *l3, struct mbuf *m)
 {
 	u_char *ptr = m->m_data;
 
-	if(!((l2->tei_valid == TEI_VALID) &&
+	if (!((l2->tei_valid == TEI_VALID) &&
 	     (l2->tei == GETTEI(*(ptr+OFF_TEI))))) {
-		i4b_Dfreembuf(m);
+		m_freem(m);
 		return;
 	}
 
@@ -98,7 +98,7 @@ i4b_rxd_s_frame(struct isdn_l2 *l2, struct isdn_l3 *l3, struct mbuf *m)
 		i4b_print_frame(m->m_len, m->m_data);
 		break;
 	}
-	i4b_Dfreembuf(m);
+	m_freem(m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -113,7 +113,7 @@ i4b_tx_rr_command(struct isdn_l2 *l2, pbit_t pbit)
 
 	m = i4b_build_s_frame(l2, CR_CMD_TO_NT, pbit, RR);
 
-	l2->driver->ph_data_req(l2->l1_token, m, MBUF_FREE);
+	i4b_output(l2, m, MBUF_FREE);
 
 	l2->stat.tx_rr++; /* update statistics */
 }
@@ -130,7 +130,7 @@ i4b_tx_rr_response(struct isdn_l2 *l2, fbit_t fbit)
 
 	m = i4b_build_s_frame(l2, CR_RSP_TO_NT, fbit, RR);
 
-	l2->driver->ph_data_req(l2->l1_token, m, MBUF_FREE);
+	i4b_output(l2, m, MBUF_FREE);
 
 	l2->stat.tx_rr++; /* update statistics */
 }
@@ -147,7 +147,7 @@ i4b_tx_rnr_command(struct isdn_l2 *l2, pbit_t pbit)
 
 	m = i4b_build_s_frame(l2, CR_CMD_TO_NT, pbit, RNR);
 
-	l2->driver->ph_data_req(l2->l1_token, m, MBUF_FREE);
+	i4b_output(l2, m, MBUF_FREE);
 
 	l2->stat.tx_rnr++; /* update statistics */
 }
@@ -164,7 +164,7 @@ i4b_tx_rnr_response(struct isdn_l2 *l2, fbit_t fbit)
 
 	m = i4b_build_s_frame(l2, CR_RSP_TO_NT, fbit, RNR);
 
-	l2->driver->ph_data_req(l2->l1_token, m, MBUF_FREE);
+	i4b_output(l2, m, MBUF_FREE);
 
 	l2->stat.tx_rnr++; /* update statistics */
 }
@@ -181,7 +181,7 @@ i4b_tx_rej_response(struct isdn_l2 *l2, fbit_t fbit)
 
 	m = i4b_build_s_frame(l2, CR_RSP_TO_NT, fbit, REJ);
 
-	l2->driver->ph_data_req(l2->l1_token, m, MBUF_FREE);
+	i4b_output(l2, m, MBUF_FREE);
 
 	l2->stat.tx_rej++; /* update statistics */
 }
@@ -195,7 +195,7 @@ i4b_build_s_frame(struct isdn_l2 *l2, crbit_to_nt_t crbit,
 {
 	struct mbuf *m;
 
-	if((m = i4b_Dgetmbuf(S_FRAME_LEN)) == NULL)
+	if ((m = i4b_Dgetmbuf(S_FRAME_LEN)) == NULL)
 		return (NULL);
 
 	PUTSAPI(SAPI_CCP, crbit, m->m_data[OFF_SAPI]);

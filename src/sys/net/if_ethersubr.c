@@ -275,11 +275,8 @@ ether_resolve_addr(struct ifnet *ifp, struct mbuf *m,
 				memcpy(eh->ether_dhost, ifp->if_broadcastaddr,
 				    ETHER_ADDR_LEN);
 			else {
-				const struct in_addr *a;
-				a = &(((const struct sockaddr_in *)dst)->sin_addr);
-				ETHER_MAP_IP_MULTICAST(a, eh->ether_dhost);
+				/* XXX ... */
 			}
-			etype = htons(ETHERTYPE_IP);
 			memcpy(&eh->ether_type, &etype, sizeof(etype));
 			memcpy(eh->ether_shost, IF_LLADDR(ifp), ETHER_ADDR_LEN);
 		}
@@ -835,9 +832,15 @@ ether_demux(struct ifnet *ifp, struct mbuf *m)
 		break;
 #endif
 #ifdef ISDN
-	case ETHERTYPE_ISDN:
-		isr = NETISR_ISDN;
+	case ETHERTYPE_ISDN_B1:
+		isr = NETISR_ISDN_B1;
 		break;
+	case ETHERTYPE_ISDN_B2:
+		isr = NETISR_ISDN_B2;
+		break;
+	case ETHERTYPE_ISDN_D:
+		isr = NETISR_ISDN_D;
+	break;	
 #endif /* ISDN */
 	default:
 		goto discard;

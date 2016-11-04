@@ -144,7 +144,7 @@ i4b_mdl_status_ind(struct isdn_l3 *l3, int status, int parm)
 		sendup = 0;
 
 		for (i = 0; i < num_call_desc; i++) {
-			if (call_desc[i].cd_l3_id == l3->l3_id) {
+			if (call_desc[i].cd_l3->l3_id == l3->l3_id) {
 				
 				i4b_l3_stop_all_timers(&(call_desc[i]));
 				
@@ -173,7 +173,7 @@ i4b_mdl_status_ind(struct isdn_l3 *l3, int status, int parm)
 			"no outgoing access to S0", l3->l3_id);
 
 		for (i = 0; i < num_call_desc; i++) {
-			if (call_desc[i].cd_l3_id == l3->l3_id) {
+			if (call_desc[i].cd_l3->l3_id == l3->l3_id) {
 				if (call_desc[i].cd_id != CDID_UNUSED) {
 					SET_CAUSE_TYPE(
 						call_desc[i].cd_cause_in, 
@@ -217,7 +217,7 @@ n_mgmt_command(struct isdn_l3 *d, int cmd, void *parm)
 		NDBGL3(L3_MSG, "CMR_DOPEN for isdnif %d", l3->l3_id);
 
 		for (i = 0; i < num_call_desc; i++) {
-			if (call_desc[i].cd_l3_id == l3->l3_id) 
+			if (call_desc[i].cd_l3->l3_id == l3->l3_id) 
 				call_desc[i].cd_id = CDID_UNUSED;		
 		}
 		l3->l3_dl_est = DL_DOWN;

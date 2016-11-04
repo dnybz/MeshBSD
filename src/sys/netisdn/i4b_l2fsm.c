@@ -856,7 +856,7 @@ F_AE01(struct isdn_l2 *l2, struct isdn_l3 *l3)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_AE01 executing");
 
-	i4b_Dcleanifq(&l2->i_queue);
+	IF_DRAIN(&l2->i_queue);
 
 	l2->l3initiated = 1;
 }
@@ -869,7 +869,7 @@ F_AE05(struct isdn_l2 *l2, struct isdn_l3 *l3)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_AE05 executing");
 
-	i4b_Dcleanifq(&l2->i_queue);
+	IF_DRAIN(&l2->i_queue);
 
 	l2->postfsmarg = l2->l3;
 	l2->postfsmfunc = i4b_dl_release_ind;
@@ -885,7 +885,7 @@ F_AE06(struct isdn_l2 *l2, struct isdn_l3 *l3)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_AE06 executing");
 
-	i4b_Dcleanifq(&l2->i_queue);
+	IF_DRAIN(&l2->i_queue);
 
 	l2->postfsmarg = l2->l3;
 	l2->postfsmfunc = i4b_dl_release_ind;
@@ -937,7 +937,7 @@ F_AE09(struct isdn_l2 *l2, struct isdn_l3 *l3)
 			l2->postfsmfunc = i4b_dl_establish_cnf;
 		} else {
 			if (l2->vs != l2->va) {
-				i4b_Dcleanifq(&l2->i_queue);
+				IF_DRAIN(&l2->i_queue);
 				l2->postfsmarg = l2->l3;
 				l2->postfsmfunc = i4b_dl_establish_ind;
 			}
@@ -965,7 +965,7 @@ F_AE10(struct isdn_l2 *l2, struct isdn_l3 *l3)
 	if (l2->rxd_PF == 0) 
 		l2->Q921_state = ST_AW_EST;
 	else {
-		i4b_Dcleanifq(&l2->i_queue);
+		IF_DRAIN(&l2->i_queue);
 
 		l2->postfsmarg = l2->l3;
 		l2->postfsmfunc = i4b_dl_release_ind;
@@ -985,7 +985,7 @@ F_AE11(struct isdn_l2 *l2, struct isdn_l3 *l3)
 	NDBGL2(L2_F_MSG, "FSM function F_AE11 executing");
 
 	if (l2->RC >= N200) {
-		i4b_Dcleanifq(&l2->i_queue);
+		IF_DRAIN(&l2->i_queue);
 
 		i4b_mdl_error_ind(l2, "F_AE11", MDL_ERR_G);
 
@@ -1144,7 +1144,7 @@ F_MF01(struct isdn_l2 *l2, struct isdn_l3 *l3)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_MF01 executing");
 
-	i4b_Dcleanifq(&l2->i_queue);
+	IF_DRAIN(&l2->i_queue);
 
 	i4b_establish_data_link(l2);
 
@@ -1159,7 +1159,7 @@ F_MF05(struct isdn_l2 *l2, struct isdn_l3 *l3)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_MF05 executing");
 
-	i4b_Dcleanifq(&l2->i_queue);
+	IF_DRAIN(&l2->i_queue);
 
 	l2->postfsmarg = l2->l3;
 	l2->postfsmfunc = i4b_dl_release_ind;
@@ -1176,7 +1176,7 @@ F_MF06(struct isdn_l2 *l2, struct isdn_l3 *l3)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_MF06 executing");
 
-	i4b_Dcleanifq(&l2->i_queue);
+	IF_DRAIN(&l2->i_queue);
 
 	l2->postfsmarg = l2->l3;
 	l2->postfsmfunc = i4b_dl_release_ind;
@@ -1206,7 +1206,7 @@ F_MF07(struct isdn_l2 *l2, struct isdn_l3 *l3)
 	i4b_mdl_error_ind(l2, "F_MF07", MDL_ERR_F);
 
 	if (l2->vs != l2->va) {
-		i4b_Dcleanifq(&l2->i_queue);
+		IF_DRAIN(&l2->i_queue);
 
 		l2->postfsmarg = l2->l3;
 		l2->postfsmfunc = i4b_dl_establish_ind;
@@ -1228,7 +1228,8 @@ F_MF08(struct isdn_l2 *l2, struct isdn_l3 *l3)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_MF08 executing");
 
-	i4b_Dcleanifq(&l2->i_queue);
+	IF_DRAIN(&l2->i_queue);
+	
 	i4b_mdl_status_ind(l2->l3, STI_L2STAT, LAYER_IDLE);
 	i4b_tx_ua(l2, l2->rxd_PF);
 
@@ -1310,7 +1311,7 @@ F_MF13(struct isdn_l2 *l2, struct isdn_l3 *l3)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_MF13 executing");
 
-	i4b_Dcleanifq(&l2->i_queue);
+	IF_DRAIN(&l2->i_queue);
 
 	l2->RC = 0;
 
@@ -1484,7 +1485,7 @@ F_TR01(struct isdn_l2 *l2, struct isdn_l3 *l3)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_TR01 executing");
 
-	i4b_Dcleanifq(&l2->i_queue);
+	IF_DRAIN(&l2->i_queue);
 
 	i4b_establish_data_link(l2);
 
@@ -1499,7 +1500,7 @@ F_TR05(struct isdn_l2 *l2, struct isdn_l3 *l3)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_TR05 executing");
 
-	i4b_Dcleanifq(&l2->i_queue);
+	IF_DRAIN(&l2->i_queue);
 
 	l2->postfsmarg = l2->l3;
 	l2->postfsmfunc = i4b_dl_release_ind;
@@ -1515,7 +1516,7 @@ F_TR06(struct isdn_l2 *l2, struct isdn_l3 *l3)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_TR06 executing");
 
-	i4b_Dcleanifq(&l2->i_queue);
+	IF_DRAIN(&l2->i_queue);
 
 	l2->postfsmarg = l2->l3;
 	l2->postfsmfunc = i4b_dl_release_ind;
@@ -1543,7 +1544,7 @@ F_TR07(struct isdn_l2 *l2, struct isdn_l3 *l3)
 
 	if (l2->vs != l2->va)
 	{
-		i4b_Dcleanifq(&l2->i_queue);
+		IF_DRAIN(&l2->i_queue);
 
 		l2->postfsmarg = l2->l3;
 		l2->postfsmfunc = i4b_dl_establish_ind;
@@ -1565,7 +1566,7 @@ F_TR08(struct isdn_l2 *l2, struct isdn_l3 *l3)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_TR08 executing");
 
-	i4b_Dcleanifq(&l2->i_queue);
+	IF_DRAIN(&l2->i_queue);
 	i4b_mdl_status_ind(l3, STI_L2STAT, LAYER_IDLE);
 	i4b_tx_ua(l2, l2->rxd_PF);
 
@@ -1650,7 +1651,7 @@ F_TR13(struct isdn_l2 *l2, struct isdn_l3 *l3)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_TR13 executing");
 
-	i4b_Dcleanifq(&l2->i_queue);
+	IF_DRAIN(&l2->i_queue);
 
 	l2->RC = 0;
 

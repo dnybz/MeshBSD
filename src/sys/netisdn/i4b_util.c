@@ -61,8 +61,6 @@
 
 #include "opt_i4bq921.h"
 
-#if NI4BQ921
-
 #include <sys/param.h>
 #include <sys/kernel.h>
 #include <sys/systm.h>
@@ -104,18 +102,17 @@ i4b_establish_data_link(struct isdn_l2 *l2)
  *	routine CLEAR EXCEPTION CONDITIONS (Q.921 03/93 page 83)
  *---------------------------------------------------------------------------*/
 void
-i4b_clear_exception_conditions(struct isdn_l2 *l2)
+i4b_clear_exception_conditions(struct isdn_l2 *l2) 
 {
 	mtx_lock(&i4b_mtx);
 
 /*XXX -------------------------------------------------------------- */
 /*XXX is this really appropriate here or should it moved elsewhere ? */
 
-	i4b_Dcleanifq(&l2->i_queue);
+	IF_DRAIN(&l2->i_queue);
 
-	if (l2->ua_num != UA_EMPTY)
-	{
-		i4b_Dfreembuf(l2->ua_frame);
+	if (l2->ua_num != UA_EMPTY) {
+		m_freem(l2->ua_frame);
 		l2->ua_num = UA_EMPTY;
 	}
 /*XXX -------------------------------------------------------------- */
@@ -180,43 +177,33 @@ i4b_enquiry_response(struct isdn_l2 *l2)
 void
 i4b_invoke_retransmission(struct isdn_l2 *l2, int nr)
 {
-	int s;
-
-	mtx_lock(&i4b_mtx);
-
 	NDBGL2(L2_ERROR, "nr = %d", nr );
 
-	while(l2->vs != nr)
-	{
+	while (l2->vs != nr) {
 		NDBGL2(L2_ERROR, "nr(%d) != vs(%d)", nr, l2->vs);
 
 		M128DEC(l2->vs);
 
 /* XXXXXXXXXXXXXXXXX */
 
-		if ((l2->ua_num != UA_EMPTY) && (l2->vs == l2->ua_num))
-		{
-			if (IF_QFULL(&l2->i_queue))
-			{
+		if ((l2->ua_num != UA_EMPTY) && 
+			(l2->vs == l2->ua_num)) {
+			
+			if (_IF_QFULL(&l2->i_queue)) 
 				NDBGL2(L2_ERROR, "ERROR, I-queue full!");
-			}
-			else
-			{
+			else {
 				IF_ENQUEUE(&l2->i_queue, l2->ua_frame);
 				l2->ua_num = UA_EMPTY;
 			}
-		}
-		else
-		{
-			NDBGL2(L2_ERROR, "ERROR, l2->vs = %d, l2->ua_num = %d ",l2->vs, l2->ua_num);
+		} else {
+			NDBGL2(L2_ERROR, "ERROR, l2->vs = %d, "
+				"l2->ua_num = %d ",l2->vs, l2->ua_num);
 		}
 
 /* XXXXXXXXXXXXXXXXX */
 
 		i4b_i_frame_queued_up(l2);
 	}
-
-	mtx_unlock(&i4b_mtx);
 }
 
 /*---------------------------------------------------------------------------*
@@ -225,8 +212,7 @@ i4b_invoke_retransmission(struct isdn_l2 *l2, int nr)
 void
 i4b_acknowledge_pending(struct isdn_l2 *l2)
 {
-	if (l2->ack_pend)
-	{
+	if (l2->ack_pend) {
 		l2->ack_pend = 0;
 		i4b_tx_rr_response(l2, F0);
 	}
@@ -241,12 +227,12 @@ i4b_print_frame(int len, u_char *buf)
 #if DO_I4B_DEBUG
 	int i;
 
-	if (!(i4b_l2_debug & L2_ERROR))		/* XXXXXXXXXXXXXXXXXXXXX */
-		return;
-
-	for(i = 0; i < len; i++)
-		printf(" 0x%x", buf[i]);
-	printf("\n");
+	if (i4b_l2_debug & L2_ERROR) {
+		for (i = 0; i < len; i++)
+			(void)printf(" 0x%x", buf[i]);
+	
+		(void)printf("\n");
+	}
 #endif
 }
 
@@ -256,7 +242,8 @@ i4b_print_frame(int len, u_char *buf)
 void
 i4b_print_l2var(struct isdn_l2 *l2)
 {
-	NDBGL2(L2_ERROR, "isdnif %d V(R)=%d, V(S)=%d, V(A)=%d,ACKP=%d,PBSY=%d,OBSY=%d",
+	NDBGL2(L2_ERROR, "isdnif %d V(R)=%d, V(S)=%d, "
+		"V(A)=%d,ACKP=%d,PBSY=%d,OBSY=%d",
 		l2->drv->isdnif,
 		l2->vr,
 		l2->vs,
@@ -282,18 +269,17 @@ i4b_rxd_ack(struct isdn_l2 *l2, struct isdn_l3 *drv, int nr)
 		l2->va);
 #endif
 
-	if (l2->ua_num != UA_EMPTY)
-	{
-		int s;
-
+	if (l2->ua_num != UA_EMPTY) {
 		mtx_lock(&i4b_mtx);
 
 		M128DEC(nr);
 
-		if (l2->ua_num != nr)
-			NDBGL2(L2_ERROR, "((N(R)-1)=%d) != (UA=%d) !!!", nr, l2->ua_num);
-
-		i4b_Dfreembuf(l2->ua_frame);
+		if (l2->ua_num != nr) {
+			NDBGL2(L2_ERROR, 
+				"((N(R)-1)=%d) != (UA=%d) !!!", 
+				nr, l2->ua_num);
+		}
+		m_freem(l2->ua_frame);
 		l2->ua_num = UA_EMPTY;
 
 		mtx_unlock(&i4b_mtx);
@@ -304,14 +290,12 @@ i4b_rxd_ack(struct isdn_l2 *l2, struct isdn_l3 *drv, int nr)
  *	if not already active, activate layer 1
  *---------------------------------------------------------------------------*/
 void
-i4b_l1_activate(struct isdn_l2 *l2)
-{
-	if (l2->ph_active == PH_INACTIVE)
-	{
+i4b_l1_activate(struct isdn_l2 *l2) {
+	if (l2->ph_active == PH_INACTIVE) {
 		l2->ph_active = PH_ACTIVEPEND;
 		l2->l1->ph_activate_req(l2->l1_token);
 	}
-};
+}
 
 /*---------------------------------------------------------------------------*
  *	check for v(a) <= n(r) <= v(s)
@@ -321,19 +305,21 @@ i4b_l1_activate(struct isdn_l2 *l2)
 int
 i4b_l2_nr_ok(int nr, int va, int vs)
 {
-	if ((va > nr) && ((nr != 0) || (va != 127)))
-	{
-		NDBGL2(L2_ERROR, "ERROR, va = %d, nr = %d, vs = %d [1]", va, nr, vs);
-		return 0;	/* fail */
+	int error = 1;
+	
+	if ((va > nr) && ((nr != 0) || (va != 127))) {
+		NDBGL2(L2_ERROR, 
+			"ERROR, va = %d, nr = %d, vs = %d [1]", va, nr, vs);
+		error = 0;	/* fail */
+		goto out;
 	}
 
-	if ((nr > vs) && ((vs != 0) || (nr != 127)))
-	{
-		NDBGL2(L2_ERROR, "ERROR, va = %d, nr = %d, vs = %d [2]", va, nr, vs);
-		return 0;	/* fail */
+	if ((nr > vs) && ((vs != 0) || (nr != 127))) {
+		NDBGL2(L2_ERROR, 
+			"ERROR, va = %d, nr = %d, vs = %d [2]", va, nr, vs);
+		error = 0;	/* fail */
 	}
-	return 1;		/* good */
+out:	
+	return (error);		/* good */
 }
-
-#endif /* NI4BQ921 > 0 */
 

@@ -65,10 +65,7 @@
 #define _NETISDN_I4B_L2_H_
 
 struct isdn_l2 {
-	const struct isdn_l1 *l1;
-	
-	
-	void *	l1_token;
+	struct ifnet *l2_ifp;
 	struct isdn_l3 *l3;
 
 	int	Q921_state;	/* state according to Q.921 */

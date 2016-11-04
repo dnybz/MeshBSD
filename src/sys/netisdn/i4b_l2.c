@@ -63,8 +63,6 @@
 
 #include "opt_i4bq921.h"
 
-#if NI4BQ921
-
 #include <sys/param.h>
 #include <sys/lock.h>
 #include <sys/mutex.h>
@@ -134,29 +132,29 @@ i4b_dl_unit_data_req(struct isdn_l2 *l2, struct isdn_l3 *l3,
 int 
 i4b_dl_data_req(struct isdn_l2 *l2, struct isdn_l3 *l3, struct mbuf *m)
 {
+	int error;
+	
 	switch(l2->Q921_state) {
 	case ST_AW_EST:
 	case ST_MULTIFR:
 	case ST_TIMREC:
 
-		if (IF_QFULL(&l2->i_queue)) {
+		IFQ_ENQUEUE(&l2->i_queue, m, error);
+		
+		if (error) 
 			NDBGL2(L2_ERROR, "i_queue full!!");
-		    i4b_Dfreembuf(m);
-		} else {
-			mtx_lock(&i4b_mtx);
-			IF_ENQUEUE(&l2->i_queue, m);
-			mtx_unlock(&i4b_mtx);
-
+		else
 			i4b_i_frame_queued_up(l2);
-		}
+		
 		break;
 	default:
 		NDBGL2(L2_ERROR, "isdnif %d ERROR in state [%s], "
 			"freeing mbuf", l2->l3->isdnif, i4b_print_l2state(l2));
-		i4b_Dfreembuf(m);
+		m_freem(m);
+		error = EINVAL;
 		break;
 	}
-	return (0);
+	return (error);
 }
 
 /*---------------------------------------------------------------------------*
@@ -202,7 +200,7 @@ i4b_l2_unit_init(struct isdn_l2 *l2)
 	l2->postfsmfunc = NULL;
 
 	if (l2->ua_num != UA_EMPTY) {
-		i4b_Dfreembuf(l2->ua_frame);
+		m_freem(l2->ua_frame);
 		l2->ua_num = UA_EMPTY;
 		l2->ua_frame = NULL;
 	}
@@ -223,7 +221,7 @@ isdn_layer2_status_ind(struct isdn_l2 *l2, struct isdn_l3 *l3,
 {
 	int sendup = 1;
 
-	mtx_lock(&i4b_mtx);;
+	mtx_lock(&i4b_mtx)
 
 	NDBGL2(L2_PRIM, "isdnif %d, status=%d, parm=%d", 
 		l2->l3->isdnif, status, parm);
@@ -317,58 +315,6 @@ i4b_mdl_command_req(struct isdn_l3 *l3, int command, void *parm)
 	return (0);
 }
 
-/*---------------------------------------------------------------------------*
- * isdn_layer2_data_ind - process a rx'd frame got from layer 1
- *---------------------------------------------------------------------------*/
-int
-isdn_layer2_data_ind(struct isdn_l2 *l2, struct isdn_l3 *l3, 
-	struct mbuf *m)
-{
-	u_char *ptr = m->m_data;
-
-	if ((*(ptr + OFF_CNTL) & 0x01) == 0) {
-/* 
- * 6 oct - 2 chksum oct 
- */
-		if (m->m_len < 4) {
-			l2->stat.err_rx_len++;
-			NDBGL2(L2_ERROR, "ERROR, I-frame < 6 octetts!");
-			i4b_Dfreembuf(m);
-			goto out;
-		}
-		i4b_rxd_i_frame(l2, l3, m);
-	} else if ((*(ptr + OFF_CNTL) & 0x03) == 0x01 ) {
-/* 
- * 6 oct - 2 chksum oct 
- */
-		if (m->m_len < 4) {
-			l2->stat.err_rx_len++;
-			NDBGL2(L2_ERROR, "ERROR, S-frame < 6 octetts!");
-			i4b_Dfreembuf(m);
-			goto out;
-		}
-		i4b_rxd_s_frame(l2, l3, m);
-	} else if ((*(ptr + OFF_CNTL) & 0x03) == 0x03 ) {
-/* 
- * 5 oct - 2 chksum oct 
- */
-		if (m->m_len < 3) {
-			l2->stat.err_rx_len++;
-			NDBGL2(L2_ERROR, "ERROR, U-frame < 5 octetts!");
-			i4b_Dfreembuf(m);
-			goto out;
-		}
-		i4b_rxd_u_frame(l2, l3, m);
-	} else {
-		l2->stat.err_rx_badf++;
-		NDBGL2(L2_ERROR, "ERROR, bad frame rx'd - ");
-		i4b_print_frame(m->m_len, m->m_data);
-		i4b_Dfreembuf(m);
-	}
-out:	
-	return (0);
-}
-
 int 
 i4b_l2_channel_get_state(struct isdn_l3 *l3, int b_chanid)
 {
@@ -394,8 +340,10 @@ isdn_bchan_silence(unsigned char *data, int len)
 {
 	register int i = 0;
 	register int j = 0;
-
-	/* count idle bytes */
+	int error = 1;
+/* 
+ * count idle bytes 
+ */
 
 	for (;i < len; i++) {
 		if ((*data >= 0xaa) && (*data <= 0xac))
@@ -404,13 +352,11 @@ isdn_bchan_silence(unsigned char *data, int len)
 	}
 
 #ifdef NOTDEF
-	(void)printf("isic_hscx_silence: got %d silence bytes in frame\n", j);
+	(void)printf("%s: got %d silence bytes in frame\n", __func__, j);
 #endif
 
 	if (j < (TEL_IDLE_MIN))
-		return (0);
+		error = 0;
 	
-	return (1);
+	return (error);
 }
-
-#endif /* NI4BQ921  */

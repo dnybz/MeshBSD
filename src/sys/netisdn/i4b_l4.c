@@ -107,14 +107,7 @@ i4b_attach(struct ifnet *ifp, void *l2,
 		struct isdn_l3_sap *sap, int nbch)
 {
 	struct isdn_l3 *l3;
-/*
- * Failsafe, fall asleep until need ressources are provided.
- */
-	l3 = malloc(sizeof(*l3), M_DEVBUF, M_WAITOK|M_ZERO);
-	l3->l3_bch_state = malloc(nbch * sizeof(int), M_DEVBUF, M_WAITOK);
-	
-	mtx_lock(&i4b_mtx);
-	
+
 	(void)strlcpy(l3->l3_xname, ifp->if_xname, IFNAMSIZ);
 	
 	l3->l3_sap = sap;
@@ -127,8 +120,8 @@ i4b_attach(struct ifnet *ifp, void *l2,
 	for (i = 0; i < nbch; i++)
 		l3->l3_bch_state[i] = BCH_ST_FREE;
 
+	mtx_lock(&i4b_mtx);
 	SLIST_INSERT_HEAD(&isdnif_list, l3, l3_q);
-
 	mtx_unlock(&i4b_mtx);
 
 	return (l3);
@@ -143,6 +136,7 @@ i4b_detach(struct isdn_l3 *l3)
 	struct isdn_l3 *sc;
 	int isdnif;
 	int maxidx;
+	int i;
 
 	mtx_lock(&i4b_mtx);
 
@@ -157,11 +151,20 @@ i4b_detach(struct isdn_l3 *l3)
 			maxidx = sc->l3_id;
 	next_isdnif = maxidx+1;
 
-	free_all_cd_of_isdnif(isdnif);
+	for (i = 0; i < num_call_desc; i++) {
+		if ((call_desc[i].cd_id != CDID_UNUSED) &&
+		    call_desc[i].cd_l3_id == l3_id) {
+			NDBGL4(L4_MSG, "releasing cd - index=%d cdid=%u cr=%d",
+				i, call_desc[i].cd_id, call_desc[i].cd_cr);
+			if (call_desc[i].callouts_inited)
+				i4b_stop_callout(&call_desc[i]);
+			call_desc[i].cd_id = CDID_UNUSED;
+			call_desc[i].cd_l3_id = -1;
+			call_desc[i].cd_l3 = NULL;
+		}
+	}
 
 	mtx_unlock(&i4b_mtx);
-
-	free(l3, M_DEVBUF);
 	
 	(void)printf("ISDN %d detached\n", isdnif);
 
@@ -221,6 +224,7 @@ i4b_l4_daemon_attached(void)
 	struct isdn_l3 *d;
 
 	mtx_lock(&i4b_mtx);
+	
 	SLIST_FOREACH(d, &isdnif_list, l3_q) {
 		d->l3_sap->N_MGMT_COMMAND(d, CMR_DOPEN, 0);
 	}
@@ -236,6 +240,7 @@ i4b_l4_daemon_detached(void)
 	struct isdn_l3 *d;
 
 	mtx_lock(&i4b_mtx);
+
 	SLIST_FOREACH(d, &isdnif_list, l3_q) {
 		d->l3_sap->N_MGMT_COMMAND(d, CMR_DCLOSE, 0);
 	}
@@ -255,7 +260,7 @@ static void 	i4b_l4_setup_timeout_fix_unit(struct isdn_call_desc *);
 static void 	i4b_l4_setup_timeout_var_unit(struct isdn_call_desc *);
 static time_t 	i4b_get_idletime(struct isdn_call_desc *);
 
-static int next_l4_sap_id = 0;
+static int next_l4_id = 0;
 
 /*
  * A L4-softc denotes an interface for 
@@ -269,40 +274,42 @@ struct isdn_l4 {
 	struct isdn_l4_sap *l4_sap;
 	int l4_units;
 };
-static SLIST_HEAD(, isdn_l4) l4_iflist
-    = SLIST_HEAD_INITIALIZER(l4_iflist);
+static SLIST_HEAD(, isdn_l4) l4_iflist = SLIST_HEAD_INITIALIZER(l4_iflist);
 
 /*
  * Attach interface on L4 as morphism in e. g. socket-layer.
  */
 int 
-isdn_l4_attach(const char *name, int units, 
+i4b_l4_attach(const char *name, int units, 
 	struct isdn_l4_sap *sap)
 {
-	struct isdn_l4 *new_if;
+	struct isdn_l4 *l4;
 /*
- * XXX: M_I4B ??? 
+ * Fall asleep until necessary resources are ready for allocation.
  */
-	new_if = malloc(sizeof(struct isdn_l4), M_DEVBUF,
-	    M_WAITOK|M_ZERO);
+	l4 = malloc(sizeof(struct isdn_l4), M_DEVBUF, M_WAITOK|M_ZERO);
 	
-	(void)strncpy(new_if->l4_name, name, L4IF_NAME_SIZ);
+	mtx_lock(&i4b_mtx);
 	
-	new_if->l4_name[L4IF_NAME_SIZ-1] = 0;
-	new_if->l4_id =	next_l4_sap_id++;
-	new_if->l4_sap = sap;
-	new_if->units = units;
+	(void)strncpy(l4->l4_name, name, L4IF_NAME_SIZ);
 	
-	SLIST_INSERT_HEAD(&l4_iflist, new_if, l4_q);
+	l4->l4_name[L4IF_NAME_SIZ-1] = 0;
+	l4->l4_id =	next_l4_id++;
+	l4->l4_sap = sap;
+	l4->units = units;
 	
-	return (new_if->l4_id);
+	SLIST_INSERT_HEAD(&l4_iflist, l4, l4_q);
+	
+	mtx_unlock(&i4b_mtx);
+	
+	return (l4->l4_id);
 }
 
 /*
  * Release by interface bound resources.
  */
 int 
-isdn_l4_detatch(const char *name)
+i4b_l4_detach(const char *name)
 {
 	struct isdn_l4 *d;
 	
@@ -315,10 +322,15 @@ isdn_l4_detatch(const char *name)
  * If found, zero out and free(9).
  */
 	if (d != NULL) {
-		next_l4_sap_id--;
+		
+		mtx_lock(&i4b_mtx);
+		
+		next_l4_id--;
 		SLIST_REMOVE(&l4_iflist, d, isdn_l4, l4_q);
 		bzero(d, sizeof(*d));
 		free(d, M_DEVBUF);	
+		
+		mtx_unlock(&i4b_mtx);
 	}
 	return (0);
 }
@@ -327,7 +339,7 @@ isdn_l4_detatch(const char *name)
  * Get interface (set containing callback sap's) by its name.
  */
 struct isdn_l4_sap *
-isdn_l4_find_sap(const char *name, int unit)
+i4b_l4_get_sap(const char *name, int unit)
 {
 	struct isdn_l4 *d;
 	
@@ -344,7 +356,7 @@ isdn_l4_find_sap(const char *name, int unit)
  * Get id of interface.
  */
 int 
-isdn_l4_find_id(const char *name)
+i4b_l4_get_id(const char *name)
 {
 	struct isdn_l4 *l4;
 	
@@ -360,9 +372,10 @@ isdn_l4_find_id(const char *name)
  * Get interface (callback sap) by its id.
  */
 struct isdn_l4_sap *
-isdn_l4_get_sap(int l4_id, int unit)
+i4b_l4_get_sap(int l4_id, int unit)
 {
 	struct isdn_l4 * d;
+	
 	SLIST_FOREACH(d, &l4_iflist, l4_q) {
 		if (d->l4_id == l4_id) {
 			return (d->l4_sap);
@@ -883,7 +896,7 @@ i4b_link_bchandrvr(struct isdn_call_desc *cd)
 
 	cd->ilt = d->l3_sap->get_linktab(d->l3_l2, cd->channelid);
 
-	cd->l4_sap = isdn_l4_get_sap(cd->bchan_sap_index, 
+	cd->l4_sap = i4b_l4_get_sap(cd->bchan_sap_index, 
 		cd->bchan_sap_unit);
 	
 	if (cd->l4_sap != NULL) {

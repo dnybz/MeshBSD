@@ -69,9 +69,6 @@ struct isdn_l1 {
  * Layer 2 functions called by layer 1:
  */
 
-/* Process a rx'd frame */
-int isdn_layer2_data_ind(struct isdn_l2 * t, struct isdn_l3 *, struct mbuf *m);
-
 /* Pass a layer 1 activation/deactivation to layer 2. */
 int isdn_layer2_activate_ind(struct isdn_l2 *, struct isdn_l3 *, int);
 

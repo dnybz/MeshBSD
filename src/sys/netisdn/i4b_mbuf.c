@@ -100,8 +100,7 @@ i4b_Dgetmbuf(int len)
 {
 	struct mbuf *m;
 
-	if (len > MCLBYTES)	
-	{
+	if (len > MCLBYTES)	{
 /* 
  * if length > max extension size 
  */
@@ -144,33 +143,6 @@ i4b_Dgetmbuf(int len)
 	m->m_len = len;
 
 	return (m);
-}
-
-/*---------------------------------------------------------------------------*
- *	free a D-channel mbuf
- *---------------------------------------------------------------------------*/
-void
-i4b_Dfreembuf(struct mbuf *m)
-{
-	m_freem(m);
-}
-
-/*---------------------------------------------------------------------------*
- *	clear a D-channel ifqueue from data
- *---------------------------------------------------------------------------*/
-void
-i4b_Dcleanifq(struct ifqueue *ifq)
-{
-	struct mbuf *m;
-	
-	mtx_lock(&i4b_mtx);
-
-	while (!IF_QEMPTY(ifq)) {
-		IF_DEQUEUE(ifq, m);
-		i4b_Dfreembuf(m);
-	}
-
-	mtx_unlock(&i4b_mtx);
 }
 
 /*---------------------------------------------------------------------------*
@@ -224,34 +196,6 @@ i4b_Bgetmbuf(int len)
 	m->m_len = len;
 
 	return (m);
-}
-
-/*---------------------------------------------------------------------------*
- *	free a B-channel mbuf
- *---------------------------------------------------------------------------*/
-void
-i4b_Bfreembuf(struct mbuf *m)
-{
-	m_freem(m);
-}
-
-/*---------------------------------------------------------------------------*
- *	clear a B-channel ifqueue from data
- *---------------------------------------------------------------------------*/
-void
-i4b_Bcleanifq(struct ifqueue *ifq)
-{
-	struct mbuf *m;
-	
-	mtx_lock(&i4b_mtx);
-
-	while (!IF_QEMPTY(ifq))
-	{
-		IF_DEQUEUE(ifq, m);
-		i4b_Bfreembuf(m);
-	}
-
-	mtx_unlock(&i4b_mtx);
 }
 
 /* EOF */

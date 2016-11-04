@@ -45,11 +45,8 @@
 #define IF_QEMPTY(ifq)	((ifq)->ifq_len == 0)
 
 struct mbuf * 	i4b_Dgetmbuf(int);
-void 	i4b_Dfreembuf(struct mbuf *);
-void 	i4b_Dcleanifq(struct ifqueue *);
 
 struct mbuf * 	i4b_Bgetmbuf(int);
-void 	i4b_Bfreembuf(struct mbuf *);
 void 	i4b_Bcleanifq(struct ifqueue *);
 
 #endif /* !_NETISDN_I4B_MBUF_H_ */

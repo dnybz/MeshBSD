@@ -215,31 +215,6 @@ freecd_by_cd(struct isdn_call_desc *cd)
 	mtx_unlock(&i4b_mtx);
 }
 
-/*
- * ISDN is gone, get rid of all CDs for it
- */
-void 
-free_all_cd_of_isdnif(int l3_id)
-{
-	int i;
-	
-	mtx_lock(&i4b_mtx);
-
-	for (i = 0; i < num_call_desc; i++) {
-		if ((call_desc[i].cd_id != CDID_UNUSED) &&
-		    call_desc[i].cd_l3_id == l3_id) {
-			NDBGL4(L4_MSG, "releasing cd - index=%d cdid=%u cr=%d",
-				i, call_desc[i].cd_id, call_desc[i].cd_cr);
-			if (call_desc[i].callouts_inited)
-				i4b_stop_callout(&call_desc[i]);
-			call_desc[i].cd_id = CDID_UNUSED;
-			call_desc[i].cd_l3_id = -1;
-			call_desc[i].cd_l3 = NULL;
-		}
-	}
-	mtx_unlock(&i4b_mtx);
-}
-
 /*---------------------------------------------------------------------------*
  *      return pointer to calldescriptor by giving the calldescriptor id
  *      ----------------------------------------------------------------

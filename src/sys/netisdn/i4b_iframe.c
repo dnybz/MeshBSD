@@ -97,13 +97,13 @@ i4b_rxd_i_frame(struct isdn_l2 *l2, struct isdn_l3 *l3, struct mbuf *m)
 
 	if (!((l2->tei_valid == TEI_VALID) &&
 	     (l2->tei == GETTEI(*(ptr+OFF_TEI))))) {
-		i4b_Dfreembuf(m);
+		m_freem(m);
 		return;
 	}
 
 	if ((l2->Q921_state != ST_MULTIFR) && 
 		(l2->Q921_state != ST_TIMREC)) {
-		i4b_Dfreembuf(m);
+		m_freem(m);
 		NDBGL2(L2_I_ERR, "ERROR, state != (MF || TR)!");
 		return;
 	}
@@ -121,7 +121,7 @@ i4b_rxd_i_frame(struct isdn_l2 *l2, struct isdn_l3 *l3, struct mbuf *m)
  * own receiver busy ? 
  */
 	if (l2->own_busy)	{
-		i4b_Dfreembuf(m);	/* yes, discard information */
+		m_freem(m);	/* yes, discard information */
 /* 
  * P bit == 1 ? 
  */
@@ -152,7 +152,7 @@ i4b_rxd_i_frame(struct isdn_l2 *l2, struct isdn_l3 *l3, struct mbuf *m)
 /* 
  * ERROR, sequence number NOT expected 
  */		
-			i4b_Dfreembuf(m);	/* discard information */
+			m_freem(m);	/* discard information */
 /* 
  * already exception ? 
  */
@@ -272,7 +272,7 @@ i4b_i_frame_queued_up(struct isdn_l2 *l2)
 /* 
  * free'd when ack'd ! 
  */
-	l2->driver->ph_data_req(l2->l1_token, m, MBUF_DONTFREE); 
+	i4b_output(l2, m, MBUF_DONTFREE); 
 /*
  * in case we ack an I frame with another I frame 
  */		
