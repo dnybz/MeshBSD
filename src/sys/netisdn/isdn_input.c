@@ -59,42 +59,42 @@
 #include <net/if_types.h>
 #include <net/netisr.h>
 
-#include <netisdn/i4b.h>
-#include <netisdn/i4b_var.h>
+#include <netisdn/isdn.h>
+#include <netisdn/isdn_var.h>
 
 /*
  * XXX ...
  */
 
-static void i4b_input(struct mbuf *);
+static void isdn_input(struct mbuf *);
 
 /*
  * XXX ...
  */
 
-extern struct protosw i4bsw[];
+extern struct protosw isdnsw[];
 
 /*
  * Default mtx(9) on global scope.
  */
-struct mtx i4b_mtx;
+struct mtx isdn_mtx;
 
-MTX_SYSINIT(i4b_mtx, &i4b_mtx, "i4b_lock");
+MTX_SYSINIT(isdn_mtx, &isdn_mtx, "isdn_lock");
 
 /*
  * Set containing ISDN channel. 
  */
-struct i4b_head i4b_ifaddrhead;
-struct rwlock i4b_ifaddr_lock;
+struct isdn_head isdn_ifaddrhead;
+struct rwlock isdn_ifaddr_lock;
 
-RW_SYSINIT(i4b_ifadddr_lock, &i4b_ifaddr_lock, "i4b_ifaddr_lock");
+RW_SYSINIT(isdn_ifadddr_lock, &isdn_ifaddr_lock, "isdn_ifaddr_lock");
 
 /*
  * ISDN input queue is managed by netisr(9).
  */
-static struct netisr_handler i4b_nh = {
+static struct netisr_handler isdn_nh = {
 	.nh_name 		= "isdn layer",
-	.nh_handler 		= i4b_input,
+	.nh_handler 		= isdn_input,
 	.nh_proto 		= NETISR_ISDN,
 	.nh_policy 		= NETISR_POLICY_FLOW,
 };
@@ -103,10 +103,10 @@ static struct netisr_handler i4b_nh = {
  * ISDN initialisation.
  */
 void
-i4b_init(void)
+isdn_init(void)
 {
-	TAILQ_INIT(&i4b_ifaddrhead);
-	netisr_register(&i4b_nh);
+	TAILQ_INIT(&isdn_ifaddrhead);
+	netisr_register(&isdn_nh);
 }
 
 /*
@@ -114,7 +114,7 @@ i4b_init(void)
  */
  
 static void
-i4b_input(struct mbuf *m)
+isdn_input(struct mbuf *m)
 {	
 	struct ifnet *ifp;
 	struct isdn_sc *sc;
@@ -172,7 +172,7 @@ i4b_input(struct mbuf *m)
 				NDBGL2(L2_ERROR, "ERROR, I-frame < 6 octetts!");
 				goto bad;
 			}
-			i4b_rxd_i_frame(sc, m);
+			isdn_l2_rxd_i_frame(sc, m);
 		} else if ((*(ptr + OFF_CNTL) & 0x03) == 0x01 ) {
 /* 
  * 6 oct - 2 chksum oct 
@@ -182,7 +182,7 @@ i4b_input(struct mbuf *m)
 				NDBGL2(L2_ERROR, "ERROR, S-frame < 6 octetts!");
 				goto bad;
 			}
-			i4b_rxd_s_frame(sc, m);
+			isdn_l2_rxd_s_frame(sc, m);
 		} else if ((*(ptr + OFF_CNTL) & 0x03) == 0x03 ) {
 /* 
  * 5 oct - 2 chksum oct 
@@ -192,11 +192,11 @@ i4b_input(struct mbuf *m)
 				NDBGL2(L2_ERROR, "ERROR, U-frame < 5 octetts!");
 				goto bad;
 			}
-			i4b_rxd_u_frame(sc, m);
+			isdn_l2_rxd_u_frame(sc, m);
 		} else {
 			l2->stat.err_rx_badf++;
 			NDBGL2(L2_ERROR, "ERROR, bad frame rx'd - ");
-			i4b_print_frame(m->m_len, m->m_data);
+			isdn_print_frame(m->m_len, m->m_data);
 			goto bad;
 		}
 		break;
@@ -210,7 +210,7 @@ i4b_input(struct mbuf *m)
 		break;
 	default:
 		NDBGL2(L2_ERROR, "ERROR, unknown frame rx'd - ");
-		i4b_print_frame(m->m_len, m->m_data);
+		isdn_print_frame(m->m_len, m->m_data);
 		goto bad;
 	}	
 out:	

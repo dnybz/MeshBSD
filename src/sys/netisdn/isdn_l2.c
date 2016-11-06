@@ -90,11 +90,33 @@
 
 unsigned int isdn_l2_debug = L2_DEBUG_DEFAULT;
 
+
+/*---------------------------------------------------------------------------*
+ *	isdn_l2_print_var - print some l2softc vars
+ *---------------------------------------------------------------------------*/
+void
+isdn_l2_print_var(struct isdn_softc *sc)
+{
+	struct isdn_l2 *l2;
+	
+	l2 = &sc->sc_l2;
+	
+	NDBGL2(L2_ERROR, "isdnif %d V(R)=%d, V(S)=%d, "
+		"V(A)=%d,ACKP=%d,PBSY=%d,OBSY=%d",
+		sc->sc_ifp->if_index,
+		l2->l2_vr,
+		l2->l2_vs,
+		l2->l2_va,
+		l2->l2_ack_pend,
+		l2->l2_peer_busy,
+		l2->l2_own_busy);
+}
+
 /*---------------------------------------------------------------------------*
  *	DL_ESTABLISH_REQ from layer 3
  *---------------------------------------------------------------------------*/
 int 
-isdn_dl_establish_req(struct isdn_sc *sc)
+isdn_dl_establish_req(struct isdn_softc *sc)
 {
 	
 	NDBGL2(L2_PRIM, "isdnif %d", sc->sc_ifp->if_index);
@@ -107,7 +129,7 @@ isdn_dl_establish_req(struct isdn_sc *sc)
  *	DL_RELEASE_REQ from layer 3
  *---------------------------------------------------------------------------*/
 int 
-isdn_dl_release_req(struct isdn_sc *sc)
+isdn_dl_release_req(struct isdn_softc *sc)
 {
 	NDBGL2(L2_PRIM, "isdnif %d", sc->sc_ifp->if_index);
 	isdn_next_l2state(sc, EV_DLRELRQ);
@@ -118,7 +140,7 @@ isdn_dl_release_req(struct isdn_sc *sc)
  *	DL UNIT DATA REQUEST from Layer 3
  *---------------------------------------------------------------------------*/
 int 
-isdn_dl_unit_data_req(struct isdn_sc *sc, 
+isdn_dl_unit_data_req(struct isdn_softc *sc, 
 	struct mbuf *m)
 {
 #ifdef NOTDEF
@@ -131,9 +153,13 @@ isdn_dl_unit_data_req(struct isdn_sc *sc,
  *	DL DATA REQUEST from Layer 3
  *---------------------------------------------------------------------------*/
 int 
-isdn_dl_data_req(struct isdn_l2 *l2, struct mbuf *m)
+isdn_l2_data_req(struct isdn_softc *sc, struct mbuf *m)
 {
+	struct isdn_l2 *l2;
 	int error;
+	
+	l2 = &sc->sc_l2;
+	error = 0;
 	
 	switch(l2->l2_Q921_state) {
 	case ST_AW_EST:
@@ -159,10 +185,10 @@ isdn_dl_data_req(struct isdn_l2 *l2, struct mbuf *m)
 }
 
 /*---------------------------------------------------------------------------*
- *	isdn_l2_unit_init - place layer 2 unit into known state
+ *	isdn_l2_init - place layer 2 unit into known state
  *---------------------------------------------------------------------------*/
 static void
-isdn_l2_unit_init(struct isdn_l2 *l2)
+isdn_l2_init(struct isdn_l2 *l2)
 {
 	l2->l2_Q921_state = ST_TEI_UNAS;
 	l2->l2_tei_valid = TEI_INVALID;
@@ -198,7 +224,7 @@ isdn_l2_unit_init(struct isdn_l2 *l2)
  *	isdn_l2_status_ind - status indication upward
  *---------------------------------------------------------------------------*/
 int
-isdn_l2_status_ind(struct isdn_sc *sc, 
+isdn_l2_status_ind(struct isdn_softc *sc, 
 	int status, int parm)
 {
 	struct isdn_l2 *l2;
@@ -237,7 +263,7 @@ isdn_l2_status_ind(struct isdn_sc *sc,
 		callout_init(&l2->l2_T203_callout, 0);
 		callout_init(&l2->l2_IFQU_callout, 0);
 
-		isdn_l2_unit_init(&l2->l2);
+		isdn_l2_init(&l2->l2);
 		break;
 	case STI_L1STAT:	/* state of layer 1 */
 		break;
@@ -249,14 +275,14 @@ isdn_l2_status_ind(struct isdn_sc *sc,
 			   (l2->l2_Q921_state <= ST_TIMREC)) {
 			NDBGL2(L2_ERROR, "isdnif %d, persistent deactivation!", 
 				sc->sc_ifp->if_index);
-			isdn_l2_unit_init(&l2->l2);
+			isdn_l2_init(&l2->l2);
 			parm = -1;	/* this is passed as the new
 						 * TEI to upper layers */
 		} else 
 			sendup = 0;
 		break;
 	case STI_NOL1ACC:
-		isdn_l2_unit_init(&l2->l2);
+		isdn_l2_init(&l2->l2);
 		NDBGL2(L2_ERROR, "isdnif %d, cannot access S0 bus!", 
 			sc->sc_ifp->if_index);
 		break;
@@ -278,7 +304,7 @@ isdn_l2_status_ind(struct isdn_sc *sc,
  *	MDL_COMMAND_REQ from layer 3
  *---------------------------------------------------------------------------*/
 int 
-isdn_l2_cmd_req(struct isdn_sc *sc, int cmd, void *arg)
+isdn_l2_cmd_req(struct isdn_softc *sc, int cmd, void *arg)
 {
 	struct isdn_l2 *l2;
 
@@ -289,7 +315,7 @@ isdn_l2_cmd_req(struct isdn_sc *sc, int cmd, void *arg)
 
 	switch(cmd) {
 	case CMR_DOPEN:
-		isdn_l2_unit_init(sc);
+		isdn_l2_init(sc);
 
 		break;
 	case CMR_DCLOSE:
