@@ -82,7 +82,7 @@
  *	process a received U-frame
  *---------------------------------------------------------------------------*/
 void
-i4b_rxd_u_frame(struct isdn_l2 *l2, struct isdn_l3 *l3, struct mbuf *m)
+i4b_rxd_u_frame(struct isdn_sc *sc, struct mbuf *m)
 {
 	u_char *ptr = m->m_data;
 

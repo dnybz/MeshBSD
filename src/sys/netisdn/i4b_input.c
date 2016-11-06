@@ -82,7 +82,7 @@ struct mtx i4b_mtx;
 MTX_SYSINIT(i4b_mtx, &i4b_mtx, "i4b_lock");
 
 /*
- * Defines set containing nhlfe. 
+ * Set containing ISDN channel. 
  */
 struct i4b_head i4b_ifaddrhead;
 struct rwlock i4b_ifaddr_lock;
@@ -110,18 +110,17 @@ i4b_init(void)
 }
 
 /*
- * Input processing.
+ * Input processing. 
  */
  
 static void
 i4b_input(struct mbuf *m)
 {	
 	struct ifnet *ifp;
-	struct isdn_l2 *l2;
-	struct isdn_l2 *l3;
+	struct isdn_sc *sc;
 	struct isdn_rd *rd;
 	
-	uint8_t *frame;
+	uint8_t *ptr;
 	
 	uint8_t chan;
 	uint8_t proto;
@@ -141,20 +140,15 @@ i4b_input(struct mbuf *m)
 	
 	if ((ifp->if_flags & IFF_ISDN) == 0)
 		goto bad;
-/*
- * XXX: Well, I'll refactor isdn_ifinfo{}.
- */
+
 	IF_AFDATA_RLOCK(ifp);
-	l2 = &(ISDN_IFINFO(ifp)->iii_l2);
-	l3 = &(ISDN_IFINFO(ifp)->iii_l3);
+	sc = ISDN_SOFTC(ifp);
 	IF_AFDATA_RUNLOCK(ifp);	
-/*
- * XXX: ... 
- */
+
 	rd = mtod(m, struct isdn_rd *);	
 	
-	chan = rd->ir_chan;
-	proto = rd->ir_proto;
+	chan = rd->rd_chan;
+	proto = rd->rd_proto;
 	
 	m_adj(m, ISDN_HDRLEN);
 	
@@ -169,7 +163,7 @@ i4b_input(struct mbuf *m)
 /*
  * LAPD Frame received. 
  */	
-		if ((*(frame + OFF_CNTL) & 0x01) == 0) {
+		if ((*(ptr + OFF_CNTL) & 0x01) == 0) {
 /* 
  * 6 oct - 2 chksum oct 
  */
@@ -178,8 +172,8 @@ i4b_input(struct mbuf *m)
 				NDBGL2(L2_ERROR, "ERROR, I-frame < 6 octetts!");
 				goto bad;
 			}
-			i4b_rxd_i_frame(l2, l3, m);
-		} else if ((*(frame + OFF_CNTL) & 0x03) == 0x01 ) {
+			i4b_rxd_i_frame(sc, m);
+		} else if ((*(ptr + OFF_CNTL) & 0x03) == 0x01 ) {
 /* 
  * 6 oct - 2 chksum oct 
  */
@@ -188,8 +182,8 @@ i4b_input(struct mbuf *m)
 				NDBGL2(L2_ERROR, "ERROR, S-frame < 6 octetts!");
 				goto bad;
 			}
-			i4b_rxd_s_frame(l2, l3, m);
-		} else if ((*(frame + OFF_CNTL) & 0x03) == 0x03 ) {
+			i4b_rxd_s_frame(sc, m);
+		} else if ((*(ptr + OFF_CNTL) & 0x03) == 0x03 ) {
 /* 
  * 5 oct - 2 chksum oct 
  */
@@ -198,7 +192,7 @@ i4b_input(struct mbuf *m)
 				NDBGL2(L2_ERROR, "ERROR, U-frame < 5 octetts!");
 				goto bad;
 			}
-			i4b_rxd_u_frame(l2, l3, m);
+			i4b_rxd_u_frame(sc, m);
 		} else {
 			l2->stat.err_rx_badf++;
 			NDBGL2(L2_ERROR, "ERROR, bad frame rx'd - ");
@@ -206,12 +200,17 @@ i4b_input(struct mbuf *m)
 			goto bad;
 		}
 		break;
-	case ISDN_B_CHAN:
+	case ISDN_B1_CHAN: 
+	case ISDN_B2_CHAN:
+			
+			/* FALLTHROUGH */
 /*
- * XXX: ...
+ * XXX: Well, any ethernet port aggregates two B-chans.
  */	
 		break;
 	default:
+		NDBGL2(L2_ERROR, "ERROR, unknown frame rx'd - ");
+		i4b_print_frame(m->m_len, m->m_data);
 		goto bad;
 	}	
 out:	

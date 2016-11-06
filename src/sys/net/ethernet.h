@@ -341,7 +341,7 @@ struct ether_vlan_header {
 #define	ETHERTYPE_PPPOE		0x8864	/* PPP Over Ethernet Session Stage */
 
 #ifdef ISDN
-#define	ETHERTYPE_ISDN_B1		0x8865	/* ISDN Over Ethernet */
+#define	ETHERTYPE_ISDN		0x8865	/* ISDN Over Ethernet */
 #endif /* ISDN */
 
 #define	ETHERTYPE_LANPROBE	0x8888	/* HP LanProbe test? */

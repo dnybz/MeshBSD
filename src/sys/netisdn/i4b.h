@@ -41,26 +41,51 @@ struct sockaddr_isdn {
  * Routing distinguisher, < channel, proto ,sapi, tei > maps to < lla >
  */
 struct isdn_rd {
-	uint8_t 	ir_chan;
-	uint8_t 	ir_proto;
-	uint8_t 	ir_sapi; 	
-	uint8_t 	ir_tei;	 
+	uint8_t 	rd_chan;
+	uint8_t 	rd_proto;
+	uint8_t 	rd_sapi; 	
+	uint8_t 	rd_tei;	 
 } __packed;
 #define ISDN_HDRLEN			(sizeof(struct isdn_rd))
 
 #ifdef _KERNEL
 
+/*
+ * Describes an ISDN channel on IEEE802.{3,11} link-layer.
+ */
+struct isdn_ifaddr {
+	struct ifaddr 	ii_ifa;		/* protocol-independent info */
+#define ii_addr 	ii_ifa.ifa_addr
+#define ii_netmask 	ii_ifa.ifa_netmask
+#define ii_dstaddr 	ii_ifa.ifa_dstaddr
+#define ii_ifp 	ii_ifa.ifa_ifp	
+#define ii_flags 	ii_ifa.ifa_flags
+#define ii_metric 	ii_ifa.ifa_metric
+	TAILQ_ENTRY(isdn_ifaddr)	ii_link;
+	
+	struct sockaddr_isdn 	ii_seg; /* < channel, proto ,sapi, tei >  */	
+};
+
+/*
+ * Software context.
+ */
+struct isdn_softc {
+	struct ifnet 	*sc_ifp; 	
+	struct isdn_l2 	sc_l2;
+	struct isdn_l3 	sc_l3;
+};
+
+/*
+ * Denotes AF_ISDN partition on domain family..
+ */ 
 struct i4b_ifinfo {
 	struct lltable		*iii_llt;	/* isdn_arp cache */
-	
-	struct isdn_l2 	iii_l2;
-	struct isdn_l3 	iii_l3;
-
+	struct isdn_softc 	*iii_sc;
 };
 #define ISDN_LLTABLE(ifp)	\
-	(((struct isdn_ifinfo *)(ifp)->if_afdata[AF_ISDN])->mii_llt)
-#define ISDN_IFINFO(ifp) \
-	((struct isdn_ifinfo *)(ifp)->if_afdata[AF_ISDN])
+	(((struct isdn_ifinfo *)(ifp)->if_afdata[AF_ISDN])->iii_llt)
+#define ISDN_SOFTC(ifp) \
+	(((struct isdn_ifinfo *)(ifp)->if_afdata[AF_ISDN])->iii_sc)
 
 #endif /* _KERNEL */
 	

@@ -88,7 +88,7 @@
  *	implements the routine "I COMMAND" Q.921 03/93 pp 68 and pp 77
  *---------------------------------------------------------------------------*/
 void
-i4b_rxd_i_frame(struct isdn_l2 *l2, struct isdn_l3 *l3, struct mbuf *m)
+i4b_rxd_i_frame(struct isdn_sc *sc, struct mbuf *m)
 {
 	u_char *ptr = m->m_data;
 	int nr;
