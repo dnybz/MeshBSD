@@ -37,8 +37,6 @@
 
 #include "opt_i4bq921.h"
 
-#define	NI4BQ921
-
 #include <sys/param.h>
 #include <sys/kernel.h>
 #include <sys/systm.h>
@@ -66,15 +64,14 @@ i4b_rxd_s_frame(struct isdn_l2 *l2, struct isdn_l3 *l3, struct mbuf *m)
 
 	if (!((l2->tei_valid == TEI_VALID) &&
 	     (l2->tei == GETTEI(*(ptr+OFF_TEI))))) {
-		m_freem(m);
-		return;
+		goto out;
 	}
 
 	l2->rxd_CR = GETCR(*(ptr + OFF_SAPI));
 	l2->rxd_PF = GETSPF(*(ptr + OFF_SNR));
 	l2->rxd_NR = GETSNR(*(ptr + OFF_SNR));
 
-	i4b_rxd_ack(l2, l3, l2->rxd_NR);
+	i4b_rxd_ack(l2, l2->rxd_NR);
 
 	switch(*(ptr + OFF_SRCR)) {
 	case RR:
@@ -98,6 +95,7 @@ i4b_rxd_s_frame(struct isdn_l2 *l2, struct isdn_l3 *l3, struct mbuf *m)
 		i4b_print_frame(m->m_len, m->m_data);
 		break;
 	}
+out:	
 	m_freem(m);
 }
 
@@ -195,8 +193,8 @@ i4b_build_s_frame(struct isdn_l2 *l2, crbit_to_nt_t crbit,
 {
 	struct mbuf *m;
 
-	if ((m = i4b_Dgetmbuf(S_FRAME_LEN)) == NULL)
-		return (NULL);
+	if ((m = i4b_Dgetmbuf(S_FRAME_LEN, M_DONTWAIT, MT_I4B_D)) == NULL)
+		goto out;
 
 	PUTSAPI(SAPI_CCP, crbit, m->m_data[OFF_SAPI]);
 
@@ -205,8 +203,6 @@ i4b_build_s_frame(struct isdn_l2 *l2, crbit_to_nt_t crbit,
 	m->m_data[OFF_SRCR] = type;
 
 	m->m_data[OFF_SNR] = (l2->vr << 1) | (pbit & 0x01);
-
+out:
 	return (m);
 }
-
-#endif /* NI4BQ921 */

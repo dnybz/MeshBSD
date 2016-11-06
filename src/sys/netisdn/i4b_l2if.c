@@ -277,7 +277,7 @@ i4b_l3_tx_connect(call_desc_t *cd)
 	*ptr++ = setup_cr(cd, cd->cr);	/* call reference value */
 	*ptr++ = CONNECT;		/* message type = connect */
 
-	i4b_dl_data_req(l2sc, l2sc->l3, m);
+	i4b_dl_data_req(l2sc, m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -317,7 +317,7 @@ i4b_l3_tx_release_complete(call_desc_t *cd, int send_cause_flag)
 		*ptr++ = make_q931_cause(cd->cause_out);
 	}
 
-	i4b_dl_data_req(l2sc, l2sc->l3, m);
+	i4b_dl_data_req(l2sc, m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -347,7 +347,7 @@ i4b_l3_tx_disconnect(call_desc_t *cd)
 	*ptr++ = CAUSE_STD_LOC_OUT;
 	*ptr++ = make_q931_cause(cd->cause_out);
 
-	i4b_dl_data_req(l2sc, l2sc->l3, m);
+	i4b_dl_data_req(l2sc, m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -376,7 +376,7 @@ i4b_l3_tx_setup(call_desc_t *cd)
 
 	NDBGL3(L3_PRIM, "isdnif %d, cr = 0x%02x", cd->isdnif, cd->cr);
 
-	if ((m = i4b_Dgetmbuf(msglen)) == NULL)
+	if ((m = i4b_getmbuf(msglen, M_DONTWAIT, MT_I4B_D)) == NULL)
 	{
 		panic("i4b_l3_tx_setup: can't allocate mbuf");
 	}
@@ -455,7 +455,7 @@ i4b_l3_tx_setup(call_desc_t *cd)
 	strncpy(ptr, cd->dst_telno, dlen);
 	ptr += dlen;
 
-	i4b_dl_data_req(l2sc, l2sc->l3, m);
+	i4b_dl_data_req(l2sc, m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -480,7 +480,7 @@ i4b_l3_tx_connect_ack(call_desc_t *cd)
 	*ptr++ = setup_cr(cd, cd->cr);	/* call reference value */
 	*ptr++ = CONNECT_ACKNOWLEDGE;	/* message type = connect ack */
 
-	i4b_dl_data_req(l2sc, l2sc->l3, m);
+	i4b_dl_data_req(l2sc, m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -514,7 +514,7 @@ i4b_l3_tx_status(call_desc_t *cd, u_char q850cause)
 	*ptr++ = CALLSTATE_LEN;
 	*ptr++ = i4b_status_tab[cd->Q931state];
 
-	i4b_dl_data_req(l2sc, l2sc->l3, m);
+	i4b_dl_data_req(l2sc, m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -550,7 +550,7 @@ i4b_l3_tx_release(call_desc_t *cd, int send_cause_flag)
 		*ptr++ = make_q931_cause(cd->cause_out);
 	}
 
-	i4b_dl_data_req(l2sc, l2sc->l3, m);
+	i4b_dl_data_req(l2sc, m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -575,7 +575,7 @@ i4b_l3_tx_alert(call_desc_t *cd)
 	*ptr++ = setup_cr(cd, cd->cr);	/* call reference value */
 	*ptr++ = ALERT;			/* message type = alert */
 
-	i4b_dl_data_req(l2sc, l2sc->l3, m);
+	i4b_dl_data_req(l2sc, m);
 }
 
 #endif /* NI4BQ931 > 0 */

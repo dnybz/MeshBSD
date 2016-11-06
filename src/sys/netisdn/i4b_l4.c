@@ -428,7 +428,7 @@ i4b_l4_pdeact(struct isdn_l3 *l3, int numactive)
 		md->controller = d->l3_id;
 		md->numactive = numactive;
 
-		i4bputqueue_hipri(m);		/* URGENT !!! */
+		gi4bputqueue_hipri(m);		/* URGENT !!! */
 	}
 }
 

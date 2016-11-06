@@ -186,6 +186,11 @@ ether_requestencap(struct ifnet *ifp, struct if_encap_req *req)
 	case AF_INET6:
 		etype = htons(ETHERTYPE_IPV6);
 		break;
+#ifdef ISDN
+	case AF_ISDN:
+		etype = htons(ETHERTYPE_ISDN);
+		break;
+#endif /* ISDN */
 	case AF_ARP:
 		ah = (struct arphdr *)req->hdata;
 		ah->ar_hrd = htons(ARPHRD_ETHER);
@@ -432,7 +437,7 @@ bad:			if (m != NULL)
 	}
 
 	/* Continue with link-layer output */
-	return ether_output_frame(ifp, m);
+	return (ether_output_frame(ifp, m));
 }
 
 /*
@@ -832,15 +837,9 @@ ether_demux(struct ifnet *ifp, struct mbuf *m)
 		break;
 #endif
 #ifdef ISDN
-	case ETHERTYPE_ISDN_B1:
-		isr = NETISR_ISDN_B1;
+	case ETHERTYPE_ISDN:
+		isr = NETISR_ISDN;
 		break;
-	case ETHERTYPE_ISDN_B2:
-		isr = NETISR_ISDN_B2;
-		break;
-	case ETHERTYPE_ISDN_D:
-		isr = NETISR_ISDN_D;
-	break;	
 #endif /* ISDN */
 	default:
 		goto discard;

@@ -89,7 +89,7 @@ struct protosw i4bsw[] = {
 	.pr_type =		SOCK_RAW,		
 	.pr_domain =	&i4bdomain,	
 	.pr_flags =		PR_ATOMIC|PR_ADDR,
-  	.pr_usrreqs = 	&i4b_raw_usrreqs,
+  	.pr_usrreqs = 	&nousrreqs,
 },
 };
 

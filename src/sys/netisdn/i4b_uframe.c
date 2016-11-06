@@ -211,7 +211,7 @@ i4b_build_u_frame(struct isdn_l2 *l2, crbit_to_nt_t crbit,
 {
 	struct mbuf *m;
 
-	if ((m = i4b_Dgetmbuf(U_FRAME_LEN)) == NULL)
+	if ((m = i4b_getmbuf(U_FRAME_LEN, M_DONTWAIT, MT_I4B_D)) == NULL)
 		goto out;
 
 	PUTSAPI(SAPI_CCP, crbit, m->m_data[OFF_SAPI]);

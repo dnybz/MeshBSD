@@ -130,7 +130,7 @@ i4b_dl_unit_data_req(struct isdn_l2 *l2, struct isdn_l3 *l3,
  *	DL DATA REQUEST from Layer 3
  *---------------------------------------------------------------------------*/
 int 
-i4b_dl_data_req(struct isdn_l2 *l2, struct isdn_l3 *l3, struct mbuf *m)
+i4b_dl_data_req(struct isdn_l2 *l2, struct mbuf *m)
 {
 	int error;
 	
@@ -322,7 +322,8 @@ i4b_l2_channel_get_state(struct isdn_l3 *l3, int b_chanid)
 	return (sc->bchan_state[b_chanid]);
 }
 
-void i4b_l2_channel_set_state(struct isdn_l3 *l3, 
+void 
+i4b_l2_channel_set_state(struct isdn_l3 *l3, 
 	int b_chanid, int state)
 {
 	struct isdn_l2 *sc = l3->l1_token;

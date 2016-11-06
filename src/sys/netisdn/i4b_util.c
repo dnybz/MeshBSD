@@ -257,7 +257,7 @@ i4b_print_l2var(struct isdn_l2 *l2)
  *	got s or i frame, check if valid ack for last sent frame
  *---------------------------------------------------------------------------*/
 void
-i4b_rxd_ack(struct isdn_l2 *l2, struct isdn_l3 *drv, int nr)
+i4b_rxd_ack(struct isdn_l2 *l2, int nr)
 {
 
 #ifdef NOTDEF
@@ -270,7 +270,6 @@ i4b_rxd_ack(struct isdn_l2 *l2, struct isdn_l3 *drv, int nr)
 #endif
 
 	if (l2->ua_num != UA_EMPTY) {
-		mtx_lock(&i4b_mtx);
 
 		M128DEC(nr);
 
@@ -281,8 +280,6 @@ i4b_rxd_ack(struct isdn_l2 *l2, struct isdn_l3 *drv, int nr)
 		}
 		m_freem(l2->ua_frame);
 		l2->ua_num = UA_EMPTY;
-
-		mtx_unlock(&i4b_mtx);
 	}
 }
 
@@ -290,7 +287,8 @@ i4b_rxd_ack(struct isdn_l2 *l2, struct isdn_l3 *drv, int nr)
  *	if not already active, activate layer 1
  *---------------------------------------------------------------------------*/
 void
-i4b_l1_activate(struct isdn_l2 *l2) {
+i4b_l1_activate(struct isdn_l2 *l2) 
+{
 	if (l2->ph_active == PH_INACTIVE) {
 		l2->ph_active = PH_ACTIVEPEND;
 		l2->l1->ph_activate_req(l2->l1_token);

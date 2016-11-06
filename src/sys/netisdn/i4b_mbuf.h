@@ -42,12 +42,13 @@
 #define MBUF_DONTFREE	0
 #define MBUF_FREE	1
 
-#define IF_QEMPTY(ifq)	((ifq)->ifq_len == 0)
+#define MT_DCHAN        MT_DATA
+#define MT_BCHAN        MT_DATA
 
-struct mbuf * 	i4b_Dgetmbuf(int);
+#define MT_I4B_D	MT_DCHAN
+#define MT_I4B_B	MT_BCHAN
 
-struct mbuf * 	i4b_Bgetmbuf(int);
-void 	i4b_Bcleanifq(struct ifqueue *);
+struct mbuf * 	i4b_getmbuf(int, int, short);
 
 #endif /* !_NETISDN_I4B_MBUF_H_ */
 

@@ -30,23 +30,28 @@ struct sockaddr_isdn {
 	uint8_t 	sisdn_len; 	/* length */
 	sa_family_t 	sisdn_family; 	/* AF_ISDN */
 	uint16_t 	sisdn_ctlr; 	/* Index of Ethernet Controller */
-	uint16_t 	sisdn_chan;	
-	uint16_t 	sisdn_sapi; 	
-	uint16_t 	sisdn_tei;				
+	uint8_t 	sisdn_chan;
+	uint8_t 	sisdn_proto;
+	uint8_t 	sisdn_sapi; 	
+	uint8_t 	sisdn_tei;				
 };
 #define SISDN_LEN 	(sizeof(struct sockaddr_isdn))
 
+/*
+ * Routing distinguisher, < channel, proto ,sapi, tei > maps to < lla >
+ */
+struct isdn_rd {
+	uint8_t 	ir_chan;
+	uint8_t 	ir_proto;
+	uint8_t 	ir_sapi; 	
+	uint8_t 	ir_tei;	 
+} __packed;
+#define ISDN_HDRLEN			(sizeof(struct isdn_rd))
+
 #ifdef _KERNEL
-
-struct isdn_bchan {
-
-	
-};
 
 struct i4b_ifinfo {
 	struct lltable		*iii_llt;	/* isdn_arp cache */
-	
-	struct isdn_bchan 	iii_bchan[2];
 	
 	struct isdn_l2 	iii_l2;
 	struct isdn_l3 	iii_l3;

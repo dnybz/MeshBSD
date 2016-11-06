@@ -108,15 +108,13 @@ i4b_rxd_i_frame(struct isdn_l2 *l2, struct isdn_l3 *l3, struct mbuf *m)
 		return;
 	}
 
-	mtx_lock(&i4b_mtx);
-
 	l2->stat.rx_i++;		/* update frame count */
 
 	nr = GETINR(*(ptr + OFF_INR));
 	ns = GETINS(*(ptr + OFF_INS));
 	p = GETIP(*(ptr + OFF_INR));
 
-	i4b_rxd_ack(l2, l3, nr);		/* last packet ack */
+	i4b_rxd_ack(l2, nr);		/* last packet ack */
 /* 
  * own receiver busy ? 
  */
@@ -213,8 +211,6 @@ i4b_rxd_i_frame(struct isdn_l2 *l2, struct isdn_l3 *l3, struct mbuf *m)
 		i4b_nr_error_recovery(l2);	/* sequence error */
 		l2->Q921_state = ST_AW_EST;
 	}
-
-	mtx_unlock(&i4b_mtx);
 }
 
 /*---------------------------------------------------------------------------*
@@ -225,8 +221,6 @@ i4b_i_frame_queued_up(struct isdn_l2 *l2)
 {
 	struct mbuf *m;
 	u_char *ptr;
-
-	mtx_lock(&i4b_mtx);
 
 	if ((l2->peer_busy) || 
 		(l2->vs == ((l2->va + MAX_K_VALUE) & 127))) {
@@ -248,15 +242,15 @@ i4b_i_frame_queued_up(struct isdn_l2 *l2)
 			START_TIMER(l2->IFQU_callout, 
 			i4b_i_frame_queued_up, l2, IFQU_DLY);
 		}
-		mtx_unlock(&i4b_mtx);
 		return;
 	}
-
-	IF_DEQUEUE(&l2->i_queue, m);    /* fetch next frame to tx */
+ /* 
+  * fetch next frame to tx 
+  */
+	IF_DEQUEUE(&l2->i_queue, m);   
 
 	if (!m) {
 		NDBGL2(L2_I_ERR, "ERROR, mbuf NULL after IF_DEQUEUE");
-		mtx_unlock(&i4b_mtx);
 		return;
 	}
 
@@ -284,7 +278,7 @@ i4b_i_frame_queued_up(struct isdn_l2 *l2)
  */	
 		NDBGL2(L2_I_ERR, "ERROR, l2->ua_num: %d != UA_EMPTY", l2->ua_num);
 		i4b_print_l2var(l2);
-		i4b_Dfreembuf(l2->ua_frame);
+		m_freem(l2->ua_frame);
 	}
 
 	l2->ua_frame = m;		/* save unacked frame */
@@ -294,12 +288,8 @@ i4b_i_frame_queued_up(struct isdn_l2 *l2)
 
 	l2->ack_pend = 0;
 
-	mtx_unlock(&i4b_mtx);
-
 	if (l2->T200 == TIMER_IDLE) {
 		i4b_T203_stop(l2);
 		i4b_T200_start(l2);
 	}
 }
-
-#endif /* NI4BQ921 */

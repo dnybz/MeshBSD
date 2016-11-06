@@ -1,6 +1,5 @@
 /*-
  * Copyright (c) 2016 Henning Matyschok
- * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -34,7 +33,7 @@
 #include <sys/socket.h>
 #include <sys/socketvar.h>
 #include <sys/systm.h>
-#include <sys/sysctl.h>
+#include <sys/sysraw.h>
 
 #include <net/if.h>
 #include <net/if_types.h>
@@ -50,6 +49,12 @@
 #define ISDN_RAW_SNDQ	576
 #define ISDN_RAW_RCVQ	576
 
+struct i4b_pcb {
+	struct socket	 *pcb_so;	/* the socket */
+	LIST_ENTRY(i4b_pcb) socks;
+	struct isdn_call_desc pcb_cd;
+};
+
 SYSCTL_DECL(_net_isdn);
 SYSCTL_NODE(_net, AF_ISDN, isdn, CTLFLAG_RW, 0, "ISDN Family");
 
@@ -61,8 +66,14 @@ SYSCTL_ULONG(_net_isdn, OID_AUTO, sendspace, CTLFLAG_RW,
 SYSCTL_ULONG(_net_isdn, OID_AUTO, recvspace, CTLFLAG_RW,
     &i4b_raw_recvspace, 0, "Maximum space for incoming ISDN PDU");
 
+MTX_SYSINIT(i4b_pcb_mtx, &i4b_pcb_mtx, "i4b_pcb", MTX_DEF);
+
 extern int	i4b_control(struct socket *, u_long, caddr_t, struct ifnet *,
     struct thread *);
+
+static LIST_HEAD(, i4b_pcb) i4b_pcb_list;
+
+static struct mtx	i4b_pcb_mtx;
 
 /*
  * Control socket.
@@ -71,7 +82,27 @@ extern int	i4b_control(struct socket *, u_long, caddr_t, struct ifnet *,
 static int
 i4b_attach(struct socket *so, int proto, struct thread *td)
 {
-	return (soreserve(so, i4b_raw_sendspace, i4b_raw_recvspace));
+	struct i4b_pcb *const pcbp = sotoi4b_pcb(so);
+	int error;
+
+	if (pcbp != NULL)
+		return (EISCONN);
+	
+	error = soreserve(so, i4b_raw_sendspace, i4b_raw_recvspace);
+	if (error)
+		return (error);
+	
+	pcbp = malloc(sizeof(struct ngpcb), M_PCB, M_WAITOK | M_ZERO);
+	pcbp->type = type;
+
+	so->so_pcb = (caddr_t)pcbp;
+	pcbp->pcb_so = so;
+
+	mtx_lock(&i4b_pcb_mtx);
+	LIST_INSERT_HEAD(&i4b_pcb_list, pcbp, socks);
+	mtx_unlock(&i4b_pcb_mtx);
+	
+	return (error);
 }
 
 struct pr_usrreqs i4b_raw_usrreqs = {

@@ -80,23 +80,6 @@ struct isdn_bch_stats {
 	int bch_ibytes;
 };
 
-/*---------------------------------------------------------------------------*
- * table of things the driver needs to know about the b channel
- * it is connected to for data transfer
- *---------------------------------------------------------------------------*/
-struct isdn_bch_linktab {
-	void *bch_l1token;
-	int bch_channel;
-	
-	struct isdn_l4_bch *bch_sap;
-/*
- * XXX: ... 
- */	
-	struct ifqueue *bch_tx_queue;
-	struct ifqueue *bch_rx_queue;	/* data xfer for NON-HDLC traffic   */
-	struct mbuf **rx_mbuf;		/* data xfer for HDLC based traffic */
-};
-
 struct isdn_l4_sap;
 struct isdn_l3;
 
@@ -160,10 +143,6 @@ struct isdn_call_desc {
 	int	cd_T313;			/* CONNECT sent timeout		*/
 
 	int	cd_T400;			/* L4 timeout */
-
-	isdn_link_t	*cd_ilt;		/* isdn B channel driver/state	*/
-	struct isdn_l4_sap *cd_l4_sap; 	/* Interface L4 Service Primitves */
-	void	*cd_l4_softc; 	/* Software COntext L4	*/
 
 	int	cd_dir;			/* outgoing or incoming call	*/
 #define DIR_OUTGOING	0

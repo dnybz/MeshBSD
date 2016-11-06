@@ -72,31 +72,11 @@
 #include <netisdn/i4b_mbuf.h>
 #include <netisdn/i4b_global.h>
 
-#ifndef I4B_MBUF_DEBUG
-#define I4B_MBUF_DEBUG
-#endif
-#undef I4B_MBUF_TYPE_DEBUG
-
-#ifdef I4B_MBUF_TYPE_DEBUG
-
-#define MT_DCHAN        MT_DATA
-#define MT_BCHAN        MT_DATA
-
-#define MT_I4B_D	MT_DCHAN
-#define MT_I4B_B	MT_BCHAN
-
-#else /* ! I4B_MBUF_TYPE_DEBUG */
-
-#define MT_I4B_D	MT_DATA
-#define MT_I4B_B	MT_DATA
-
-#endif /* I4B_MBUF_TYPE_DEBUG */
-
 /*---------------------------------------------------------------------------*
  *	allocate D-channel mbuf space
  *---------------------------------------------------------------------------*/
 struct mbuf*
-i4b_Dgetmbuf(int len)
+i4b_getmbuf(int len, int how, short type)
 {
 	struct mbuf *m;
 
@@ -104,98 +84,48 @@ i4b_Dgetmbuf(int len)
 /* 
  * if length > max extension size 
  */
-#ifdef I4B_MBUF_DEBUG
+#ifdef I4B_DEBUG
 		(void)printf("i4b_getmbuf: error - len(%d) > MCLBYTES(%d)\n",
 					len, MCLBYTES);
 #endif
 
-		return (NULL);
+		m = NULL;
+		goto out;
 	}
-
-	MGETHDR(m, M_DONTWAIT, MT_I4B_D);	/* get mbuf with pkthdr */
+/* 
+ * get mbuf with pkthdr 
+ */
+	MGETHDR(m, how, type);	
 /* 
  * did we actually get the mbuf? 
  */
+	if (m == NULL) {
 
-	if (!m) {
-
-#ifdef I4B_MBUF_DEBUG
-		printf("i4b_getbuf: error - MGETHDR failed!\n");
+#ifdef I4B_DEBUG
+		(void)printf("i4b_getbuf: error - MGETHDR failed!\n");
 #endif
 
-		return (NULL);
+		goto out;
 	}
 
 	if (len >= MHLEN) {
-		MCLGET(m, M_DONTWAIT);
+		MCLGET(m, how);
 
 		if (!(m->m_flags & M_EXT)) {
 			m_freem(m);
 
-#ifdef I4B_MBUF_DEBUG
-			printf("i4b_getbuf: error - MCLGET failed, len(%d)\n", len);
+#ifdef I4B_DEBUG
+			(void)printf("i4b_getbuf: error - MCLGET failed, len(%d)\n", len);
 #endif
 
-			return (NULL);
+			m = NULL;
+			goto out;
 		}
 	}
 
 	m->m_len = len;
-
+out:
 	return (m);
 }
 
-/*---------------------------------------------------------------------------*
- *	allocate B-channel mbuf space
- *---------------------------------------------------------------------------*/
-struct mbuf*
-i4b_Bgetmbuf(int len)
-{
-	struct mbuf *m;
 
-	if (len > MCLBYTES)	{
-/* 
- * if length > max extension size 
- */
-
-#ifdef I4B_MBUF_DEBUG
-		printf("i4b_getmbuf: error - len(%d) > MCLBYTES(%d)\n",
-					len, MCLBYTES);
-#endif
-
-		return (NULL);
-	}
-
-	MGETHDR(m, M_DONTWAIT, MT_I4B_B);	/* get mbuf with pkthdr */
-/* 
- * did we actually get the mbuf? 
- */
-	if (!m) {
-
-#ifdef I4B_MBUF_DEBUG
-		printf("i4b_getbuf: error - MGETHDR failed!\n");
-#endif
-
-		return (NULL);
-	}
-
-	if (len >= MHLEN) {
-		MCLGET(m, M_DONTWAIT);
-
-		if (!(m->m_flags & M_EXT)) {
-			m_freem(m);
-
-#ifdef I4B_MBUF_DEBUG
-			printf("i4b_getbuf: error - MCLGET failed, len(%d)\n", len);
-#endif
-
-			return (NULL);
-		}
-	}
-
-	m->m_len = len;
-
-	return (m);
-}
-
-/* EOF */
