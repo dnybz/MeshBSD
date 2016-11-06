@@ -23,32 +23,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _NETISDN_I4B_H_
-#define _NETISDN_I4B_H_
-
-struct sockaddr_isdn {
-	uint8_t 	sisdn_len; 	/* length */
-	sa_family_t 	sisdn_family; 	/* AF_ISDN */
-	uint16_t 	sisdn_ctlr; 	/* Index of Ethernet Controller */
-	uint8_t 	sisdn_chan;
-	uint8_t 	sisdn_proto;
-	uint8_t 	sisdn_sapi; 	
-	uint8_t 	sisdn_tei;				
-};
-#define SISDN_LEN 	(sizeof(struct sockaddr_isdn))
-
-/*
- * Routing distinguisher, < channel, proto ,sapi, tei > maps to < lla >
- */
-struct isdn_rd {
-	uint8_t 	rd_chan;
-	uint8_t 	rd_proto;
-	uint8_t 	rd_sapi; 	
-	uint8_t 	rd_tei;	 
-} __packed;
-#define ISDN_HDRLEN			(sizeof(struct isdn_rd))
+#ifndef _NETISDN_ISDN_VAR_H_
+#define _NETISDN_ISDN_VAR_H_
 
 #ifdef _KERNEL
+
+#include <sys/queue.h>
 
 /*
  * Describes an ISDN channel on IEEE802.{3,11} link-layer.
@@ -89,4 +69,4 @@ struct i4b_ifinfo {
 
 #endif /* _KERNEL */
 	
-#endif /* _NETISDN_I4B_H_ */
+#endif /* _NETISDN_ISDN_VAR_H_ */

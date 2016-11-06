@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 1999 Hellmuth Michaelis. All rights reserved.
+/*-
+ * Copyright (c) 2016 Henning Matyschok
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -20,36 +20,54 @@
  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- *---------------------------------------------------------------------------
- *
- *	i4b_rbch_ioctl.h raw B-channel driver interface ioctls
- *	------------------------------------------------------
- *
- *	$Id: i4b_rbch_ioctl.h,v 1.2 2005/12/10 23:51:50 elad Exp $
- *
- * $FreeBSD$
- *
- *      last edit-date: [Mon Dec 13 22:07:12 1999]
- *
- *---------------------------------------------------------------------------*/
+ * SUCH DAMAGE. 
+ */
+#include <sys/param.h>
+#include <sys/systm.h>
+#include <sys/mbuf.h>
+#include <sys/lock.h>
+#include <sys/rwlock.h>
+#include <sys/socket.h>
+#include <sys/kernel.h>
+#include <sys/sysctl.h>
 
-#ifndef _NETISDN_I4B_RBCH_IOCTL_H_
-#define _NETISDN_I4B_RBCH_IOCTL_H_
+#include <net/if.h>
+#include <net/if_types.h>
+#include <net/if_var.h>
 
-/*---------------------------------------------------------------------------*
- *	instruct the rbch device to dial the given number
- *---------------------------------------------------------------------------*/
+#include <netisdn/i4b.h>
+#include <netisdn/i4b_var.h>
 
-typedef char telno_t[TELNO_MAX];
+/*
+ * XXX ...
+ */
 
-#define	I4B_RBCH_DIALOUT	_IOW('R', 1, telno_t)
+int
+i4b_output(struct isdn_l2 *l2, struct mbuf *m, int flags)
+{	
+	struct sockadd_isdn sisdn;
+	struct ifnet *ifp;
+	int error;
 
-/*---------------------------------------------------------------------------*
- *	request version and release info from kernel part
- *---------------------------------------------------------------------------*/
+	bzero(&sisdn, sizeof(sisdn));
+	
+	sisdn.sisdn_family = AF_ISDN;
+	sisdn.sisdn_len = SISDN_LEN;
+	
+/*
+ * XXX ...
+ */	
+	
+	sisdn.sisdn_tei = l2->tei;
+	
+	ifp = l2->l2_ifp;
+/*
+ * XXX ...
+ */
+	error = (*ifp->if_output)
+		(ifp, m, (const struct sockaddr *)&sisdn, NULL);
+	
+	return (error);
+}
 
-#define I4B_RBCH_VR_REQ		_IOR('R', 2, msg_vr_req_t)
 
-#endif /* !_NETISDN_I4B_RBCH_IOCTL_H_ */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.
+ * Copyright (c) 1997, 1999 Hellmuth Michaelis. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -24,60 +24,32 @@
  *
  *---------------------------------------------------------------------------
  *
- *      i4b_l2fsm.h - layer 2 FSM
- *      -------------------------
+ *	i4b - mbuf handling support routines
+ *	--------------------------------------
  *
- *	$Id: i4b_l2fsm.h,v 1.3 2005/12/10 23:51:50 elad Exp $
+ *	$Id: i4b_mbuf.h,v 1.3 2005/12/10 23:51:50 elad Exp $
  *
  * $FreeBSD$
  *
- *      last edit-date: [Sat Mar 18 10:28:37 2000]
+ *	last edit-date: [Fri Mar  3 14:30:09 2000]
  *
  *---------------------------------------------------------------------------*/
 
-#ifndef _NETISDN_I4B_L2FSM_H_
-#define _NETISDN_I4B_L2FSM_H_
+#ifndef _NETISDN_ISDN_MBUF_H_
+#define _NETISDN_ISDN_MBUF_H_
 
-enum Q921_states {
-	ST_TEI_UNAS,	/* TEI unassigned */
-	ST_ASG_AW_TEI,	/* assign awaiting TEI */
-	ST_EST_AW_TEI,	/* establish awaiting TEI */
-	ST_TEI_ASGD,	/* TEI assigned */
+/* layer 1 / layer 2 comunication: 3rd ph_data_req parameter */
+#define MBUF_DONTFREE	0
+#define MBUF_FREE	1
 
-	ST_AW_EST,	/* awaiting establishment */
-	ST_AW_REL,	/* awaiting release */
-	ST_MULTIFR,	/* multiple frame established */
-	ST_TIMREC,	/* timer recovery */
+#define MT_DCHAN        MT_DATA
+#define MT_BCHAN        MT_DATA
 
-	ST_SUBSET,	/* SUBroutine SETs new state */
-	ST_ILL,		/* illegal state */
-	N_STATES	/* number of states */
-};
+#define MT_ISDN_D	MT_DCHAN
+#define MT_ISDN_B	MT_BCHAN
 
-enum Q921_events {
-	EV_DLESTRQ,	/* dl establish req */
-	EV_DLUDTRQ,	/* dl unit data req */
-	EV_MDASGRQ,	/* mdl assign req */
-	EV_MDERRRS,	/* mdl error response */
-	EV_PSDEACT,	/* persistent deactivation */
-	EV_MDREMRQ,	/* mdl remove req */
-	EV_RXSABME,	/* rx'd SABME */
-	EV_RXDISC,	/* rx'd DISC */
-	EV_RXUA,	/* rx'd UA */
-	EV_RXDM,	/* rx'd DM */
-	EV_T200EXP,	/* T200 expired */
-	EV_DLDATRQ,	/* dl data req */
-	EV_DLRELRQ,	/* dl release req */
-	EV_T203EXP,	/* T203 expired */
-	EV_OWNBUSY,	/* set own rx busy */
-	EV_OWNRDY,	/* clear own rx busy */
-	EV_RXRR,	/* rx'd RR */
-	EV_RXREJ,	/* rx'd REJ */
-	EV_RXRNR,	/* rx'd RNR */
-	EV_RXFRMR,	/* rx'd FRMR */
+struct mbuf * 	isdn_getmbuf(int, int, short);
 
-	EV_ILL,		/* Illegal */
-	N_EVENTS
-};
+#endif /* !_NETISDN_ISDN_MBUF_H_ */
 
-#endif /* !_NETISDN_I4B_L2FSM_H_ */
+/* EOF */

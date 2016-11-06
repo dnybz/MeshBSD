@@ -42,19 +42,19 @@
 #include <net/if_types.h>
 #include <net/if_var.h>
 
-#include <netisdn/i4b.h>
+#include <netisdn/isdn.h>
 
-int 	i4b_control(struct socket *, u_long, caddr_t, 
+int 	isdn_control(struct socket *, u_long, caddr_t, 
 	struct ifnet *, struct thread *);
 
 
 /*
- * Generic i4b control operations.
+ * Generic isdn control operations.
  *
  */ 
  
 int
-i4b_control(struct socket *so __unused, u_long cmd, caddr_t data, 
+isdn_control(struct socket *so __unused, u_long cmd, caddr_t data, 
 		struct ifnet *ifp, struct thread *td)
 {
 	
@@ -62,7 +62,7 @@ i4b_control(struct socket *so __unused, u_long cmd, caddr_t data,
  * XXX: please be patient... 
  */
 
-#ifdef I4B_DEBUG
+#ifdef ISDN_DEBUG
 	(void)printf("%s\n", __func__);
 #endif /* ISDN_DEBUG */
 
@@ -90,17 +90,17 @@ out:
 	return (EOPNOTSUPP);	
 }
 
-void *	i4b_domifattach(struct ifnet *);
-void	i4b_domifdetach(struct ifnet *, void *);
+void *	isdn_domifattach(struct ifnet *);
+void	isdn_domifdetach(struct ifnet *, void *);
 
 /*
  * Bind ARP cache, see kern/uiopc_domain.c 
  * and net/if.c for further details.
  */
 void *
-i4b_domifattach(struct ifnet *ifp)
+isdn_domifattach(struct ifnet *ifp)
 {
-	struct i4b_ifinfo *iii = NULL;
+	struct isdn_ifinfo *iii = NULL;
 	struct lltable *llt;
 
 	if (ifp == NULL)
@@ -113,9 +113,9 @@ i4b_domifattach(struct ifnet *ifp)
 /*
  * XXX: common operations on ARP cache...
  *
-		llt->llt_prefix_free = i4b_lltable_prefix_free;
-		llt->llt_lookup = i4b_lltable_lookup;
-		llt->llt_dump = i4b_lltable_dump;
+		llt->llt_prefix_free = isdn_lltable_prefix_free;
+		llt->llt_lookup = isdn_lltable_lookup;
+		llt->llt_dump = isdn_lltable_dump;
  */		
 		iii->iii_llt = llt;
 	} else {
@@ -130,12 +130,12 @@ out:
  * Detach cache.
  */
 void
-i4b_domifdetach(struct ifnet *ifp, void *aux)
+isdn_domifdetach(struct ifnet *ifp, void *aux)
 {
-	struct i4b_ifinfo *iii;
+	struct isdn_ifinfo *iii;
 	struct lltable *llt;
 	
-	if ((iii = (struct i4b_ifinfo *)aux) == NULL)
+	if ((iii = (struct isdn_ifinfo *)aux) == NULL)
 		return;
 
 	if (ifp == NULL)

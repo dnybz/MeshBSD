@@ -27,7 +27,7 @@
  *	i4b_iframe.c - i frame handling routines
  *	------------------------------------------
  *
- *	$Id: i4b_iframe.c,v 1.8 2005/12/11 12:25:06 christos Exp $
+ *	$Id: isdn_iframe.c,v 1.8 2005/12/11 12:25:06 christos Exp $
  *
  * $FreeBSD$
  *
@@ -59,7 +59,7 @@
  * SUCH DAMAGE.
  */
 
-#include "i4bq921.h"
+#include "isdnq921.h"
 
 #if NI4BQ921
 
@@ -72,79 +72,87 @@
 #include <sys/socket.h>
 #include <net/if.h>
 
-#include <netisdn/i4b_debug.h>
-#include <netisdn/i4b_ioctl.h>
-#include <netisdn/i4b_trace.h>
+#include <netisdn/isdn_debug.h>
+#include <netisdn/isdn_ioctl.h>
+#include <netisdn/isdn_trace.h>
 
-#include <netisdn/i4b_global.h>
-#include <netisdn/i4b_l2.h>
-#include <netisdn/i4b_l1l2.h>
-#include <netisdn/i4b_isdnq931.h>
-#include <netisdn/i4b_mbuf.h>
-#include <netisdn/i4b_l2fsm.h>
+#include <netisdn/isdn_global.h>
+#include <netisdn/isdn_l2.h>
+#include <netisdn/isdn_l1l2.h>
+#include <netisdn/isdn_isdnq931.h>
+#include <netisdn/isdn_mbuf.h>
+#include <netisdn/isdn_l2fsm.h>
 
 /*---------------------------------------------------------------------------*
  *	process i frame
  *	implements the routine "I COMMAND" Q.921 03/93 pp 68 and pp 77
  *---------------------------------------------------------------------------*/
 void
-i4b_rxd_i_frame(struct isdn_sc *sc, struct mbuf *m)
+isdn_rxd_i_frame(struct isdn_sc *sc, struct mbuf *m)
 {
-	u_char *ptr = m->m_data;
+	u_char *ptr;
+	struct isdn_l2 *l2;
+	
 	int nr;
 	int ns;
 	int p;
 
-	if (!((l2->tei_valid == TEI_VALID) &&
-	     (l2->tei == GETTEI(*(ptr+OFF_TEI))))) {
+	ptr = m->m_data;
+	l2 = &sc->sc_l2;
+
+	if (!((l2->l2_tei_valid == TEI_VALID) &&
+	     (l2->l2_tei == GETTEI(*(ptr+OFF_TEI))))) {
 		m_freem(m);
 		return;
 	}
 
-	if ((l2->Q921_state != ST_MULTIFR) && 
-		(l2->Q921_state != ST_TIMREC)) {
-		m_freem(m);
+	if ((l2->l2_Q921_state != ST_MULTIFR) && 
+		(l2->l2_Q921_state != ST_TIMREC)) {
 		NDBGL2(L2_I_ERR, "ERROR, state != (MF || TR)!");
+		m_freem(m);
 		return;
 	}
-
-	l2->stat.rx_i++;		/* update frame count */
-
+	mtx_lock(&l2->l2_mtx);
+/* 
+ * update frame count 
+ */
+	l2->l2_stat.rx_i++;
+	
 	nr = GETINR(*(ptr + OFF_INR));
 	ns = GETINS(*(ptr + OFF_INS));
 	p = GETIP(*(ptr + OFF_INR));
 
-	i4b_rxd_ack(l2, nr);		/* last packet ack */
+	isdn_rxd_ack(l2, nr);		/* last packet ack */
 /* 
  * own receiver busy ? 
  */
-	if (l2->own_busy)	{
+	if (l2->l2_own_busy)	{
 		m_freem(m);	/* yes, discard information */
 /* 
  * P bit == 1 ? 
  */
 		if (p == 1)	{
-			i4b_tx_rnr_response(l2, p); /* yes, tx RNR */
-			l2->ack_pend = 0;	/* clear ACK pending */
+			isdn_tx_rnr_resp(l2, p); /* yes, tx RNR */
+			l2->l2_ack_pend = 0;	/* clear ACK pending */
 		}
 	} else {
 /* 
  * own receiver ready, where if /* expected sequence number ?  
  */	
-		if (ns == l2->vr)	{
-			M128INC(l2->vr);	/* yes, update */
+		if (ns == l2->l2_vr)	{
+			M128INC(l2->l2_vr);	/* yes, update */
 
-			l2->rej_excpt = 0;	/* clr reject exception */
+			l2->l2_rej_excpt = 0;	/* clr reject exception */
 
 			m_adj(m, I_HDR_LEN);	/* strip i frame header */
 
-			l2->iframe_sent = 0;	/* reset i acked already */
+			l2->l2_iframe_sent = 0;	/* reset i acked already */
 
-			i4b_dl_data_ind(l3, m);	/* pass data up */
+			isdn_dl_data_ind(l3, m);	/* pass data up */
 
-			if (!l2->iframe_sent) {
-				i4b_tx_rr_response(l2, p); /* yes, tx RR */
-				l2->ack_pend = 0;	/* clr ACK pending */
+			if (!l2->l2_iframe_sent) {
+				isdn_tx_rr_resp(l2, p); /* yes, tx RR */
+				l2->l2_ack_pend = 0;	/* clr ACK pending */
 			}
 		} else {
 /* 
@@ -154,81 +162,81 @@ i4b_rxd_i_frame(struct isdn_sc *sc, struct mbuf *m)
 /* 
  * already exception ? 
  */
-			if (l2->rej_excpt == 1) {
+			if (l2->l2_rej_excpt == 1) {
 /* 
- * immediate response ? 
+ * immediate resp ? 
  */
 				if (p == 1)	{
-					i4b_tx_rr_response(l2, p); /* yes, tx RR */
-					l2->ack_pend = 0; /* clr ack pend */
+					isdn_tx_rr_resp(l2, p); /* yes, tx RR */
+					l2->l2_ack_pend = 0; /* clr ack pend */
 				}
 			} else {
 /* 
  * not in exception cond 
  */			
-				l2->rej_excpt = 1;	/* set exception */
-				i4b_tx_rej_response(l2, p);	/* tx REJ */
-				l2->ack_pend = 0;	/* clr ack pending */
+				l2->l2_rej_excpt = 1;	/* set exception */
+				isdn_tx_rej_resp(l2, p);	/* tx REJ */
+				l2->l2_ack_pend = 0;	/* clr ack pending */
 			}
 		}
 	}
 /* 
  * sequence number ranges as expected ? 
  */
-	if (i4b_l2_nr_ok(nr, l2->va, l2->vs)) {
-		if (l2->Q921_state == ST_TIMREC) {
-			l2->va = nr;
-
-			mtx_unlock(&i4b_mtx);
-
-			return;
-		}
+	if (isdn_l2_nr_ok(nr, l2->l2_va, l2->l2_vs)) {
+		if (l2->l2_Q921_state == ST_TIMREC) {
+			l2->l2_va = nr;
+		} else {
 /* 
  * yes, other side busy ? 
  */
-		if (l2->peer_busy) {
-			l2->va = nr;	/* yes, update ack count */
-		} else {
+			if (l2->l2_peer_busy) {
+				l2->l2_va = nr;	/* yes, update ack count */
+			} else {
 /* 
  * other side ready 
  */		
-			if (nr == l2->vs) {
+				if (nr == l2->l2_vs) {
 /* 
  * count expected ? 
- */			
-						
-				l2->va = nr;	/* update ack */
-				i4b_T200_stop(l2);
-				i4b_T203_restart(l2);
-			} else {
-				if (nr != l2->va) {
-					l2->va = nr;
-					i4b_T200_restart(l2);
+ */								
+					l2->l2_va = nr;	/* update ack */
+					isdn_T200_stop(l2);
+					isdn_T203_restart(l2);
+				} else {
+					if (nr != l2->l2_va) {
+						l2->l2_va = nr;
+						isdn_T200_restart(l2);
+					}
 				}
 			}
 		}
 	} else {
-		i4b_nr_error_recovery(l2);	/* sequence error */
-		l2->Q921_state = ST_AW_EST;
+/* 
+ * sequence error 
+ */		
+		isdn_nr_error_recovery(l2);	
+		l2->l2_Q921_state = ST_AW_EST;
 	}
+	mtx_unlock(&l2->l2_mtx);
 }
 
 /*---------------------------------------------------------------------------*
  *	internal I FRAME QUEUED UP routine (Q.921 03/93 p 61)
  *---------------------------------------------------------------------------*/
 void
-i4b_i_frame_queued_up(struct isdn_l2 *l2)
+isdn_i_frame_queued_up(struct isdn_l2 *l2)
 {
 	struct mbuf *m;
 	u_char *ptr;
 
-	if ((l2->peer_busy) || 
-		(l2->vs == ((l2->va + MAX_K_VALUE) & 127))) {
-		if (l2->peer_busy) {
+	if ((l2->l2_peer_busy) || 
+		(l2->l2_vs == ((l2->l2_va + MAX_K_VALUE) & 127))) {
+		if (l2->l2_peer_busy) {
 			NDBGL2(L2_I_MSG, "regen IFQUP, cause: peer busy!");
 		}
 
-		if (l2->vs == ((l2->va + MAX_K_VALUE) & 127)) {
+		if (l2->l2_vs == ((l2->l2_va + MAX_K_VALUE) & 127)) {
 			NDBGL2(L2_I_MSG, "regen IFQUP, cause: vs=va+k!");
 		}
 
@@ -237,17 +245,17 @@ i4b_i_frame_queued_up(struct isdn_l2 *l2)
 		 * frame ...", shall we retransmit the last i frame ?
 		 */
 
-		if (!(IF_QEMPTY(&l2->i_queue))) {
+		if (!(IF_QEMPTY(&l2->l2_i_queue))) {
 			NDBGL2(L2_I_MSG, "re-scheduling IFQU call!");
-			START_TIMER(l2->IFQU_callout, 
-			i4b_i_frame_queued_up, l2, IFQU_DLY);
+			START_TIMER(l2->l2_IFQU_callout, 
+			isdn_i_frame_queued_up, l2, IFQU_DLY);
 		}
 		return;
 	}
  /* 
   * fetch next frame to tx 
   */
-	IF_DEQUEUE(&l2->i_queue, m);   
+	IF_DEQUEUE(&l2->l2_i_queue, m);   
 
 	if (!m) {
 		NDBGL2(L2_I_ERR, "ERROR, mbuf NULL after IF_DEQUEUE");
@@ -257,39 +265,39 @@ i4b_i_frame_queued_up(struct isdn_l2 *l2)
 	ptr = m->m_data;
 
 	PUTSAPI(SAPI_CCP, CR_CMD_TO_NT, *(ptr + OFF_SAPI));
-	PUTTEI(l2->tei, *(ptr + OFF_TEI));
+	PUTTEI(l2->l2_tei, *(ptr + OFF_TEI));
 
-	*(ptr + OFF_INS) = (l2->vs << 1) & 0xfe; /* bit 0 = 0 */
-	*(ptr + OFF_INR) = (l2->vr << 1) & 0xfe; /* P bit = 0 */
+	*(ptr + OFF_INS) = (l2->l2_vs << 1) & 0xfe; /* bit 0 = 0 */
+	*(ptr + OFF_INR) = (l2->l2_vr << 1) & 0xfe; /* P bit = 0 */
 
-	l2->stat.tx_i++;	/* update frame counter */
+	l2->l2_stat.tx_i++;	/* update frame counter */
 /* 
  * free'd when ack'd ! 
  */
-	i4b_output(l2, m, MBUF_DONTFREE); 
+	isdn_output(l2, m, MBUF_DONTFREE); 
 /*
  * in case we ack an I frame with another I frame 
  */		
-	l2->iframe_sent = 1;		
+	l2->l2_iframe_sent = 1;		
 
-	if (l2->ua_num != UA_EMPTY) {
+	if (l2->l2_ua_num != UA_EMPTY) {
 /* 
  * failsafe 
  */	
-		NDBGL2(L2_I_ERR, "ERROR, l2->ua_num: %d != UA_EMPTY", l2->ua_num);
-		i4b_print_l2var(l2);
-		m_freem(l2->ua_frame);
+		NDBGL2(L2_I_ERR, "ERROR, l2->l2_ua_num: %d != UA_EMPTY", l2->l2_ua_num);
+		isdn_print_l2var(l2);
+		m_freem(l2->l2_ua_frame);
 	}
 
-	l2->ua_frame = m;		/* save unacked frame */
-	l2->ua_num = l2->vs;	/* save frame number */
+	l2->l2_ua_frame = m;		/* save unacked frame */
+	l2->l2_ua_num = l2->l2_vs;	/* save frame number */
 
-	M128INC(l2->vs);
+	M128INC(l2->l2_vs);
 
-	l2->ack_pend = 0;
+	l2->l2_ack_pend = 0;
 
-	if (l2->T200 == TIMER_IDLE) {
-		i4b_T203_stop(l2);
-		i4b_T200_start(l2);
+	if (l2->l2_T200 == TIMER_IDLE) {
+		isdn_T203_stop(l2);
+		isdn_T200_start(l2);
 	}
 }

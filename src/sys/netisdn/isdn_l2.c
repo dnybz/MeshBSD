@@ -1,4 +1,4 @@
-/* $NetBSD: i4b_l2.c,v 1.24 2008/07/20 01:05:27 martin Exp $ */
+/* $NetBSD: isdn_l2.c,v 1.24 2008/07/20 01:05:27 martin Exp $ */
 
 /*
  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.
@@ -29,7 +29,7 @@
  *      i4b_l2.c - ISDN layer 2 (Q.921)
  *	-------------------------------
  *
- *	$Id: i4b_l2.c,v 1.24 2008/07/20 01:05:27 martin Exp $
+ *	$Id: isdn_l2.c,v 1.24 2008/07/20 01:05:27 martin Exp $
  *
  * $FreeBSD$
  *
@@ -61,7 +61,7 @@
  * SUCH DAMAGE.
  */
 
-#include "opt_i4bq921.h"
+#include "opt_isdnq921.h"
 
 #include <sys/param.h>
 #include <sys/lock.h>
@@ -72,33 +72,34 @@
 #include <sys/socket.h>
 #include <net/if.h>
 
-#include <netisdn/i4b.h>
+#include <netisdn/isdn.h>
 
-#include <netisdn/i4b_debug.h>
-#include <netisdn/i4b_ioctl.h>
+#include <netisdn/isdn_debug.h>
+#include <netisdn/isdn_ioctl.h>
 
-#include <netisdn/i4b_l3l4.h>
-#include <netisdn/i4b_l2.h>
-#include <netisdn/i4b_l1l2.h>
-#include <netisdn/i4b_isdnq931.h>
-#include <netisdn/i4b_mbuf.h>
-#include <netisdn/i4b_global.h>
+#include <netisdn/isdn_l3l4.h>
+#include <netisdn/isdn_l2.h>
+#include <netisdn/isdn_l1l2.h>
+#include <netisdn/isdn_isdnq931.h>
+#include <netisdn/isdn_mbuf.h>
+#include <netisdn/isdn_global.h>
 
-#include <netisdn/i4b_l2fsm.h>
+#include <netisdn/isdn_l2fsm.h>
 
 /* this layers debug level */
 
-unsigned int i4b_l2_debug = L2_DEBUG_DEFAULT;
+unsigned int isdn_l2_debug = L2_DEBUG_DEFAULT;
 
 /*---------------------------------------------------------------------------*
  *	DL_ESTABLISH_REQ from layer 3
  *---------------------------------------------------------------------------*/
 int 
-i4b_dl_establish_req(struct isdn_l2 *l2, struct isdn_l3 *l3)
+isdn_dl_establish_req(struct isdn_sc *sc)
 {
-	NDBGL2(L2_PRIM, "isdnif %d", l2->l3->isdnif);
-	i4b_l1_activate(l2);
-	i4b_next_l2state(l2, l3, EV_DLESTRQ);
+	
+	NDBGL2(L2_PRIM, "isdnif %d", sc->sc_ifp->if_index);
+	
+	isdn_next_l2state(sc, EV_DLESTRQ);
 	return (0);
 }
 
@@ -106,10 +107,10 @@ i4b_dl_establish_req(struct isdn_l2 *l2, struct isdn_l3 *l3)
  *	DL_RELEASE_REQ from layer 3
  *---------------------------------------------------------------------------*/
 int 
-i4b_dl_release_req(struct isdn_l2 *l2, struct isdn_l3 *l3)
+isdn_dl_release_req(struct isdn_sc *sc)
 {
-	NDBGL2(L2_PRIM, "isdnif %d", l2->l3->isdnif);
-	i4b_next_l2state(l2, l3, EV_DLRELRQ);
+	NDBGL2(L2_PRIM, "isdnif %d", sc->sc_ifp->if_index);
+	isdn_next_l2state(sc, EV_DLRELRQ);
 	return (0);
 }
 
@@ -117,11 +118,11 @@ i4b_dl_release_req(struct isdn_l2 *l2, struct isdn_l3 *l3)
  *	DL UNIT DATA REQUEST from Layer 3
  *---------------------------------------------------------------------------*/
 int 
-i4b_dl_unit_data_req(struct isdn_l2 *l2, struct isdn_l3 *l3, 
+isdn_dl_unit_data_req(struct isdn_sc *sc, 
 	struct mbuf *m)
 {
 #ifdef NOTDEF
-	NDBGL2(L2_PRIM, "isdnif %d", l2->isdnif);
+	NDBGL2(L2_PRIM, "isdnif %d", sc->sc_ifp->if_index);
 #endif
 	return (0);
 }
@@ -130,26 +131,26 @@ i4b_dl_unit_data_req(struct isdn_l2 *l2, struct isdn_l3 *l3,
  *	DL DATA REQUEST from Layer 3
  *---------------------------------------------------------------------------*/
 int 
-i4b_dl_data_req(struct isdn_l2 *l2, struct mbuf *m)
+isdn_dl_data_req(struct isdn_l2 *l2, struct mbuf *m)
 {
 	int error;
 	
-	switch(l2->Q921_state) {
+	switch(l2->l2_Q921_state) {
 	case ST_AW_EST:
 	case ST_MULTIFR:
 	case ST_TIMREC:
 
-		IFQ_ENQUEUE(&l2->i_queue, m, error);
+		IFQ_ENQUEUE(&l2->l2_i_queue, m, error);
 		
 		if (error) 
 			NDBGL2(L2_ERROR, "i_queue full!!");
 		else
-			i4b_i_frame_queued_up(l2);
+			isdn_i_frame_queued_up(l2);
 		
 		break;
 	default:
 		NDBGL2(L2_ERROR, "isdnif %d ERROR in state [%s], "
-			"freeing mbuf", l2->l3->isdnif, i4b_print_l2state(l2));
+			"freeing mbuf", sc->sc_ifp->if_index, isdn_print_l2state(l2));
 		m_freem(m);
 		error = EINVAL;
 		break;
@@ -158,73 +159,59 @@ i4b_dl_data_req(struct isdn_l2 *l2, struct mbuf *m)
 }
 
 /*---------------------------------------------------------------------------*
- *	isdn_layer2_activate_ind - link activation/deactivation indication from  
- *  layer 1
- *---------------------------------------------------------------------------*/
-int
-isdn_layer2_activate_ind(struct isdn_l2 *l2, 
-	struct isdn_l3 *l3, int event_activate)
-{
-	if (event_activate) 
-		l2->ph_active = PH_ACTIVE;
-	else 
-		l2->ph_active = PH_INACTIVE;
-
-	return (0);
-}
-
-/*---------------------------------------------------------------------------*
- *	i4b_l2_unit_init - place layer 2 unit into known state
+ *	isdn_l2_unit_init - place layer 2 unit into known state
  *---------------------------------------------------------------------------*/
 static void
-i4b_l2_unit_init(struct isdn_l2 *l2)
+isdn_l2_unit_init(struct isdn_l2 *l2)
 {
-	mtx_lock(&i4b_mtx);
-	l2->Q921_state = ST_TEI_UNAS;
-	l2->tei_valid = TEI_INVALID;
-	l2->vr = 0;
-	l2->vs = 0;
-	l2->va = 0;
-	l2->ack_pend = 0;
-	l2->rej_excpt = 0;
-	l2->peer_busy = 0;
-	l2->own_busy = 0;
-	l2->l3initiated = 0;
+	l2->l2_Q921_state = ST_TEI_UNAS;
+	l2->l2_tei_valid = TEI_INVALID;
+	l2->l2_vr = 0;
+	l2->l2_vs = 0;
+	l2->l2_va = 0;
+	l2->l2_ack_pend = 0;
+	l2->l2_rej_excpt = 0;
+	l2->l2_peer_busy = 0;
+	l2->l2_own_busy = 0;
+	l2->l2_l3initiated = 0;
 
-	l2->rxd_CR = 0;
-	l2->rxd_PF = 0;
-	l2->rxd_NR = 0;
-	l2->RC = 0;
-	l2->iframe_sent = 0;
+	l2->l2_rxd_CR = 0;
+	l2->l2_rxd_PF = 0;
+	l2->l2_rxd_NR = 0;
+	l2->l2_RC = 0;
+	l2->l2_iframe_sent = 0;
 
-	l2->postfsmfunc = NULL;
+	l2->l2_postfsmfunc = NULL;
 
-	if (l2->ua_num != UA_EMPTY) {
-		m_freem(l2->ua_frame);
-		l2->ua_num = UA_EMPTY;
-		l2->ua_frame = NULL;
+	if (l2->l2_ua_num != UA_EMPTY) {
+		m_freem(l2->l2_ua_frame);
+		l2->l2_ua_num = UA_EMPTY;
+		l2->l2_ua_frame = NULL;
 	}
 	
-	i4b_T200_stop(l2);
-	i4b_T202_stop(l2);
-	i4b_T203_stop(l2);
-
-	mtx_unlock(&i4b_mtx);
+	isdn_T200_stop(l2);
+	isdn_T202_stop(l2);
+	isdn_T203_stop(l2);
 }
 
 /*---------------------------------------------------------------------------*
- *	isdn_layer2_status_ind - status indication upward
+ *	isdn_l2_status_ind - status indication upward
  *---------------------------------------------------------------------------*/
 int
-isdn_layer2_status_ind(struct isdn_l2 *l2, struct isdn_l3 *l3, 
+isdn_l2_status_ind(struct isdn_sc *sc, 
 	int status, int parm)
 {
-	int sendup = 1;
-
-	mtx_lock(&i4b_mtx)
+	struct isdn_l2 *l2;
+	int sendup;
 
 	NDBGL2(L2_PRIM, "isdnif %d, status=%d, parm=%d", 
-		l2->l3->isdnif, status, parm);
+		sc->sc_ifp->if_index, status, parm);
+
+	l2 = &sc->sc_l2;
+	
+	mtx_lock(&l2->l2_mtx);
+
+	sendup = 1;
 
 	switch(status) {
 	case STI_ATTACH:
@@ -232,25 +219,25 @@ isdn_layer2_status_ind(struct isdn_l2 *l2, struct isdn_l3 *l3,
 /* 
  * detach 
  */
-			callout_stop(&l2->T200_callout);
-			callout_stop(&l2->T202_callout);
-			callout_stop(&l2->T203_callout);
-			callout_stop(&l2->IFQU_callout);
+			callout_stop(&l2->l2_T200_callout);
+			callout_stop(&l2->l2_T202_callout);
+			callout_stop(&l2->l2_T203_callout);
+			callout_stop(&l2->l2_IFQU_callout);
 			break;
 		}
-		l2->i_queue.ifq_maxlen = IQUEUE_MAXLEN;
-		l2->ua_frame = NULL;
+		l2->l2_i_queue.ifq_maxlen = IQUEUE_MAXLEN;
+		l2->l2_ua_frame = NULL;
 
-		(void)memset(&l2->stat, 0, sizeof(lapdstat_t));
+		(void)memset(&l2->l2_stat, 0, sizeof(lapdstat_t));
 /* 
  * initialize the callout handles for timeout routines 
  */
-		callout_init(&l2->T200_callout, 0);
-		callout_init(&l2->T202_callout, 0);
-		callout_init(&l2->T203_callout, 0);
-		callout_init(&l2->IFQU_callout, 0);
+		callout_init(&l2->l2_T200_callout, 0);
+		callout_init(&l2->l2_T202_callout, 0);
+		callout_init(&l2->l2_T203_callout, 0);
+		callout_init(&l2->l2_IFQU_callout, 0);
 
-		i4b_l2_unit_init(l2);
+		isdn_l2_unit_init(&l2->l2);
 		break;
 	case STI_L1STAT:	/* state of layer 1 */
 		break;
@@ -258,31 +245,31 @@ isdn_layer2_status_ind(struct isdn_l2 *l2, struct isdn_l3 *l3,
 /*
  * XXX
  */			
- 		if ((l2->Q921_state >= ST_AW_EST) &&
-			   (l2->Q921_state <= ST_TIMREC)) {
+ 		if ((l2->l2_Q921_state >= ST_AW_EST) &&
+			   (l2->l2_Q921_state <= ST_TIMREC)) {
 			NDBGL2(L2_ERROR, "isdnif %d, persistent deactivation!", 
-				l2->l3->isdnif);
-			i4b_l2_unit_init(l2);
+				sc->sc_ifp->if_index);
+			isdn_l2_unit_init(&l2->l2);
 			parm = -1;	/* this is passed as the new
 						 * TEI to upper layers */
 		} else 
 			sendup = 0;
 		break;
 	case STI_NOL1ACC:
-		i4b_l2_unit_init(l2);
+		isdn_l2_unit_init(&l2->l2);
 		NDBGL2(L2_ERROR, "isdnif %d, cannot access S0 bus!", 
-			l2->l3->isdnif);
+			sc->sc_ifp->if_index);
 		break;
 	default:
 		NDBGL2(L2_ERROR, "ERROR, isdnif %d, unknown status message!", 
-			l2->l3->isdnif);
+			sc->sc_ifp->if_index);
 		break;
 	}
 
 	if (sendup)
-		i4b_mdl_status_ind(l2->l3, status, parm);  /* send up to layer 3 */
+		isdn_mdl_status_ind(sc, status, parm);  /* send up to layer 3 */
 
-	mtx_unlock(&i4b_mtx);
+	mtx_unlock(&l2->l2_mtx);
 
 	return (0);
 }
@@ -291,43 +278,59 @@ isdn_layer2_status_ind(struct isdn_l2 *l2, struct isdn_l3 *l3,
  *	MDL_COMMAND_REQ from layer 3
  *---------------------------------------------------------------------------*/
 int 
-i4b_mdl_command_req(struct isdn_l3 *l3, int command, void *parm)
+isdn_l2_cmd_req(struct isdn_sc *sc, int cmd, void *arg)
 {
-	struct isdn_l2 *sc = (struct isdn_l2*)l3->l1_token;
+	struct isdn_l2 *l2;
 
-	NDBGL2(L2_PRIM, "isdnif %d, command=%d, parm=%p",
-		 l3->isdnif, command, parm);
+	NDBGL2(L2_PRIM, "isdnif %d, cmd=%d, arg=%p",
+		 sc->sc_ifp->if_index, cmd, arg);
 
-	switch(command) {
+	l2 = &sc->sc_l2;
+
+	switch(cmd) {
 	case CMR_DOPEN:
-		i4b_l2_unit_init(sc);
-			/* XXX - enable interrupts */
+		isdn_l2_unit_init(sc);
+
 		break;
 	case CMR_DCLOSE:
-			/* XXX - disable interrupts */
+		break;
+	default;
 		break;
 	}
-
-	/* pass down to layer 1 driver */
+/* 
+ * XXX pass down Trace cmd to isdn_input 
+ *
 	if (sc->driver)
-		sc->driver->mph_command_req(sc->l1_token, command, parm);
-
+		sc->driver->mph_cmd_req(sc->l1_token, cmd, parm);
+ */
 	return (0);
 }
 
 int 
-i4b_l2_channel_get_state(struct isdn_l3 *l3, int b_chanid)
+isdn_l2_b_chan_get_state(struct isdn_l3 *l3, int b_chan_id)
 {
+/*
+ * XXX ...
+ *	
 	struct isdn_l2 *sc = l3->l1_token;
-	return (sc->bchan_state[b_chanid]);
+	return (sc->bchan_state[b_chan_id]);	
+ *
+ *
+ */
 }
 
 void 
-i4b_l2_channel_set_state(struct isdn_l3 *l3, 
-	int b_chanid, int state)
+isdn_l2_b_chan_set_state(struct isdn_l3 *l3, 
+	int b_chan_id, int state)
 {
+/*
+ * XXX ...
+ *	
 	struct isdn_l2 *sc = l3->l1_token;
-	sc->bchan_state[b_chanid] = state;
+	sc->bchan_state[b_chan_id] = state;
+
+ *
+ */
 }
 
 /*---------------------------------------------------------------------------*
@@ -337,7 +340,7 @@ i4b_l2_channel_set_state(struct isdn_l3 *l3,
 #define TEL_IDLE_MIN (BCH_MAX_DATALEN/2)
 
 int
-isdn_bchan_silence(unsigned char *data, int len)
+isdn_b_chan_silence(unsigned char *data, int len)
 {
 	register int i = 0;
 	register int j = 0;

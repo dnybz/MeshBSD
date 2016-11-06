@@ -46,14 +46,11 @@
 
 #include <netisdn/i4b.h>
 
+extern int	i4b_control(struct socket *, u_long, caddr_t, struct ifnet *,
+    struct thread *);
+    
 #define ISDN_RAW_SNDQ	576
 #define ISDN_RAW_RCVQ	576
-
-struct i4b_pcb {
-	struct socket	 *pcb_so;	/* the socket */
-	LIST_ENTRY(i4b_pcb) socks;
-	struct isdn_call_desc pcb_cd;
-};
 
 SYSCTL_DECL(_net_isdn);
 SYSCTL_NODE(_net, AF_ISDN, isdn, CTLFLAG_RW, 0, "ISDN Family");
@@ -66,18 +63,37 @@ SYSCTL_ULONG(_net_isdn, OID_AUTO, sendspace, CTLFLAG_RW,
 SYSCTL_ULONG(_net_isdn, OID_AUTO, recvspace, CTLFLAG_RW,
     &i4b_raw_recvspace, 0, "Maximum space for incoming ISDN PDU");
 
-MTX_SYSINIT(i4b_pcb_mtx, &i4b_pcb_mtx, "i4b_pcb", MTX_DEF);
+/*
+ * Raw socket.
+ */
 
-extern int	i4b_control(struct socket *, u_long, caddr_t, struct ifnet *,
-    struct thread *);
+static int
+i4b_attach(struct socket *so, int proto, struct thread *td)
+{
+	
+	return (soreserve(so, i4b_raw_sendspace, i4b_raw_recvspace));
+}
+
+struct pr_usrreqs i4b_raw_usrreqs = {
+	.pru_attach =	i4b_raw_attach,
+	.pru_control =	i4b_control,
+};
+
+/*
+ * Control socket.
+ * 
+ 
+struct i4b_pcb {
+	struct socket	 *pcb_so;
+	LIST_ENTRY(i4b_pcb) socks;
+	struct isdn_call_desc pcb_cd;
+};
+
+MTX_SYSINIT(i4b_pcb_mtx, &i4b_pcb_mtx, "i4b_pcb", MTX_DEF);
 
 static LIST_HEAD(, i4b_pcb) i4b_pcb_list;
 
 static struct mtx	i4b_pcb_mtx;
-
-/*
- * Control socket.
- */ 
 
 static int
 i4b_attach(struct socket *so, int proto, struct thread *td)
@@ -105,9 +121,5 @@ i4b_attach(struct socket *so, int proto, struct thread *td)
 	return (error);
 }
 
-struct pr_usrreqs i4b_raw_usrreqs = {
-	.pru_attach =	i4b_attach,
-	.pru_control =	i4b_control,
-};
-
- 
+ *
+ */

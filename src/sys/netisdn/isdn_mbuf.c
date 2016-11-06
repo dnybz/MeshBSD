@@ -24,10 +24,10 @@
  *
  *---------------------------------------------------------------------------
  *
- *	i4b_l4timer.c - timer and timeout handling for layer 4
- *	--------------------------------------------------------
+ *	i4b - mbuf handling support routines
+ *	------------------------------------
  *
- *	$Id: i4b_l4timer.c,v 1.6 2005/12/11 12:25:06 christos Exp $
+ *	$Id: isdn_mbuf.c,v 1.6 2010/01/18 16:29:51 pooka Exp $
  *
  * $FreeBSD$
  *
@@ -59,64 +59,61 @@
  * SUCH DAMAGE. 
  */
  
-#include "isdn.h"
-
-#if NISDN
-
 #include <sys/param.h>
-#include <sys/kernel.h>
 #include <sys/systm.h>
 #include <sys/mbuf.h>
-#include <sys/socket.h>
-#include <net/if.h>
 
-#include <netisdn/i4b_debug.h>
-#include <netisdn/i4b_ioctl.h>
-
-#include <netisdn/i4b_global.h>
-#include <netisdn/i4b_l3l4.h>
-#include <netisdn/i4b_mbuf.h>
-
-#include <netisdn/i4b_l4.h>
+#include <netisdn/isdn_mbuf.h>
 
 /*---------------------------------------------------------------------------*
- *	timer T400 timeout function
+ *	allocate D-channel mbuf space
  *---------------------------------------------------------------------------*/
-static void
-T400_timeout(call_desc_t *cd)
+struct mbuf*
+isdn_getmbuf(int len, int how, short type)
 {
-	NDBGL4(L4_ERR, "cr = %d", cd->cr);
-}
+	struct mbuf *m;
 
-/*---------------------------------------------------------------------------*
- *	timer T400 start
- *---------------------------------------------------------------------------*/
-void
-T400_start(call_desc_t *cd)
-{
-	if (cd->T400 == TIMER_ACTIVE)
-		return;
-
-	NDBGL4(L4_MSG, "cr = %d", cd->cr);
-	cd->T400 = TIMER_ACTIVE;
-
-	START_TIMER(cd->T400_callout, T400_timeout, cd, T400DEF);
-}
-
-/*---------------------------------------------------------------------------*
- *	timer T400 stop
- *---------------------------------------------------------------------------*/
-void
-T400_stop(call_desc_t *cd)
-{
-	mtx_lock(&i4b_mtx);
-
-	if (cd->T400 == TIMER_ACTIVE) {
-		STOP_TIMER(cd->T400_callout, T400_timeout, cd);
-		cd->T400 = TIMER_IDLE;
+	if (len > MCLBYTES)	{
+/* 
+ * if length > max extension size 
+ */
+#ifdef ISDN_DEBUG
+	(void)printf("%s: len(%d) > MCLBYTES(%d)\n",__func__, len, MCLBYTES);
+#endif
+		m = NULL;
+		goto out;
 	}
-	mtx_unlock(&i4b_mtx);
-	NDBGL4(L4_MSG, "cr = %d", cd->cr);
-}
+/* 
+ * get mbuf with pkthdr 
+ */
+	MGETHDR(m, how, type);	
+/* 
+ * did we actually get the mbuf? 
+ */
+	if (m == NULL) {
 
-#endif /* NISDN > 0 */
+#ifdef ISDN_DEBUG
+	(void)printf("%s: MGETHDR failed!\n", __func__);
+#endif
+
+		goto out;
+	}
+
+	if (len >= MHLEN) {
+		MCLGET(m, how);
+
+		if (!(m->m_flags & M_EXT)) {
+			m_freem(m);
+
+#ifdef ISDN_DEBUG
+	(void)printf("%s: MCLGET failed, len(%d)\n", __func__, len);
+#endif
+			m = NULL;
+			goto out;
+		}
+	}
+
+	m->m_len = len;
+out:
+	return (m);
+}
