@@ -162,8 +162,14 @@ struct isdn_ifaddr {
 #define ii_flags 	ii_ifa.ifa_flags
 #define ii_metric 	ii_ifa.ifa_metric
 	TAILQ_ENTRY(isdn_ifaddr)	ii_link;
-	
-	struct sockaddr_isdn 	ii_seg; /* < channel, proto ,sapi, tei >  */	
+/* 
+ * < channel, proto ,sapi, tei >  
+ */	
+	struct sockaddr_isdn 	ii_seg;	
+/* 
+ * < telno, subaddr > 
+ */
+	struct sockaddr_e167 	ii_no; 	 
 };
 
 #endif /* _KERNEL */
