@@ -24,12 +24,40 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+/*-
+ * Copyright (c) 2016 Henning Matyschok
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+ 
 #include <sys/cdefs.h>
 __FBSDID("$FreeBSD: head/sys/net/if_llatbl.c 298995 2016-05-03 18:05:43Z pfg $");
 
 #include "opt_ddb.h"
 #include "opt_inet.h"
 #include "opt_inet6.h"
+
+#include "opt_isdn.h"
+#include "opt_isdn_debug.h"
 
 #include <sys/param.h>
 #include <sys/systm.h>
@@ -812,6 +840,16 @@ lla_rt_output(struct rt_msghdr *rtm, struct rt_addrinfo *info)
 			    &((struct sockaddr_in *)dst)->sin_addr,
 			    (u_char *)LLADDR(dl));
 #endif
+#ifdef ISDN
+/* 
+ * RD on < channel, proto ,sapi, tei > maps to < lla >  
+ */
+		if ((laflags & LLE_PUB) && dst->sa_family == AF_INET)
+			arprequest(ifp,
+			    &((struct sockaddr_isdn *)dst)->sisdn_rd,
+			    &((struct sockaddr_isdn *)dst)->sisdn_rd,
+			    (u_char *)LLADDR(dl));
+#endif /* ISDN */
 
 		break;
 
@@ -883,6 +921,17 @@ llatbl_lle_show(struct llentry_sa *la)
 		break;
 	}
 #endif
+#ifdef ISDN
+	{
+		struct sockaddr_isdn *sisdn;
+		
+		sisdn = (struct sockaddr_isdn *)&la->l3_addr;
+		db_printf(" isdn_chan=%d isdn_proto=%d "
+			"isdn_sapi=%d isdn_tei=%d\n",
+			sisdn->sisdn_chan, sisdn->sisdn_proto,
+			sisdn->sisdn_sapi, sisdn->sisdn_tei); 
+	}
+#endif /* ISDN */
 	default:
 		db_printf(" l3_addr=N/A (af=%d)\n", la->l3_addr.sa_family);
 		break;

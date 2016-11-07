@@ -37,6 +37,9 @@ struct isdn_rd {
 } __packed;
 #define ISDN_HDRLEN			(sizeof(struct isdn_rd))
 
+/*
+ * Denotes ISDN on datalink-layer.
+ */
 struct sockaddr_isdn {
 	uint8_t 	sisdn_len; 	/* length */
 	sa_family_t 	sisdn_family; 	/* AF_ISDN */
@@ -45,46 +48,13 @@ struct sockaddr_isdn {
 };
 #define SISDN_LEN 	(sizeof(struct sockaddr_isdn))
 
-#ifdef _KERNEL
-
 /*
- * Describes an ISDN channel on IEEE802.{3,11} link-layer.
+ * Denotes tel-no.
  */
-struct isdn_ifaddr {
-	struct ifaddr 	ii_ifa;		/* protocol-independent info */
-#define ii_addr 	ii_ifa.ifa_addr
-#define ii_netmask 	ii_ifa.ifa_netmask
-#define ii_dstaddr 	ii_ifa.ifa_dstaddr
-#define ii_ifp 	ii_ifa.ifa_ifp	
-#define ii_flags 	ii_ifa.ifa_flags
-#define ii_metric 	ii_ifa.ifa_metric
-	TAILQ_ENTRY(isdn_ifaddr)	ii_link;
-	
-	struct sockaddr_isdn 	ii_seg; /* < channel, proto ,sapi, tei >  */	
+struct sockaddr_e167 {
+	uint8_t 	se167_len; 	/* length */
+	sa_family_t 	se167_family; 	/* AF_E167 */
+	uint8_t 	se167_telno[ISDN_TELNO_MAX];
+	uint8_t 	se167_subaddr[ISDN_SUBADDR_MAX];
 };
-
-/*
- * Software context.
- */
-struct isdn_softc {
-	struct ifnet 	*sc_ifp; 	
-	struct isdn_l2 	sc_l2;
-	struct isdn_l3 	sc_l3;
-	struct mtx  	sc_mtx;
-};
-
-/*
- * Denotes AF_ISDN partition on domain family..
- */ 
-struct isdn_ifinfo {
-	struct lltable		*iii_llt;	/* isdn_arp cache */
-	struct isdn_softc 	*iii_sc;
-};
-#define ISDN_LLTABLE(ifp)	\
-	(((struct isdn_ifinfo *)(ifp)->if_afdata[AF_ISDN])->iii_llt)
-#define ISDN_SOFTC(ifp) \
-	(((struct isdn_ifinfo *)(ifp)->if_afdata[AF_ISDN])->iii_sc)
-
-#endif /* _KERNEL */
-	
 #endif /* _NETISDN_ISDN_H_ */
