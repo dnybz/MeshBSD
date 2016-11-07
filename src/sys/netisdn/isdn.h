@@ -26,17 +26,6 @@
 #ifndef _NETISDN_ISDN_H_
 #define _NETISDN_ISDN_H_
 
-struct sockaddr_isdn {
-	uint8_t 	sisdn_len; 	/* length */
-	sa_family_t 	sisdn_family; 	/* AF_ISDN */
-	uint16_t 	sisdn_ctlr; 	/* Index of Ethernet Controller */
-	uint8_t 	sisdn_chan;
-	uint8_t 	sisdn_proto;
-	uint8_t 	sisdn_sapi; 	
-	uint8_t 	sisdn_tei;				
-};
-#define SISDN_LEN 	(sizeof(struct sockaddr_isdn))
-
 /*
  * Routing distinguisher, < channel, proto ,sapi, tei > maps to < lla >
  */
@@ -47,6 +36,14 @@ struct isdn_rd {
 	uint8_t 	rd_tei;	 
 } __packed;
 #define ISDN_HDRLEN			(sizeof(struct isdn_rd))
+
+struct sockaddr_isdn {
+	uint8_t 	sisdn_len; 	/* length */
+	sa_family_t 	sisdn_family; 	/* AF_ISDN */
+	uint16_t 	sisdn_ctlr; 	/* Index of < lla > */
+	struct isdn_rd 	sisdn_rd;	/* < channel, proto ,sapi, tei > */		
+};
+#define SISDN_LEN 	(sizeof(struct sockaddr_isdn))
 
 #ifdef _KERNEL
 
@@ -73,6 +70,7 @@ struct isdn_softc {
 	struct ifnet 	*sc_ifp; 	
 	struct isdn_l2 	sc_l2;
 	struct isdn_l3 	sc_l3;
+	struct mtx  	sc_mtx;
 };
 
 /*

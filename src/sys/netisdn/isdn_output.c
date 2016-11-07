@@ -22,6 +22,10 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE. 
  */
+
+#include "opt_inet.h" 
+#include "opt_isdn.h" 
+ 
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/mbuf.h>
@@ -39,7 +43,7 @@
 #include <netisdn/i4b_var.h>
 
 /*
- * XXX ...
+ * XXX fn signature is wrong ... well ... this is a sketch
  */
 
 int

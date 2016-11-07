@@ -22,8 +22,9 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include "opt_i4b.h"
-#include "opt_i4b_debug.h"
+
+#include "opt_inet.h"
+#include "opt_isdn.h"
 
 #include <sys/param.h>
 #include <sys/mbuf.h>

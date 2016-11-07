@@ -59,6 +59,9 @@
 #include "opt_mbuf_profiling.h"
 #include "opt_rss.h"
 
+#include "opt_isdn.h"
+#include "opt_isdn_debug.h"
+
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/kernel.h>
@@ -1064,6 +1067,11 @@ ether_ioctl(struct ifnet *ifp, u_long command, caddr_t data)
 			arp_ifinit(ifp, ifa);
 			break;
 #endif
+#ifdef ISDN
+		case AF_ISDN:
+			isdn_ifinit(ifp, ifa);
+			break;
+#endif /* ISDN */		
 		default:
 			ifp->if_init(ifp->if_softc);
 			break;

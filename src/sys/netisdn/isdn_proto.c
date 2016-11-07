@@ -23,8 +23,10 @@
  * SUCH DAMAGE.
  */
 
-#include "opt_i4b.h"
-#include "opt_i4b_debug.h"
+#include "opt_inet.h"
+
+#include "opt_isdn.h"
+#include "opt_isdn_debug.h"
 
 #include <sys/param.h>
 #include <sys/systm.h>

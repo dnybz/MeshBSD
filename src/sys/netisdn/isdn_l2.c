@@ -61,7 +61,10 @@
  * SUCH DAMAGE.
  */
 
-#include "opt_isdnq921.h"
+#include "opt_inet.h"
+
+#include "opt_isdn.h"
+#include "opt_isdn_debug.h"
 
 #include <sys/param.h>
 #include <sys/lock.h>
@@ -90,6 +93,144 @@
 
 unsigned int isdn_l2_debug = L2_DEBUG_DEFAULT;
 
+/*---------------------------------------------------------------------------*
+ *	routine ESTABLISH DATA LINK (Q.921 03/93 page 83)
+ *---------------------------------------------------------------------------*/
+void
+isdn_establish_data_link(struct isdn_l2 *l2)
+{
+	isdn_l1_activate(l2);
+
+	isdn_clear_exception_conditions(l2);
+
+	l2->RC = 0;
+
+	isdn_tx_sabme(l2, P1);
+
+	isdn_T200_restart(l2);
+
+	isdn_T203_stop(l2);
+}
+
+/*---------------------------------------------------------------------------*
+ *	routine CLEAR EXCEPTION CONDITIONS (Q.921 03/93 page 83)
+ *---------------------------------------------------------------------------*/
+void
+isdn_clear_exception_conditions(struct isdn_l2 *l2) 
+{
+	mtx_lock(&isdn_mtx);
+
+/*XXX -------------------------------------------------------------- */
+/*XXX is this really appropriate here or should it moved elsewhere ? */
+
+	IF_DRAIN(&l2->i_queue);
+
+	if (l2->ua_num != UA_EMPTY) {
+		m_freem(l2->ua_frame);
+		l2->ua_num = UA_EMPTY;
+	}
+/*XXX -------------------------------------------------------------- */
+
+	l2->peer_busy = 0;
+
+	l2->rej_excpt = 0;
+
+	l2->own_busy = 0;
+
+	l2->ack_pend = 0;
+
+	mtx_unlock(&isdn_mtx);
+}
+
+/*---------------------------------------------------------------------------*
+ *	routine TRANSMIT ENQUIRE (Q.921 03/93 page 83)
+ *---------------------------------------------------------------------------*/
+void
+isdn_transmit_enquire(struct isdn_l2 *l2)
+{
+	if (l2->own_busy)
+		isdn_tx_rnr_command(l2, P1);
+	else
+		isdn_tx_rr_command(l2, P1);
+
+	l2->ack_pend = 0;
+
+	isdn_T200_start(l2);
+}
+
+/*---------------------------------------------------------------------------*
+ *	routine NR ERROR RECOVERY (Q.921 03/93 page 83)
+ *---------------------------------------------------------------------------*/
+void
+isdn_nr_error_recovery(struct isdn_l2 *l2)
+{
+	isdn_mdl_error_ind(l2, "isdn_nr_error_recovery", MDL_ERR_J);
+
+	isdn_establish_data_link(l2);
+
+	l2->l3initiated = 0;
+}
+
+/*---------------------------------------------------------------------------*
+ *	routine ENQUIRY RESPONSE (Q.921 03/93 page 84)
+ *---------------------------------------------------------------------------*/
+void
+isdn_enquiry_response(struct isdn_l2 *l2)
+{
+	if (l2->own_busy)
+		isdn_tx_rnr_response(l2, F1);
+	else
+		isdn_tx_rr_response(l2, F1);
+
+	l2->ack_pend = 0;
+}
+
+/*---------------------------------------------------------------------------*
+ *	routine INVOKE RETRANSMISSION (Q.921 03/93 page 84)
+ *---------------------------------------------------------------------------*/
+void
+isdn_invoke_retransmission(struct isdn_l2 *l2, int nr)
+{
+	NDBGL2(L2_ERROR, "nr = %d", nr );
+
+	while (l2->vs != nr) {
+		NDBGL2(L2_ERROR, "nr(%d) != vs(%d)", nr, l2->vs);
+
+		M128DEC(l2->vs);
+
+/* XXXXXXXXXXXXXXXXX */
+
+		if ((l2->ua_num != UA_EMPTY) && 
+			(l2->vs == l2->ua_num)) {
+			
+			if (_IF_QFULL(&l2->i_queue)) 
+				NDBGL2(L2_ERROR, "ERROR, I-queue full!");
+			else {
+				IF_ENQUEUE(&l2->i_queue, l2->ua_frame);
+				l2->ua_num = UA_EMPTY;
+			}
+		} else {
+			NDBGL2(L2_ERROR, "ERROR, l2->vs = %d, "
+				"l2->ua_num = %d ",l2->vs, l2->ua_num);
+		}
+
+/* XXXXXXXXXXXXXXXXX */
+
+		isdn_l2_queue_i_frame(l2);
+	}
+}
+
+/*---------------------------------------------------------------------------*
+ *	routine ACKNOWLEDGE PENDING (Q.921 03/93 p 70)
+ *---------------------------------------------------------------------------*/
+void
+isdn_l2_acknowledge_pending(struct isdn_l2 *l2)
+{
+	if (l2->ack_pend) {
+		l2->ack_pend = 0;
+		isdn_tx_rr_response(l2, F0);
+	}
+}
 
 /*---------------------------------------------------------------------------*
  *	isdn_l2_print_var - print some l2softc vars
@@ -116,7 +257,7 @@ isdn_l2_print_var(struct isdn_softc *sc)
  *	DL_ESTABLISH_REQ from layer 3
  *---------------------------------------------------------------------------*/
 int 
-isdn_dl_establish_req(struct isdn_softc *sc)
+isdn_l2_establish_req(struct isdn_softc *sc)
 {
 	
 	NDBGL2(L2_PRIM, "isdnif %d", sc->sc_ifp->if_index);
@@ -129,7 +270,7 @@ isdn_dl_establish_req(struct isdn_softc *sc)
  *	DL_RELEASE_REQ from layer 3
  *---------------------------------------------------------------------------*/
 int 
-isdn_dl_release_req(struct isdn_softc *sc)
+isdn_l2_release_req(struct isdn_softc *sc)
 {
 	NDBGL2(L2_PRIM, "isdnif %d", sc->sc_ifp->if_index);
 	isdn_next_l2state(sc, EV_DLRELRQ);
@@ -140,7 +281,7 @@ isdn_dl_release_req(struct isdn_softc *sc)
  *	DL UNIT DATA REQUEST from Layer 3
  *---------------------------------------------------------------------------*/
 int 
-isdn_dl_unit_data_req(struct isdn_softc *sc, 
+isdn_l2_unit_data_req(struct isdn_softc *sc, 
 	struct mbuf *m)
 {
 #ifdef NOTDEF

@@ -1,72 +1,3 @@
-/*
- * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- *---------------------------------------------------------------------------
- *
- *	i4b_util.c - layer 2 utility routines
- *	-------------------------------------
- *
- *	$Id: isdn_util.c,v 1.11 2006/11/16 01:33:49 christos Exp $
- *
- * $FreeBSD$
- *
- *      last edit-date: [Fri Jan  5 11:33:47 2001]
- *
- *---------------------------------------------------------------------------
- *
- *	i4b_iframe.c - i frame handling routines
- *	------------------------------------------
- *
- *	$Id: isdn_iframe.c,v 1.8 2005/12/11 12:25:06 christos Exp $
- *
- * $FreeBSD$
- *
- *      last edit-date: [Fri Jan  5 11:33:47 2001]
- *
- *---------------------------------------------------------------------------
- *
- *	isdn_sframe.c - s frame handling routines
- *	----------------------------------------
- *
- *	$Id: isdn_sframe.c,v 1.8 2005/12/11 12:25:06 christos Exp $
- *
- * $FreeBSD$
- *
- *      last edit-date: [Fri Jan  5 11:33:47 2001]
- *
- *---------------------------------------------------------------------------
- *
- *	i4b_uframe.c - routines for handling U-frames
- *	-----------------------------------------------
- *
- *	$Id: i4b_uframe.c,v 1.8 2007/01/24 13:08:15 hubertf Exp $
- *
- * $FreeBSD$
- *
- *      last edit-date: [Fri Jan  5 11:33:47 2001]
- *
- *---------------------------------------------------------------------------*/
 /*-
  * Copyright (c) 2016 Henning Matyschok
  *
@@ -91,8 +22,35 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+/*
+ * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
 
-#include "opt_isdnq921.h"
+#include "opt_inet.h"
+
+#include "opt_isdn.h"
+#include "opt_isdn_debug.h"
 
 #include <sys/param.h>
 #include <sys/kernel.h>
@@ -113,151 +71,12 @@
 #include <netisdn/isdn_l3l4.h>
 
 /*---------------------------------------------------------------------------*
- *	routine ESTABLISH DATA LINK (Q.921 03/93 page 83)
- *---------------------------------------------------------------------------*/
-void
-isdn_establish_data_link(struct isdn_l2 *l2)
-{
-	isdn_l1_activate(l2);
-
-	isdn_clear_exception_conditions(l2);
-
-	l2->RC = 0;
-
-	isdn_tx_sabme(l2, P1);
-
-	isdn_T200_restart(l2);
-
-	isdn_T203_stop(l2);
-}
-
-/*---------------------------------------------------------------------------*
- *	routine CLEAR EXCEPTION CONDITIONS (Q.921 03/93 page 83)
- *---------------------------------------------------------------------------*/
-void
-isdn_clear_exception_conditions(struct isdn_l2 *l2) 
-{
-	mtx_lock(&isdn_mtx);
-
-/*XXX -------------------------------------------------------------- */
-/*XXX is this really appropriate here or should it moved elsewhere ? */
-
-	IF_DRAIN(&l2->i_queue);
-
-	if (l2->ua_num != UA_EMPTY) {
-		m_freem(l2->ua_frame);
-		l2->ua_num = UA_EMPTY;
-	}
-/*XXX -------------------------------------------------------------- */
-
-	l2->peer_busy = 0;
-
-	l2->rej_excpt = 0;
-
-	l2->own_busy = 0;
-
-	l2->ack_pend = 0;
-
-	mtx_unlock(&isdn_mtx);
-}
-
-/*---------------------------------------------------------------------------*
- *	routine TRANSMIT ENQUIRE (Q.921 03/93 page 83)
- *---------------------------------------------------------------------------*/
-void
-isdn_transmit_enquire(struct isdn_l2 *l2)
-{
-	if (l2->own_busy)
-		isdn_tx_rnr_command(l2, P1);
-	else
-		isdn_tx_rr_command(l2, P1);
-
-	l2->ack_pend = 0;
-
-	isdn_T200_start(l2);
-}
-
-/*---------------------------------------------------------------------------*
- *	routine NR ERROR RECOVERY (Q.921 03/93 page 83)
- *---------------------------------------------------------------------------*/
-void
-isdn_nr_error_recovery(struct isdn_l2 *l2)
-{
-	isdn_mdl_error_ind(l2, "isdn_nr_error_recovery", MDL_ERR_J);
-
-	isdn_establish_data_link(l2);
-
-	l2->l3initiated = 0;
-}
-
-/*---------------------------------------------------------------------------*
- *	routine ENQUIRY RESPONSE (Q.921 03/93 page 84)
- *---------------------------------------------------------------------------*/
-void
-isdn_enquiry_response(struct isdn_l2 *l2)
-{
-	if (l2->own_busy)
-		isdn_tx_rnr_response(l2, F1);
-	else
-		isdn_tx_rr_response(l2, F1);
-
-	l2->ack_pend = 0;
-}
-
-/*---------------------------------------------------------------------------*
- *	routine INVOKE RETRANSMISSION (Q.921 03/93 page 84)
- *---------------------------------------------------------------------------*/
-void
-isdn_invoke_retransmission(struct isdn_l2 *l2, int nr)
-{
-	NDBGL2(L2_ERROR, "nr = %d", nr );
-
-	while (l2->vs != nr) {
-		NDBGL2(L2_ERROR, "nr(%d) != vs(%d)", nr, l2->vs);
-
-		M128DEC(l2->vs);
-
-/* XXXXXXXXXXXXXXXXX */
-
-		if ((l2->ua_num != UA_EMPTY) && 
-			(l2->vs == l2->ua_num)) {
-			
-			if (_IF_QFULL(&l2->i_queue)) 
-				NDBGL2(L2_ERROR, "ERROR, I-queue full!");
-			else {
-				IF_ENQUEUE(&l2->i_queue, l2->ua_frame);
-				l2->ua_num = UA_EMPTY;
-			}
-		} else {
-			NDBGL2(L2_ERROR, "ERROR, l2->vs = %d, "
-				"l2->ua_num = %d ",l2->vs, l2->ua_num);
-		}
-
-/* XXXXXXXXXXXXXXXXX */
-
-		isdn_l2_queue_i_frame(l2);
-	}
-}
-
-/*---------------------------------------------------------------------------*
- *	routine ACKNOWLEDGE PENDING (Q.921 03/93 p 70)
- *---------------------------------------------------------------------------*/
-void
-isdn_acknowledge_pending(struct isdn_l2 *l2)
-{
-	if (l2->ack_pend) {
-		l2->ack_pend = 0;
-		isdn_tx_rr_response(l2, F0);
-	}
-}
-
-/*---------------------------------------------------------------------------*
  *	isdn_print_frame - just print the hex contents of a frame
  *---------------------------------------------------------------------------*/
 void
-isdn_print_frame(int len, u_char *buf)
+isdn_l2_print_frame(int len, u_char *buf)
 {
-#if DO_I4B_DEBUG
+#ifdef ISDN_DEBUG
 	int i;
 
 	if (isdn_l2_debug & L2_ERROR) {
@@ -274,7 +93,7 @@ isdn_print_frame(int len, u_char *buf)
  *	got s or i frame, check if valid ack for last sent frame
  *---------------------------------------------------------------------------*/
 void
-isdn_rxd_ack(struct isdn_l2 *l2, int nr)
+isdn_l2_rxd_ack(struct isdn_l2 *l2, int nr)
 {
 
 #ifdef NOTDEF
@@ -333,7 +152,7 @@ out:
  *
  */
 void
-isdn_rxd_i_frame(struct isdn_softc *sc, struct mbuf *m)
+isdn_l2_rxd_i_frame(struct isdn_softc *sc, struct mbuf *m)
 {
 	u_char *ptr;
 	struct isdn_l2 *l2;
@@ -603,7 +422,7 @@ out:
  *	transmit RR cmd
  *---------------------------------------------------------------------------*/
 void
-isdn_tx_rr_cmd(struct isdn_l2 *l2, pbit_t pbit)
+isdn_l2_tx_rr_cmd(struct isdn_l2 *l2, pbit_t pbit)
 {
 	struct mbuf *m;
 
@@ -620,7 +439,7 @@ isdn_tx_rr_cmd(struct isdn_l2 *l2, pbit_t pbit)
  *	transmit RR resp
  *---------------------------------------------------------------------------*/
 void
-isdn_tx_rr_resp(struct isdn_l2 *l2, fbit_t fbit)
+isdn_l2_tx_rr_resp(struct isdn_l2 *l2, fbit_t fbit)
 {
 	struct mbuf *m;
 
@@ -639,7 +458,7 @@ isdn_tx_rr_resp(struct isdn_l2 *l2, fbit_t fbit)
  *	transmit RNR cmd
  *---------------------------------------------------------------------------*/
 void
-isdn_tx_rnr_cmd(struct isdn_l2 *l2, pbit_t pbit)
+isdn_l2_tx_rnr_cmd(struct isdn_l2 *l2, pbit_t pbit)
 {
 	struct mbuf *m;
 
@@ -658,7 +477,7 @@ isdn_tx_rnr_cmd(struct isdn_l2 *l2, pbit_t pbit)
  *	transmit RNR resp
  *---------------------------------------------------------------------------*/
 void
-isdn_tx_rnr_resp(struct isdn_l2 *l2, fbit_t fbit)
+isdn_l2_tx_rnr_resp(struct isdn_l2 *l2, fbit_t fbit)
 {
 	struct mbuf *m;
 
@@ -677,7 +496,7 @@ isdn_tx_rnr_resp(struct isdn_l2 *l2, fbit_t fbit)
  *	transmit REJ resp
  *---------------------------------------------------------------------------*/
 void
-isdn_tx_rej_resp(struct isdn_l2 *l2, fbit_t fbit)
+isdn__tx_rej_resp(struct isdn_l2 *l2, fbit_t fbit)
 {
 	struct mbuf *m;
 
@@ -701,7 +520,7 @@ isdn_l2_build_s_frame(struct isdn_l2 *l2, crbit_to_nt_t crbit,
 {
 	struct mbuf *m;
 
-	if ((m = isdn_Dgetmbuf(S_FRAME_LEN, M_DONTWAIT, MT_I4B_D)) == NULL)
+	if ((m = isdn_getmbuf(S_FRAME_LEN, M_DONTWAIT, MT_I4B_D)) == NULL)
 		goto out;
 
 	PUTSAPI(SAPI_CCP, crbit, m->m_data[OFF_SAPI]);
