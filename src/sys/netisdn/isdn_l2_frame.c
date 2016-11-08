@@ -73,6 +73,7 @@
 /*---------------------------------------------------------------------------*
  *	isdn_print_frame - just print the hex contents of a frame
  *---------------------------------------------------------------------------*/
+
 void
 isdn_l2_print_frame(int len, u_char *buf)
 {
@@ -132,14 +133,20 @@ isdn_l2_nr_ok(int nr, int va, int vs)
 	if ((va > nr) && ((nr != 0) || (va != 127))) {
 		NDBGL2(L2_ERROR, 
 			"ERROR, va = %d, nr = %d, vs = %d [1]", va, nr, vs);
-		error = 0;	/* fail */
+/* 
+ * fail 
+ */	
+		error = 0;	
 		goto out;
 	}
 
 	if ((nr > vs) && ((vs != 0) || (nr != 127))) {
 		NDBGL2(L2_ERROR, 
 			"ERROR, va = %d, nr = %d, vs = %d [2]", va, nr, vs);
-		error = 0;	/* fail */
+/* 
+ * fail 
+ */		
+		error = 0;
 	}
 out:	
 	return (error);		/* good */
@@ -289,13 +296,17 @@ isdn_l2_rxd_i_frame(struct isdn_softc *sc, struct mbuf *m)
  *	internal I FRAME QUEUED UP routine (Q.921 03/93 p 61)
  *---------------------------------------------------------------------------*/
 void
-isdn_l2_queue_i_frame(struct isdn_l2 *l2)
+isdn_l2_queue_i_frame(struct isdn_softc *sc)
 {
+	struct isdn_l2 *l2 = &sc->sc_l2;
 	struct mbuf *m;
 	u_char *ptr;
 
+	SC_WLOCK(sc);
+
 	if ((l2->l2_peer_busy) || 
 		(l2->l2_vs == ((l2->l2_va + MAX_K_VALUE) & 127))) {
+		
 		if (l2->l2_peer_busy) {
 			NDBGL2(L2_I_MSG, "regen IFQUP, cause: peer busy!");
 		}
@@ -303,26 +314,27 @@ isdn_l2_queue_i_frame(struct isdn_l2 *l2)
 		if (l2->l2_vs == ((l2->l2_va + MAX_K_VALUE) & 127)) {
 			NDBGL2(L2_I_MSG, "regen IFQUP, cause: vs=va+k!");
 		}
-
-		/*
-		 * XXX see: Q.921, page 36, 5.6.1 ".. may retransmit an I
-		 * frame ...", shall we retransmit the last i frame ?
-		 */
-
+/*
+ * XXX: see: Q.921, page 36, 5.6.1 ".. may retransmit an I
+ * XXX: frame ...", shall we retransmit the last i frame ?
+ */
 		if (!(_IF_QEMPTY(&l2->l2_i_queue))) {
 			NDBGL2(L2_I_MSG, "re-scheduling IFQU call!");
 			START_TIMER(l2->l2_IFQU_callout, 
+
 			isdn_l2_queue_i_frame, l2, IFQU_DLY);
 		}
+		SC_WUNLOCK(sc);
 		return;
 	}
- /* 
-  * fetch next frame to tx 
-  */
+/* 
+ * Fetch next frame for tx. 
+ */
 	IF_DEQUEUE(&l2->l2_i_queue, m);   
 
-	if (!m) {
+	if (m == NULL) {
 		NDBGL2(L2_I_ERR, "ERROR, mbuf NULL after IF_DEQUEUE");
+		SC_WUNLOCK(sc);
 		return;
 	}
 
@@ -338,11 +350,11 @@ isdn_l2_queue_i_frame(struct isdn_l2 *l2)
 /* 
  * XXX: wrong ... free'd when ack'd ! 
  */
-	isdn_output(l2, m, MBUF_DONTFREE); 
+	isdn_output(sc->sc_ifp, l2, m, MBUF_DONTFREE); 
 /*
  * in case we ack an I frame with another I frame 
- */		
-	l2->l2_iframe_sent = 1;		
+ */	
+	l2->l2_iframe_sent = 1;
 
 	if (l2->l2_ua_num != UA_EMPTY) {
 /* 
@@ -361,6 +373,8 @@ isdn_l2_queue_i_frame(struct isdn_l2 *l2)
 	M128INC(l2->l2_vs);
 
 	l2->l2_ack_pend = 0;
+
+	SC_WUNLOCK(sc);
 
 	if (l2->l2_T200 == TIMER_IDLE) {
 		isdn_T203_stop(l2);

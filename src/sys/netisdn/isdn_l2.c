@@ -76,18 +76,9 @@
 #include <net/if.h>
 
 #include <netisdn/isdn.h>
-
-#include <netisdn/isdn_debug.h>
-#include <netisdn/isdn_ioctl.h>
-
-#include <netisdn/isdn_l3l4.h>
-#include <netisdn/isdn_l2.h>
-#include <netisdn/isdn_l1l2.h>
-#include <netisdn/isdn_isdnq931.h>
-#include <netisdn/isdn_mbuf.h>
 #include <netisdn/isdn_global.h>
 
-#include <netisdn/isdn_l2fsm.h>
+
 
 /* this layers debug level */
 
@@ -97,7 +88,7 @@ unsigned int isdn_l2_debug = L2_DEBUG_DEFAULT;
  *	routine ESTABLISH DATA LINK (Q.921 03/93 page 83)
  *---------------------------------------------------------------------------*/
 void
-isdn_establish_data_link(struct isdn_l2 *l2)
+isdn_l2_establish(struct isdn_l2 *l2)
 {
 	isdn_l1_activate(l2);
 
@@ -166,7 +157,7 @@ isdn_nr_error_recovery(struct isdn_l2 *l2)
 {
 	isdn_mdl_error_ind(l2, "isdn_nr_error_recovery", MDL_ERR_J);
 
-	isdn_establish_data_link(l2);
+	isdn_l2_establish(l2);
 
 	l2->l3initiated = 0;
 }
@@ -296,12 +287,9 @@ isdn_l2_unit_data_req(struct isdn_softc *sc,
 int 
 isdn_l2_data_req(struct isdn_softc *sc, struct mbuf *m)
 {
-	struct isdn_l2 *l2;
-	int error;
-	
-	l2 = &sc->sc_l2;
-	error = 0;
-	
+	struct isdn_l2 *l2 = &sc->sc_l2;
+	int error = 0;
+
 	switch(l2->l2_Q921_state) {
 	case ST_AW_EST:
 	case ST_MULTIFR:
@@ -312,12 +300,13 @@ isdn_l2_data_req(struct isdn_softc *sc, struct mbuf *m)
 		if (error) 
 			NDBGL2(L2_ERROR, "i_queue full!!");
 		else
-			isdn_i_frame_queued_up(l2);
+			isdn_l2_queue_i_frame(sc);
 		
 		break;
 	default:
 		NDBGL2(L2_ERROR, "isdnif %d ERROR in state [%s], "
-			"freeing mbuf", sc->sc_ifp->if_index, isdn_print_l2state(l2));
+			"freeing mbuf", sc->sc_ifp->if_index, 
+			isdn_l2_print_state(l2));
 		m_freem(m);
 		error = EINVAL;
 		break;
@@ -507,7 +496,7 @@ isdn_l2_b_chan_set_state(struct isdn_l3 *l3,
 #define TEL_IDLE_MIN (BCH_MAX_DATALEN/2)
 
 int
-isdn_b_chan_silence(unsigned char *data, int len)
+isdn_l2_b_chan_silence(uint8_t *data, int len)
 {
 	register int i = 0;
 	register int j = 0;
@@ -515,8 +504,7 @@ isdn_b_chan_silence(unsigned char *data, int len)
 /* 
  * count idle bytes 
  */
-
-	for (;i < len; i++) {
+	for (; i < len; i++) {
 		if ((*data >= 0xaa) && (*data <= 0xac))
 			j++;
 		data++;

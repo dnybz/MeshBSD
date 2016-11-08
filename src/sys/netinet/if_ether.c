@@ -40,6 +40,9 @@ __FBSDID("$FreeBSD: head/sys/netinet/if_ether.c 298066 2016-04-15 15:46:41Z pfg 
 
 #include "opt_inet.h"
 
+#include "opt_isdn.h"
+#include "opt_isdn_debug.h"
+
 #include <sys/param.h>
 #include <sys/kernel.h>
 #include <sys/lock.h>
@@ -70,6 +73,10 @@ __FBSDID("$FreeBSD: head/sys/netinet/if_ether.c 298066 2016-04-15 15:46:41Z pfg 
 #ifdef INET
 #include <netinet/ip_carp.h>
 #endif
+
+#ifdef ISDN
+#include <netisdn/isdn_arp.h>
+#endif /* ISDN */
 
 #include <security/mac/mac_framework.h>
 
