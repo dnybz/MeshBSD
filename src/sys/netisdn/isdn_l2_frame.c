@@ -59,16 +59,15 @@
 #include <sys/socket.h>
 #include <net/if.h>
 
-#include <netisdn/isdn_debug.h>
-#include <netisdn/isdn_ioctl.h>
-
-#include <netisdn/isdn_global.h>
+#include <netisdn/isdn.h>
+#include <netisdn/isdn_var.h>
 #include <netisdn/isdn_l2.h>
-#include <netisdn/isdn_l1l2.h>
-#include <netisdn/isdn_isdnq931.h>
-#include <netisdn/isdn_mbuf.h>
-#include <netisdn/isdn_l2fsm.h>
-#include <netisdn/isdn_l3l4.h>
+
+/*
+ * XXX: ...
+ */
+
+int isdn_l2_debug = L2_DEBUG_DEFAULT;
 
 /*---------------------------------------------------------------------------*
  *	isdn_print_frame - just print the hex contents of a frame
@@ -79,7 +78,9 @@ isdn_l2_print_frame(int len, u_char *buf)
 {
 #ifdef ISDN_DEBUG
 	int i;
-
+/* 
+ * XXX: ...
+ */
 	if (isdn_l2_debug & L2_ERROR) {
 		for (i = 0; i < len; i++)
 			(void)printf(" 0x%x", buf[i]);
@@ -94,29 +95,29 @@ isdn_l2_print_frame(int len, u_char *buf)
  *	got s or i frame, check if valid ack for last sent frame
  *---------------------------------------------------------------------------*/
 void
-isdn_l2_rxd_ack(struct isdn_l2 *l2, int nr)
+isdn_l2_rxd_ack(struct isdn_softc *sc, int nr)
 {
 
 #ifdef NOTDEF
 	NDBGL2(L2_ERROR, "N(R)=%d, UA=%d, V(R)=%d, V(S)=%d, V(A)=%d",
 		nr,
-		l2->ua_num,
-		l2->vr,
-		l2->vs,
-		l2->va);
+		sc->sc_l2.l2_ua_num,
+		sc->sc_l2.l2_vr,
+		sc->sc_l2.l2_vs,
+		sc->sc_l2.l2_va);
 #endif
 
-	if (l2->ua_num != UA_EMPTY) {
+	if (sc->sc_l2.l2_ua_num != UA_EMPTY) {
 
 		M128DEC(nr);
 
-		if (l2->ua_num != nr) {
+		if (sc->sc_l2.l2_ua_num != nr) {
 			NDBGL2(L2_ERROR, 
 				"((N(R)-1)=%d) != (UA=%d) !!!", 
-				nr, l2->ua_num);
+				nr, sc->sc_l2.l2_ua_num);
 		}
-		m_freem(l2->ua_frame);
-		l2->ua_num = UA_EMPTY;
+		m_freem(sc->sc_l2.l2_ua_frame);
+		sc->sc_l2.l2_ua_num = UA_EMPTY;
 	}
 }
 
@@ -161,69 +162,65 @@ out:
 void
 isdn_l2_rxd_i_frame(struct isdn_softc *sc, struct mbuf *m)
 {
-	u_char *ptr;
-	struct isdn_l2 *l2;
+	u_char ptr = m->m_data;
 	
 	int nr;
 	int ns;
 	int p;
 
-	ptr = m->m_data;
-	l2 = &sc->sc_l2;
-
-	if (!((l2->l2_tei_valid == TEI_VALID) &&
-	     (l2->l2_tei == GETTEI(*(ptr+OFF_TEI))))) {
+	if (!((sc->sc_l2.l2_tei_valid == TEI_VALID) &&
+	     (sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI))))) {
 		m_freem(m);
 		return;
 	}
 
-	if ((l2->l2_Q921_state != ST_MULTIFR) && 
-		(l2->l2_Q921_state != ST_TIMREC)) {
+	if ((sc->sc_l2.l2_Q921_state != ST_MULTIFR) && 
+		(sc->sc_l2.l2_Q921_state != ST_TIMREC)) {
 		NDBGL2(L2_I_ERR, "ERROR, state != (MF || TR)!");
 		m_freem(m);
 		return;
 	}
-	mtx_lock(&l2->l2_mtx);
+	SC_WLOCK(sc);
 /* 
  * update frame count 
  */
-	l2->l2_stat.rx_i++;
+	sc->sc_l2.l2_stat.rx_i++;
 	
 	nr = GETINR(*(ptr + OFF_INR));
 	ns = GETINS(*(ptr + OFF_INS));
 	p = GETIP(*(ptr + OFF_INR));
 
-	isdn_rxd_ack(l2, nr);		/* last packet ack */
+	isdn_l2_rxd_ack(sc, nr);		/* last packet ack */
 /* 
  * own receiver busy ? 
  */
-	if (l2->l2_own_busy)	{
+	if (sc->sc_l2.l2_own_busy)	{
 		m_freem(m);	/* yes, discard information */
 /* 
  * P bit == 1 ? 
  */
 		if (p == 1)	{
-			isdn_tx_rnr_resp(l2, p); /* yes, tx RNR */
-			l2->l2_ack_pend = 0;	/* clear ACK pending */
+			isdn_l2_tx_rnr_resp(l2, p); /* yes, tx RNR */
+			sc->sc_l2.l2_ack_pend = 0;	/* clear ACK pending */
 		}
 	} else {
 /* 
  * own receiver ready, where if /* expected sequence number ?  
  */	
-		if (ns == l2->l2_vr)	{
-			M128INC(l2->l2_vr);	/* yes, update */
+		if (ns == sc->sc_l2.l2_vr)	{
+			M128INC(sc->sc_l2.l2_vr);	/* yes, update */
 
-			l2->l2_rej_excpt = 0;	/* clr reject exception */
+			sc->sc_l2.l2_rej_excpt = 0;	/* clr reject exception */
 
 			m_adj(m, I_HDR_LEN);	/* strip i frame header */
 
-			l2->l2_iframe_sent = 0;	/* reset i acked already */
+			sc->sc_l2.l2_iframe_sent = 0;	/* reset i ack'd already */
 
 			isdn_dl_data_ind(l3, m);	/* pass data up */
 
-			if (!l2->l2_iframe_sent) {
-				isdn_tx_rr_resp(l2, p); /* yes, tx RR */
-				l2->l2_ack_pend = 0;	/* clr ACK pending */
+			if (!sc->sc_l2.l2_iframe_sent) {
+				isdn_l2_tx_rr_resp(l2, p); /* yes, tx RR */
+				sc->sc_l2.l2_ack_pend = 0;	/* clr ACK pending */
 			}
 		} else {
 /* 
@@ -233,50 +230,50 @@ isdn_l2_rxd_i_frame(struct isdn_softc *sc, struct mbuf *m)
 /* 
  * already exception ? 
  */
-			if (l2->l2_rej_excpt == 1) {
+			if (sc->sc_l2.l2_rej_excpt == 1) {
 /* 
  * immediate resp ? 
  */
 				if (p == 1)	{
-					isdn_tx_rr_resp(l2, p); /* yes, tx RR */
-					l2->l2_ack_pend = 0; /* clr ack pend */
+					isdn_l2_tx_rr_resp(l2, p); /* yes, tx RR */
+					sc->sc_l2.l2_ack_pend = 0; /* clr ack pend */
 				}
 			} else {
 /* 
  * not in exception cond 
  */			
-				l2->l2_rej_excpt = 1;	/* set exception */
-				isdn_tx_rej_resp(l2, p);	/* tx REJ */
-				l2->l2_ack_pend = 0;	/* clr ack pending */
+				sc->sc_l2.l2_rej_excpt = 1;	/* set exception */
+				isdn_l2_tx_rej_resp(l2, p);	/* tx REJ */
+				sc->sc_l2.l2_ack_pend = 0;	/* clr ack pending */
 			}
 		}
 	}
 /* 
  * sequence number ranges as expected ? 
  */
-	if (isdn_l2_nr_ok(nr, l2->l2_va, l2->l2_vs)) {
-		if (l2->l2_Q921_state == ST_TIMREC) {
-			l2->l2_va = nr;
+	if (isdn_l2_nr_ok(nr, sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
+		if (sc->sc_l2.l2_Q921_state == ST_TIMREC) {
+			sc->sc_l2.l2_va = nr;
 		} else {
 /* 
  * yes, other side busy ? 
  */
-			if (l2->l2_peer_busy) {
-				l2->l2_va = nr;	/* yes, update ack count */
+			if (sc->sc_l2.l2_peer_busy) {
+				sc->sc_l2.l2_va = nr;	/* yes, update ack count */
 			} else {
 /* 
  * other side ready 
  */		
-				if (nr == l2->l2_vs) {
+				if (nr == sc->sc_l2.l2_vs) {
 /* 
  * count expected ? 
  */								
-					l2->l2_va = nr;	/* update ack */
+					sc->sc_l2.l2_va = nr;	/* update ack */
 					isdn_T200_stop(l2);
 					isdn_T203_restart(l2);
 				} else {
-					if (nr != l2->l2_va) {
-						l2->l2_va = nr;
+					if (nr != sc->sc_l2.l2_va) {
+						sc->sc_l2.l2_va = nr;
 						isdn_T200_restart(l2);
 					}
 				}
@@ -287,9 +284,9 @@ isdn_l2_rxd_i_frame(struct isdn_softc *sc, struct mbuf *m)
  * sequence error 
  */		
 		isdn_nr_error_recovery(l2);	
-		l2->l2_Q921_state = ST_AW_EST;
+		sc->sc_l2.l2_Q921_state = ST_AW_EST;
 	}
-	mtx_unlock(&l2->l2_mtx);
+	SC_WUNLOCK(sc);
 }
 
 /*---------------------------------------------------------------------------*
@@ -298,29 +295,28 @@ isdn_l2_rxd_i_frame(struct isdn_softc *sc, struct mbuf *m)
 void
 isdn_l2_queue_i_frame(struct isdn_softc *sc)
 {
-	struct isdn_l2 *l2 = &sc->sc_l2;
 	struct mbuf *m;
 	u_char *ptr;
 
 	SC_WLOCK(sc);
 
-	if ((l2->l2_peer_busy) || 
-		(l2->l2_vs == ((l2->l2_va + MAX_K_VALUE) & 127))) {
+	if ((sc->sc_l2.l2_peer_busy) || 
+		(sc->sc_l2.l2_vs == ((sc->sc_l2.l2_va + MAX_K_VALUE) & 127))) {
 		
-		if (l2->l2_peer_busy) {
+		if (sc->sc_l2.l2_peer_busy) {
 			NDBGL2(L2_I_MSG, "regen IFQUP, cause: peer busy!");
 		}
 
-		if (l2->l2_vs == ((l2->l2_va + MAX_K_VALUE) & 127)) {
+		if (sc->sc_l2.l2_vs == ((sc->sc_l2.l2_va + MAX_K_VALUE) & 127)) {
 			NDBGL2(L2_I_MSG, "regen IFQUP, cause: vs=va+k!");
 		}
 /*
  * XXX: see: Q.921, page 36, 5.6.1 ".. may retransmit an I
  * XXX: frame ...", shall we retransmit the last i frame ?
  */
-		if (!(_IF_QEMPTY(&l2->l2_i_queue))) {
+		if (!(_IF_QEMPTY(&sc->sc_l2.l2_i_queue))) {
 			NDBGL2(L2_I_MSG, "re-scheduling IFQU call!");
-			START_TIMER(l2->l2_IFQU_callout, 
+			START_TIMER(sc->sc_l2.l2_IFQU_callout, 
 
 			isdn_l2_queue_i_frame, l2, IFQU_DLY);
 		}
@@ -330,7 +326,7 @@ isdn_l2_queue_i_frame(struct isdn_softc *sc)
 /* 
  * Fetch next frame for tx. 
  */
-	IF_DEQUEUE(&l2->l2_i_queue, m);   
+	IF_DEQUEUE(&sc->sc_l2.l2_i_queue, m);   
 
 	if (m == NULL) {
 		NDBGL2(L2_I_ERR, "ERROR, mbuf NULL after IF_DEQUEUE");
@@ -341,12 +337,12 @@ isdn_l2_queue_i_frame(struct isdn_softc *sc)
 	ptr = m->m_data;
 
 	PUTSAPI(SAPI_CCP, CR_CMD_TO_NT, *(ptr + OFF_SAPI));
-	PUTTEI(l2->l2_tei, *(ptr + OFF_TEI));
+	PUTTEI(sc->sc_l2.l2_tei, *(ptr + OFF_TEI));
 
-	*(ptr + OFF_INS) = (l2->l2_vs << 1) & 0xfe; /* bit 0 = 0 */
-	*(ptr + OFF_INR) = (l2->l2_vr << 1) & 0xfe; /* P bit = 0 */
+	*(ptr + OFF_INS) = (sc->sc_l2.l2_vs << 1) & 0xfe; /* bit 0 = 0 */
+	*(ptr + OFF_INR) = (sc->sc_l2.l2_vr << 1) & 0xfe; /* P bit = 0 */
 
-	l2->l2_stat.tx_i++;	/* update frame counter */
+	sc->sc_l2.l2_stat.tx_i++;	/* update frame counter */
 /* 
  * XXX: wrong ... free'd when ack'd ! 
  */
@@ -354,29 +350,37 @@ isdn_l2_queue_i_frame(struct isdn_softc *sc)
 /*
  * in case we ack an I frame with another I frame 
  */	
-	l2->l2_iframe_sent = 1;
+	sc->sc_l2.l2_iframe_sent = 1;
 
-	if (l2->l2_ua_num != UA_EMPTY) {
+	if (sc->sc_l2.l2_ua_num != UA_EMPTY) {
 /* 
  * failsafe 
  */	
-		NDBGL2(L2_I_ERR, "ERROR, l2->l2_ua_num: %d != UA_EMPTY", l2->l2_ua_num);
+		NDBGL2(L2_I_ERR, "sc->sc_l2.l2_ua_num: %d != UA_EMPTY", 
+			sc->sc_l2.l2_ua_num);
+/*
+ * XXX
+ */		
+		isdn_l2_print_var(sc);
 		
-		isdn_print_l2var(sc);
-		
-		m_freem(l2->l2_ua_frame);
+		m_freem(sc->sc_l2.l2_ua_frame);
 	}
+/* 
+ * save unack'd frame 
+ */
+	sc->sc_l2.l2_ua_frame = m;		
+/* 
+ * save frame number 
+ */
+	sc->sc_l2.l2_ua_num = sc->sc_l2.l2_vs;	
 
-	l2->l2_ua_frame = m;		/* save unacked frame */
-	l2->l2_ua_num = l2->l2_vs;	/* save frame number */
+	M128INC(sc->sc_l2.l2_vs);
 
-	M128INC(l2->l2_vs);
-
-	l2->l2_ack_pend = 0;
+	sc->sc_l2.l2_ack_pend = 0;
 
 	SC_WUNLOCK(sc);
 
-	if (l2->l2_T200 == TIMER_IDLE) {
+	if (sc->sc_l2.l2_T200 == TIMER_IDLE) {
 		isdn_T203_stop(l2);
 		isdn_T200_start(l2);
 	}
@@ -389,41 +393,37 @@ isdn_l2_queue_i_frame(struct isdn_softc *sc)
 void
 isdn_l2_rxd_s_frame(struct isdn_softc *sc, struct mbuf *m)
 {
-	u_char *ptr;
-	struct isdn_l2 *l2;
-	
-	ptr = m->m_data;
-	l2 = &sc->sc_l2;
+	u_char *ptr = m->m_data;
 
-	if (!((l2->l2_tei_valid == TEI_VALID) &&
-	     (l2->l2_tei == GETTEI(*(ptr+OFF_TEI))))) {
+	if (!((sc->sc_l2.l2_tei_valid == TEI_VALID) &&
+	     (sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI))))) {
 		goto out;
 	}
 
-	l2->l2_rxd_CR = GETCR(*(ptr + OFF_SAPI));
-	l2->l2_rxd_PF = GETSPF(*(ptr + OFF_SNR));
-	l2->l2_rxd_NR = GETSNR(*(ptr + OFF_SNR));
+	sc->sc_l2.l2_rxd_CR = GETCR(*(ptr + OFF_SAPI));
+	sc->sc_l2.l2_rxd_PF = GETSPF(*(ptr + OFF_SNR));
+	sc->sc_l2.l2_rxd_NR = GETSNR(*(ptr + OFF_SNR));
 
-	isdn_rxd_ack(l2, l2->l2_rxd_NR);
+	isdn_l2_rxd_ack(sc, sc->sc_l2.l2_rxd_NR);
 
 	switch(*(ptr + OFF_SRCR)) {
 	case RR:
-		l2->l2_stat.rx_rr++; /* update statistics */
-		NDBGL2(L2_S_MSG, "rx'd RR, N(R) = %d", l2->l2_rxd_NR);
-		isdn_next_l2state(l2, l3, EV_RXRR);
+		sc->sc_l2.l2_stat.rx_rr++; /* update statistics */
+		NDBGL2(L2_S_MSG, "rx'd RR, N(R) = %d", sc->sc_l2.l2_rxd_NR);
+		isdn_l2_next_state(sc, EV_RXRR);
 		break;
 	case RNR:
-		l2->l2_stat.rx_rnr++; /* update statistics */
-		NDBGL2(L2_S_MSG, "rx'd RNR, N(R) = %d", l2->l2_rxd_NR);
-		isdn_next_l2state(l2, l3, EV_RXRNR);
+		sc->sc_l2.l2_stat.rx_rnr++; /* update statistics */
+		NDBGL2(L2_S_MSG, "rx'd RNR, N(R) = %d", sc->sc_l2.l2_rxd_NR);
+		isdn_l2_next_state(sc, EV_RXRNR);
 		break;
 	case REJ:
-		l2->l2_stat.rx_rej++; /* update statistics */
-		NDBGL2(L2_S_MSG, "rx'd REJ, N(R) = %d", l2->l2_rxd_NR);
-		isdn_next_l2state(l2, l3, EV_RXREJ);
+		sc->sc_l2.l2_stat.rx_rej++; /* update statistics */
+		NDBGL2(L2_S_MSG, "rx'd REJ, N(R) = %d", sc->sc_l2.l2_rxd_NR);
+		isdn_l2_next_state(sc, EV_RXREJ);
 		break;
 	default:
-		l2->l2_stat.err_rx_bads++; /* update statistics */
+		sc->sc_l2.l2_stat.err_rx_bads++; /* update statistics */
 		NDBGL2(L2_S_ERR, "ERROR, unknown code, frame = ");
 		isdn_print_frame(m->m_len, m->m_data);
 		break;
@@ -436,100 +436,102 @@ out:
  *	transmit RR cmd
  *---------------------------------------------------------------------------*/
 void
-isdn_l2_tx_rr_cmd(struct isdn_l2 *l2, pbit_t pbit)
+isdn_l2_tx_rr_cmd(struct isdn_softc *sc, pbit_t pbit)
 {
 	struct mbuf *m;
 
-	NDBGL2(L2_S_MSG, "tx RR, isdnif = %d", l2->l2_l3->isdnif);
+	NDBGL2(L2_S_MSG, "tx RR, isdnif = %d", sc->sc_l2.l2_l3->isdnif);
 
-	m = isdn_l2_build_s_frame(l2, CR_CMD_TO_NT, pbit, RR);
-
+	m = isdn_l2_build_s_frame(sc, CR_CMD_TO_NT, pbit, RR);
+/*
+ * XXX: wrong ...
+ */
 	isdn_output(l2, m, MBUF_FREE);
 
-	l2->l2_stat.tx_rr++; /* update statistics */
+	sc->sc_l2.l2_stat.tx_rr++; /* update statistics */
 }
 
 /*---------------------------------------------------------------------------*
  *	transmit RR resp
  *---------------------------------------------------------------------------*/
 void
-isdn_l2_tx_rr_resp(struct isdn_l2 *l2, fbit_t fbit)
+isdn_l2_tx_rr_resp(struct isdn_softc *sc, fbit_t fbit)
 {
 	struct mbuf *m;
 
-	NDBGL2(L2_S_MSG, "tx RR, isdnif = %d", l2->l2_l3->isdnif);
+	NDBGL2(L2_S_MSG, "tx RR, isdnif = %d", sc->sc_l2.l2_l3->isdnif);
 
-	m = isdn_l2_build_s_frame(l2, CR_RSP_TO_NT, fbit, RR);
+	m = isdn_l2_build_s_frame(sc, CR_RSP_TO_NT, fbit, RR);
 /*
  * XXX: wrong ...
  */
 	isdn_output(l2, m, MBUF_FREE);
 
-	l2->l2_stat.tx_rr++; /* update statistics */
+	sc->sc_l2.l2_stat.tx_rr++; /* update statistics */
 }
 
 /*---------------------------------------------------------------------------*
  *	transmit RNR cmd
  *---------------------------------------------------------------------------*/
 void
-isdn_l2_tx_rnr_cmd(struct isdn_l2 *l2, pbit_t pbit)
+isdn_l2_tx_rnr_cmd(struct isdn_softc *sc, pbit_t pbit)
 {
 	struct mbuf *m;
 
-	NDBGL2(L2_S_MSG, "tx RNR, isdnif = %d", l2->l2_l3->isdnif);
+	NDBGL2(L2_S_MSG, "tx RNR, isdnif = %d", sc->sc_l2.l2_l3->isdnif);
 
-	m = isdn_l2_build_s_frame(l2, CR_CMD_TO_NT, pbit, RNR);
+	m = isdn_l2_build_s_frame(sc, CR_CMD_TO_NT, pbit, RNR);
 /*
  * XXX: wrong ...
  */
 	isdn_output(l2, m, MBUF_FREE);
 
-	l2->l2_stat.tx_rnr++; /* update statistics */
+	sc->sc_l2.l2_stat.tx_rnr++; /* update statistics */
 }
 
 /*---------------------------------------------------------------------------*
  *	transmit RNR resp
  *---------------------------------------------------------------------------*/
 void
-isdn_l2_tx_rnr_resp(struct isdn_l2 *l2, fbit_t fbit)
+isdn_l2_tx_rnr_resp(struct isdn_softc *sc, fbit_t fbit)
 {
 	struct mbuf *m;
 
-	NDBGL2(L2_S_MSG, "tx RNR, isdnif = %d", l2->l2_l3->isdnif);
+	NDBGL2(L2_S_MSG, "tx RNR, isdnif = %d", sc->sc_l2.l2_l3->isdnif);
 
-	m = isdn_l2_build_s_frame(l2, CR_RSP_TO_NT, fbit, RNR);
+	m = isdn_l2_build_s_frame(sc, CR_RSP_TO_NT, fbit, RNR);
 /*
  * XXX: wrong ...
  */
 	isdn_output(l2, m, MBUF_FREE);
 
-	l2->l2_stat.tx_rnr++; /* update statistics */
+	sc->sc_l2.l2_stat.tx_rnr++; /* update statistics */
 }
 
 /*---------------------------------------------------------------------------*
  *	transmit REJ resp
  *---------------------------------------------------------------------------*/
 void
-isdn__tx_rej_resp(struct isdn_l2 *l2, fbit_t fbit)
+isdn__tx_rej_resp(struct isdn_softc *sc, fbit_t fbit)
 {
 	struct mbuf *m;
 
-	NDBGL2(L2_S_MSG, "tx REJ, isdnif = %d", l2->l2_l3->isdnif);
+	NDBGL2(L2_S_MSG, "tx REJ, isdnif = %d", sc->sc_l2.l2_l3->isdnif);
 
-	m = isdn_l2_build_s_frame(l2, CR_RSP_TO_NT, fbit, REJ);
+	m = isdn_l2_build_s_frame(sc, CR_RSP_TO_NT, fbit, REJ);
 /*
  * XXX: wrong ...
  */
 	isdn_output(l2, m, MBUF_FREE);
 
-	l2->l2_stat.tx_rej++; /* update statistics */
+	sc->sc_l2.l2_stat.tx_rej++; /* update statistics */
 }
 
 /*---------------------------------------------------------------------------*
  *	build S-frame for sending
  *---------------------------------------------------------------------------*/
 struct mbuf *
-isdn_l2_build_s_frame(struct isdn_l2 *l2, crbit_to_nt_t crbit, 
+isdn_l2_build_s_frame(struct isdn_softc *sc, crbit_to_nt_t crbit, 
 	pbit_t pbit, u_char type)
 {
 	struct mbuf *m;
@@ -539,11 +541,11 @@ isdn_l2_build_s_frame(struct isdn_l2 *l2, crbit_to_nt_t crbit,
 
 	PUTSAPI(SAPI_CCP, crbit, m->m_data[OFF_SAPI]);
 
-	PUTTEI(l2->l2_tei, m->m_data[OFF_TEI]);
+	PUTTEI(sc->sc_l2.l2_tei, m->m_data[OFF_TEI]);
 
 	m->m_data[OFF_SRCR] = type;
 
-	m->m_data[OFF_SNR] = (l2->l2_vr << 1) | (pbit & 0x01);
+	m->m_data[OFF_SNR] = (sc->sc_l2.l2_vr << 1) | (pbit & 0x01);
 out:
 	return (m);
 }
@@ -566,12 +568,13 @@ isdn_l2_rxd_u_frame(struct isdn_softc *sc, struct mbuf *m)
  * commands 
  */
 	case SABME:
-		if ((l2->tei_valid == TEI_VALID) && 
-			(l2->tei == GETTEI(*(ptr+OFF_TEI)))) {
-			l2->stat.rx_sabme++;
-			NDBGL2(L2_U_MSG, "SABME, sapi = %d, tei = %d", sapi, tei);
-			l2->rxd_PF = pfbit;
-			i4b_next_l2state(l2, l3, EV_RXSABME);
+		if ((sc->sc_l2.l2_tei_valid == TEI_VALID) && 
+			(sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI)))) {
+			sc->sc_l2.l2_stat.rx_sabme++;
+			NDBGL2(L2_U_MSG, 
+				"SABME, sapi = %d, tei = %d", sapi, tei);
+			sc->sc_l2.l2_rxd_PF = pfbit;
+			isdn_l2_next_state(sc, EV_RXSABME);
 		}
 		m_freem(m);
 		break;
@@ -582,13 +585,13 @@ isdn_l2_rxd_u_frame(struct isdn_softc *sc, struct mbuf *m)
 /* 
  * layer 2 management (SAPI = 63) 
  */
-			l2->stat.rx_tei++;
-			i4b_tei_rxframe(l2, l3, m);
+			sc->sc_l2.l2_stat.rx_tei++;
+			isdn_tei_rxframe(l2, l3, m);
 		} else if ((sapi == SAPI_CCP) && (tei == GROUP_TEI)) {
 /* 
  * call control (SAPI = 0) 
  */
-			l2->stat.rx_ui++;
+			sc->sc_l2.l2_stat.rx_ui++;
 /* 
  * strip ui header 
  */
@@ -596,29 +599,31 @@ isdn_l2_rxd_u_frame(struct isdn_softc *sc, struct mbuf *m)
 /* 
  * to upper layer 
  */
-			i4b_dl_unit_data_ind(l2->l3, m);
+			isdn_dl_unit_data_ind(sc->sc_l2.l2_l3, m);
 		} else {
-			l2->stat.err_rx_badui++;
+			sc->sc_l2.l2_stat.err_rx_badui++;
 			NDBGL2(L2_U_ERR, "unknown UI frame!");
 			m_freem(m);
 		}
 		break;
 	case DISC:
-		if ((l2->tei_valid == TEI_VALID) && 
-			(l2->tei == GETTEI(*(ptr+OFF_TEI)))) {
-			l2->stat.rx_disc++;
-			NDBGL2(L2_U_MSG, "DISC, sapi = %d, tei = %d", sapi, tei);
-			l2->rxd_PF = pfbit;
-			i4b_next_l2state(l2, l3, EV_RXDISC);
+		if ((sc->sc_l2.l2_tei_valid == TEI_VALID) && 
+			(sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI)))) {
+			sc->sc_l2.l2_stat.rx_disc++;
+			NDBGL2(L2_U_MSG, 
+				"DISC, sapi = %d, tei = %d", sapi, tei);
+			sc->sc_l2.l2_rxd_PF = pfbit;
+			isdn_l2_next_state(sc, EV_RXDISC);
 		}
 		m_freem(m);
 		break;
 	case XID:
 		
-		if ((l2->tei_valid == TEI_VALID) && 
-			(l2->tei == GETTEI(*(ptr+OFF_TEI)))) {
-			l2->stat.rx_xid++;
-			NDBGL2(L2_U_MSG, "XID, sapi = %d, tei = %d", sapi, tei);
+		if ((sc->sc_l2.l2_tei_valid == TEI_VALID) && 
+			(sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI)))) {
+			sc->sc_l2.l2_stat.rx_xid++;
+			NDBGL2(L2_U_MSG, 
+				"XID, sapi = %d, tei = %d", sapi, tei);
 		}
 		m_freem(m);
 		break;
@@ -626,48 +631,49 @@ isdn_l2_rxd_u_frame(struct isdn_softc *sc, struct mbuf *m)
  * responses 
  */
 	case DM:
-		if ((l2->tei_valid == TEI_VALID) && 
-			(l2->tei == GETTEI(*(ptr+OFF_TEI)))) {
-				l2->stat.rx_dm++;
-			NDBGL2(L2_U_MSG, "DM, sapi = %d, tei = %d", sapi, tei);
-			i4b_print_frame(m->m_len, m->m_data);
-			l2->rxd_PF = pfbit;
-			i4b_next_l2state(l2, l3, EV_RXDM);
+		if ((sc->sc_l2.l2_tei_valid == TEI_VALID) && 
+			(sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI)))) {
+				sc->sc_l2.l2_stat.rx_dm++;
+			NDBGL2(L2_U_MSG, 
+				"DM, sapi = %d, tei = %d", sapi, tei);
+			isdn_print_frame(m->m_len, m->m_data);
+			sc->sc_l2.l2_rxd_PF = pfbit;
+			isdn_l2_next_state(sc, EV_RXDM);
 		}
 		m_freem(m);
 		break;
 	case UA:
-		if ((l2->tei_valid == TEI_VALID) && 
-			(l2->tei == GETTEI(*(ptr+OFF_TEI)))) {
-			l2->stat.rx_ua++;
+		if ((sc->sc_l2.l2_tei_valid == TEI_VALID) && 
+			(sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI)))) {
+			sc->sc_l2.l2_stat.rx_ua++;
 			NDBGL2(L2_U_MSG, "UA, sapi = %d, tei = %d", sapi, tei);
-			l2->rxd_PF = pfbit;
-			i4b_next_l2state(l2, l3, EV_RXUA);
+			sc->sc_l2.l2_rxd_PF = pfbit;
+			isdn_l2_next_state(sc, EV_RXUA);
 		}
 		m_freem(m);
 		break;
 	case FRMR:
-		if ((l2->tei_valid == TEI_VALID) && 
-			(l2->tei == GETTEI(*(ptr+OFF_TEI)))) {
-			l2->stat.rx_frmr++;
+		if ((sc->sc_l2.l2_tei_valid == TEI_VALID) && 
+			(sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI)))) {
+			sc->sc_l2.l2_stat.rx_frmr++;
 			NDBGL2(L2_U_MSG, "FRMR, sapi = %d, tei = %d", sapi, tei);
-			l2->rxd_PF = pfbit;
-			i4b_next_l2state(l2, l3, EV_RXFRMR);
+			sc->sc_l2.l2_rxd_PF = pfbit;
+			isdn_l2_next_state(sc, EV_RXFRMR);
 		}
 		m_freem(m);
 		break;
 	default:
-		if ((l2->tei_valid == TEI_VALID) && 
-			(l2->tei == GETTEI(*(ptr+OFF_TEI)))) {
+		if ((sc->sc_l2.l2_tei_valid == TEI_VALID) && 
+			(sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI)))) {
 			NDBGL2(L2_U_ERR, "UNKNOWN TYPE ERROR, sapi = %d, "
 				"tei = %d, frame = ", sapi, tei);
-			i4b_print_frame(m->m_len, m->m_data);
+			isdn_print_frame(m->m_len, m->m_data);
 		} else {
 			NDBGL2(L2_U_ERR, "not mine -  UNKNOWN TYPE ERROR, "
 				"sapi = %d, tei = %d, frame = ", sapi, tei);
-			i4b_print_frame(m->m_len, m->m_data);
+			isdn_print_frame(m->m_len, m->m_data);
 		}
-		l2->stat.err_rx_badui++;
+		sc->sc_l2.l2_stat.err_rx_badui++;
 		m_freem(m);
 		break;
 	}
@@ -677,17 +683,17 @@ isdn_l2_rxd_u_frame(struct isdn_softc *sc, struct mbuf *m)
  *	build U-frame for sending
  *---------------------------------------------------------------------------*/
 struct mbuf *
-isdn_l2_build_u_frame(struct isdn_l2 *l2, crbit_to_nt_t crbit, 
+isdn_l2_build_u_frame(struct isdn_softc *sc, crbit_to_nt_t crbit, 
 	pbit_t pbit, u_char type)
 {
 	struct mbuf *m;
 
-	if ((m = i4b_getmbuf(U_FRAME_LEN, M_DONTWAIT, MT_I4B_D)) == NULL)
+	if ((m = isdn_getmbuf(U_FRAME_LEN, M_DONTWAIT, MT_I4B_D)) == NULL)
 		goto out;
 
 	PUTSAPI(SAPI_CCP, crbit, m->m_data[OFF_SAPI]);
 
-	PUTTEI(l2->tei, m->m_data[OFF_TEI]);
+	PUTTEI(sc->sc_l2.l2_tei, m->m_data[OFF_TEI]);
 
 	if (pbit)
 		m->m_data[OFF_CNTL] = type | UPBITSET;
@@ -701,84 +707,84 @@ out:
  *	transmit SABME command
  *---------------------------------------------------------------------------*/
 void
-i4b_tx_sabme(struct isdn_l2 *l2, pbit_t pbit)
+isdn_l2_tx_sabme(struct isdn_softc *sc, pbit_t pbit)
 {
 	struct mbuf *m;
 
-	l2->stat.tx_sabme++;
-	NDBGL2(L2_U_MSG, "tx SABME, tei = %d", l2->tei);
-	m = isdn_l2_build_u_frame(l2, CR_CMD_TO_NT, pbit, SABME);
+	sc->sc_l2.l2_stat.tx_sabme++;
+	NDBGL2(L2_U_MSG, "tx SABME, tei = %d", sc->sc_l2.l2_tei);
+	m = isdn_l2_build_u_frame(sc, CR_CMD_TO_NT, pbit, SABME);
 /*
  * XXX: wrong ...
  */
-	i4b_output(l2, m, MBUF_FREE);
+	isdn_output(l2, m, MBUF_FREE);
 }
 
 /*---------------------------------------------------------------------------*
  *	transmit DM response
  *---------------------------------------------------------------------------*/
 void
-i4b_tx_dm(struct isdn_l2 *l2, fbit_t fbit)
+isdn_l2_tx_dm(struct isdn_softc *sc, fbit_t fbit)
 {
 	struct mbuf *m;
 
-	l2->stat.tx_dm++;
-	NDBGL2(L2_U_MSG, "tx DM, tei = %d", l2->tei);
-	m = isdn_l2_build_u_frame(l2, CR_RSP_TO_NT, fbit, DM);
+	sc->sc_l2.l2_stat.tx_dm++;
+	NDBGL2(L2_U_MSG, "tx DM, tei = %d", sc->sc_l2.l2_tei);
+	m = isdn_l2_build_u_frame(sc, CR_RSP_TO_NT, fbit, DM);
 /*
  * XXX: wrong ...
  */
-	i4b_output(l2, m, MBUF_FREE);
+	isdn_output(l2, m, MBUF_FREE);
 }
 
 /*---------------------------------------------------------------------------*
  *	transmit DISC command
  *---------------------------------------------------------------------------*/
 void
-i4b_tx_disc(struct isdn_l2 *l2, pbit_t pbit)
+isdn_l2_tx_disc(struct isdn_softc *sc, pbit_t pbit)
 {
 	struct mbuf *m;
 
-	l2->stat.tx_disc++;
-	NDBGL2(L2_U_MSG, "tx DISC, tei = %d", l2->tei);
-	m = isdn_l2_build_u_frame(l2, CR_CMD_TO_NT, pbit, DISC);
+	sc->sc_l2.l2_stat.tx_disc++;
+	NDBGL2(L2_U_MSG, "tx DISC, tei = %d", sc->sc_l2.l2_tei);
+	m = isdn_l2_build_u_frame(sc, CR_CMD_TO_NT, pbit, DISC);
 /*
  * XXX: wrong ...
  */
-	i4b_output(l2, m, MBUF_FREE);
+	isdn_output(l2, m, MBUF_FREE);
 }
 
 /*---------------------------------------------------------------------------*
  *	transmit UA response
  *---------------------------------------------------------------------------*/
 void
-i4b_tx_ua(struct isdn_l2 *l2, fbit_t fbit)
+isdn_l2_tx_ua(struct isdn_softc *sc, fbit_t fbit)
 {
 	struct mbuf *m;
 
-	l2->stat.tx_ua++;
-	NDBGL2(L2_U_MSG, "tx UA, tei = %d", l2->tei);
-	m = isdn_l2_build_u_frame(l2, CR_RSP_TO_NT, fbit, UA);
+	sc->sc_l2.l2_stat.tx_ua++;
+	NDBGL2(L2_U_MSG, "tx UA, tei = %d", sc->sc_l2.l2_tei);
+	m = isdn_l2_build_u_frame(sc, CR_RSP_TO_NT, fbit, UA);
 /*
  * XXX: wrong ...
  */
-	i4b_output(l2, m, MBUF_FREE);
+	isdn_output(l2, m, MBUF_FREE);
 }
 
 /*---------------------------------------------------------------------------*
  *	transmit FRMR response
  *---------------------------------------------------------------------------*/
 void
-i4b_tx_frmr(struct isdn_l2 *l2, fbit_t fbit)
+isdn_l2_tx_frmr(struct isdn_softc *sc, fbit_t fbit)
 {
 	struct mbuf *m;
 
-	l2->stat.tx_frmr++;
-	NDBGL2(L2_U_MSG, "tx FRMR, tei = %d", l2->tei);
-	m = isdn_l2_build_u_frame(l2, CR_RSP_TO_NT, fbit, FRMR);
+	sc->sc_l2.l2_stat.tx_frmr++;
+	NDBGL2(L2_U_MSG, "tx FRMR, tei = %d", sc->sc_l2.l2_tei);
+	m = isdn_l2_build_u_frame(sc, CR_RSP_TO_NT, fbit, FRMR);
 /*
  * XXX: wrong ...
  */
-	i4b_output(l2, m, MBUF_FREE);
+	isdn_output(l2, m, MBUF_FREE);
 }
 

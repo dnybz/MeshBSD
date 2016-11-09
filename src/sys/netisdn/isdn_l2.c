@@ -76,138 +76,139 @@
 #include <net/if.h>
 
 #include <netisdn/isdn.h>
-#include <netisdn/isdn_global.h>
+#include <netisdn/isdn_var.h>
+#include <netisdn/isdn_l2.h>
+
+/*
+ * XXX: ...
+ */
 
 
 
-/* this layers debug level */
-
-unsigned int isdn_l2_debug = L2_DEBUG_DEFAULT;
 
 /*---------------------------------------------------------------------------*
  *	routine ESTABLISH DATA LINK (Q.921 03/93 page 83)
  *---------------------------------------------------------------------------*/
 void
-isdn_l2_establish(struct isdn_l2 *l2)
+isdn_l2_establish(struct isdn_softc *sc)
 {
-	isdn_l1_activate(l2);
+	isdn_clear_exception_cond(sc);
 
-	isdn_clear_exception_conditions(l2);
+	sc->sc_l2.l2_RC = 0;
 
-	l2->RC = 0;
+	isdn_l2_tx_sabme(sc, P1);
 
-	isdn_tx_sabme(l2, P1);
+	isdn_T200_restart(&sc->sc_l2);
 
-	isdn_T200_restart(l2);
-
-	isdn_T203_stop(l2);
+	isdn_T203_stop(&sc->sc_l2);
 }
 
 /*---------------------------------------------------------------------------*
  *	routine CLEAR EXCEPTION CONDITIONS (Q.921 03/93 page 83)
  *---------------------------------------------------------------------------*/
 void
-isdn_clear_exception_conditions(struct isdn_l2 *l2) 
+isdn_l2_clear_exception_cond(struct isdn_softc *sc) 
 {
-	mtx_lock(&isdn_mtx);
+	SC_WLOCK(sc);
 
 /*XXX -------------------------------------------------------------- */
 /*XXX is this really appropriate here or should it moved elsewhere ? */
 
-	IF_DRAIN(&l2->i_queue);
+	IF_DRAIN(&sc->sc_l2.l2_i_queue);
 
-	if (l2->ua_num != UA_EMPTY) {
-		m_freem(l2->ua_frame);
-		l2->ua_num = UA_EMPTY;
+	if (sc->sc_l2.l2_ua_num != UA_EMPTY) {
+		m_freem(sc->sc_l2.l2_ua_frame);
+		sc->sc_l2.l2_ua_num = UA_EMPTY;
 	}
-/*XXX -------------------------------------------------------------- */
+	sc->sc_l2.l2_peer_busy = 0;
+	sc->sc_l2.l2_rej_excpt = 0;
+	sc->sc_l2.l2_own_busy = 0;
+	sc->sc_l2.l2_ack_pend = 0;
 
-	l2->peer_busy = 0;
-
-	l2->rej_excpt = 0;
-
-	l2->own_busy = 0;
-
-	l2->ack_pend = 0;
-
-	mtx_unlock(&isdn_mtx);
+	SC_WUNLOCK(sc);
 }
 
 /*---------------------------------------------------------------------------*
  *	routine TRANSMIT ENQUIRE (Q.921 03/93 page 83)
  *---------------------------------------------------------------------------*/
 void
-isdn_transmit_enquire(struct isdn_l2 *l2)
+isdn_l2_tx_enquire(struct isdn_softc *sc)
 {
-	if (l2->own_busy)
-		isdn_tx_rnr_command(l2, P1);
+	if (sc->sc_l2.l2_own_busy)
+		isdn_l2_tx_rnr_cmd(sc, P1);
 	else
-		isdn_tx_rr_command(l2, P1);
+		isdn_l2_tx_rr_cmd(sc, P1);
 
-	l2->ack_pend = 0;
+	sc->sc_l2.l2_ack_pend = 0;
 
-	isdn_T200_start(l2);
+	isdn_T200_start(&sc->sc_l2);
 }
 
 /*---------------------------------------------------------------------------*
  *	routine NR ERROR RECOVERY (Q.921 03/93 page 83)
  *---------------------------------------------------------------------------*/
 void
-isdn_nr_error_recovery(struct isdn_l2 *l2)
+isdn_l2_nr_error_recovery(struct isdn_softc *sc)
 {
-	isdn_mdl_error_ind(l2, "isdn_nr_error_recovery", MDL_ERR_J);
+/*
+ * XXX ... LME
+ 
+	isdn_mdl_error_ind(l2, "isdn_l2_nr_error_recovery", MDL_ERR_J);
+ */
+	isdn_l2_establish(sc);
 
-	isdn_l2_establish(l2);
-
-	l2->l3initiated = 0;
+	sc->sc_l2.l2_l3_init = 0;
 }
 
 /*---------------------------------------------------------------------------*
  *	routine ENQUIRY RESPONSE (Q.921 03/93 page 84)
  *---------------------------------------------------------------------------*/
 void
-isdn_enquiry_response(struct isdn_l2 *l2)
+isdn_l2_enquiry_resp(struct isdn_softc *sc)
 {
-	if (l2->own_busy)
-		isdn_tx_rnr_response(l2, F1);
+	if (sc->sc_l2.l2_own_busy)
+		isdn_l2_tx_rnr_resp(sc, F1);
 	else
-		isdn_tx_rr_response(l2, F1);
+		isdn_l2_tx_rr_resp(sc, F1);
 
-	l2->ack_pend = 0;
+	sc->sc_l2.l2_ack_pend = 0;
 }
 
 /*---------------------------------------------------------------------------*
  *	routine INVOKE RETRANSMISSION (Q.921 03/93 page 84)
  *---------------------------------------------------------------------------*/
 void
-isdn_invoke_retransmission(struct isdn_l2 *l2, int nr)
+isdn_l2_invoke_rtx(struct isdn_softc *sc, int nr)
 {
-	NDBGL2(L2_ERROR, "nr = %d", nr );
+	NDBGL2(L2_ERROR, "nr = %d", nr);
 
-	while (l2->vs != nr) {
-		NDBGL2(L2_ERROR, "nr(%d) != vs(%d)", nr, l2->vs);
+	while (sc->sc_l2.l2_vs != nr) {
+		NDBGL2(L2_ERROR, "nr(%d) != vs(%d)", nr, sc->sc_l2.l2_vs);
 
-		M128DEC(l2->vs);
+		M128DEC(sc->sc_l2.l2_vs);
 
 /* XXXXXXXXXXXXXXXXX */
 
-		if ((l2->ua_num != UA_EMPTY) && 
-			(l2->vs == l2->ua_num)) {
+		if ((sc->sc_l2.l2_ua_num != UA_EMPTY) && 
+			(sc->sc_l2.l2_vs == sc->sc_l2.l2_ua_num)) {
 			
-			if (_IF_QFULL(&l2->i_queue)) 
+			if (_IF_QFULL(&sc->sc_l2.l2_i_queue)) 
 				NDBGL2(L2_ERROR, "ERROR, I-queue full!");
 			else {
-				IF_ENQUEUE(&l2->i_queue, l2->ua_frame);
-				l2->ua_num = UA_EMPTY;
+				IF_ENQUEUE(&sc->sc_l2.l2_i_queue, 
+					sc->sc_l2.l2_ua_frame);
+				sc->sc_l2.l2_ua_num = UA_EMPTY;
 			}
 		} else {
 			NDBGL2(L2_ERROR, "ERROR, l2->vs = %d, "
-				"l2->ua_num = %d ",l2->vs, l2->ua_num);
+				"l2->ua_num = %d ", 
+				sc->sc_l2.l2_vs, 
+				sc->sc_l2.l2_ua_num);
 		}
 
 /* XXXXXXXXXXXXXXXXX */
 
-		isdn_l2_queue_i_frame(l2);
+		isdn_l2_queue_i_frame(sc);
 	}
 }
 
@@ -215,11 +216,11 @@ isdn_invoke_retransmission(struct isdn_l2 *l2, int nr)
  *	routine ACKNOWLEDGE PENDING (Q.921 03/93 p 70)
  *---------------------------------------------------------------------------*/
 void
-isdn_l2_acknowledge_pending(struct isdn_l2 *l2)
+isdn_l2_ack_pending(struct isdn_softc *sc)
 {
-	if (l2->ack_pend) {
-		l2->ack_pend = 0;
-		isdn_tx_rr_response(l2, F0);
+	if (sc->sc_l2.l2_ack_pend) {
+		sc->sc_l2.l2_ack_pend = 0;
+		isdn_l2_tx_rr_resp(sc, F0);
 	}
 }
 
@@ -228,20 +229,16 @@ isdn_l2_acknowledge_pending(struct isdn_l2 *l2)
  *---------------------------------------------------------------------------*/
 void
 isdn_l2_print_var(struct isdn_softc *sc)
-{
-	struct isdn_l2 *l2;
-	
-	l2 = &sc->sc_l2;
-	
+{	
 	NDBGL2(L2_ERROR, "isdnif %d V(R)=%d, V(S)=%d, "
 		"V(A)=%d,ACKP=%d,PBSY=%d,OBSY=%d",
 		sc->sc_ifp->if_index,
-		l2->l2_vr,
-		l2->l2_vs,
-		l2->l2_va,
-		l2->l2_ack_pend,
-		l2->l2_peer_busy,
-		l2->l2_own_busy);
+		sc->sc_l2.l2_vr,
+		sc->sc_l2.l2_vs,
+		sc->sc_l2.l2_va,
+		sc->sc_l2.l2_ack_pend,
+		sc->sc_l2.l2_peer_busy,
+		sc->sc_l2.l2_own_busy);
 }
 
 /*---------------------------------------------------------------------------*
@@ -272,8 +269,7 @@ isdn_l2_release_req(struct isdn_softc *sc)
  *	DL UNIT DATA REQUEST from Layer 3
  *---------------------------------------------------------------------------*/
 int 
-isdn_l2_unit_data_req(struct isdn_softc *sc, 
-	struct mbuf *m)
+isdn_l2_unit_data_req(struct isdn_softc *sc, struct mbuf *m)
 {
 #ifdef NOTDEF
 	NDBGL2(L2_PRIM, "isdnif %d", sc->sc_ifp->if_index);
@@ -290,12 +286,12 @@ isdn_l2_data_req(struct isdn_softc *sc, struct mbuf *m)
 	struct isdn_l2 *l2 = &sc->sc_l2;
 	int error = 0;
 
-	switch(l2->l2_Q921_state) {
+	switch(sc->sc_l2.l2_Q921_state) {
 	case ST_AW_EST:
 	case ST_MULTIFR:
 	case ST_TIMREC:
 
-		IFQ_ENQUEUE(&l2->l2_i_queue, m, error);
+		IFQ_ENQUEUE(&sc->sc_l2.l2_i_queue, m, error);
 		
 		if (error) 
 			NDBGL2(L2_ERROR, "i_queue full!!");
@@ -320,29 +316,29 @@ isdn_l2_data_req(struct isdn_softc *sc, struct mbuf *m)
 static void
 isdn_l2_init(struct isdn_l2 *l2)
 {
-	l2->l2_Q921_state = ST_TEI_UNAS;
-	l2->l2_tei_valid = TEI_INVALID;
-	l2->l2_vr = 0;
-	l2->l2_vs = 0;
-	l2->l2_va = 0;
-	l2->l2_ack_pend = 0;
-	l2->l2_rej_excpt = 0;
-	l2->l2_peer_busy = 0;
-	l2->l2_own_busy = 0;
-	l2->l2_l3initiated = 0;
+	sc->sc_l2.l2_Q921_state = ST_TEI_UNAS;
+	sc->sc_l2.l2_tei_valid = TEI_INVALID;
+	sc->sc_l2.l2_vr = 0;
+	sc->sc_l2.l2_vs = 0;
+	sc->sc_l2.l2_va = 0;
+	sc->sc_l2.l2_ack_pend = 0;
+	sc->sc_l2.l2_rej_excpt = 0;
+	sc->sc_l2.l2_peer_busy = 0;
+	sc->sc_l2.l2_own_busy = 0;
+	sc->sc_l2.l2_l2_l3_init = 0;
 
-	l2->l2_rxd_CR = 0;
-	l2->l2_rxd_PF = 0;
-	l2->l2_rxd_NR = 0;
-	l2->l2_RC = 0;
-	l2->l2_iframe_sent = 0;
+	sc->sc_l2.l2_rxd_CR = 0;
+	sc->sc_l2.l2_rxd_PF = 0;
+	sc->sc_l2.l2_rxd_NR = 0;
+	sc->sc_l2.l2_RC = 0;
+	sc->sc_l2.l2_iframe_sent = 0;
 
-	l2->l2_postfsmfunc = NULL;
+	sc->sc_l2.l2_postfsmfunc = NULL;
 
-	if (l2->l2_ua_num != UA_EMPTY) {
-		m_freem(l2->l2_ua_frame);
-		l2->l2_ua_num = UA_EMPTY;
-		l2->l2_ua_frame = NULL;
+	if (sc->sc_l2.l2_ua_num != UA_EMPTY) {
+		m_freem(sc->sc_l2.l2_ua_frame);
+		sc->sc_l2.l2_ua_num = UA_EMPTY;
+		sc->sc_l2.l2_ua_frame = NULL;
 	}
 	
 	isdn_T200_stop(l2);
@@ -365,7 +361,7 @@ isdn_l2_status_ind(struct isdn_softc *sc,
 
 	l2 = &sc->sc_l2;
 	
-	mtx_lock(&l2->l2_mtx);
+	mtx_lock(&sc->sc_l2.l2_mtx);
 
 	sendup = 1;
 
@@ -375,23 +371,23 @@ isdn_l2_status_ind(struct isdn_softc *sc,
 /* 
  * detach 
  */
-			callout_stop(&l2->l2_T200_callout);
-			callout_stop(&l2->l2_T202_callout);
-			callout_stop(&l2->l2_T203_callout);
-			callout_stop(&l2->l2_IFQU_callout);
+			callout_stop(&sc->sc_l2.l2_T200_callout);
+			callout_stop(&sc->sc_l2.l2_T202_callout);
+			callout_stop(&sc->sc_l2.l2_T203_callout);
+			callout_stop(&sc->sc_l2.l2_IFQU_callout);
 			break;
 		}
-		l2->l2_i_queue.ifq_maxlen = IQUEUE_MAXLEN;
-		l2->l2_ua_frame = NULL;
+		sc->sc_l2.l2_i_queue.ifq_maxlen = IQUEUE_MAXLEN;
+		sc->sc_l2.l2_ua_frame = NULL;
 
-		(void)memset(&l2->l2_stat, 0, sizeof(lapdstat_t));
+		(void)memset(&sc->sc_l2.l2_stat, 0, sizeof(lapdstat_t));
 /* 
  * initialize the callout handles for timeout routines 
  */
-		callout_init(&l2->l2_T200_callout, 0);
-		callout_init(&l2->l2_T202_callout, 0);
-		callout_init(&l2->l2_T203_callout, 0);
-		callout_init(&l2->l2_IFQU_callout, 0);
+		callout_init(&sc->sc_l2.l2_T200_callout, 0);
+		callout_init(&sc->sc_l2.l2_T202_callout, 0);
+		callout_init(&sc->sc_l2.l2_T203_callout, 0);
+		callout_init(&sc->sc_l2.l2_IFQU_callout, 0);
 
 		isdn_l2_init(&l2->l2);
 		break;
@@ -401,8 +397,8 @@ isdn_l2_status_ind(struct isdn_softc *sc,
 /*
  * XXX
  */			
- 		if ((l2->l2_Q921_state >= ST_AW_EST) &&
-			   (l2->l2_Q921_state <= ST_TIMREC)) {
+ 		if ((sc->sc_l2.l2_Q921_state >= ST_AW_EST) &&
+			   (sc->sc_l2.l2_Q921_state <= ST_TIMREC)) {
 			NDBGL2(L2_ERROR, "isdnif %d, persistent deactivation!", 
 				sc->sc_ifp->if_index);
 			isdn_l2_init(&l2->l2);
@@ -425,7 +421,7 @@ isdn_l2_status_ind(struct isdn_softc *sc,
 	if (sendup)
 		isdn_mdl_status_ind(sc, status, parm);  /* send up to layer 3 */
 
-	mtx_unlock(&l2->l2_mtx);
+	mtx_unlock(&sc->sc_l2.l2_mtx);
 
 	return (0);
 }

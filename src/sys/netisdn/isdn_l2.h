@@ -205,7 +205,7 @@ struct isdn_l2 {
 	int	l2_rej_excpt;	/* reject exception */
 	int	l2_peer_busy;	/* peer receiver busy */
 	int	l2_own_busy;	/* own receiver busy */
-	int	l2_l3initiated;	/* layer 3 initiated */
+	int	l2_l3_init;	/* layer 3 initiated */
 /*
  * XXX: might be merged in isdn_c_chan{}
  */
