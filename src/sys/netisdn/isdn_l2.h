@@ -179,7 +179,7 @@ struct isdn_l2 {
 /* 
  * call-back function, when T202 expires 
  */	
-	void 	(*l2_T202func)(void *);
+	void 	(*l2_T202_fn)(void *);
 	
 	int	l2_T203;		/* max line idle time */
 	
@@ -231,11 +231,11 @@ struct isdn_l2 {
 /* 
  * function to be called at fsm exit 
  */
-	int (*l2_postfsmfunc)(struct isdn_l3 *);
+	int (*l2_post_fsm_fn)(struct isdn_l3 *);
 /* 
  * argument for function, above 
  */	
-	struct isdn_l3 *l2_postfsmarg;	
+	struct isdn_l3 *l2_post_fsm_arg;	
 /* 
  * statistics 
  */

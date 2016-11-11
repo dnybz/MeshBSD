@@ -47,30 +47,29 @@
  */
 
 int
-i4b_output(struct isdn_l2 *l2, struct mbuf *m, int flags)
+isdn_output(struct ifnet *ifp, struct mbuf *m, struct sockaddr_isdn *sisdn)
 {	
-	struct sockadd_isdn sisdn;
-	struct ifnet *ifp;
+	struct isdn_rd *rd;
 	int error;
-
-	bzero(&sisdn, sizeof(sisdn));
-	
-	sisdn.sisdn_family = AF_ISDN;
-	sisdn.sisdn_len = SISDN_LEN;
-	
 /*
  * XXX ...
  */	
-	
-	sisdn.sisdn_tei = l2->tei;
-	
-	ifp = l2->l2_ifp;
+	M_PREPEND(m, sizeof(*rd), (M_ZERO|M_NOWAIT));
+	if (m == NULL) {
+		error = ENOBUFS;
+		goto out;
+	}		
+	rd = mtod(m, struct isdn_rd *);
+	rd->rd_chan = sisdn.sisdn_rd.rd_chan;
+	rd->rd_proto = sisdn.sisdn_rd.rd_proto;
+	rd->rd_sapi = sisdn.sisdn_rd.rd_sapi; 	
+	rd->rd_tei = sisdn.sisdn_rd.rd_tei;	 
 /*
  * XXX ...
  */
 	error = (*ifp->if_output)
 		(ifp, m, (const struct sockaddr *)&sisdn, NULL);
-	
+out:	
 	return (error);
 }
 

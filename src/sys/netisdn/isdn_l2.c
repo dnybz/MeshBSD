@@ -213,35 +213,6 @@ isdn_l2_invoke_rtx(struct isdn_softc *sc, int nr)
 }
 
 /*---------------------------------------------------------------------------*
- *	routine ACKNOWLEDGE PENDING (Q.921 03/93 p 70)
- *---------------------------------------------------------------------------*/
-void
-isdn_l2_ack_pending(struct isdn_softc *sc)
-{
-	if (sc->sc_l2.l2_ack_pend) {
-		sc->sc_l2.l2_ack_pend = 0;
-		isdn_l2_tx_rr_resp(sc, F0);
-	}
-}
-
-/*---------------------------------------------------------------------------*
- *	isdn_l2_print_var - print some l2softc vars
- *---------------------------------------------------------------------------*/
-void
-isdn_l2_print_var(struct isdn_softc *sc)
-{	
-	NDBGL2(L2_ERROR, "isdnif %d V(R)=%d, V(S)=%d, "
-		"V(A)=%d,ACKP=%d,PBSY=%d,OBSY=%d",
-		sc->sc_ifp->if_index,
-		sc->sc_l2.l2_vr,
-		sc->sc_l2.l2_vs,
-		sc->sc_l2.l2_va,
-		sc->sc_l2.l2_ack_pend,
-		sc->sc_l2.l2_peer_busy,
-		sc->sc_l2.l2_own_busy);
-}
-
-/*---------------------------------------------------------------------------*
  *	DL_ESTABLISH_REQ from layer 3
  *---------------------------------------------------------------------------*/
 int 
