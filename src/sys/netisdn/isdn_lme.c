@@ -67,8 +67,11 @@
 #include <netisdn/isdn_mbuf.h>
 #include <netisdn/isdn_l2_fsm.h>
 
+/*
+ * ISDN Link Management Entity (LME).
+ */
 
-#if I4B_DEBUG
+#if ISDN_DEBUG
 static const char *isdn_lme_error_text[] = {
 	"MDL_ERR_A: rx'd unsolicited response - supervisory (F=1)",
 	"MDL_ERR_B: rx'd unsolicited response - DM (F=1)",
@@ -87,10 +90,10 @@ static const char *isdn_lme_error_text[] = {
 	"MDL_ERR_O: other error - N201 error",
 	"MDL_ERR_MAX: isdn_lme_error_ind called with wrong parameter!!!"
 };
-#endif
+#endif 	/* ISDN_DEBUG */
 
 /*---------------------------------------------------------------------------*
- *	mdl assign indication handler
+ *	lme tei assignement / indication handler
  *---------------------------------------------------------------------------*/
 void
 isdn_lme_assign_ind(struct isdn_softc *sc)
@@ -98,13 +101,13 @@ isdn_lme_assign_ind(struct isdn_softc *sc)
 	NDBGL2(L2_PRIM, "isdnif %d", sc->sc_ifp->if_index);
 
 	if (sc->sc_l2.l2_tei_valid == TEI_VALID) {
-		sc->sc_l2.l2_T202_fn = (void(*)(void*))isdn_l2_verify_tei;
+		sc->sc_l2.l2_T202_fn = (void(*)(void *))isdn_l2_verify_tei;
 		sc->sc_l2.l2_N202 = N202DEF;
-		isdn_l2_verify_tei(l2sc);
+		isdn_l2_verify_tei((sc);
 	} else {
-		sc->sc_l2.l2_T202_fn = (void(*)(void*))isdn_l2_assign_tei;
+		sc->sc_l2.l2_T202_fn = (void(*)(void *))isdn_l2_assign_tei;
 		sc->sc_l2.l2_N202 = N202DEF;
-		isdn_l2_assign_tei(l2sc);
+		isdn_l2_assign_tei((sc);
 	}
 }
 
@@ -128,14 +131,14 @@ isdn_lme_error_ind(struct isdn_softc *sc, const char *where, int error)
 		break;
 	case MDL_ERR_C:
 	case MDL_ERR_D:
-		isdn_l2_verify_tei(l2sc);
+		isdn_l2_verify_tei(sc);
 		break;
 	case MDL_ERR_E:
 	case MDL_ERR_F:
 		break;
 	case MDL_ERR_G:
 	case MDL_ERR_H:
-		isdn_l2_verify_tei(l2sc);
+		isdn_l2_verify_tei(sc);
 		break;
 	case MDL_ERR_I:
 	case MDL_ERR_J:

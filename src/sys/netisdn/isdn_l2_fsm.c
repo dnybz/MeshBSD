@@ -748,7 +748,7 @@ F_T07(struct isdn_softc *sc)
 	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_establish_ind;
 
-	i4b_T203_start(l2);
+	isdn_l2_T203_start(sc);
 
 	sc->sc_l2.l2_Q921_state = ST_MULTIFR;
 }
@@ -837,7 +837,7 @@ F_AE05(struct isdn_softc *sc)
 	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
-	i4b_T200_stop(l2);
+	isdn_l2_T200_stop(sc);
 }
 
 /*---------------------------------------------------------------------------*
@@ -853,7 +853,7 @@ F_AE06(struct isdn_softc *sc)
 	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
-	i4b_T200_stop(l2);
+	isdn_l2_T200_stop(sc);
 /*
  * XXX
  */		
@@ -907,8 +907,8 @@ F_AE09(struct isdn_softc *sc)
 		}
 		i4b_mdl_status_ind(sc->sc_l2.l2_l3, STI_L2STAT, LAYER_ACTIVE);
 
-		i4b_T200_stop(l2);
-		i4b_T203_start(l2);
+		isdn_l2_T200_stop(sc);
+		isdn_l2_T203_start(sc);
 
 		sc->sc_l2.l2_vs = 0;
 		sc->sc_l2.l2_va = 0;
@@ -933,7 +933,7 @@ F_AE10(struct isdn_softc *sc)
 		sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 		sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
-		i4b_T200_stop(l2);
+		isdn_l2_T200_stop(sc);
 
 		sc->sc_l2.l2_Q921_state = ST_TEI_ASGD;
 	}
@@ -961,7 +961,7 @@ F_AE11(struct isdn_softc *sc)
 
 		(void)isdn_l2_tx_u_frame(sc, CR_CMD_TO_NT, P1, SABME);
 
-		i4b_T200_start(l2);
+		isdn_l2_T200_start(sc);
 
 		sc->sc_l2.l2_Q921_state = ST_AW_EST;
 	}
@@ -990,7 +990,7 @@ F_AR05(struct isdn_softc *sc)
 	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_cnf;
 
-	i4b_T200_stop(l2);
+	isdn_l2_T200_stop(sc);
 }
 
 /*---------------------------------------------------------------------------*
@@ -1004,7 +1004,7 @@ F_AR06(struct isdn_softc *sc)
 	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_cnf;
 
-	i4b_T200_stop(l2);
+	isdn_l2_T200_stop(sc);
 /*
  * XXX
  */	
@@ -1045,7 +1045,7 @@ F_AR09(struct isdn_softc *sc)
 		sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 		sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_cnf;
 
-		i4b_T200_stop(l2);
+		isdn_l2_T200_stop(sc);
 
 		sc->sc_l2.l2_Q921_state = ST_TEI_ASGD;
 	} else {
@@ -1067,7 +1067,7 @@ F_AR10(struct isdn_softc *sc)
 		sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 		sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_cnf;
 
-		i4b_T200_stop(l2);
+		isdn_l2_T200_stop(sc);
 
 		sc->sc_l2.l2_Q921_state = ST_TEI_ASGD;
 	} else 
@@ -1094,7 +1094,7 @@ F_AR11(struct isdn_softc *sc)
 
 		(void)isdn_l2_tx_u_frame(sc, CR_CMD_TO_NT, P1, DISC);
 
-		i4b_T200_start(l2);
+		isdn_l2_T200_start(sc);
 
 		sc->sc_l2.l2_Q921_state = ST_AW_REL;
 	}
@@ -1128,8 +1128,8 @@ F_MF05(struct isdn_softc *sc)
 	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
-	i4b_T200_stop(l2);
-	i4b_T203_stop(l2);
+	isdn_l2_T200_stop(sc);
+	isdn_l2_T203_stop(sc);
 }
 
 /*---------------------------------------------------------------------------*
@@ -1145,8 +1145,8 @@ F_MF06(struct isdn_softc *sc)
 	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
-	i4b_T200_stop(l2);
-	i4b_T203_stop(l2);
+	isdn_l2_T200_stop(sc);
+	isdn_l2_T203_stop(sc);
 /*
  * XXX
  */	
@@ -1162,22 +1162,26 @@ F_MF07(struct isdn_softc *sc)
 	NDBGL2(L2_F_MSG, "FSM function F_MF07 executing");
 
 	i4b_clear_exception_conditions(l2);
-
+/* 
+ * XXX ...
+ *
 	i4b_mdl_status_ind(sc->sc_l2.l2_l3, STI_L2STAT, LAYER_ACTIVE);
-
+ *?
 	(void)isdn_l2_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
 
 	isdn_lme_error_ind(sc, "F_MF07", MDL_ERR_F);
 
 	if (sc->sc_l2.l2_vs != sc->sc_l2.l2_va) {
 		IF_DRAIN(&sc->sc_l2.l2_i_queue);
-
+/*
+ * XXX ...
+ */
 		sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 		sc->sc_l2.l2_post_fsm_fn = i4b_dl_establish_ind;
 	}
 
-	i4b_T200_stop(l2);
-	i4b_T203_start(l2);
+	isdn_l2_T200_stop(sc);
+	isdn_l2_T203_start(sc);
 
 	sc->sc_l2.l2_vs = 0;
 	sc->sc_l2.l2_va = 0;
@@ -1200,8 +1204,8 @@ F_MF08(struct isdn_softc *sc)
 	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
-	i4b_T200_stop(l2);
-	i4b_T203_stop(l2);
+	isdn_l2_T200_stop(sc);
+	isdn_l2_T203_stop(sc);
 }
 
 /*---------------------------------------------------------------------------*
@@ -1281,8 +1285,8 @@ F_MF13(struct isdn_softc *sc)
 
 	(void)isdn_l2_tx_u_frame(sc, CR_CMD_TO_NT, P1, DISC);
 
-	i4b_T203_stop(l2);
-	i4b_T200_restart(l2);
+	isdn_l2_T203_stop(sc);
+	isdn_l2_T200_restart(sc);
 }
 
 /*---------------------------------------------------------------------------*
@@ -1354,11 +1358,11 @@ F_MF17(struct isdn_softc *sc)
 	if (i4b_l2_nr_ok(sc->sc_l2.l2_rxd_NR, sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
 		if (sc->sc_l2.l2_rxd_NR == sc->sc_l2.l2_vs) {
 			sc->sc_l2.l2_va = sc->sc_l2.l2_rxd_NR;
-			i4b_T200_stop(l2);
-			i4b_T203_restart(l2);
+			isdn_l2_T200_stop(sc);
+			isdn_l2_T203_restart(sc);
 		} else if (sc->sc_l2.l2_rxd_NR != sc->sc_l2.l2_va) {
 			sc->sc_l2.l2_va = sc->sc_l2.l2_rxd_NR;
-			i4b_T200_restart(l2);
+			isdn_l2_T200_restart(sc);
 		}
 		sc->sc_l2.l2_Q921_state = ST_MULTIFR;
 	} else {
@@ -1387,8 +1391,8 @@ F_MF18(struct isdn_softc *sc)
 
 	if (i4b_l2_nr_ok(sc->sc_l2.l2_rxd_NR, sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
 		sc->sc_l2.l2_va = sc->sc_l2.l2_rxd_NR;
-		i4b_T200_stop(l2);
-		i4b_T203_start(l2);
+		isdn_l2_T200_stop(sc);
+		isdn_l2_T203_start(sc);
 		i4b_invoke_retransmission(l2, sc->sc_l2.l2_rxd_NR);
 		sc->sc_l2.l2_Q921_state = ST_MULTIFR;
 	} else {
@@ -1417,8 +1421,8 @@ F_MF19(struct isdn_softc *sc)
 
 	if (i4b_l2_nr_ok(sc->sc_l2.l2_rxd_NR, sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
 		sc->sc_l2.l2_va = sc->sc_l2.l2_rxd_NR;
-		i4b_T203_stop(l2);
-        i4b_T200_restart(l2);
+		isdn_l2_T203_stop(sc);
+        isdn_l2_T200_restart(sc);
 		sc->sc_l2.l2_Q921_state = ST_MULTIFR;
 	} else {
 		i4b_nr_error_recovery(l2);
@@ -1469,7 +1473,7 @@ F_TR05(struct isdn_softc *sc)
 	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
-	i4b_T200_stop(l2);
+	isdn_l2_T200_stop(sc);
 }
 
 /*---------------------------------------------------------------------------*
@@ -1485,7 +1489,7 @@ F_TR06(struct isdn_softc *sc)
 	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
-	i4b_T200_stop(l2);
+	isdn_l2_T200_stop(sc);
 
 /*XXX*/	isdn_lme_assign_ind(sc);
 }
@@ -1514,8 +1518,8 @@ F_TR07(struct isdn_softc *sc)
 		sc->sc_l2.l2_post_fsm_fn = i4b_dl_establish_ind;
 	}
 
-	i4b_T200_stop(l2);
-	i4b_T203_start(l2);
+	isdn_l2_T200_stop(sc);
+	isdn_l2_T203_start(sc);
 
 	sc->sc_l2.l2_vs = 0;
 	sc->sc_l2.l2_va = 0;
@@ -1537,7 +1541,7 @@ F_TR08(struct isdn_softc *sc)
 	sc->sc_l2.l2_post_fsm_arg = l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
-	i4b_T200_stop(l2);
+	isdn_l2_T200_stop(sc);
 }
 
 /*---------------------------------------------------------------------------*
@@ -1621,7 +1625,7 @@ F_TR13(struct isdn_softc *sc)
 
 	(void)isdn_l2_tx_u_frame(sc, CR_CMD_TO_NT, P1, DISC);
 
-	i4b_T200_restart(l2);
+	isdn_l2_T200_restart(sc);
 }
 
 /*---------------------------------------------------------------------------*
@@ -1676,8 +1680,8 @@ F_TR17(struct isdn_softc *sc)
 		if (sc->sc_l2.l2_rxd_PF == 1) {
 			if (i4b_l2_nr_ok(sc->sc_l2.l2_rxd_NR, sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
 				sc->sc_l2.l2_va = sc->sc_l2.l2_rxd_NR;
-				i4b_T200_stop(l2);
-				i4b_T203_start(l2);
+				isdn_l2_T200_stop(sc);
+				isdn_l2_T203_start(sc);
 				i4b_invoke_retransmission(l2, sc->sc_l2.l2_rxd_NR);
 				sc->sc_l2.l2_Q921_state = ST_MULTIFR;
 				return;
@@ -1715,8 +1719,8 @@ F_TR18(struct isdn_softc *sc)
 		if (sc->sc_l2.l2_rxd_PF == 1) {
 			if (i4b_l2_nr_ok(sc->sc_l2.l2_rxd_NR, sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
 				sc->sc_l2.l2_va = sc->sc_l2.l2_rxd_NR;
-				i4b_T200_stop(l2);
-				i4b_T203_start(l2);
+				isdn_l2_T200_stop(sc);
+				isdn_l2_T203_start(sc);
 				i4b_invoke_retransmission(l2, sc->sc_l2.l2_rxd_NR);
 				sc->sc_l2.l2_Q921_state = ST_MULTIFR;
 				return;
@@ -1754,7 +1758,7 @@ F_TR19(struct isdn_softc *sc)
 		if (sc->sc_l2.l2_rxd_PF == 1) {
 			if (i4b_l2_nr_ok(sc->sc_l2.l2_rxd_NR, sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
 				sc->sc_l2.l2_va = sc->sc_l2.l2_rxd_NR;
-				i4b_T200_restart(l2);
+				isdn_l2_T200_restart(sc);
 				i4b_invoke_retransmission(l2, sc->sc_l2.l2_rxd_NR);
 				sc->sc_l2.l2_Q921_state = ST_MULTIFR;
 				return;
