@@ -549,7 +549,7 @@ void
 isdn_l2_next_state(struct isdn_softc *sc, int event)
 {
 	int curr, next;
-	int (*post_fsm_fn)(struct isdn_l3 *) = NULL;
+	int (*post_fsm_fn)(struct isdn_softc *);
 /* 
  * check event number 
  */
@@ -619,12 +619,12 @@ isdn_l2_next_state(struct isdn_softc *sc, int event)
 	}
 }
 
-#if ISDN_DEBUG
 /*---------------------------------------------------------------------------*
  *	return pointer to current state description
  *---------------------------------------------------------------------------*/
+#if ISDN_DEBUG
 const char *
-i4b_print_l2state(struct isdn_l2 *l2)
+i4b_print_l2state(struct isdn_softc *sc)
 {
 	return (isdn_l2_state_text[sc->sc_l2.l2_Q921_state]);
 }
@@ -694,7 +694,7 @@ static void
 F_TE04(struct isdn_softc *sc)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_TE04 executing");
-	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
+	sc->sc_l2.l2_post_fsm_fn = isdn_l2_release_ind;
 }
 
 /*---------------------------------------------------------------------------*
@@ -704,7 +704,7 @@ static void
 F_TE05(struct isdn_softc *sc)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_TE05 executing");
-	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
+	sc->sc_l2.l2_post_fsm_fn = isdn_l2_release_ind;
 }
 
 /*---------------------------------------------------------------------------*
@@ -854,7 +854,7 @@ F_AE05(struct isdn_softc *sc)
 
 	IF_DRAIN(&sc->sc_l2.l2_i_queue);
 
-	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
+	sc->sc_l2.l2_post_fsm_fn = isdn_l2_release_ind;
 
 	isdn_l2_T200_stop(sc);
 }
@@ -869,7 +869,7 @@ F_AE06(struct isdn_softc *sc)
 
 	IF_DRAIN(&sc->sc_l2.l2_i_queue);
 
-	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
+	sc->sc_l2.l2_post_fsm_fn = isdn_l2_release_ind;
 
 	isdn_l2_T200_stop(sc);
 /*
@@ -946,7 +946,7 @@ F_AE10(struct isdn_softc *sc)
 	else {
 		IF_DRAIN(&sc->sc_l2.l2_i_queue);
 
-		sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
+		sc->sc_l2.l2_post_fsm_fn = isdn_l2_release_ind;
 
 		isdn_l2_T200_stop(sc);
 
@@ -967,7 +967,7 @@ F_AE11(struct isdn_softc *sc)
 
 		isdn_lme_error_ind(sc, "F_AE11", MDL_ERR_G);
 
-		sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
+		sc->sc_l2.l2_post_fsm_fn = isdn_l2_release_ind;
 
 		sc->sc_l2.l2_Q921_state = ST_TEI_ASGD;
 	} else {
@@ -1134,7 +1134,7 @@ F_MF05(struct isdn_softc *sc)
 
 	IF_DRAIN(&sc->sc_l2.l2_i_queue);
 
-	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
+	sc->sc_l2.l2_post_fsm_fn = isdn_l2_release_ind;
 
 	isdn_l2_T200_stop(sc);
 	isdn_l2_T203_stop(sc);
@@ -1150,7 +1150,7 @@ F_MF06(struct isdn_softc *sc)
 
 	IF_DRAIN(&sc->sc_l2.l2_i_queue);
 
-	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
+	sc->sc_l2.l2_post_fsm_fn = isdn_l2_release_ind;
 
 	isdn_l2_T200_stop(sc);
 	isdn_l2_T203_stop(sc);
@@ -1208,7 +1208,7 @@ F_MF08(struct isdn_softc *sc)
 	
 	(void)isdn_l2_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
 
-	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
+	sc->sc_l2.l2_post_fsm_fn = isdn_l2_release_ind;
 
 	isdn_l2_T200_stop(sc);
 	isdn_l2_T203_stop(sc);
@@ -1476,7 +1476,7 @@ F_TR05(struct isdn_softc *sc)
 
 	IF_DRAIN(&sc->sc_l2.l2_i_queue);
 
-	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
+	sc->sc_l2.l2_post_fsm_fn = isdn_l2_release_ind;
 
 	isdn_l2_T200_stop(sc);
 }
@@ -1491,7 +1491,7 @@ F_TR06(struct isdn_softc *sc)
 
 	IF_DRAIN(&sc->sc_l2.l2_i_queue);
 
-	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
+	sc->sc_l2.l2_post_fsm_fn = isdn_l2_release_ind;
 
 	isdn_l2_T200_stop(sc);
 
@@ -1541,7 +1541,7 @@ F_TR08(struct isdn_softc *sc)
 	i4b_mdl_status_ind(l3, STI_L2STAT, LAYER_IDLE);
 	(void)isdn_l2_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
 
-	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
+	sc->sc_l2.l2_post_fsm_fn = isdn_l2_release_ind;
 
 	isdn_l2_T200_stop(sc);
 }
@@ -1680,7 +1680,8 @@ F_TR17(struct isdn_softc *sc)
 		
 	} else {
 		if (sc->sc_l2.l2_rxd_PF == 1) {
-			if (i4b_l2_nr_ok(sc->sc_l2.l2_rxd_NR, sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
+			if (i4b_l2_nr_ok(sc->sc_l2.l2_rxd_NR, 
+					sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
 				sc->sc_l2.l2_va = sc->sc_l2.l2_rxd_NR;
 				isdn_l2_T200_stop(sc);
 				isdn_l2_T203_start(sc);
@@ -1695,7 +1696,8 @@ F_TR17(struct isdn_softc *sc)
 		}
 	}
 
-	if (i4b_l2_nr_ok(sc->sc_l2.l2_rxd_NR, sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
+	if (i4b_l2_nr_ok(sc->sc_l2.l2_rxd_NR, 
+			sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
 		sc->sc_l2.l2_va = sc->sc_l2.l2_rxd_NR;
 		sc->sc_l2.l2_Q921_state = ST_TIMREC;
 	} else {
@@ -1719,7 +1721,8 @@ F_TR18(struct isdn_softc *sc)
 			i4b_enquiry_response(l2);
 	} else {
 		if (sc->sc_l2.l2_rxd_PF == 1) {
-			if (i4b_l2_nr_ok(sc->sc_l2.l2_rxd_NR, sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
+			if (i4b_l2_nr_ok(sc->sc_l2.l2_rxd_NR, 
+					sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
 				sc->sc_l2.l2_va = sc->sc_l2.l2_rxd_NR;
 				isdn_l2_T200_stop(sc);
 				isdn_l2_T203_start(sc);
@@ -1734,7 +1737,8 @@ F_TR18(struct isdn_softc *sc)
 		}
 	}
 
-	if (i4b_l2_nr_ok(sc->sc_l2.l2_rxd_NR, sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
+	if (i4b_l2_nr_ok(sc->sc_l2.l2_rxd_NR, 
+			sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
 		sc->sc_l2.l2_va = sc->sc_l2.l2_rxd_NR;
 		sc->sc_l2.l2_Q921_state = ST_TIMREC;
 	} else {
@@ -1758,7 +1762,8 @@ F_TR19(struct isdn_softc *sc)
 			i4b_enquiry_response(l2);
 	} else {
 		if (sc->sc_l2.l2_rxd_PF == 1) {
-			if (i4b_l2_nr_ok(sc->sc_l2.l2_rxd_NR, sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
+			if (i4b_l2_nr_ok(sc->sc_l2.l2_rxd_NR, 
+					sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
 				sc->sc_l2.l2_va = sc->sc_l2.l2_rxd_NR;
 				isdn_l2_T200_restart(sc);
 				i4b_invoke_retransmission(l2, sc->sc_l2.l2_rxd_NR);
@@ -1772,7 +1777,8 @@ F_TR19(struct isdn_softc *sc)
 		}
 	}
 
-	if (i4b_l2_nr_ok(sc->sc_l2.l2_rxd_NR, sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
+	if (i4b_l2_nr_ok(sc->sc_l2.l2_rxd_NR, 
+			sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
 		sc->sc_l2.l2_va = sc->sc_l2.l2_rxd_NR;
 		sc->sc_l2.l2_Q921_state = ST_TIMREC;
 	} else {

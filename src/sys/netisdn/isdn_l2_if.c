@@ -60,23 +60,10 @@
 #include <sys/socket.h>
 #include <net/if.h>
 
-#include <netisdn/i4b_debug.h>
-#include <netisdn/i4b_ioctl.h>
-#include <netisdn/i4b_cause.h>
+#include <netisdn/isdn.h>
+#include <netisdn/isdn_var.h>
 
-#include <netisdn/i4b_isdnq931.h>
-#include <netisdn/i4b_l3l4.h>
-#include <netisdn/i4b_mbuf.h>
-
-#include <netisdn/i4b_l2.h>
-#include <netisdn/i4b_l1l2.h>
-#include <netisdn/i4b_l3.h>
-#include <netisdn/i4b_l3fsm.h>
-#include <netisdn/i4b_q931.h>
-
-#include <netisdn/i4b_l4.h>
-
-static unsigned char isdn_l2_mk_q931_cause(cause_t cause);
+static uint8_t 	isdn_l2_mk_q931_cause(cause_t cause);
 
 /*---------------------------------------------------------------------------*
  * this converts our internal state (number) to the number specified
@@ -104,10 +91,10 @@ int isdn_l2_status_tab[] = {
 /*---------------------------------------------------------------------------*
  *	return a valid q.931/q.850 cause from any of the internal causes
  *---------------------------------------------------------------------------*/
-static unsigned char
+static uint8_t
 isdn_l2_mk_q931_cause(cause_t cause)
 {
-	register unsigned char ret;
+	register uint8_t ret;
 
 	switch (GET_CAUSE_TYPE(cause)) {
 	case CAUSET_Q850:
@@ -131,7 +118,7 @@ int
 i4b_get_dl_stat(struct isdn_b_chan *bc)
 {
 	const struct isdn_l3 * l3 = cd->l3l3;
-	return (l3->dl_est);
+	return (sc->sc_l3.l3_dl_est);
 }
 
 /*---------------------------------------------------------------------------*
@@ -141,20 +128,20 @@ int
 i4b_dl_establish_ind(struct isdn_l3 * l3)
 {
 	int i, found;
-	NDBGL2(L2_PRIM, "DL-ESTABLISH-IND isdnif %d", l3->isdnif);
+	NDBGL2(L2_PRIM, "DL-ESTABLISH-IND isdnif %d", sc->sc_l3.l3_isdnif);
 /* 
  * first set DL up in controller descriptor 
  */
-	NDBGL3(L3_MSG, "isdnif %d DL established!", l3->isdnif);
-	l3->dl_est = DL_UP;
+	NDBGL3(L3_MSG, "isdnif %d DL established!", sc->sc_l3.l3_isdnif);
+	sc->sc_l3.l3_dl_est = DL_UP;
 
 	found = 0;
 /* 
  * second, inform all (!) active call of the event 
  */
-	for (i = 0; i < num_call_desc; i++) {
+	for (i = 0; i < N_BCH; i++) {
 		if ( (call_desc[i].cdid != 0)
-		    && call_desc[i].isdnif == l3->isdnif) {
+		    && call_desc[i].isdnif == sc->sc_l3.l3_isdnif) {
 			next_l3state(&call_desc[i], EV_DLESTIN);
 			found++;
 		}
@@ -162,7 +149,7 @@ i4b_dl_establish_ind(struct isdn_l3 * l3)
 
 	if (found == 0) {
 		NDBGL3(L3_ERR, "ERROR, no cdid for isdnif %d found!",
-		    l3->isdnif);
+		    sc->sc_l3.l3_isdnif);
 		return (-1);
 	} 
 
@@ -178,12 +165,12 @@ i4b_dl_establish_cnf(struct isdn_l3 * l3)
 	int i;
 	int found = 0;
 
-	NDBGL2(L2_PRIM, "DL-ESTABLISH-CONF isdnif %d", l3->isdnif);
+	NDBGL2(L2_PRIM, "DL-ESTABLISH-CONF isdnif %d", sc->sc_l3.l3_isdnif);
 
-	for (i = 0; i < num_call_desc; i++) {
+	for (i = 0; i < N_BCH; i++) {
 		if (call_desc[i].cdid != 0
-		    && call_desc[i].isdnif == l3->isdnif) {
-			l3->dl_est = DL_UP;
+		    && call_desc[i].isdnif == sc->sc_l3.l3_isdnif) {
+			sc->sc_l3.l3_dl_est = DL_UP;
 			next_l3state(&call_desc[i], EV_DLESTCF);
 			found++;
 		}
@@ -191,7 +178,7 @@ i4b_dl_establish_cnf(struct isdn_l3 * l3)
 
 	if (found == 0) {
 		NDBGL3(L3_ERR, "ERROR, no cdid for isdnif %d found!",
-		    l3->isdnif);
+		    sc->sc_l3.l3_isdnif);
 		return (-1);
 	}
 	
@@ -202,34 +189,33 @@ i4b_dl_establish_cnf(struct isdn_l3 * l3)
  *	DL RELEASE INDICATION from Layer 2
  *---------------------------------------------------------------------------*/
 int
-i4b_dl_release_ind(struct isdn_l3 * l3)
+isdn_l2_release_ind(struct isdn_softc *sc)
 {
-	int i;
-	int found = 0;
+	int i, found;
 
-	NDBGL2(L2_PRIM, "DL-RELEASE-IND isdnif %d", l3->isdnif);
+	NDBGL2(L2_PRIM, "DL-RELEASE-IND isdnif %d", sc->sc_l3.l3_isdnif);
 /* 
  * first set controller to down 
  */
-	l3->dl_est = DL_DOWN;
+	sc->sc_l3.l3_dl_est = DL_DOWN;
 
 	found = 0;
 /* 
  * second, inform all (!) active calls of the event
- */
-	for (i = 0; i < num_call_desc; i++) {
+ *
+	for (i = 0; i < N_BCH; i++) {
 		if (call_desc[i].cdid != 0
-		    && call_desc[i].isdnif == l3->isdnif) {
+		    && call_desc[i].isdnif == sc->sc_l3.l3_isdnif) {
 			next_l3state(&call_desc[i], EV_DLRELIN);
 			found++;
 		}
 	}
-
+ */
 	if (found == 0) {
 /* 
  * this is not an error since it might be a normal call end 
  */
-		NDBGL3(L3_MSG, "no cdid for isdnif %d found", l3->isdnif);
+		NDBGL3(L3_MSG, "no cdid for isdnif %d found", sc->sc_l3.l3_isdnif);
 	}
 	return (0);
 }
@@ -240,9 +226,9 @@ i4b_dl_release_ind(struct isdn_l3 * l3)
 int
 i4b_dl_release_cnf(struct isdn_l3 * l3)
 {
-	NDBGL2(L2_PRIM, "DL-RELEASE-CONF isdnif %d", l3->isdnif);
+	NDBGL2(L2_PRIM, "DL-RELEASE-CONF isdnif %d", sc->sc_l3.l3_isdnif);
 
-	l3->dl_est = DL_DOWN;
+	sc->sc_l3.l3_dl_est = DL_DOWN;
 	return (0);
 }
 
@@ -252,7 +238,7 @@ i4b_dl_release_cnf(struct isdn_l3 * l3)
 int
 i4b_dl_data_ind(struct isdn_l3 *l3, struct mbuf *m)
 {
-	i4b_decode_q931(l3->isdnif, m->m_len, m->m_data);
+	i4b_decode_q931(sc->sc_l3.l3_isdnif, m->m_len, m->m_data);
 	i4b_Dfreembuf(m);
 	return (0);
 }
@@ -263,7 +249,7 @@ i4b_dl_data_ind(struct isdn_l3 *l3, struct mbuf *m)
 int
 i4b_dl_unit_data_ind(struct isdn_l3 *l3, struct mbuf *m)
 {
-	i4b_decode_q931(l3->isdnif, m->m_len, m->m_data);
+	i4b_decode_q931(sc->sc_l3.l3_isdnif, m->m_len, m->m_data);
 	i4b_Dfreembuf(m);
 	return (0);
 }
@@ -274,7 +260,7 @@ i4b_dl_unit_data_ind(struct isdn_l3 *l3, struct mbuf *m)
 void
 i4b_l3_tx_connect(struct isdn_b_chan *bc)
 {
-	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3l3->l1_token;
+	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3sc->sc_l3.l3_l1_token;
 	struct mbuf *m;
 	u_char *ptr;
 
@@ -299,7 +285,7 @@ i4b_l3_tx_connect(struct isdn_b_chan *bc)
 void
 i4b_l3_tx_release_complete(struct isdn_b_chan *bc, int send_cause_flag)
 {
-	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3l3->l1_token;
+	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3sc->sc_l3.l3_l1_token;
 	struct mbuf *m;
 	u_char *ptr;
 	int len = I_FRAME_HDRLEN + MSG_RELEASE_COMPLETE_LEN;
@@ -339,7 +325,7 @@ i4b_l3_tx_release_complete(struct isdn_b_chan *bc, int send_cause_flag)
 void
 i4b_l3_tx_disconnect(struct isdn_b_chan *bc)
 {
-	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3l3->l1_token;
+	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3sc->sc_l3.l3_l1_token;
 	struct mbuf *m;
 	u_char *ptr;
 
@@ -369,7 +355,7 @@ i4b_l3_tx_disconnect(struct isdn_b_chan *bc)
 void
 i4b_l3_tx_setup(struct isdn_b_chan *bc)
 {
-	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3l3->l1_token;
+	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3sc->sc_l3.l3_l1_token;
 	struct mbuf *m;
 	u_char *ptr;
 	int slen = strlen(cd->src_telno);
@@ -477,7 +463,7 @@ i4b_l3_tx_setup(struct isdn_b_chan *bc)
 void
 i4b_l3_tx_connect_ack(struct isdn_b_chan *bc)
 {
-	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3l3->l1_token;
+	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3sc->sc_l3.l3_l1_token;
 	struct mbuf *m;
 	u_char *ptr;
 
@@ -502,7 +488,7 @@ i4b_l3_tx_connect_ack(struct isdn_b_chan *bc)
 void
 i4b_l3_tx_status(struct isdn_b_chan *bc, u_char q850cause)
 {
-	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3l3->l1_token;
+	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3sc->sc_l3.l3_l1_token;
 	struct mbuf *m;
 	u_char *ptr;
 
@@ -536,7 +522,7 @@ i4b_l3_tx_status(struct isdn_b_chan *bc, u_char q850cause)
 void
 i4b_l3_tx_release(struct isdn_b_chan *bc, int send_cause_flag)
 {
-	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3l3->l1_token;
+	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3sc->sc_l3.l3_l1_token;
 	struct mbuf *m;
 	u_char *ptr;
 	int len = I_FRAME_HDRLEN + MSG_RELEASE_LEN;
@@ -572,7 +558,7 @@ i4b_l3_tx_release(struct isdn_b_chan *bc, int send_cause_flag)
 void
 i4b_l3_tx_alert(struct isdn_b_chan *bc)
 {
-	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3l3->l1_token;
+	struct isdn_l2 *l2sc = (isdn_l2_t*)cd->l3sc->sc_l3.l3_l1_token;
 	struct mbuf *m;
 	u_char *ptr;
 

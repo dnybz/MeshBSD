@@ -362,6 +362,14 @@ isdn_l2_tx_u_frame(struct isdn_softc *sc, crbit_to_nt_t crbit,
 	struct mbuf *m;
 	int error;
 	
+	bzero(&sisdn, sizeof(sisdn));
+	
+	sisdn.sisdn_type = AF_ISDN;
+	sisdn.sisdn_len = sizeof(sisdn);
+	sisdn.sisdn_rd.rd_chan = ISDN_D_CHAN;
+	sisdn.sisdn_rd.rd_sapi = SAPI_CCP;
+	sisdn.sisdn_rd.rd_tei = sc->sc_l2.l2_tei;
+	
 	if ((m = isdn_getmbuf(U_FRAME_LEN, M_DONTWAIT, MT_I4B_D)) == NULL) {
 		error = ENOBUFS;
 		goto out;
@@ -407,14 +415,6 @@ isdn_l2_tx_u_frame(struct isdn_softc *sc, crbit_to_nt_t crbit,
 		m_freem(m);
 		goto out;
 	}
-	bzero(&sisdn, sizeof(sisdn));
-	
-	sisdn.sisdn_type = AF_ISDN;
-	sisdn.sisdn_len = sizeof(sisdn);
-	sisdn.sisdn_rd.rd_chan = ISDN_D_CHAN;
-	sisdn.sisdn_rd.rd_sapi = SAPI_CCP;
-	sisdn.sisdn_rd.rd_tei = sc->sc_l2.l2_tei;
-	
 	PUTSAPI(sisdn.sisdn_rd.rd_sapi, crbit, m->m_data[OFF_SAPI]);
 
 	PUTTEI(sisdn.sisdn_rd.rd_tei, m->m_data[OFF_TEI]);

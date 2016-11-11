@@ -1,3 +1,27 @@
+/*-
+ * Copyright (c) 2016 Henning Matyschok
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
 /*
  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.
  *
@@ -21,19 +45,7 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- *
- *---------------------------------------------------------------------------
- *
- *	i4b_tei.c - tei handling procedures
- *	-----------------------------------
- *
- *	$Id: i4b_tei.c,v 1.10 2007/01/24 13:08:15 hubertf Exp $
- *
- * $FreeBSD$
- *
- *      last edit-date: [Fri Jan  5 11:33:47 2001]
- *
- *---------------------------------------------------------------------------*/
+ */
 
 #include "opt_inet.h"
 
@@ -57,6 +69,8 @@
 #include <netisdn/isdn_mbuf.h>
 #include <netisdn/isdn_l2_fsm.h>
 
+static void 	isdn_l2_mk_rand_ri(struct isdn_softc *);
+static struct mbuf * 	isdn_l2_tx_tei_frame(struct isdn_softc *, uint8_t);
 
 /*---------------------------------------------------------------------------*
  *	handle a received TEI management frame
@@ -76,7 +90,7 @@ isdn_l2_rxd_tei(struct isdn_softc *sc, struct mbuf *m)
 			sc->sc_l2.l2_tei_valid = TEI_VALID;
 
 			if (sc->sc_l2.l2_T202 == TIMER_ACTIVE)
-				i4b_T202_stop(l2sc);
+				isdn_l2_T202_stop(sc);
 /*
  * XXX ...
  *
@@ -140,9 +154,9 @@ isdn_l2_rxd_tei(struct isdn_softc *sc, struct mbuf *m)
 			}
 
 			if (sc->sc_l2.l2_T202 == TIMER_ACTIVE)
-				i4b_T202_stop(l2sc);
+				isdn_l2_T202_stop(sc);
 			
-			isdn_l2_chk_tei_resp(l2sc);
+			isdn_l2_chk_tei_resp(sc);
 		}
 		break;
 	case MT_ID_REMOVE:
@@ -178,29 +192,42 @@ isdn_l2_rxd_tei(struct isdn_softc *sc, struct mbuf *m)
 /*---------------------------------------------------------------------------*
  *	allocate and fill up a TEI management frame for sending
  *---------------------------------------------------------------------------*/
-static struct mbuf *
-build_tei_mgmt_frame(l2_softc_t *l2sc, uint8_t type)
+static int
+isdn_l2_tx_tei_frame(struct isdn_softc *sc, uint8_t type)
 {
+	struct sockaddr_isdn sisdn;
 	struct mbuf *m;
+	int error;
 
-	if ((m = isdn_getmbuf(TEI_MGMT_FRM_LEN, M_DONTWAIT, MT_I4B_D)) == NULL)
-		return(NULL);
+	bzero(&sisdn, sizeof(sisdn));
+	
+	sisdn.sisdn_type = AF_ISDN;
+	sisdn.sisdn_len = sizeof(sisdn);
+	sisdn.sisdn_rd.rd_chan = ISDN_D_CHAN;
+	sisdn.sisdn_rd.rd_sapi = 0xfc; /* SAPI = 63, CR = 0, EA = 0 */
+	sisdn.sisdn_rd.rd_tei = 0xff;	/* TEI = 127, EA = 1 */
 
-	m->m_data[TEIM_SAPIO] = 0xfc;	/* SAPI = 63, CR = 0, EA = 0 */
-	m->m_data[TEIM_TEIO]  = 0xff;	/* TEI = 127, EA = 1 */
+	if ((m = isdn_getmbuf(TEI_MGMT_FRM_LEN, M_DONTWAIT, MT_I4B_D)) == NULL) {
+		error = ENOBUFS;
+		goto out;
+	}
+	m->m_flags |= M_BCAST;
+		
+	m->m_data[TEIM_SAPIO] = sisdn.sisdn_rd.rd_sapi;	
+	m->m_data[TEIM_TEIO]  = sisdn.sisdn_rd.rd_te
 	m->m_data[TEIM_UIO]   = UI;	/* UI */
 	m->m_data[TEIM_MEIO]  = MEI;	/* MEI */
 	m->m_data[TEIM_MTO]   = type;	/* message type */
 
 	switch (type) {
 	case MT_ID_REQEST:
-		i4b_make_rand_ri(l2sc);
+		isdn_l2_mk_rand_ri(sc);
 		m->m_data[TEIM_RILO] = sc->sc_l2.l2_last_ril;
 		m->m_data[TEIM_RIHO] = sc->sc_l2.l2_last_rih;
 		m->m_data[TEIM_AIO] = (GROUP_TEI << 1) | 0x01;
 		break;
 	case MT_ID_CHK_RSP:
-		i4b_make_rand_ri(l2sc);
+		isdn_l2_mk_rand_ri(sc);
 		m->m_data[TEIM_RILO] = sc->sc_l2.l2_last_ril;
 		m->m_data[TEIM_RIHO] = sc->sc_l2.l2_last_rih;
 		m->m_data[TEIM_AIO] = (sc->sc_l2.l2_tei << 1) | 0x01;
@@ -211,13 +238,25 @@ build_tei_mgmt_frame(l2_softc_t *l2sc, uint8_t type)
 		m->m_data[TEIM_AIO] = (sc->sc_l2.l2_tei << 1) | 0x01;
 		break;
 	default:
+		error = EINVAL;
 		m_freem(m);
-		panic("build_tei_mgmt_frame: invalid type");
-		break;
+		goto out;
 	}
 	sc->sc_l2.l2_stat.tx_tei++;
 	
-	return(m);
+	switch (type) {
+	case MT_ID_REQEST:
+	case MT_ID_VERIFY:
+		isdn_l2_T202_start(sc);
+		break;
+	case MT_ID_CHK_RSP:
+		break;
+	default:
+		break;
+	}
+	error = isdn_output(sc->sc_ifp, m, &sisdn);
+out:	
+	return (error);
 }
 
 /*---------------------------------------------------------------------------*
@@ -225,23 +264,16 @@ build_tei_mgmt_frame(l2_softc_t *l2sc, uint8_t type)
  *	T202func and N202 _MUST_ be set prior to calling this function !
  *---------------------------------------------------------------------------*/
 void
-isdn_l2_assign_tei(l2_softc_t *l2sc)
+isdn_l2_assign_tei(struct isdn_softc *sc)
 {
-	struct mbuf *m;
+	int error;
 
 	NDBGL2(L2_TEI_MSG, "tx TEI ID_Request");
 
-	m = build_tei_mgmt_frame(l2sc, MT_ID_REQEST);
+	error = isdn_l2_tx_tei_frame(sc, MT_ID_REQEST);
 
-	if (m == NULL)
-		panic("isdn_l2_assign_tei: no mbuf");
-
-	i4b_T202_start(l2sc);
-/*
- * XXX
- * 
-	sc->sc_l2.l2_driver->ph_data_req(sc->sc_l2.l2_l1_token, m, MBUF_FREE);
- */
+	if (error == ENOBUFS)
+		panic("%s: no mbuf", __func__);
 }
 
 /*---------------------------------------------------------------------------*
@@ -249,55 +281,42 @@ isdn_l2_assign_tei(l2_softc_t *l2sc)
  *	T202func and N202 _MUST_ be set prior to calling this function !
  *---------------------------------------------------------------------------*/
 void
-isdn_l2_verify_tei(l2_softc_t *l2sc)
+isdn_l2_verify_tei(struct isdn_softc *sc)
 {
-	struct mbuf *m;
+	int error;
 
 	NDBGL2(L2_TEI_MSG, "tx TEI ID_Verify");
 
-	m = build_tei_mgmt_frame(l2sc, MT_ID_VERIFY);
+	error = isdn_l2_tx_tei_frame(sc, MT_ID_VERIFY);
 
-	if (m == NULL)
-		panic("isdn_l2_verify_tei: no mbuf");
-
-	i4b_T202_start(l2sc);
-/*
- * XXX
- * 
-	sc->sc_l2.l2_driver->ph_data_req(sc->sc_l2.l2_l1_token, m, MBUF_FREE);
- */
+	if (error == ENOBUFS)
+		panic("%s: no mbuf", __func__);
 }
 
 /*---------------------------------------------------------------------------*
  *	isdn_l2_chk_tei_resp - TEI check response procedure (Q.921, 5.3.5, pp 29)
  *---------------------------------------------------------------------------*/
 void
-isdn_l2_chk_tei_resp(l2_softc_t *l2sc)
+isdn_l2_chk_tei_resp(struct isdn_softc *sc)
 {
-	struct mbuf *m;
-	static int lasttei = 0;
+	int lasttei = 0, error;
 
 	if (sc->sc_l2.l2_tei != lasttei) {
 		lasttei = sc->sc_l2.l2_tei;
 		NDBGL2(L2_TEI_MSG, "tx TEI ID_Check_Response");
 	}
+	
+	error = isdn_l2_tx_tei_frame(sc, MT_ID_CHK_RSP);
 
-	m = build_tei_mgmt_frame(l2sc, MT_ID_CHK_RSP);
-
-	if (m == NULL)
-		panic("isdn_l2_chk_tei_resp: no mbuf");
-/*
- * XXX
- * 
-	sc->sc_l2.l2_driver->ph_data_req(sc->sc_l2.l2_l1_token, m, MBUF_FREE);
- */
+	if (error == ENOBUFS)
+		panic("%s: no mbuf", __func__);
 }
 
 /*---------------------------------------------------------------------------*
  *	generate some 16 bit "random" number used for TEI mgmt Ri field
  *---------------------------------------------------------------------------*/
-void
-i4b_make_rand_ri(l2_softc_t *l2sc)
+static void
+isdn_l2_mk_rand_ri(struct isdn_softc *sc)
 {
 	u_short val;
 

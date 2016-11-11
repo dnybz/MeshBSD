@@ -73,7 +73,7 @@
 /*
  *	Call / connection on one B-channel and all its parameters.
  */
-struct isdn_b_chan {
+struct isdn_bc {
 	int	bc_cr;			/* call reference value		*/
 
 	int	bc_cr_flag;			/* call reference flag		*/
@@ -164,7 +164,23 @@ struct isdn_b_chan {
 	uint8_t	bc_display[ISDN_DISPLAY_MAX];	/* display information element	*/
 	char	bc_datetime[ISDN_DATETIME_MAX];	/* date/time information element*/
 };
+#define T303VAL	(hz*4)			/* 4 seconds timeout		*/
+#define T305VAL	(hz*30)			/* 30 seconds timeout		*/
+#define T308VAL	(hz*4)			/* 4 seconds timeout		*/
+#define T309VAL	(hz*90)			/* 90 seconds timeout		*/
+#define T310VAL	(hz*60)			/* 30-120 seconds timeout	*/
+#define T313VAL	(hz*4)			/* 4 seconds timeout		*/
+#define T400DEF	(hz*10)			/* 10 seconds timeout		*/
 
+#define BCH_ST_FREE	0		/* free to be used, idle */
+#define BCH_ST_RSVD	1		/* reserved, may become free or used */
+#define BCH_ST_USED	2
+
+#define N_BCH	2
+
+/*
+ * Software context for LAPD.
+ */
 struct isdn_l2 {
 	int	l2_Q921_state;	/* state according to Q.921 */
 
@@ -218,7 +234,7 @@ struct isdn_l2 {
 /*
  * XXX: might be merged in isdn_b_chan{}
  */
-	int	l2_b_chan_state[2];
+	int	l2_b_chan_state[B_BCH];
 
 	struct ifqueue l2_i_queue;	/* queue of outgoing i frames */
 #define IQUEUE_MAXLEN	20
@@ -438,6 +454,7 @@ struct isdn_softc {
 	struct ifnet 	*sc_ifp; 	
 	struct isdn_l2 	sc_l2;
 	struct isdn_l3 	sc_l3;
+	struct isdn_bc 	sc_bc[N_BCH];
 	struct rwlock 	sc_lock;
 };
 
