@@ -240,11 +240,7 @@ struct isdn_l2 {
 /* 
  * function to be called at fsm exit 
  */
-	int (*l2_post_fsm_fn)(struct isdn_l3 *);
-/* 
- * argument for function, above 
- */	
-	struct isdn_l3 *l2_post_fsm_arg;	
+	int 	(*l2_post_fsm_fn)(struct isdn_softc *);	
 /* 
  * statistics 
  */

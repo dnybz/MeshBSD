@@ -1,3 +1,27 @@
+/*-
+ * Copyright (c) 2016 Henning Matyschok
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
 /*
  * Copyright (c) 1997, 2000 Hellmuth Michaelis. All rights reserved.
  *
@@ -43,7 +67,7 @@
 
 #include <netisdn/i4b_l2fsm.h>
 
-#if ISDN_DEBUG
+#ifdef ISDN_DEBUG
 static const char *isdn_l2_state_text[N_STATES] = {
 	"ST_TEI_UNAS",
 	"ST_ASG_AW_TEI",
@@ -82,7 +106,7 @@ static const char *isdn_l2_event_text[N_EVENTS] = {
 	"EV_RXFRMR",
 	"Illegal Event"
 };
-#endif
+#endif 	/* ISDN_DEBUG */
 
 static void 	F_TU01(struct isdn_softc *);
 static void 	F_TU03(struct isdn_softc *);
@@ -591,7 +615,7 @@ isdn_l2_next_state(struct isdn_softc *sc, int event)
 		post_fsm_fn = sc->sc_l2.l2_post_fsm_fn;
 		sc->sc_l2.l2_post_fsm_fn = NULL;
         
-        (*post_fsm_fn)(sc->sc_l2.l2_post_fsm_arg);
+        (void)(*post_fsm_fn)(sc);
 	}
 }
 
@@ -602,7 +626,7 @@ isdn_l2_next_state(struct isdn_softc *sc, int event)
 const char *
 i4b_print_l2state(struct isdn_l2 *l2)
 {
-	return(isdn_l2_state_text[sc->sc_l2.l2_Q921_state]);
+	return (isdn_l2_state_text[sc->sc_l2.l2_Q921_state]);
 }
 #endif 	/* ISDN_DEBUG */
 
@@ -670,7 +694,6 @@ static void
 F_TE04(struct isdn_softc *sc)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_TE04 executing");
-	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 }
 
@@ -681,7 +704,6 @@ static void
 F_TE05(struct isdn_softc *sc)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_TE05 executing");
-	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 }
 
@@ -745,7 +767,6 @@ F_T07(struct isdn_softc *sc)
 	sc->sc_l2.l2_va = 0;
 	sc->sc_l2.l2_vr = 0;
 
-	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_establish_ind;
 
 	isdn_l2_T203_start(sc);
@@ -807,7 +828,6 @@ static void
 F_T13(struct isdn_softc *sc)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_T13 executing");
-	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_cnf;
 }
 
@@ -834,7 +854,6 @@ F_AE05(struct isdn_softc *sc)
 
 	IF_DRAIN(&sc->sc_l2.l2_i_queue);
 
-	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
 	isdn_l2_T200_stop(sc);
@@ -850,7 +869,6 @@ F_AE06(struct isdn_softc *sc)
 
 	IF_DRAIN(&sc->sc_l2.l2_i_queue);
 
-	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
 	isdn_l2_T200_stop(sc);
@@ -896,12 +914,10 @@ F_AE09(struct isdn_softc *sc)
 		if (sc->sc_l2.l2_l3_init) {
 			sc->sc_l2.l2_l3_init = 0;
 			sc->sc_l2.l2_vr = 0;
-			sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 			sc->sc_l2.l2_post_fsm_fn = i4b_dl_establish_cnf;
 		} else {
 			if (sc->sc_l2.l2_vs != sc->sc_l2.l2_va) {
 				IF_DRAIN(&sc->sc_l2.l2_i_queue);
-				sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 				sc->sc_l2.l2_post_fsm_fn = i4b_dl_establish_ind;
 			}
 		}
@@ -930,7 +946,6 @@ F_AE10(struct isdn_softc *sc)
 	else {
 		IF_DRAIN(&sc->sc_l2.l2_i_queue);
 
-		sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 		sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
 		isdn_l2_T200_stop(sc);
@@ -952,7 +967,6 @@ F_AE11(struct isdn_softc *sc)
 
 		isdn_lme_error_ind(sc, "F_AE11", MDL_ERR_G);
 
-		sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 		sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
 		sc->sc_l2.l2_Q921_state = ST_TEI_ASGD;
@@ -987,7 +1001,6 @@ F_AR05(struct isdn_softc *sc)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_AR05 executing");
 
-	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_cnf;
 
 	isdn_l2_T200_stop(sc);
@@ -1001,7 +1014,6 @@ F_AR06(struct isdn_softc *sc)
 {
 	NDBGL2(L2_F_MSG, "FSM function F_AR06 executing");
 
-	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_cnf;
 
 	isdn_l2_T200_stop(sc);
@@ -1042,7 +1054,6 @@ F_AR09(struct isdn_softc *sc)
 	NDBGL2(L2_F_MSG, "FSM function F_AR09 executing");
 
 	if (sc->sc_l2.l2_rxd_PF) {
-		sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 		sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_cnf;
 
 		isdn_l2_T200_stop(sc);
@@ -1064,7 +1075,6 @@ F_AR10(struct isdn_softc *sc)
 	NDBGL2(L2_F_MSG, "FSM function F_AR10 executing");
 
 	if (sc->sc_l2.l2_rxd_PF) {
-		sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 		sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_cnf;
 
 		isdn_l2_T200_stop(sc);
@@ -1085,7 +1095,6 @@ F_AR11(struct isdn_softc *sc)
 	if (sc->sc_l2.l2_RC >= N200) {
 		isdn_lme_error_ind(sc, "F_AR11", MDL_ERR_H);
 
-		sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 		sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_cnf;
 
 		sc->sc_l2.l2_Q921_state = ST_TEI_ASGD;
@@ -1125,7 +1134,6 @@ F_MF05(struct isdn_softc *sc)
 
 	IF_DRAIN(&sc->sc_l2.l2_i_queue);
 
-	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
 	isdn_l2_T200_stop(sc);
@@ -1142,7 +1150,6 @@ F_MF06(struct isdn_softc *sc)
 
 	IF_DRAIN(&sc->sc_l2.l2_i_queue);
 
-	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
 	isdn_l2_T200_stop(sc);
@@ -1166,7 +1173,7 @@ F_MF07(struct isdn_softc *sc)
  * XXX ...
  *
 	i4b_mdl_status_ind(sc->sc_l2.l2_l3, STI_L2STAT, LAYER_ACTIVE);
- *?
+ */
 	(void)isdn_l2_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
 
 	isdn_lme_error_ind(sc, "F_MF07", MDL_ERR_F);
@@ -1176,7 +1183,6 @@ F_MF07(struct isdn_softc *sc)
 /*
  * XXX ...
  */
-		sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 		sc->sc_l2.l2_post_fsm_fn = i4b_dl_establish_ind;
 	}
 
@@ -1199,9 +1205,9 @@ F_MF08(struct isdn_softc *sc)
 	IF_DRAIN(&sc->sc_l2.l2_i_queue);
 	
 	i4b_mdl_status_ind(sc->sc_l2.l2_l3, STI_L2STAT, LAYER_IDLE);
+	
 	(void)isdn_l2_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
 
-	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
 	isdn_l2_T200_stop(sc);
@@ -1470,7 +1476,6 @@ F_TR05(struct isdn_softc *sc)
 
 	IF_DRAIN(&sc->sc_l2.l2_i_queue);
 
-	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
 	isdn_l2_T200_stop(sc);
@@ -1486,7 +1491,6 @@ F_TR06(struct isdn_softc *sc)
 
 	IF_DRAIN(&sc->sc_l2.l2_i_queue);
 
-	sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
 	isdn_l2_T200_stop(sc);
@@ -1514,7 +1518,6 @@ F_TR07(struct isdn_softc *sc)
 	{
 		IF_DRAIN(&sc->sc_l2.l2_i_queue);
 
-		sc->sc_l2.l2_post_fsm_arg = &sc->sc_l2.l2_l3;
 		sc->sc_l2.l2_post_fsm_fn = i4b_dl_establish_ind;
 	}
 
@@ -1538,7 +1541,6 @@ F_TR08(struct isdn_softc *sc)
 	i4b_mdl_status_ind(l3, STI_L2STAT, LAYER_IDLE);
 	(void)isdn_l2_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
 
-	sc->sc_l2.l2_post_fsm_arg = l3;
 	sc->sc_l2.l2_post_fsm_fn = i4b_dl_release_ind;
 
 	isdn_l2_T200_stop(sc);

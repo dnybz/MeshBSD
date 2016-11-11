@@ -68,9 +68,7 @@
 
 static void 	isdn_l2_T200_timeout(struct isdn_softc *);
 static void 	isdn_l2_T202_timeout(struct isdn_softc *);
-#if ISDN_T203_ACTIVE
 static void 	isdn_l2_T203_timeout(struct isdn_softc *);
-#endif
 
 /*---------------------------------------------------------------------------*
  *	Q.921 timer T200 timeout function
@@ -100,7 +98,6 @@ isdn_l2_T202_timeout(struct isdn_softc *sc)
 /*---------------------------------------------------------------------------*
  *	Q.921 timer T203 timeout function
  *---------------------------------------------------------------------------*/
-#if ISDN_T203_ACTIVE
 static void
 isdn_l2_T203_timeout(struct isdn_softc *sc)
 {
@@ -108,7 +105,6 @@ isdn_l2_T203_timeout(struct isdn_softc *sc)
 	
 	isdn_l2_next_state(sc, EV_T203EXP);
 }
-#endif
 
 /*---------------------------------------------------------------------------*
  *	Q.921 timer T200 start
@@ -210,7 +206,6 @@ isdn_l2_T202_stop(struct isdn_softc *sc)
 void
 isdn_l2_T203_start(struct isdn_softc *sc)
 {
-#if ISDN_T203_ACTIVE
 	if (sc->sc_l2.l2_T203 == TIMER_ACTIVE)
 		return;
 
@@ -219,7 +214,6 @@ isdn_l2_T203_start(struct isdn_softc *sc)
 
 	START_TIMER(sc->sc_l2.l2_T203_callout, 
 		isdn_l2_T203_timeout, sc, T203DEF);
-#endif
 }
 
 /*---------------------------------------------------------------------------*
@@ -228,7 +222,6 @@ isdn_l2_T203_start(struct isdn_softc *sc)
 void
 isdn_l2_T203_stop(struct isdn_softc *sc)
 {
-#if ISDN_T203_ACTIVE
 	SC_WLOCK(sc);
 	
 	if (sc->sc_l2.l2_T203 != TIMER_IDLE) {
@@ -239,7 +232,6 @@ isdn_l2_T203_stop(struct isdn_softc *sc)
 	SC_WUNLOCK(sc);
 	
 	NDBGL2(L2_T_MSG, "isdnif %d", sc->sc_ifp->if_index);
-#endif
 }
 
 /*---------------------------------------------------------------------------*
@@ -248,7 +240,6 @@ isdn_l2_T203_stop(struct isdn_softc *sc)
 void
 isdn_l2_T203_restart(struct isdn_softc *sc)
 {
-#if ISDN_T203_ACTIVE
 	SC_WLOCK(sc);
 
 	if (sc->sc_l2.l2_T203 != TIMER_IDLE) {
@@ -263,5 +254,4 @@ isdn_l2_T203_restart(struct isdn_softc *sc)
 	SC_WUNLOCK(sc);
 
 	NDBGL2(L2_T_MSG, "isdnif %d", sc->sc_ifp->if_index);
-#endif
 }
