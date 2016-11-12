@@ -71,6 +71,7 @@
 /*
  * XXX ...
  */
+static void 	isdn_rxd_ack(struct isdn_softc *, int);
 
 static void 	isdn_i_frame_input(struct isdn_softc *, struct mbuf *);
 static void 	isdn_s_frame_input(struct isdn_softc *, struct mbuf *);
@@ -140,8 +141,8 @@ isdn_input(struct mbuf *m)
 	if (m->m_pkthdr.len < ISDN_HDRLEN) 
 		goto bad;
 
-	if (m->m_len < MPLS_ISDN) {
-		if ((m = m_pullup(m, MPLS_HDRLEN)) == NULL)
+	if (m->m_len < ISDN_HDRLEN) {
+		if ((m = m_pullup(m, ISDN_HDRLEN)) == NULL)
 			goto out;
 	}
 	
@@ -262,7 +263,7 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
 /* 
  * last packet ack 
  */
-	isdn_l2_rxd_ack(sc, nr);		
+	isdn_rxd_ack(sc, nr);		
 /* 
  * own receiver busy ? 
  */
@@ -292,7 +293,7 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
 
 			sc->sc_l2.l2_iframe_sent = 0;	/* reset i ack'd already */
 
-			isdn_dl_data_ind(l3, m);	/* pass data up */
+			isdn_l2_data_ind(sc, m);	/* pass data up */
 
 			if (!sc->sc_l2.l2_iframe_sent) {
 /*
@@ -379,9 +380,8 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
 	SC_WUNLOCK(sc);
 }
 
-/*-
- *	process s frame
- *
+/*
+ * Process S frame.
  */
 static void
 isdn_s_frame_input(struct isdn_softc *sc, struct mbuf *m)
@@ -397,7 +397,7 @@ isdn_s_frame_input(struct isdn_softc *sc, struct mbuf *m)
 	sc->sc_l2.l2_rxd_PF = GETSPF(*(ptr + OFF_SNR));
 	sc->sc_l2.l2_rxd_NR = GETSNR(*(ptr + OFF_SNR));
 
-	isdn_l2_rxd_ack(sc, sc->sc_l2.l2_rxd_NR);
+	isdn_rxd_ack(sc, sc->sc_l2.l2_rxd_NR);
 
 	switch(*(ptr + OFF_SRCR)) {
 	case RR:
@@ -425,9 +425,8 @@ out:
 	m_freem(m);
 }
 
-/*-
- *	process a received U-frame
- *
+/*
+ * Process a received U frame.
  */
 static void
 isdn_u_frame_input(struct isdn_softc *sc, struct mbuf *m)
@@ -551,5 +550,33 @@ isdn_u_frame_input(struct isdn_softc *sc, struct mbuf *m)
 		sc->sc_l2.l2_stat.err_rx_badui++;
 		m_freem(m);
 		break;
+	}
+}
+
+/*
+ * Got s or i frame, check if valid ack for last sent frame.
+ */
+static void
+isdn_rxd_ack(struct isdn_softc *sc, int nr)
+{
+
+	NDBGL2(L2_ERROR, "N(R)=%d, UA=%d, V(R)=%d, V(S)=%d, V(A)=%d",
+		nr,
+		sc->sc_l2.l2_ua_num,
+		sc->sc_l2.l2_vr,
+		sc->sc_l2.l2_vs,
+		sc->sc_l2.l2_va);
+
+	if (sc->sc_l2.l2_ua_num != UA_EMPTY) {
+
+		M128DEC(nr);
+
+		if (sc->sc_l2.l2_ua_num != nr) {
+			NDBGL2(L2_ERROR, 
+				"((N(R)-1)=%d) != (UA=%d) !!!", 
+				nr, sc->sc_l2.l2_ua_num);
+		}
+		m_freem(sc->sc_l2.l2_ua_frame);
+		sc->sc_l2.l2_ua_num = UA_EMPTY;
 	}
 }

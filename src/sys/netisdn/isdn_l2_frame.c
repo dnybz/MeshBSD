@@ -65,7 +65,6 @@
 
 static void 	isdn_l2_ack_pending(struct isdn_softc *);
 static void 	isdn_l2_print_var(struct isdn_softc *);
-static void 	isdn_l2_rxd_ack(struct isdn_softc *, int);
 static void 	isdn_l2_tx_i_frame(struct isdn_softc *, struct mbuf *);
 
 /*
@@ -421,33 +420,5 @@ isdn_l2_ack_pending(struct isdn_softc *sc)
 	}
 }
 
-/*---------------------------------------------------------------------------*
- *	got s or i frame, check if valid ack for last sent frame
- *---------------------------------------------------------------------------*/
-static void
-isdn_l2_rxd_ack(struct isdn_softc *sc, int nr)
-{
 
-#ifdef NOTDEF
-	NDBGL2(L2_ERROR, "N(R)=%d, UA=%d, V(R)=%d, V(S)=%d, V(A)=%d",
-		nr,
-		sc->sc_l2.l2_ua_num,
-		sc->sc_l2.l2_vr,
-		sc->sc_l2.l2_vs,
-		sc->sc_l2.l2_va);
-#endif
-
-	if (sc->sc_l2.l2_ua_num != UA_EMPTY) {
-
-		M128DEC(nr);
-
-		if (sc->sc_l2.l2_ua_num != nr) {
-			NDBGL2(L2_ERROR, 
-				"((N(R)-1)=%d) != (UA=%d) !!!", 
-				nr, sc->sc_l2.l2_ua_num);
-		}
-		m_freem(sc->sc_l2.l2_ua_frame);
-		sc->sc_l2.l2_ua_num = UA_EMPTY;
-	}
-}
 

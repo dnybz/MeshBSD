@@ -83,7 +83,7 @@
  * XXX: ...
  */
 
-
+static void 	isdn_l2_init(struct isdn_softc *);
 
 
 /*---------------------------------------------------------------------------*
@@ -96,11 +96,11 @@ isdn_l2_establish(struct isdn_softc *sc)
 
 	sc->sc_l2.l2_RC = 0;
 
-	isdn_l2_tx_sabme(sc, P1);
+	(void)isdn_l2_tx_u_frame(sc, CR_CMD_TO_NT, P1, SABME);
+	
+	isdn_l2_T200_restart(sc);
 
-	isdn_T200_restart(&sc->sc_l2);
-
-	isdn_T203_stop(&sc->sc_l2);
+	isdn_l2_T203_stop(sc);
 }
 
 /*---------------------------------------------------------------------------*
@@ -141,7 +141,7 @@ isdn_l2_tx_enquire(struct isdn_softc *sc)
 
 	sc->sc_l2.l2_ack_pend = 0;
 
-	isdn_T200_start(&sc->sc_l2);
+	isdn_l2_T200_start(sc);
 }
 
 /*---------------------------------------------------------------------------*
@@ -221,7 +221,7 @@ isdn_l2_establish_req(struct isdn_softc *sc)
 	
 	NDBGL2(L2_PRIM, "isdnif %d", sc->sc_ifp->if_index);
 	
-	isdn_next_l2state(sc, EV_DLESTRQ);
+	isdn_l2_next_state(sc, EV_DLESTRQ);
 	return (0);
 }
 
@@ -232,7 +232,7 @@ int
 isdn_l2_release_req(struct isdn_softc *sc)
 {
 	NDBGL2(L2_PRIM, "isdnif %d", sc->sc_ifp->if_index);
-	isdn_next_l2state(sc, EV_DLRELRQ);
+	isdn_l2_next_state(sc, EV_DLRELRQ);
 	return (0);
 }
 
@@ -284,7 +284,7 @@ isdn_l2_data_req(struct isdn_softc *sc, struct mbuf *m)
  *	isdn_l2_init - place layer 2 unit into known state
  *---------------------------------------------------------------------------*/
 static void
-isdn_l2_init(struct isdn_l2 *l2)
+isdn_l2_init(struct isdn_softc *sc)
 {
 	sc->sc_l2.l2_Q921_state = ST_TEI_UNAS;
 	sc->sc_l2.l2_tei_valid = TEI_INVALID;
@@ -303,7 +303,7 @@ isdn_l2_init(struct isdn_l2 *l2)
 	sc->sc_l2.l2_RC = 0;
 	sc->sc_l2.l2_iframe_sent = 0;
 
-	sc->sc_l2.l2_postfsmfunc = NULL;
+	sc->sc_l2.l2_post_fsm_fn = NULL;
 
 	if (sc->sc_l2.l2_ua_num != UA_EMPTY) {
 		m_freem(sc->sc_l2.l2_ua_frame);
@@ -311,31 +311,25 @@ isdn_l2_init(struct isdn_l2 *l2)
 		sc->sc_l2.l2_ua_frame = NULL;
 	}
 	
-	isdn_T200_stop(l2);
-	isdn_T202_stop(l2);
-	isdn_T203_stop(l2);
+	isdn_l2_T200_stop(sc);
+	isdn_l2_T202_stop(sc);
+	isdn_l2_T203_stop(sc);
 }
 
 /*---------------------------------------------------------------------------*
  *	isdn_l2_status_ind - status indication upward
  *---------------------------------------------------------------------------*/
 int
-isdn_l2_status_ind(struct isdn_softc *sc, 
-	int status, int parm)
+isdn_l2_status_ind(struct isdn_softc *sc, int status, int parm)
 {
-	struct isdn_l2 *l2;
 	int sendup;
 
 	NDBGL2(L2_PRIM, "isdnif %d, status=%d, parm=%d", 
 		sc->sc_ifp->if_index, status, parm);
 
-	l2 = &sc->sc_l2;
-	
-	mtx_lock(&sc->sc_l2.l2_mtx);
-
 	sendup = 1;
 
-	switch(status) {
+	switch (status) {
 	case STI_ATTACH:
 		if (parm == 0) {
 /* 
@@ -359,7 +353,7 @@ isdn_l2_status_ind(struct isdn_softc *sc,
 		callout_init(&sc->sc_l2.l2_T203_callout, 0);
 		callout_init(&sc->sc_l2.l2_IFQU_callout, 0);
 
-		isdn_l2_init(&l2->l2);
+		isdn_l2_init(sc);
 		break;
 	case STI_L1STAT:	/* state of layer 1 */
 		break;
@@ -371,14 +365,14 @@ isdn_l2_status_ind(struct isdn_softc *sc,
 			   (sc->sc_l2.l2_Q921_state <= ST_TIMREC)) {
 			NDBGL2(L2_ERROR, "isdnif %d, persistent deactivation!", 
 				sc->sc_ifp->if_index);
-			isdn_l2_init(&l2->l2);
+			isdn_l2_init(sc);
 			parm = -1;	/* this is passed as the new
 						 * TEI to upper layers */
 		} else 
 			sendup = 0;
 		break;
 	case STI_NOL1ACC:
-		isdn_l2_init(&l2->l2);
+		isdn_l2_init(sc);
 		NDBGL2(L2_ERROR, "isdnif %d, cannot access S0 bus!", 
 			sc->sc_ifp->if_index);
 		break;
@@ -391,8 +385,6 @@ isdn_l2_status_ind(struct isdn_softc *sc,
 	if (sendup)
 		isdn_mdl_status_ind(sc, status, parm);  /* send up to layer 3 */
 
-	mtx_unlock(&sc->sc_l2.l2_mtx);
-
 	return (0);
 }
 
@@ -402,12 +394,8 @@ isdn_l2_status_ind(struct isdn_softc *sc,
 int 
 isdn_l2_cmd_req(struct isdn_softc *sc, int cmd, void *arg)
 {
-	struct isdn_l2 *l2;
-
 	NDBGL2(L2_PRIM, "isdnif %d, cmd=%d, arg=%p",
 		 sc->sc_ifp->if_index, cmd, arg);
-
-	l2 = &sc->sc_l2;
 
 	switch(cmd) {
 	case CMR_DOPEN:
@@ -476,9 +464,9 @@ isdn_l2_b_chan_silence(uint8_t *data, int len)
 		data++;
 	}
 
-#ifdef NOTDEF
+#ifdef ISDN_DEBUG
 	(void)printf("%s: got %d silence bytes in frame\n", __func__, j);
-#endif
+#endif /* ISDN_DEBUG */
 
 	if (j < (TEL_IDLE_MIN))
 		error = 0;

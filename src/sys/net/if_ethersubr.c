@@ -279,13 +279,10 @@ ether_resolve_addr(struct ifnet *ifp, struct mbuf *m,
 		if ((m->m_flags & (M_BCAST | M_MCAST)) == 0)
 			error = isdn_arpresolve(ifp, 0, m, dst, phdr, &lleflags);
 		else {
-			if (m->m_flags & M_BCAST)
-				memcpy(eh->ether_dhost, ifp->if_broadcastaddr,
-				    ETHER_ADDR_LEN);
-			else {
-				/* XXX ... */
-			}
+			etype = htons(ETHERTYPE_ISDN);
 			memcpy(&eh->ether_type, &etype, sizeof(etype));
+			memcpy(eh->ether_dhost, ifp->if_broadcastaddr, 
+				ETHER_ADDR_LEN);
 			memcpy(eh->ether_shost, IF_LLADDR(ifp), ETHER_ADDR_LEN);
 		}
 #endif /* ISDN */

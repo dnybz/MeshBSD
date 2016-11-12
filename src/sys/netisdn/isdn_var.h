@@ -54,6 +54,8 @@
 
 #include <sys/queue.h>
 
+struct isdn_softc;
+
 /*
  * Callout handling.
  */
@@ -74,6 +76,11 @@
  *	Call / connection on one B-channel and all its parameters.
  */
 struct isdn_bc {
+	struct isdn_softc 	*bc_sc;
+	
+	TAILQ_ENTRY(isdn_bc)	bc_link;
+	TAILQ_ENTRY(isdn_bc)	bc_chain;
+	
 	int	bc_cr;			/* call reference value		*/
 
 	int	bc_cr_flag;			/* call reference flag		*/
@@ -176,7 +183,7 @@ struct isdn_bc {
 #define BCH_ST_RSVD	1		/* reserved, may become free or used */
 #define BCH_ST_USED	2
 
-#define N_BCH	2
+TAILQ_HEAD(isdn_bcq, isdn_bc);
 
 /*
  * Software context for LAPD.
@@ -435,8 +442,14 @@ struct isdn_softc {
 	struct ifnet 	*sc_ifp; 	
 	struct isdn_l2 	sc_l2;
 	struct isdn_l3 	sc_l3;
-	struct isdn_bc 	sc_bc[N_BCH];
+/*
+ * RW Lock.
+ */
 	struct rwlock 	sc_lock;
+/*
+ * Set contains softc, b-channel.
+ */	
+	struct isdn_bcq 	sc_bcq;
 };
 
 #define SC_LOCK_INIT(sc, d, t) \
@@ -469,7 +482,7 @@ struct isdn_ifinfo {
 	(((struct isdn_ifinfo *)(ifp)->if_afdata[AF_ISDN])->iii_sc)
 
 /*
- * Describes an ISDN channel on IEEE802.{3,11} link-layer.
+ * Descripbes an ISDN TEI on IEEE802.{3,11} link-layer.
  */
 struct isdn_ifaddr {
 	struct ifaddr 	ii_ifa;		/* protocol-independent info */
