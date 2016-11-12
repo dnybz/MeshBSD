@@ -135,9 +135,9 @@ void
 isdn_l2_tx_enquire(struct isdn_softc *sc)
 {
 	if (sc->sc_l2.l2_own_busy)
-		isdn_l2_tx_rnr_cmd(sc, P1);
+		(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, P1, RNR);	
 	else
-		isdn_l2_tx_rr_cmd(sc, P1);
+		(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, P1, RR);	
 
 	sc->sc_l2.l2_ack_pend = 0;
 
@@ -167,9 +167,9 @@ void
 isdn_l2_enquiry_resp(struct isdn_softc *sc)
 {
 	if (sc->sc_l2.l2_own_busy)
-		isdn_l2_tx_rnr_resp(sc, F1);
+		(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, F1, RNR);	
 	else
-		isdn_l2_tx_rr_resp(sc, F1);
+		(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, F1, RR);
 
 	sc->sc_l2.l2_ack_pend = 0;
 }
@@ -254,7 +254,6 @@ isdn_l2_unit_data_req(struct isdn_softc *sc, struct mbuf *m)
 int 
 isdn_l2_data_req(struct isdn_softc *sc, struct mbuf *m)
 {
-	struct isdn_l2 *l2 = &sc->sc_l2;
 	int error = 0;
 
 	switch(sc->sc_l2.l2_Q921_state) {
@@ -264,7 +263,7 @@ isdn_l2_data_req(struct isdn_softc *sc, struct mbuf *m)
 
 		IFQ_ENQUEUE(&sc->sc_l2.l2_i_queue, m, error);
 		
-		if (error) 
+		if (error != 0) 
 			NDBGL2(L2_ERROR, "i_queue full!!");
 		else
 			isdn_l2_queue_i_frame(sc);
@@ -273,7 +272,7 @@ isdn_l2_data_req(struct isdn_softc *sc, struct mbuf *m)
 	default:
 		NDBGL2(L2_ERROR, "isdnif %d ERROR in state [%s], "
 			"freeing mbuf", sc->sc_ifp->if_index, 
-			isdn_l2_print_state(l2));
+			isdn_l2_print_state(sc));
 		m_freem(m);
 		error = EINVAL;
 		break;

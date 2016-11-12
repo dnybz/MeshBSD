@@ -112,12 +112,6 @@ isdn_control(struct socket *so __unused, u_long cmd, caddr_t data,
 		error = ENXIO;
 		goto out;
 	}
-
-	if ((ifp->if_flags & IFF_ISDN) == 0) {
-		error = EADDRNOTAVAIL;
- 		goto out;			
- 	}
-
 /*
  * XXX: please be patient... 
  */
@@ -339,18 +333,18 @@ isdn_lltable_rtcheck(struct ifnet *ifp, u_int flags,
  
  
 static inline uint32_t
-isdn_lltable_hash_dst(const struct isdn_rd dst, uint32_t hsize)
+isdn_lltable_hash_rd(const struct isdn_rd rd, uint32_t hsize)
 {
 
-	return (ISDN_LLTBL_HASH(dst.rd_chan, dst.rd_proto,
-		dst.rd_sapi, dst.rd_tei, hsize));
+	return (ISDN_LLTBL_HASH(rd.rd_chan, rd.rd_proto,
+		rd.rd_sapi, rd.rd_tei, hsize));
 }
 
 static uint32_t
 isdn_lltable_hash(const struct llentry *lle, uint32_t hsize)
 {
 
-	return (isdn_lltable_hash_dst(lle->r_l3addr.rd, hsize));
+	return (isdn_lltable_hash_rd(lle->r_l3addr.rd, hsize));
 }
 
 static void
@@ -366,18 +360,18 @@ isdn_lltable_fill_sa_entry(const struct llentry *lle, struct sockaddr *sa)
 }
 
 static inline struct llentry *
-isdn_lltable_find_dst(struct lltable *llt, struct isdn_rd dst)
+isdn_lltable_find_rd(struct lltable *llt, struct isdn_rd rd)
 {
 	struct llentry *lle;
 	struct llentries *lleh;
 	u_int hashidx;
 
-	hashidx = isdn_lltable_hash_dst(dst, llt->llt_hsize);
+	hashidx = isdn_lltable_hash_rd(rd, llt->llt_hsize);
 	lleh = &llt->lle_head[hashidx];
 	LIST_FOREACH(lle, lleh, lle_next) {
 		if (lle->la_flags & LLE_DELETED)
 			continue;
-		if (lle->r_l3addr.rd == dst)
+		if (lle->r_l3addr.rd == rd)
 			break;
 	}
 
@@ -453,33 +447,41 @@ isdn_lltable_alloc(struct lltable *llt, u_int flags,
  * If found return lle read locked.
  */
 static struct llentry *
-isdn_lltable_lookup(struct lltable *llt, u_int flags, const struct sockaddr *l3addr)
+isdn_lltable_lookup(struct lltable *llt, u_int flags, 
+	const struct sockaddr *l3addr)
 {
-	const struct sockaddr_in *sin = (const struct sockaddr_in *)l3addr;
+	const struct sockaddr_isdn *sisdn = (const struct sockaddr_in *)l3addr;
 	struct llentry *lle;
 
 	IF_AFDATA_LOCK_ASSERT(llt->llt_ifp);
-	KASSERT(l3addr->sa_family == AF_INET,
-	    ("sin_family %d", l3addr->sa_family));
-	lle = isdn_lltable_find_dst(llt, sin->sin_addr);
+	KASSERT(l3addr->sa_family == AF_ISDN,
+	    ("sisdn_family %d", l3addr->sa_family));
+	lle = isdn_lltable_find_rd(llt, sisdn->sisdn_rd);
 
 	if (lle == NULL)
-		return (NULL);
+		goto out;
 
 	KASSERT((flags & (LLE_UNLOCKED|LLE_EXCLUSIVE)) !=
-	    (LLE_UNLOCKED|LLE_EXCLUSIVE),("wrong lle request flags: 0x%X",
+	    (LLE_UNLOCKED|LLE_EXCLUSIVE),
+	    ("wrong lle request flags: 0x%X",
 	    flags));
 
 	if (flags & LLE_UNLOCKED)
-		return (lle);
+		goto out;
 
 	if (flags & LLE_EXCLUSIVE)
 		LLE_WLOCK(lle);
 	else
 		LLE_RLOCK(lle);
-
+out:
 	return (lle);
 }
+
+struct isdn_arpc {
+	struct rt_msghdr	arpc_rtm;
+	struct sockaddr_isdn	arpc_sisdn;
+	struct sockaddr_dl	arpc_sdl;
+};
 
 static int
 isdn_lltable_dump_entry(struct lltable *llt, struct llentry *lle,
@@ -489,11 +491,7 @@ isdn_lltable_dump_entry(struct lltable *llt, struct llentry *lle,
 /* 
  * XXX stack use 
  */
-	struct {
-		struct rt_msghdr	rtm;
-		struct sockaddr_isdn	sisdn;
-		struct sockaddr_dl	sdl;
-	} arpc;
+	struct isdn_arpc arpc;
 	struct sockaddr_dl *sdl;
 	int error = 0;
 
@@ -506,9 +504,9 @@ isdn_lltable_dump_entry(struct lltable *llt, struct llentry *lle,
 /* 
  * XXX: Skip if jailed. 
  */
-	lltable_fill_sa_entry(lle,(struct sockaddr *)&arpc.sisdn);
+	lltable_fill_sa_entry(lle,(struct sockaddr *)&arpc.arpc_sisdn);
 	if (prison_if(wr->td->td_ucred, 
-		(struct sockaddr *)&arpc.sisdn) != 0)
+		(struct sockaddr *)&arpc.arpc_sisdn) != 0)
 		goto out;
 /*
  * produce a msg made of:
@@ -516,18 +514,18 @@ isdn_lltable_dump_entry(struct lltable *llt, struct llentry *lle,
  *  struct sockaddr_isdn; (RD)
  *  struct sockaddr_dl;
  */
-	arpc.rtm.rtm_msglen = sizeof(arpc);
-	arpc.rtm.rtm_version = RTM_VERSION;
-	arpc.rtm.rtm_type = RTM_GET;
-	arpc.rtm.rtm_flags = RTF_UP;
-	arpc.rtm.rtm_addrs = RTA_DST | RTA_GATEWAY;
+	arpc.arpc_rtm.rtm_msglen = sizeof(arpc);
+	arpc.arpc_rtm.rtm_version = RTM_VERSION;
+	arpc.arpc_rtm.rtm_type = RTM_GET;
+	arpc.arpc_rtm.rtm_flags = RTF_UP;
+	arpc.arpc_rtm.rtm_addrs = RTA_DST | RTA_GATEWAY;
 /* 
  * publish 
  */
 	if (lle->la_flags & LLE_PUB)
-		arpc.rtm.rtm_flags |= RTF_ANNOUNCE;
+		arpc.arpc_rtm.rtm_flags |= RTF_ANNOUNCE;
 
-	sdl = &arpc.sdl;
+	sdl = &arpc.arpc_sdl;
 	sdl->sdl_family = AF_LINK;
 	sdl->sdl_len = sizeof(*sdl);
 	sdl->sdl_index = ifp->if_index;
@@ -540,17 +538,17 @@ isdn_lltable_dump_entry(struct lltable *llt, struct llentry *lle,
 		sdl->sdl_alen = 0;
 		bzero(LLADDR(sdl), ifp->if_addrlen);
 	}
-	arpc.rtm.rtm_rmx.rmx_expire =
+	arpc.arpc_rtm.rtm_rmx.rmx_expire =
 	lle->la_flags & LLE_STATIC ? 0 : lle->la_expire;
-	arpc.rtm.rtm_flags |= (RTF_HOST | RTF_LLDATA);
+	arpc.arpc_rtm.rtm_flags |= (RTF_HOST | RTF_LLDATA);
 	
 	if (lle->la_flags & LLE_STATIC)
-		arpc.rtm.rtm_flags |= RTF_STATIC;
+		arpc.arpc_rtm.rtm_flags |= RTF_STATIC;
 	
 	if (lle->la_flags & LLE_IFADDR)
-		arpc.rtm.rtm_flags |= RTF_PINNED;
+		arpc.arpc_rtm.rtm_flags |= RTF_PINNED;
 	
-	arpc.rtm.rtm_index = ifp->if_index;
+	arpc.arpc_rtm.rtm_index = ifp->if_index;
 	error = SYSCTL_OUT(wr, &arpc, sizeof(arpc));
 out:
 	return (error);
@@ -562,7 +560,7 @@ isdn_lltattach(struct ifnet *ifp)
 	struct lltable *llt;
 
 	llt = lltable_allocate_htbl(ISDN_LLTBL_DEFAULT_HSIZE);
- 	llt->llt_af = AF_INET;
+ 	llt->llt_af = AF_ISDN;
  	llt->llt_ifp = ifp;
 
 	llt->llt_lookup = isdn_lltable_lookup;
@@ -585,29 +583,12 @@ isdn_lltattach(struct ifnet *ifp)
 void *
 isdn_domifattach(struct ifnet *ifp)
 {
-	struct isdn_ifinfo *iii = NULL;
-	struct lltable *llt;
-
-	if (ifp == NULL)
-		goto out;
+	struct isdn_ifinfo *iii;
 
 	iii = malloc(sizeof(*iii), M_IFADDR, M_WAITOK|M_ZERO);
-	
-	if ((llt = lltable_init(ifp, AF_ISDN)) != NULL) {
+	iii->iii_llt = isdn_lltattach(ifp);
+	iii->iii_sc = malloc(sizeof(*iii->iii_sc), M_IFADDR, M_WAITOK|M_ZERO);
 
-/*
- * XXX: common operations on ARP cache...
- *
-		llt->llt_prefix_free = isdn_lltable_prefix_free;
-		llt->llt_lookup = isdn_lltable_lookup;
-		llt->llt_dump = isdn_lltable_dump;
- */		
-		iii->iii_llt = llt;
-	} else {
-		free(iii, M_IFADDR);
-		iii = NULL;
-	}
-out:
 	return (iii);
 }
 
@@ -617,30 +598,10 @@ out:
 void
 isdn_domifdetach(struct ifnet *ifp, void *aux)
 {
-	struct isdn_ifinfo *iii;
-	struct lltable *llt;
+	struct isdn_ifinfo *iii = (struct isdn_ifinfo *)aux;
 	
-	if ((iii = (struct isdn_ifinfo *)aux) == NULL)
-		return;
-
-	if (ifp == NULL)
-		return;
-		
-	if ((llt = iii->iii_llt) == NULL)
-		return;
-
-	switch (ifp->if_type) {
-	case IFT_ETHER:
-	case IFT_LOOP:
-		
-		if (ifp->if_flags & IFF_ISDN) {
-			ifp->if_flags &= ~IFF_ISDN;
-		}
-		break;
-	default:
-		break;
-	}
-	lltable_free(llt);
+	free(iii->iii_sc, M_IFADDR);
+	lltable_free(iii->iii_llt);
 	free(iii, M_IFADDR);
 } 
 

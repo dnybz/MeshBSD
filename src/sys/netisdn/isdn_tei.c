@@ -69,6 +69,29 @@
 #include <netisdn/isdn_mbuf.h>
 #include <netisdn/isdn_l2_fsm.h>
 
+/* 
+ * Structure of a TEI management frame.
+ */
+
+#define TEI_MGMT_FRM_LEN   8		/* frame length */
+#define TEIM_SAPIO	0x00		/* SAPI, CR, EA */
+#define TEIM_TEIO	0x01		/* TEI, EA */
+#define TEIM_UIO	0x02		/* frame type = UI = 0x03 */
+#define TEIM_MEIO	0x03		/* management entity id = 0x0f */
+#define 	MEI	0x0f
+#define TEIM_RILO	0x04		/* reference number, low  */
+#define TEIM_RIHO	0x05		/* reference number, high */
+#define TEIM_MTO	0x06		/* message type */
+#define 	MT_ID_REQEST	0x01
+#define 	MT_ID_ASSIGN	0x02
+#define 	MT_ID_DENY	0x03
+#define 	MT_ID_CHK_REQ	0x04
+#define 	MT_ID_CHK_RSP	0x05
+#define 	MT_ID_REMOVE	0x06
+#define 	MT_ID_VERIFY	0x07
+#define TEIM_AIO	0x07		/* action indicator */
+
+
 static void 	isdn_l2_mk_rand_ri(struct isdn_softc *);
 static struct mbuf * 	isdn_l2_tx_tei_frame(struct isdn_softc *, uint8_t);
 
@@ -78,7 +101,7 @@ static struct mbuf * 	isdn_l2_tx_tei_frame(struct isdn_softc *, uint8_t);
 void
 isdn_l2_rxd_tei(struct isdn_softc *sc, struct mbuf *m)
 {
-	u_char *ptr = m->m_data;
+	u_char *ptr = mtod(m, uint8_t);
 
 	switch (*(ptr + OFF_MT)) {
 	case MT_ID_ASSIGN:
@@ -144,13 +167,13 @@ isdn_l2_rxd_tei(struct isdn_softc *sc, struct mbuf *m)
 			((sc->sc_l2.l2_tei == GET_TEIFROMAI(*(ptr+OFF_AI))) || 
 			(GROUP_TEI == GET_TEIFROMAI(*(ptr+OFF_AI))))) {
 			
-			static int lasttei = -1;
+			sc->sc_l2.l2_tei_last = -1;
 
-			if (sc->sc_l2.l2_tei != lasttei) {
+			if (sc->sc_l2.l2_tei != sc->sc_l2.l2_tei_last) {
 				NDBGL2(L2_TEI_MSG, 
 					"TEI ID Check Req - TEI = %d", 
 					sc->sc_l2.l2_tei);
-				lasttei = sc->sc_l2.l2_tei;
+				sc->sc_l2.l2_tei_last = sc->sc_l2.l2_tei;
 			}
 
 			if (sc->sc_l2.l2_T202 == TIMER_ACTIVE)
@@ -187,76 +210,6 @@ isdn_l2_rxd_tei(struct isdn_softc *sc, struct mbuf *m)
 		break;
 	}
 	m_freem(m);
-}
-
-/*---------------------------------------------------------------------------*
- *	allocate and fill up a TEI management frame for sending
- *---------------------------------------------------------------------------*/
-static int
-isdn_l2_tx_tei_frame(struct isdn_softc *sc, uint8_t type)
-{
-	struct sockaddr_isdn sisdn;
-	struct mbuf *m;
-	int error;
-
-	bzero(&sisdn, sizeof(sisdn));
-	
-	sisdn.sisdn_type = AF_ISDN;
-	sisdn.sisdn_len = sizeof(sisdn);
-	sisdn.sisdn_rd.rd_chan = ISDN_D_CHAN;
-	sisdn.sisdn_rd.rd_sapi = 0xfc; /* SAPI = 63, CR = 0, EA = 0 */
-	sisdn.sisdn_rd.rd_tei = 0xff;	/* TEI = 127, EA = 1 */
-
-	if ((m = isdn_getmbuf(TEI_MGMT_FRM_LEN, M_DONTWAIT, MT_I4B_D)) == NULL) {
-		error = ENOBUFS;
-		goto out;
-	}
-	m->m_flags |= M_BCAST;
-		
-	m->m_data[TEIM_SAPIO] = sisdn.sisdn_rd.rd_sapi;	
-	m->m_data[TEIM_TEIO]  = sisdn.sisdn_rd.rd_te
-	m->m_data[TEIM_UIO]   = UI;	/* UI */
-	m->m_data[TEIM_MEIO]  = MEI;	/* MEI */
-	m->m_data[TEIM_MTO]   = type;	/* message type */
-
-	switch (type) {
-	case MT_ID_REQEST:
-		isdn_l2_mk_rand_ri(sc);
-		m->m_data[TEIM_RILO] = sc->sc_l2.l2_last_ril;
-		m->m_data[TEIM_RIHO] = sc->sc_l2.l2_last_rih;
-		m->m_data[TEIM_AIO] = (GROUP_TEI << 1) | 0x01;
-		break;
-	case MT_ID_CHK_RSP:
-		isdn_l2_mk_rand_ri(sc);
-		m->m_data[TEIM_RILO] = sc->sc_l2.l2_last_ril;
-		m->m_data[TEIM_RIHO] = sc->sc_l2.l2_last_rih;
-		m->m_data[TEIM_AIO] = (sc->sc_l2.l2_tei << 1) | 0x01;
-		break;
-	case MT_ID_VERIFY:
-		m->m_data[TEIM_RILO] = 0;
-		m->m_data[TEIM_RIHO] = 0;
-		m->m_data[TEIM_AIO] = (sc->sc_l2.l2_tei << 1) | 0x01;
-		break;
-	default:
-		error = EINVAL;
-		m_freem(m);
-		goto out;
-	}
-	sc->sc_l2.l2_stat.tx_tei++;
-	
-	switch (type) {
-	case MT_ID_REQEST:
-	case MT_ID_VERIFY:
-		isdn_l2_T202_start(sc);
-		break;
-	case MT_ID_CHK_RSP:
-		break;
-	default:
-		break;
-	}
-	error = isdn_output(sc->sc_ifp, m, &sisdn);
-out:	
-	return (error);
 }
 
 /*---------------------------------------------------------------------------*
@@ -313,12 +266,82 @@ isdn_l2_chk_tei_resp(struct isdn_softc *sc)
 }
 
 /*---------------------------------------------------------------------------*
+ *	allocate and fill up a TEI management frame for sending
+ *---------------------------------------------------------------------------*/
+static int
+isdn_l2_tx_tei_frame(struct isdn_softc *sc, uint8_t type)
+{
+	struct sockaddr_isdn sisdn;
+	struct mbuf *m;
+	int error;
+
+	bzero(&sisdn, sizeof(sisdn));
+	
+	sisdn.sisdn_type = AF_ISDN;
+	sisdn.sisdn_len = sizeof(sisdn);
+	sisdn.sisdn_rd.rd_chan = ISDN_D_CHAN;
+	sisdn.sisdn_rd.rd_sapi = 0xfc; /* SAPI = 63, CR = 0, EA = 0 */
+	sisdn.sisdn_rd.rd_tei = 0xff;	/* TEI = 127, EA = 1 */
+
+	if ((m = isdn_getmbuf(TEI_MGMT_FRM_LEN, M_DONTWAIT, MT_I4B_D)) == NULL) {
+		error = ENOBUFS;
+		goto out;
+	}
+	m->m_flags |= M_BCAST;
+		
+	m->m_data[TEIM_SAPIO] = sisdn.sisdn_rd.rd_sapi;	
+	m->m_data[TEIM_TEIO]  = sisdn.sisdn_rd.rd_tei;
+	m->m_data[TEIM_UIO]   = UI;	/* UI */
+	m->m_data[TEIM_MEIO]  = MEI;	/* MEI */
+	m->m_data[TEIM_MTO]   = type;	/* message type */
+
+	switch (type) {
+	case MT_ID_REQEST:
+		isdn_l2_mk_rand_ri(sc);
+		m->m_data[TEIM_RILO] = sc->sc_l2.l2_last_ril;
+		m->m_data[TEIM_RIHO] = sc->sc_l2.l2_last_rih;
+		m->m_data[TEIM_AIO] = (GROUP_TEI << 1) | 0x01;
+		break;
+	case MT_ID_CHK_RSP:
+		isdn_l2_mk_rand_ri(sc);
+		m->m_data[TEIM_RILO] = sc->sc_l2.l2_last_ril;
+		m->m_data[TEIM_RIHO] = sc->sc_l2.l2_last_rih;
+		m->m_data[TEIM_AIO] = (sc->sc_l2.l2_tei << 1) | 0x01;
+		break;
+	case MT_ID_VERIFY:
+		m->m_data[TEIM_RILO] = 0;
+		m->m_data[TEIM_RIHO] = 0;
+		m->m_data[TEIM_AIO] = (sc->sc_l2.l2_tei << 1) | 0x01;
+		break;
+	default:
+		error = EINVAL;
+		m_freem(m);
+		goto out;
+	}
+	sc->sc_l2.l2_stat.tx_tei++;
+	
+	switch (type) {
+	case MT_ID_REQEST:
+	case MT_ID_VERIFY:
+		isdn_l2_T202_start(sc);
+		break;
+	case MT_ID_CHK_RSP:
+		break;
+	default:
+		break;
+	}
+	error = isdn_output(sc->sc_ifp, m, &sisdn);
+out:	
+	return (error);
+}
+
+/*---------------------------------------------------------------------------*
  *	generate some 16 bit "random" number used for TEI mgmt Ri field
  *---------------------------------------------------------------------------*/
 static void
 isdn_l2_mk_rand_ri(struct isdn_softc *sc)
 {
-	u_short val;
+	uint16_t val;
 
 	(void)read_random((char *)&val, sizeof(val));
 

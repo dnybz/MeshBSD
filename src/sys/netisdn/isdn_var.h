@@ -184,13 +184,14 @@ struct isdn_bc {
 struct isdn_l2 {
 	int	l2_Q921_state;	/* state according to Q.921 */
 
-	u_char	l2_last_ril;	/* last reference number from TEI management */
-	u_char	l2_last_rih;
+	uint8_t	l2_last_ril;	/* last reference number from TEI management */
+	uint8_t	l2_last_rih;
 
 	int	l2_tei_valid;	/* tei is valid flag */
 #define TEI_INVALID	0
 #define TEI_VALID	1
 	int	l2_tei;		/* tei, if tei flag valid */
+	int l2_tei_last;
 
 	int	l2_ph_active;	/* Layer 1 active flag */
 #define PH_INACTIVE	0	/* layer 1 inactive */
@@ -405,26 +406,6 @@ typedef enum {
 #define GETINR(octett)	(((octett) >> 1) & 0x7f)
 #define GETINS(octett)	(((octett) >> 1) & 0x7f)
 #define GETIP(octett)	((octett) & IPFBIT)
-
-/* structure of a TEI management frame */
-
-#define TEI_MGMT_FRM_LEN   8		/* frame length */
-#define TEIM_SAPIO	0x00		/* SAPI, CR, EA */
-#define TEIM_TEIO	0x01		/* TEI, EA */
-#define TEIM_UIO	0x02		/* frame type = UI = 0x03 */
-#define TEIM_MEIO	0x03		/* management entity id = 0x0f */
-#define 	MEI	0x0f
-#define TEIM_RILO	0x04		/* reference number, low  */
-#define TEIM_RIHO	0x05		/* reference number, high */
-#define TEIM_MTO	0x06		/* message type */
-#define 	MT_ID_REQEST	0x01
-#define 	MT_ID_ASSIGN	0x02
-#define 	MT_ID_DENY	0x03
-#define 	MT_ID_CHK_REQ	0x04
-#define 	MT_ID_CHK_RSP	0x05
-#define 	MT_ID_REMOVE	0x06
-#define 	MT_ID_VERIFY	0x07
-#define TEIM_AIO	0x07		/* action indicator */
 
 /* isdn_mdl_error_ind codes */
 

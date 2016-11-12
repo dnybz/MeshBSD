@@ -1318,9 +1318,11 @@ F_MF15(struct isdn_softc *sc)
 
 	if (sc->sc_l2.l2_own_busy == 0) {
 		sc->sc_l2.l2_own_busy = 1;
-
-		i4b_tx_rnr_response(l2, F0); /* wrong in Q.921 03/93 p 64 */
-
+/* 
+ * wrong in Q.921 03/93 p 64 
+ */
+		(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, F0, RNR);	
+		
 		sc->sc_l2.l2_ack_pend = 0;
 	}
 }
@@ -1335,9 +1337,11 @@ F_MF16(struct isdn_softc *sc)
 
 	if (sc->sc_l2.l2_own_busy != 0) {
 		sc->sc_l2.l2_own_busy = 0;
-
-		i4b_tx_rr_response(l2, F0); /* wrong in Q.921 03/93 p 64 */
-
+/* 
+ * wrong in Q.921 03/93 p 64 
+ */
+		(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, F0, RR);	
+		
 		sc->sc_l2.l2_ack_pend = 0;
 	}
 }
@@ -1539,6 +1543,7 @@ F_TR08(struct isdn_softc *sc)
 
 	IF_DRAIN(&sc->sc_l2.l2_i_queue);
 	i4b_mdl_status_ind(l3, STI_L2STAT, LAYER_IDLE);
+	
 	(void)isdn_l2_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
 
 	sc->sc_l2.l2_post_fsm_fn = isdn_l2_release_ind;
@@ -1640,8 +1645,10 @@ F_TR15(struct isdn_softc *sc)
 
 	if (sc->sc_l2.l2_own_busy == 0) {
 		sc->sc_l2.l2_own_busy = 1;
-
-		i4b_tx_rnr_response(l2, F0);
+/*
+ * Tx RNR response.
+ */				
+		(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, F0, RNR);		
 
 		sc->sc_l2.l2_ack_pend = 0;
 	}
@@ -1657,9 +1664,11 @@ F_TR16(struct isdn_softc *sc)
 
 	if (sc->sc_l2.l2_own_busy != 0) {
 		sc->sc_l2.l2_own_busy = 0;
+/*
+ * Tx RNR response, this is wrong in Q.921 03/93 p 74 !
+ */				
+		(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, F0, RR);		
 
-		i4b_tx_rr_response(l2, F0);	/* this is wrong	 */
-						/* in Q.921 03/93 p 74 ! */
 		sc->sc_l2.l2_ack_pend = 0;
 	}
 }

@@ -239,7 +239,7 @@ int
 i4b_dl_data_ind(struct isdn_l3 *l3, struct mbuf *m)
 {
 	i4b_decode_q931(sc->sc_l3.l3_isdnif, m->m_len, m->m_data);
-	i4b_Dfreembuf(m);
+	m_freem(m);
 	return (0);
 }
 
@@ -250,7 +250,7 @@ int
 i4b_dl_unit_data_ind(struct isdn_l3 *l3, struct mbuf *m)
 {
 	i4b_decode_q931(sc->sc_l3.l3_isdnif, m->m_len, m->m_data);
-	i4b_Dfreembuf(m);
+	m_freem(m);
 	return (0);
 }
 
@@ -266,9 +266,10 @@ i4b_l3_tx_connect(struct isdn_b_chan *bc)
 
 	NDBGL3(L3_PRIM, "isdnif %d, cr = 0x%02x", cd->isdnif, cd->cr);
 
-	if ((m = i4b_Dgetmbuf(I_FRAME_HDRLEN + MSG_CONNECT_LEN)) == NULL)
-		panic("i4b_l3_tx_connect: can't allocate mbuf");
-
+	if ((m = isdn_getmbuf(I_FRAME_HDRLEN + MSG_CONNECT_LEN,
+		M_DONTWAIT, MT_I4B_D)) == NULL) {
+		panic("%s: can't allocate mbuf", __func__);
+	}
 	ptr = m->m_data + I_FRAME_HDRLEN;
 
 	*ptr++ = PD_Q931;		/* protocol discriminator */
@@ -299,8 +300,8 @@ i4b_l3_tx_release_complete(struct isdn_b_chan *bc, int send_cause_flag)
 			cd->isdnif, cd->cr, cd->cause_out);
 	}
 
-	if ((m = i4b_Dgetmbuf(len)) == NULL)
-		panic("i4b_l3_tx_release_complete: can't allocate mbuf");
+	if ((m = isdn_getmbuf(len, M_DONTWAIT, MT_I4B_D)) == NULL)
+		panic("%s: can't allocate mbuf", __func__);
 
 	ptr = m->m_data + I_FRAME_HDRLEN;
 
@@ -316,7 +317,7 @@ i4b_l3_tx_release_complete(struct isdn_b_chan *bc, int send_cause_flag)
 		*ptr++ = isdn_l2_mk_q931_cause(cd->cause_out);
 	}
 
-	i4b_dl_data_req(l2sc, m);
+	i4b_dl_data_req(sc, m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -331,9 +332,10 @@ i4b_l3_tx_disconnect(struct isdn_b_chan *bc)
 
 	NDBGL3(L3_PRIM, "isdnif %d, cr = 0x%02x", cd->isdnif, cd->cr);
 
-	if ((m = i4b_Dgetmbuf(I_FRAME_HDRLEN + MSG_DISCONNECT_LEN)) == NULL)
-		panic("i4b_l3_tx_disconnect: can't allocate mbuf");
-
+	if ((m = isdn_getmbuf(I_FRAME_HDRLEN + MSG_DISCONNECT_LEN, 
+		M_DONTWAIT, MT_I4B_D)) == NULL) {
+		panic("%s: can't allocate mbuf", __func__);
+	}
 	ptr = m->m_data + I_FRAME_HDRLEN;
 
 	*ptr++ = PD_Q931;		/* protocol discriminator */
@@ -375,10 +377,8 @@ i4b_l3_tx_setup(struct isdn_b_chan *bc)
 
 	NDBGL3(L3_PRIM, "isdnif %d, cr = 0x%02x", cd->isdnif, cd->cr);
 
-	if ((m = i4b_getmbuf(msglen, M_DONTWAIT, MT_I4B_D)) == NULL)
-	{
-		panic("i4b_l3_tx_setup: can't allocate mbuf");
-	}
+	if ((m = isdn_getmbuf(msglen, M_DONTWAIT, MT_I4B_D)) == NULL) 
+		panic("%s: can't allocate mbuf", __func__);
 
 	cd->crflag = CRF_ORIG;		/* we are the originating side */
 
@@ -469,9 +469,10 @@ i4b_l3_tx_connect_ack(struct isdn_b_chan *bc)
 
 	NDBGL3(L3_PRIM, "isdnif %d, cr = 0x%02x", cd->isdnif, cd->cr);
 
-	if ((m = i4b_Dgetmbuf(I_FRAME_HDRLEN + MSG_CONNECT_ACK_LEN)) == NULL)
-		panic("i4b_l3_tx_connect_ack: can't allocate mbuf");
-
+	if ((m = isdn_getmbuf(I_FRAME_HDRLEN + MSG_CONNECT_ACK_LEN, 
+		M_DONTWAIT, MT_I4B_D)) == NULL) {
+		panic("%s: can't allocate mbuf", __func__);
+	}
 	ptr = m->m_data + I_FRAME_HDRLEN;
 
 	*ptr++ = PD_Q931;		/* protocol discriminator */
@@ -494,9 +495,10 @@ i4b_l3_tx_status(struct isdn_b_chan *bc, u_char q850cause)
 
 	NDBGL3(L3_PRIM, "isdnif %d, cr = 0x%02x", cd->isdnif, cd->cr);
 
-	if ((m = i4b_Dgetmbuf(I_FRAME_HDRLEN + MSG_STATUS_LEN)) == NULL)
-		panic("i4b_l3_tx_status: can't allocate mbuf");
-
+	if ((m = isdn_getmbuf(I_FRAME_HDRLEN + MSG_STATUS_LEN,
+		M_DONTWAIT, MT_I4B_D)) == NULL) {
+		panic("%s: can't allocate mbuf", __func__);
+	}
 	ptr = m->m_data + I_FRAME_HDRLEN;
 
 	*ptr++ = PD_Q931;		/* protocol discriminator */
@@ -532,8 +534,8 @@ i4b_l3_tx_release(struct isdn_b_chan *bc, int send_cause_flag)
 	if (send_cause_flag == 0)
 		len -= 4;
 
-	if ((m = i4b_Dgetmbuf(len)) == NULL)
-		panic("i4b_l3_tx_release: can't allocate mbuf");
+	if ((m = isdn_getmbuf(len, M_DONTWAIT, MT_I4B_D)) == NULL)
+		panic("%s: can't allocate mbuf", __func__);
 
 	ptr = m->m_data + I_FRAME_HDRLEN;
 
@@ -562,9 +564,10 @@ i4b_l3_tx_alert(struct isdn_b_chan *bc)
 	struct mbuf *m;
 	u_char *ptr;
 
-	if ((m = i4b_Dgetmbuf(I_FRAME_HDRLEN + MSG_ALERT_LEN)) == NULL)
-		panic("i4b_l3_tx_alert: can't allocate mbuf");
-
+	if ((m = isdn_getmbuf(I_FRAME_HDRLEN + MSG_ALERT_LEN,
+		M_DONTWAIT, MT_I4B_D)) == NULL) {
+		panic("%s: can't allocate mbuf", __func__);
+	}
 	NDBGL3(L3_PRIM, "isdnif %d, cr = 0x%02x", cd->isdnif, cd->cr);
 
 	ptr = m->m_data + I_FRAME_HDRLEN;
@@ -576,5 +579,3 @@ i4b_l3_tx_alert(struct isdn_b_chan *bc)
 
 	i4b_dl_data_req(l2sc, m);
 }
-
-#endif /* NI4BQ931 > 0 */

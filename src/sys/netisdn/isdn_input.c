@@ -147,9 +147,6 @@ isdn_input(struct mbuf *m)
 	
 	if ((ifp = m->m_pkthdr.rcvif) == NULL)
 		goto bad;
-	
-	if ((ifp->if_flags & IFF_ISDN) == 0)
-		goto bad;
 
 	IF_AFDATA_RLOCK(ifp);
 	sc = ISDN_SOFTC(ifp);
@@ -162,11 +159,11 @@ isdn_input(struct mbuf *m)
 	
 	m_adj(m, ISDN_HDRLEN);
 	
-	frame = m->m_data;
+	ptr = mtod(m, uint8_t *);
 	
-#ifdef I4B_DEBUG
+#ifdef ISDN_DEBUG
 	(void)printf("%s: on=%s \n", __func__, ifp->if_xname);
-#endif /* I4B_DEBUG */
+#endif /* ISDN_DEBUG */
 
 	switch (chan) {
 	case ISDN_D_CHAN:
@@ -229,15 +226,13 @@ bad:
 	m_freem(m);	
 }
 
-/*-
- *	process i frame
- *	implements the routine "I COMMAND" Q.921 03/93 pp 68 and pp 77
- *
+/*
+ *	Process I frame, "I COMMAND" Q.921 03/93 pp 68 and pp 77
  */
 static void
 isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
 {
-	u_char ptr = m->m_data;
+	u_char ptr = mtod(m, uint8_t *);
 	
 	int nr;
 	int ns;
@@ -251,7 +246,7 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
 
 	if ((sc->sc_l2.l2_Q921_state != ST_MULTIFR) && 
 		(sc->sc_l2.l2_Q921_state != ST_TIMREC)) {
-		NDBGL2(L2_I_ERR, "ERROR, state != (MF || TR)!");
+		NDBGL2(L2_I_ERR, "%s: state != (MF || TR)!", __func__);
 		m_freem(m);
 		return;
 	}
@@ -264,8 +259,10 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
 	nr = GETINR(*(ptr + OFF_INR));
 	ns = GETINS(*(ptr + OFF_INS));
 	p = GETIP(*(ptr + OFF_INR));
-
-	isdn_l2_rxd_ack(sc, nr);		/* last packet ack */
+/* 
+ * last packet ack 
+ */
+	isdn_l2_rxd_ack(sc, nr);		
 /* 
  * own receiver busy ? 
  */
@@ -275,12 +272,16 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
  * P bit == 1 ? 
  */
 		if (p == 1)	{
-			isdn_l2_tx_rnr_resp(l2, p); /* yes, tx RNR */
+/*
+ * Tx RNR response.
+ */				
+			(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, p, RNR);		
+
 			sc->sc_l2.l2_ack_pend = 0;	/* clear ACK pending */
 		}
 	} else {
 /* 
- * own receiver ready, where if /* expected sequence number ?  
+ * own receiver ready, if expected sequence number ?  
  */	
 		if (ns == sc->sc_l2.l2_vr)	{
 			M128INC(sc->sc_l2.l2_vr);	/* yes, update */
@@ -294,7 +295,11 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
 			isdn_dl_data_ind(l3, m);	/* pass data up */
 
 			if (!sc->sc_l2.l2_iframe_sent) {
-				isdn_l2_tx_rr_resp(l2, p); /* yes, tx RR */
+/*
+ * Tx RR response.
+ */				
+				(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, p, RR);
+				
 				sc->sc_l2.l2_ack_pend = 0;	/* clr ACK pending */
 			}
 		} else {
@@ -310,7 +315,11 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
  * immediate resp ? 
  */
 				if (p == 1)	{
-					isdn_l2_tx_rr_resp(l2, p); /* yes, tx RR */
+/*
+ * Tx RR response.
+ */				
+					(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, p, RR);
+					
 					sc->sc_l2.l2_ack_pend = 0; /* clr ack pend */
 				}
 			} else {
@@ -318,7 +327,12 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
  * not in exception cond 
  */			
 				sc->sc_l2.l2_rej_excpt = 1;	/* set exception */
-				isdn_l2_tx_rej_resp(l2, p);	/* tx REJ */
+				
+/*
+ * Tx REJ response.
+ */				
+				(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, p, REJ);			
+				
 				sc->sc_l2.l2_ack_pend = 0;	/* clr ack pending */
 			}
 		}
@@ -344,12 +358,12 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
  * count expected ? 
  */								
 					sc->sc_l2.l2_va = nr;	/* update ack */
-					isdn_T200_stop(l2);
-					isdn_T203_restart(l2);
+					isdn_l2_T200_stop(sc);
+					isdn_l2_T203_restart(sc);
 				} else {
 					if (nr != sc->sc_l2.l2_va) {
 						sc->sc_l2.l2_va = nr;
-						isdn_T200_restart(l2);
+						isdn_l2_T200_restart(sc);
 					}
 				}
 			}
@@ -358,7 +372,7 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
 /* 
  * sequence error 
  */		
-		isdn_nr_error_recovery(l2);	
+		isdn_nr_error_recovery(sc);	
 		
 		sc->sc_l2.l2_Q921_state = ST_AW_EST;
 	}
@@ -372,7 +386,7 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
 static void
 isdn_s_frame_input(struct isdn_softc *sc, struct mbuf *m)
 {
-	u_char *ptr = m->m_data;
+	u_char *ptr = mtod(m, uint8_t *);
 
 	if (!((sc->sc_l2.l2_tei_valid == TEI_VALID) &&
 	     (sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI))))) {
@@ -418,7 +432,7 @@ out:
 static void
 isdn_u_frame_input(struct isdn_softc *sc, struct mbuf *m)
 {
-	u_char *ptr = m->m_data;
+	u_char *ptr = mtod(m, uint8_t *);
 
 	int sapi = GETSAPI(*(ptr + OFF_SAPI));
 	int tei = GETTEI(*(ptr + OFF_TEI));
