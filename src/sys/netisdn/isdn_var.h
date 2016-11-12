@@ -107,7 +107,7 @@ struct isdn_bc {
 	int	bc_Q931state;		/* Q.931 state for call	*/
 	int	bc_event;			/* event to be processed */
 
-	int	bc_response;		/* setup response type	*/
+	int	bc_resp;		/* setup response type	*/
 
 	int	bc_T303;			/* SETUP sent response timeout	*/
 	int	bc_T303_first_to;		/* first timeout flag		*/

@@ -47,7 +47,6 @@
  * SUCH DAMAGE.
  */
 
-
 #include "opt_inet.h"
 
 #include "opt_isdn.h"
@@ -74,7 +73,7 @@ int isdn_l3_debug = L3_DEBUG_DEFAULT;
  * protocol independent causes -> Q.931 causes 
  */
 
-uint8_t isdn_q931_cause_tab[CAUSE_I4B_MAX] = {
+uint8_t isdn_q931_cause_tab[ISDN_CAUSE_MAX] = {
 /* 
  * CAUSE_I4B_NORMAL -> normal call clearing 
  */	
@@ -117,14 +116,14 @@ uint8_t isdn_q931_cause_tab[CAUSE_I4B_MAX] = {
  *	setup cr ref flag according to direction
  *---------------------------------------------------------------------------*/
 uint8_t
-setup_cr(struct isdn_bc *bc, uint8_t cr)
+isdn_q931_setup_cr(struct isdn_bc *bc, uint8_t cr)
 {
 	if (bc->bc_cr_flag == CRF_ORIG)
 		return (cr & 0x7f);	/* clear cr ref flag */
 	else if (bc->bc_cr_flag == CRF_DEST)
 		return (cr | 0x80);	/* set cr ref flag */
 	else
-		panic("setup_cr: invalid crflag!");
+		panic("isdn_q931_setup_cr: invalid cr_flag!");
 }
 
 /*---------------------------------------------------------------------------*
@@ -135,11 +134,11 @@ isdn_q931_decode(struct isdn_softc *sc, int msg_len, uint8_t *msg_ptr)
 {
 	struct isdn_bc *bc = NULL;
 	int codeset = CODESET_0;
-	int old_codeset = CODESET_0;
+	int codeset_old = CODESET_0;
 	int shift_flag = UNSHIFTED;
-	int crlen = 0;
-	int crval = 0;
-	int crflag = 0;
+	int cr_len = 0;
+	int cr = 0;
+	int cr_flag = 0;
 	int i;
 	int offset;
 /* 
@@ -147,13 +146,13 @@ isdn_q931_decode(struct isdn_softc *sc, int msg_len, uint8_t *msg_ptr)
  */
 	if (*msg_ptr != PD_Q931) {
 /*
- * XXX ...
+ * XXX ... I'll move this artefact into isdn_softc{}.
  */
-		static int protoflag = -1;	/* print only once .. */
+		static int proto_flag = -1;	/* print only once .. */
 
-		if (*msg_ptr != protoflag) {
+		if (*msg_ptr != proto_flag) {
 			NDBGL3(L3_P_MSG, "unknown protocol discriminator 0x%x!", *msg_ptr);
-			protoflag = *msg_ptr;
+			proto_flag = *msg_ptr;
 		}
 		return;
 	}
@@ -163,52 +162,52 @@ isdn_q931_decode(struct isdn_softc *sc, int msg_len, uint8_t *msg_ptr)
 /* 
  * extract call reference 
  */
-	crlen = *msg_ptr & CRLENGTH_MASK;
+	cr_len = *msg_ptr & CRLENGTH_MASK;
 	msg_ptr++;
 	msg_len--;
 
-	if (crlen != 0) {
-		crval += *msg_ptr & 0x7f;
-		crflag = (*msg_ptr >> 7) & 0x01;
+	if (cr_len != 0) {
+		cr += *msg_ptr & 0x7f;
+		cr_flag = (*msg_ptr >> 7) & 0x01;
 		msg_ptr++;
 		msg_len--;
 
-		for (i=1; i < crlen; i++) {
-			crval += *msg_ptr;
+		for (i=1; i < cr_len; i++) {
+			cr += *msg_ptr;
 			msg_ptr++;
 			msg_len--;
 		}
 	} else {
-		crval = 0;
-		crflag = 0;
+		cr = 0;
+		cr_flag = 0;
 	}
 
 	NDBGL3(L3_P_MSG, "Call Ref, len %d, val %d, flag %d", 
-		crlen, crval, crflag);
+		cr_len, cr, cr_flag);
 /* 
  * find or allocate calldescriptor 
  */
-	if ((bc = isdn_bc_by_cr(sc, crval,
-			crflag == CRF_DEST ? CRF_ORIG : CRF_DEST)) == NULL) {
+	if ((bc = isdn_bc_by_cr(sc, cr,
+			cr_flag == CRF_DEST ? CRF_ORIG : CRF_DEST)) == NULL) {
 		if (*msg_ptr == SETUP) {
 /*
  * get and init new calldescriptor 
  */
 			bc = isdn_bc_alloc(sc);
-			bc->bc_cr = crval;
+			bc->bc_cr = cr;
 			bc->bc_cr_flag = CRF_DEST;	/* we are the dest side */
 		} else {
 /*
  * XXX
  */			
-			if (crval != 0) {
+			if (cr != 0) {
 /* 
  * ignore global call references 
  */						
 				NDBGL3(L3_P_ERR, "cannot find calldescriptor "
-					"for cr = 0x%x, crflag = 0x%x, "
+					"for cr = 0x%x, cr_flag = 0x%x, "
 					"msg = 0x%x, frame = ", 
-					crval, crflag, *msg_ptr);
+					cr, cr_flag, *msg_ptr);
 				
 				isdn_l2_print_frame(msg_len, msg_ptr);
 			}
@@ -234,15 +233,15 @@ isdn_q931_decode(struct isdn_softc *sc, int msg_len, uint8_t *msg_ptr)
 			if (!(*msg_ptr & SHIFT_LOCK))
 				shift_flag = SHIFTED;
 
-			old_codeset = codeset;
+			codeset_old = codeset;
 			codeset = *msg_ptr & CODESET_MASK;
 
 			if ((shift_flag != SHIFTED) &&
-			   (codeset <= old_codeset)) {
+			   (codeset <= codeset_old)) {
 				NDBGL3(L3_P_ERR, "Q.931 lockingshift "
 				"proc violation, shift %d -> %d", 
-				old_codeset, codeset);
-				codeset = old_codeset;
+				codeset_old, codeset);
+				codeset = codeset_old;
 			}
 			msg_len--;
 			msg_ptr++;
@@ -267,7 +266,7 @@ isdn_q931_decode(struct isdn_softc *sc, int msg_len, uint8_t *msg_ptr)
  */
 		if (shift_flag == SHIFTED) {
 			shift_flag = UNSHIFTED;
-			codeset = old_codeset;
+			codeset = codeset_old;
 		}
 	}
 	isdn_l3_next_state(bc, bc->bc_event);
@@ -315,7 +314,7 @@ isdn_q931_decode_cs0_ie(struct isdn_bc *bc, int msg_len, uint8_t *msg_ptr)
 /* 
  * XXX 
  */	
-			bc->bc_bprot = BPROT_NONE;
+			bc->bc_bproto = BPROT_NONE;
 			NDBGL3(L3_P_MSG, "IEI_BEARERCAP - Telephony");
 			break;
 		case 0x88:	
@@ -324,14 +323,14 @@ isdn_q931_decode_cs0_ie(struct isdn_bc *bc, int msg_len, uint8_t *msg_ptr)
  *
  * XXX 
  */	
- 			bc->bc_bprot = BPROT_RHDLC;
+ 			bc->bc_bproto = BPROT_RHDLC;
 			NDBGL3(L3_P_MSG, "IEI_BEARERCAP - Raw HDLC");
 			break;
 		default:
 /* 
  * XXX 
  */		
- 			bc->bc_bprot = BPROT_NONE;
+ 			bc->bc_bproto = BPROT_NONE;
 			NDBGL3(L3_P_ERR, "IEI_BEARERCAP - Unsupported "
 				"B-Protocol 0x%x", msg_ptr[2]);
 			break;
@@ -369,58 +368,58 @@ isdn_q931_decode_cs0_ie(struct isdn_bc *bc, int msg_len, uint8_t *msg_ptr)
  * channel id 
  */
 		if ((msg_ptr[2] & 0xf4) != 0x80) {
-			bc->bc_channelid = CHAN_NO;
+			bc->bc_id = CHAN_NO;
 			NDBGL3(L3_P_ERR, "IEI_CHANNELID, "
 				"unsupported value 0x%x", msg_ptr[2]);
 		} else {
-			int old_chanid = bc->bc_channelid;
+			int old_chanid = bc->bc_id;
 			
 			switch (msg_ptr[2] & 0x03) {
 			case IE_CHAN_ID_NO:
-				bc->bc_channelid = CHAN_NO;
+				bc->bc_id = CHAN_NO;
 				break;
 			case IE_CHAN_ID_B1:
-				bc->bc_channelid = CHAN_B1;
+				bc->bc_id = CHAN_B1;
 				break;
 			case IE_CHAN_ID_B2:
-				bc->bc_channelid = CHAN_B2;
+				bc->bc_id = CHAN_B2;
 				break;
 			case IE_CHAN_ID_ANY:
-				bc->bc_channelid = CHAN_ANY;
+				bc->bc_id = CHAN_ANY;
 				break;
 			}
-			bc->bc_channelexcl = (msg_ptr[2] & 0x08) >> 3;
+			bc->bc_excl = (msg_ptr[2] & 0x08) >> 3;
 
 			NDBGL3(L3_P_MSG, "IEI_CHANNELID - channel %d, "
-			"exclusive = %d", bc->bc_channelid, bc->bc_channelexcl);
+			"exclusive = %d", bc->bc_id, bc->bc_excl);
 /* 
  * if this is the first time 
  * we know the real channel,
  * reserve it 
  */
-			if (old_chanid != bc->bc_channelid) {
+			if (old_chanid != bc->bc_id) {
 				
-				if ((bc->bc_channelid == CHAN_B1) || 
-					(bc->bc_channelid == CHAN_B2)) {
+				if ((bc->bc_id == CHAN_B1) || 
+					(bc->bc_id == CHAN_B2)) {
 					struct isdn_l3 *d = bc->bc_l3drv;
 
 					if (i4b_l2_channel_get_state(d, 
-						bc->bc_channelid) == BCH_ST_FREE) {
+						bc->bc_id) == BCH_ST_FREE) {
 						
 						if (d != NULL) {
-							d->bch_state[bc->bc_channelid] = BCH_ST_RSVD;
+							d->bch_state[bc->bc_id] = BCH_ST_RSVD;
 							update_controller_leds(d);
 						}
-						i4b_l2_channel_set_state(d, bc->bc_channelid, BCH_ST_RSVD);
+						i4b_l2_channel_set_state(d, bc->bc_id, BCH_ST_RSVD);
 					} else
 						NDBGL3(L3_P_ERR, "IE ChannelID, Channel NOT free!!");
 				
-				} else if (bc->bc_channelid == CHAN_NO) {
+				} else if (bc->bc_id == CHAN_NO) {
 					NDBGL3(L3_P_MSG, "IE ChannelID, SETUP "
 						"with channel = No channel (CW)");
 				} else {
 /* 
- * bc->bc_channelid == CHAN_ANY 
+ * bc->bc_id == CHAN_ANY 
  */					
 					NDBGL3(L3_P_ERR, "ERROR: IE ChannelID, "
 						"SETUP with channel = Any channel!");
@@ -516,20 +515,20 @@ isdn_q931_decode_cs0_ie(struct isdn_bc *bc, int msg_len, uint8_t *msg_ptr)
 /* 
  * no presentation/screening indicator ? 
  */		
-			(void)memcpy(bc->bc_src_telno, &msg_ptr[3], 
+			(void)memcpy(bc->bc_src.se167_telno, &msg_ptr[3], 
 				min(TELNO_MAX, msg_ptr[1]-1));
 				
-			bc->bc_src_telno[min(TELNO_MAX, msg_ptr[1] - 1)] = '\0';
+			bc->bc_src.se167_telno[min(TELNO_MAX, msg_ptr[1] - 1)] = '\0';
 			bc->bc_scr_ind = SCR_NONE;
 			bc->bc_prs_ind = PRS_NONE;
 		} else {
-			(void)memcpy(bc->bc_src_telno, &msg_ptr[4], 
+			(void)memcpy(bc->bc_src.se167_telno, &msg_ptr[4], 
 				min(TELNO_MAX, msg_ptr[1]-2));
-			bc->bc_src_telno[min(TELNO_MAX, msg_ptr[1] - 2)] = '\0';
+			bc->bc_src.se167_telno[min(TELNO_MAX, msg_ptr[1] - 2)] = '\0';
 			bc->bc_scr_ind = (msg_ptr[3] & 0x03) + SCR_USR_NOSC;
 			bc->bc_prs_ind = ((msg_ptr[3] >> 5) & 0x03) + PRS_ALLOWED;
 		}
-		NDBGL3(L3_P_MSG, "IEI_CALLINGPN = %s", bc->bc_src_telno);
+		NDBGL3(L3_P_MSG, "IEI_CALLINGPN = %s", bc->bc_src.se167_telno);
 		break;
 	case IEI_CALLINGPS:	
 /* 
@@ -537,19 +536,19 @@ isdn_q931_decode_cs0_ie(struct isdn_bc *bc, int msg_len, uint8_t *msg_ptr)
  */
 		NDBGL3(L3_P_MSG, "IEI_CALLINGPS");
 		
-		(void)memcpy(bc->bc_src_subaddr, &msg_ptr[1], 
+		(void)memcpy(bc->bc_src.se167_subaddr, &msg_ptr[1], 
 			min(SUBADDR_MAX, msg_ptr[1]-1));
 		break;
 	case IEI_CALLEDPN:
 /* 
  * called party number 
  */
-		(void)memcpy(bc->bc_dst_telno, &msg_ptr[3], 
+		(void)memcpy(bc->bc_dst.se167_telno, &msg_ptr[3], 
 			min(TELNO_MAX, msg_ptr[1]-1));
 		
-		bc->bc_dst_telno[min(TELNO_MAX, msg_ptr [1] - 1)] = '\0';
+		bc->bc_dst.se167_telno[min(TELNO_MAX, msg_ptr [1] - 1)] = '\0';
 		
-		NDBGL3(L3_P_MSG, "IEI_CALLED = %s", bc->bc_dst_telno);
+		NDBGL3(L3_P_MSG, "IEI_CALLED = %s", bc->bc_dst.se167_telno);
 		break;
 	case IEI_CALLEDPS:	
 /* 
@@ -612,7 +611,7 @@ isdn_q931_decode_cs0_ie(struct isdn_bc *bc, int msg_len, uint8_t *msg_ptr)
  */
 		NDBGL3(L3_P_MSG, "IEI_FACILITY");
 		
-		if (i4b_aoc(msg_ptr, cd) > -1)
+		if (isdn_q932fac_aoc(msg_ptr, cd) > -1)
 			i4b_l4_charging_ind(bc);
 		
 		break;
@@ -639,13 +638,13 @@ isdn_q931_decode_cs0_ie(struct isdn_bc *bc, int msg_len, uint8_t *msg_ptr)
  *	decode and process one Q.931 codeset 0 information element
  *---------------------------------------------------------------------------*/
 void
-isdn_q931_decode_msg(struct isdn_bc *bc, uint8_t message_type)
+isdn_q931_decode_msg(struct isdn_bc *bc, uint8_t msg_type)
 {
 	const char *m = NULL;
 
 	bc->bc_event = EV_ILL;
 
-	switch (message_type) {
+	switch (msg_type) {
 /* 
  * call establishment 
  */
@@ -667,13 +666,13 @@ isdn_q931_decode_msg(struct isdn_bc *bc, uint8_t message_type)
 	case SETUP:
 		m = "SETUP";
 
-		bc->bc_bprot = BPROT_NONE;
+		bc->bc_bproto = BPROT_NONE;
 		bc->bc_cause_in = 0;
 		bc->bc_cause_out = 0;
-		bc->bc_dst_telno[0] = '\0';
-		bc->bc_src_telno[0] = '\0';
-		bc->bc_channelid = CHAN_NO;
-		bc->bc_channelexcl = 0;
+		bc->bc_dst.se167_telno[0] = '\0';
+		bc->bc_src.se167_telno[0] = '\0';
+		bc->bc_id = CHAN_NO;
+		bc->bc_excl = 0;
 		bc->bc_display[0] = '\0';
 		bc->bc_datetime[0] = '\0';
 		bc->bc_event = EV_SETUP;
@@ -798,15 +797,13 @@ isdn_q931_decode_msg(struct isdn_bc *bc, uint8_t message_type)
 	default:
 		NDBGL3(L3_P_ERR, "isdnif %d, "
 			"cr = 0x%02x, msg = 0x%02x", 
-			bc->bc_isdnif, bc->bc_cr, message_type);
+			bc->bc_sc->sc_ifp->if_index, bc->bc_cr, msg_type);
 		break;
 	}
 	
 	if (m) {
 		NDBGL3(L3_PRIM, "%s: isdnif %d, "
 			"cr = 0x%02x\n", 
-			m, bc->bc_isdnif, bc->bc_cr);
+			m, bc->bc_sc->sc_ifp->if_index, bc->bc_cr);
 	}
 }
-
-#endif /* NI4BQ931 > 0 */
