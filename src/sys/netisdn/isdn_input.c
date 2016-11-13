@@ -292,9 +292,11 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
 			m_adj(m, I_HDR_LEN);	/* strip i frame header */
 
 			sc->sc_l2.l2_iframe_sent = 0;	/* reset i ack'd already */
-
-			isdn_l2_data_ind(sc, m);	/* pass data up */
-
+/* 
+ * pass data up 
+ */
+			isdn_q931_decode(sc, m);
+			
 			if (!sc->sc_l2.l2_iframe_sent) {
 /*
  * Tx RR response.
@@ -302,7 +304,7 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
 				(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, p, RR);
 				
 				sc->sc_l2.l2_ack_pend = 0;	/* clr ACK pending */
-			}
+			}	
 		} else {
 /* 
  * ERROR, sequence number NOT expected 
@@ -359,12 +361,12 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
  * count expected ? 
  */								
 					sc->sc_l2.l2_va = nr;	/* update ack */
-					isdn_l2_T200_stop(sc);
-					isdn_l2_T203_restart(sc);
+					isdn_T200_stop(sc);
+					isdn_T203_restart(sc);
 				} else {
 					if (nr != sc->sc_l2.l2_va) {
 						sc->sc_l2.l2_va = nr;
-						isdn_l2_T200_restart(sc);
+						isdn_T200_restart(sc);
 					}
 				}
 			}
@@ -373,7 +375,7 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
 /* 
  * sequence error 
  */		
-		isdn_nr_error_recovery(sc);	
+		isdn_l2_nr_error_recovery(sc);	
 		
 		sc->sc_l2.l2_Q921_state = ST_AW_EST;
 	}
@@ -472,8 +474,8 @@ isdn_u_frame_input(struct isdn_softc *sc, struct mbuf *m)
 			m_adj(m, UI_HDR_LEN);
 /* 
  * to upper layer 
- */
-			isdn_dl_unit_data_ind(sc->sc_l2.l2_l3, m);
+ */	
+			isdn_q931_decode(sc, m);	
 		} else {
 			sc->sc_l2.l2_stat.err_rx_badui++;
 			NDBGL2(L2_U_ERR, "unknown UI frame!");

@@ -68,10 +68,10 @@ static void 	isdn_l2_print_var(struct isdn_softc *);
 static void 	isdn_l2_tx_i_frame(struct isdn_softc *, struct mbuf *);
 
 /*
- * XXX: ...
- */
-
+ * XXX: I'll transform this in to MIB.
+ *
 int isdn_l2_debug = L2_DEBUG_DEFAULT;
+ */
 
 /*---------------------------------------------------------------------------*
  *	isdn_print_frame - just print the hex contents of a frame
@@ -152,8 +152,7 @@ isdn_l2_queue_i_frame(struct isdn_softc *sc)
 			NDBGL2(L2_I_MSG, 
 				"%s: re-scheduling IFQU call!", __func__);
 			START_TIMER(sc->sc_l2.l2_IFQU_callout, 
-
-			isdn_l2_queue_i_frame, l2, IFQU_DLY);
+				isdn_l2_queue_i_frame, sc, IFQU_DLY);
 		}	
 	} else {
 /* 
@@ -175,24 +174,15 @@ isdn_l2_queue_i_frame(struct isdn_softc *sc)
 static void 	
 isdn_l2_tx_i_frame(struct isdn_softc *sc, struct mbuf *m)
 {
-	struct sockaddr_isdn sisdn;
 	struct mbuf *n;
 	uint8_t *ptr;
 
 	SC_WLOCK(sc);
-
-	bzero(&sisdn, sizeof(sisdn));
-	
-	sisdn.sisdn_type = AF_ISDN;
-	sisdn.sisdn_len = sizeof(sisdn);
-	sisdn.sisdn_rd.rd_chan = ISDN_D_CHAN;
-	sisdn.sisdn_rd.rd_sapi = SAPI_CCP;
-	sisdn.sisdn_rd.rd_tei = sc->sc_l2.l2_tei;
 	
 	ptr = mtod(m, uint8_t *);
 
-	PUTSAPI(sisdn.sisdn_rd.rd_sapi, CR_CMD_TO_NT, *(ptr + OFF_SAPI));
-	PUTTEI(sisdn.sisdn_rd.rd_tei, *(ptr + OFF_TEI));
+	PUTSAPI(SAPI_CCP, CR_CMD_TO_NT, *(ptr + OFF_SAPI));
+	PUTTEI(sc->sc_l2.l2_tei, *(ptr + OFF_TEI));
 
 	*(ptr + OFF_INS) = (sc->sc_l2.l2_vs << 1) & 0xfe; /* bit 0 = 0 */
 	*(ptr + OFF_INR) = (sc->sc_l2.l2_vr << 1) & 0xfe; /* P bit = 0 */
@@ -201,9 +191,10 @@ isdn_l2_tx_i_frame(struct isdn_softc *sc, struct mbuf *m)
 /*
  * Transmit writable copy of frame.
  */
- 	if ((n = m_dup(m, M_NOWAIT)) != NULL) 
- 		(void)isdn_output(sc->sc_ifp, n, &sisdn);
- 		
+ 	if ((n = m_dup(m, M_NOWAIT)) != NULL) {
+ 		(void)isdn_output(sc->sc_ifp, n, 
+ 			ISDN_D_CHAN, 0, SAPI_CCP, sc->sc_l2.l2_tei);
+ 	}	
 /*
  * in case we ack an I frame with another I frame 
  */	
@@ -249,7 +240,6 @@ int
 isdn_l2_tx_s_frame(struct isdn_softc *sc, crbit_to_nt_t crbit, 
 	pbit_t pbit, uint8_t type)
 {
-	struct sockaddr_isdn sisdn;
 	struct mbuf *m;
 	int error;
 	
@@ -273,23 +263,17 @@ isdn_l2_tx_s_frame(struct isdn_softc *sc, crbit_to_nt_t crbit,
 		m_freem(m);
 		goto out;
 	}
-	bzero(&sisdn, sizeof(sisdn));
 	
-	sisdn.sisdn_type = AF_ISDN;
-	sisdn.sisdn_len = sizeof(sisdn);
-	sisdn.sisdn_rd.rd_chan = ISDN_D_CHAN;
-	sisdn.sisdn_rd.rd_sapi = SAPI_CCP;
-	sisdn.sisdn_rd.rd_tei = sc->sc_l2.l2_tei;
-	
-	PUTSAPI(sisdn.sisdn_rd.rd_sapi, crbit, m->m_data[OFF_SAPI]);
+	PUTSAPI(SAPI_CCP, crbit, m->m_data[OFF_SAPI]);
 
-	PUTTEI(sisdn.sisdn_rd.rd_tei, m->m_data[OFF_TEI]);
+	PUTTEI(sc->sc_l2.l2_tei, m->m_data[OFF_TEI]);
 
 	m->m_data[OFF_SRCR] = type;
 
 	m->m_data[OFF_SNR] = (sc->sc_l2.l2_vr << 1) | (pbit & 0x01);
 	
-	error = isdn_output(sc->sc_ifp, m, &sisdn);	
+	error = isdn_output(sc->sc_ifp, m, 
+		ISDN_D_CHAN, 0, SAPI_CCP, sc->sc_l2.l2_tei);	
 	
 	switch (type) {
 	case RR:
@@ -315,7 +299,6 @@ int
 isdn_l2_tx_u_frame(struct isdn_softc *sc, crbit_to_nt_t crbit, 
 	pbit_t pbit, uint8_t type)
 {
-	struct sockaddr_isdn sisdn;
 	struct mbuf *m;
 	int error;
 	
@@ -365,24 +348,18 @@ isdn_l2_tx_u_frame(struct isdn_softc *sc, crbit_to_nt_t crbit,
 		m_freem(m);
 		goto out;
 	}
-	bzero(&sisdn, sizeof(sisdn));
 	
-	sisdn.sisdn_type = AF_ISDN;
-	sisdn.sisdn_len = sizeof(sisdn);
-	sisdn.sisdn_rd.rd_chan = ISDN_D_CHAN;
-	sisdn.sisdn_rd.rd_sapi = SAPI_CCP;
-	sisdn.sisdn_rd.rd_tei = sc->sc_l2.l2_tei;
-	
-	PUTSAPI(sisdn.sisdn_rd.rd_sapi, crbit, m->m_data[OFF_SAPI]);
+	PUTSAPI(SAPI_CCP, crbit, m->m_data[OFF_SAPI]);
 
-	PUTTEI(sisdn.sisdn_rd.rd_tei, m->m_data[OFF_TEI]);
+	PUTTEI(sc->sc_l2.l2_tei, m->m_data[OFF_TEI]);
 
 	if (pbit)
 		m->m_data[OFF_CNTL] = type | UPBITSET;
 	else
 		m->m_data[OFF_CNTL] = type & ~UPBITSET;
 	
-	error = isdn_output(sc->sc_ifp, m, &sisdn);	
+	error = isdn_output(sc->sc_ifp, m, 
+		ISDN_D_CHAN, 0, SAPI_CCP, sc->sc_l2.l2_tei);	
 out:
 	return (error);
 }

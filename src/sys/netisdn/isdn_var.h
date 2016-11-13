@@ -92,6 +92,11 @@ struct isdn_bc {
 
 	int	bc_proto;			/* B channel protocol BPROT_XXX */
 
+	int bc_state;
+#define BCH_ST_FREE	0		/* free to be used, idle */
+#define BCH_ST_RSVD	1		/* reserved, may become free or used */
+#define BCH_ST_USED	2 		/* self explanatory */
+
 	cause_t	bc_cause_in;		/* cause value from NT	*/
 	cause_t	bc_cause_out;		/* cause value to NT	*/
 
@@ -179,10 +184,6 @@ struct isdn_bc {
 #define T313VAL	(hz*4)			/* 4 seconds timeout		*/
 #define T400DEF	(hz*10)			/* 10 seconds timeout		*/
 
-#define BCH_ST_FREE	0		/* free to be used, idle */
-#define BCH_ST_RSVD	1		/* reserved, may become free or used */
-#define BCH_ST_USED	2
-
 TAILQ_HEAD(isdn_bcq, isdn_bc);
 
 /*
@@ -239,11 +240,7 @@ struct isdn_l2 {
 	int	l2_peer_busy;	/* peer receiver busy */
 	int	l2_own_busy;	/* own receiver busy */
 	int	l2_l3_init;	/* layer 3 initiated */
-/*
- * XXX: might be merged in isdn_b_chan{}
- */
-	int	l2_b_chan_state[B_BCH];
-
+	
 	struct ifqueue l2_i_queue;	/* queue of outgoing i frames */
 #define IQUEUE_MAXLEN	20
 

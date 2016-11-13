@@ -113,7 +113,7 @@ isdn_l2_rxd_tei(struct isdn_softc *sc, struct mbuf *m)
 			sc->sc_l2.l2_tei_valid = TEI_VALID;
 
 			if (sc->sc_l2.l2_T202 == TIMER_ACTIVE)
-				isdn_l2_T202_stop(sc);
+				isdn_T202_stop(sc);
 /*
  * XXX ...
  *
@@ -177,7 +177,7 @@ isdn_l2_rxd_tei(struct isdn_softc *sc, struct mbuf *m)
 			}
 
 			if (sc->sc_l2.l2_T202 == TIMER_ACTIVE)
-				isdn_l2_T202_stop(sc);
+				isdn_T202_stop(sc);
 			
 			isdn_l2_chk_tei_resp(sc);
 		}
@@ -271,17 +271,8 @@ isdn_l2_chk_tei_resp(struct isdn_softc *sc)
 static int
 isdn_l2_tx_tei_frame(struct isdn_softc *sc, uint8_t type)
 {
-	struct sockaddr_isdn sisdn;
 	struct mbuf *m;
 	int error;
-
-	bzero(&sisdn, sizeof(sisdn));
-	
-	sisdn.sisdn_type = AF_ISDN;
-	sisdn.sisdn_len = sizeof(sisdn);
-	sisdn.sisdn_rd.rd_chan = ISDN_D_CHAN;
-	sisdn.sisdn_rd.rd_sapi = 0xfc; /* SAPI = 63, CR = 0, EA = 0 */
-	sisdn.sisdn_rd.rd_tei = 0xff;	/* TEI = 127, EA = 1 */
 
 	if ((m = isdn_getmbuf(TEI_MGMT_FRM_LEN, M_DONTWAIT, MT_I4B_D)) == NULL) {
 		error = ENOBUFS;
@@ -289,8 +280,8 @@ isdn_l2_tx_tei_frame(struct isdn_softc *sc, uint8_t type)
 	}
 	m->m_flags |= M_BCAST;
 		
-	m->m_data[TEIM_SAPIO] = sisdn.sisdn_rd.rd_sapi;	
-	m->m_data[TEIM_TEIO]  = sisdn.sisdn_rd.rd_tei;
+	m->m_data[TEIM_SAPIO] = 0xfc; /* SAPI = 63, CR = 0, EA = 0 */
+	m->m_data[TEIM_TEIO]  = 0xff;	/* TEI = 127, EA = 1 */
 	m->m_data[TEIM_UIO]   = UI;	/* UI */
 	m->m_data[TEIM_MEIO]  = MEI;	/* MEI */
 	m->m_data[TEIM_MTO]   = type;	/* message type */
@@ -323,14 +314,14 @@ isdn_l2_tx_tei_frame(struct isdn_softc *sc, uint8_t type)
 	switch (type) {
 	case MT_ID_REQEST:
 	case MT_ID_VERIFY:
-		isdn_l2_T202_start(sc);
+		isdn_T202_start(sc);
 		break;
 	case MT_ID_CHK_RSP:
 		break;
 	default:
 		break;
 	}
-	error = isdn_output(sc->sc_ifp, m, &sisdn);
+	error = isdn_output(sc->sc_ifp, m, ISDN_D_CHAN, 0, 0xfc, 0xff);
 out:	
 	return (error);
 }

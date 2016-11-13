@@ -94,7 +94,7 @@ int isdn_l2_status_tab[] = {
 static uint8_t
 isdn_l2_mk_q931_cause(cause_t cause)
 {
-	uint8_t ret;
+	register uint8_t ret;
 
 	switch (GET_CAUSE_TYPE(cause)) {
 	case CAUSET_Q850:
@@ -109,16 +109,6 @@ isdn_l2_mk_q931_cause(cause_t cause)
 	}
 	ret |= EXT_LAST;
 	return (ret);
-}
-
-/*---------------------------------------------------------------------------*
- *	return status of data link
- *---------------------------------------------------------------------------*/
-int
-isdn_l2_get_stat(struct isdn_bc *bc)
-{
-	
-	return (bc->bc_sc->sc_l3.l3_dl_est);
 }
 
 /*---------------------------------------------------------------------------*
@@ -231,28 +221,6 @@ isdn_l2_release_cnf(struct isdn_softc *sc)
 }
 
 /*---------------------------------------------------------------------------*
- *	isdn_l2_data_ind - process a rx'd I-frame got from layer 2
- *---------------------------------------------------------------------------*/
-int
-isdn_l2_data_ind(struct isdn_softc *sc, struct mbuf *m)
-{
-	isdn_q931_decode(sc, m->m_len, mtod(m, uint8_t *));
-	m_freem(m);
-	return (0);
-}
-
-/*---------------------------------------------------------------------------*
- *	dl_unit_data_ind - process a rx'd U-frame got from layer 2
- *---------------------------------------------------------------------------*/
-int
-isdn_l2_unit_data_ind(struct isdn_softc *sc, struct mbuf *m)
-{
-	isdn_q931_decode(sc, m->m_len, mtod(m, uint8_t *));
-	m_freem(m);
-	return (0);
-}
-
-/*---------------------------------------------------------------------------*
  *	send CONNECT message
  *---------------------------------------------------------------------------*/
 void
@@ -266,14 +234,14 @@ isdn_l3_tx_connect(struct isdn_bc *bc)
 		bc->bc_sc->sc_ifp->if_index, 
 		bc->bc_cr);
 
-	if ((m = isdn_getmbuf(len, M_DONTWAIT, MT_I4B_D)) == NULL) {
+	if ((m = isdn_getmbuf(len, M_NOWAIT, MT_I4B_D)) == NULL) {
 		panic("%s: can't allocate mbuf", __func__);
 	}
 	ptr = mtod(m, uint8_t *) + I_FRAME_HDRLEN;
 
 	*ptr++ = PD_Q931;		/* protocol discriminator */
 	*ptr++ = 0x01;			/* call reference length */
-	*ptr++ = setup_cr(bc, bc->bc_cr);	/* call reference value */
+	*ptr++ = isdn_q931_setup_cr(bc, bc->bc_cr);	/* call reference value */
 	*ptr++ = CONNECT;		/* message type = connect */
 
 	isdn_l2_data_req(bc->bc_sc, m);
@@ -299,14 +267,14 @@ isdn_l3_tx_release_complete(struct isdn_bc *bc, int send_cause_flag)
 			bc->bc_cr, bc->bc_cause_out);
 	}
 
-	if ((m = isdn_getmbuf(len, M_DONTWAIT, MT_I4B_D)) == NULL)
+	if ((m = isdn_getmbuf(len, M_NOWAIT, MT_I4B_D)) == NULL)
 		panic("%s: can't allocate mbuf", __func__);
 
 	ptr = mtod(m, uint8_t *) + I_FRAME_HDRLEN;
 
 	*ptr++ = PD_Q931;		/* protocol discriminator */
 	*ptr++ = 0x01;			/* call reference length */
-	*ptr++ = setup_cr(cd, bc->bc_cr);	/* call reference value */
+	*ptr++ = isdn_q931_setup_cr(cd, bc->bc_cr);	/* call reference value */
 	*ptr++ = RELEASE_COMPLETE;	/* message type = release complete */
 
 	if (send_cause_flag) {
@@ -332,14 +300,14 @@ isdn_l3_tx_disconnect(struct isdn_bc *bc)
 	NDBGL3(L3_PRIM, "isdnif %d, cr = 0x%02x", 
 		bc->bc_sc->sc_ifp->if_index, bc->bc_cr);
 
-	if ((m = isdn_getmbuf(len, M_DONTWAIT, MT_I4B_D)) == NULL) {
+	if ((m = isdn_getmbuf(len, M_NOWAIT, MT_I4B_D)) == NULL) {
 		panic("%s: can't allocate mbuf", __func__);
 	}
 	ptr = mtod(m, uint8_t *) + I_FRAME_HDRLEN;
 
 	*ptr++ = PD_Q931;		/* protocol discriminator */
 	*ptr++ = 0x01;			/* call ref length */
-	*ptr++ = setup_cr(bc, bc->bc_cr);	/* call reference value */
+	*ptr++ = isdn_q931_setup_cr(bc, bc->bc_cr);	/* call reference value */
 	*ptr++ = DISCONNECT;		/* message type = disconnect */
 
 	*ptr++ = IEI_CAUSE;		/* cause ie */
@@ -376,7 +344,7 @@ isdn_l3_tx_setup(struct isdn_bc *bc)
 	NDBGL3(L3_PRIM, "isdnif %d, cr = 0x%02x", 
 		bc->bc_sc->sc_ifp->if_index, bc->bc_cr);
 
-	if ((m = isdn_getmbuf(len, M_DONTWAIT, MT_I4B_D)) == NULL) 
+	if ((m = isdn_getmbuf(len, M_NOWAIT, MT_I4B_D)) == NULL) 
 		panic("%s: can't allocate mbuf", __func__);
 
 	bc->bc_crflag = CRF_ORIG;		/* we are the originating side */
@@ -385,7 +353,7 @@ isdn_l3_tx_setup(struct isdn_bc *bc)
 
 	*ptr++ = PD_Q931;		/* protocol discriminator */
 	*ptr++ = 0x01;			/* call ref length */
-	*ptr++ = setup_cr(bc, bc->bc_cr);	/* call reference value */
+	*ptr++ = isdn_q931_setup_cr(bc, bc->bc_cr);	/* call reference value */
 	*ptr++ = SETUP;			/* message type = setup */
 
 	*ptr++ = IEI_SENDCOMPL;		/* sending complete */
@@ -473,14 +441,14 @@ isdn_l3_tx_connect_ack(struct isdn_bc *bc)
 	NDBGL3(L3_PRIM, "isdnif %d, cr = 0x%02x", 
 		bc->bc_sc->sc_ifp->if_index, bc->bc_cr);
 
-	if ((m = isdn_getmbuf(len, M_DONTWAIT, MT_I4B_D)) == NULL) {
+	if ((m = isdn_getmbuf(len, M_NOWAIT, MT_I4B_D)) == NULL) {
 		panic("%s: can't allocate mbuf", __func__);
 	}
 	ptr = mtod(m, uint8_t *) + I_FRAME_HDRLEN;
 
 	*ptr++ = PD_Q931;		/* protocol discriminator */
 	*ptr++ = 0x01;			/* call reference length */
-	*ptr++ = setup_cr(bc, bc->bc_cr);	/* call reference value */
+	*ptr++ = isdn_q931_setup_cr(bc, bc->bc_cr);	/* call reference value */
 	*ptr++ = CONNECT_ACKNOWLEDGE;	/* message type = connect ack */
 
 	isdn_l2_data_req(bc->bc_sc, m);
@@ -499,14 +467,14 @@ isdn_l3_tx_status(struct isdn_bc *bc, uint8_t q850cause)
 		bc->bc_sc->sc_ifp->if_index, bc->bc_cr);
 
 	if ((m = isdn_getmbuf(I_FRAME_HDRLEN + MSG_STATUS_LEN,
-		M_DONTWAIT, MT_I4B_D)) == NULL) {
+		M_NOWAIT, MT_I4B_D)) == NULL) {
 		panic("%s: can't allocate mbuf", __func__);
 	}
 	ptr = mtod(m, uint8_t *) + I_FRAME_HDRLEN;
 
 	*ptr++ = PD_Q931;		/* protocol discriminator */
 	*ptr++ = 0x01;			/* call reference length */
-	*ptr++ = setup_cr(bc, bc->bc_cr);	/* call reference value */
+	*ptr++ = isdn_q931_setup_cr(bc, bc->bc_cr);	/* call reference value */
 	*ptr++ = STATUS;	/* message type = connect ack */
 
 	*ptr++ = IEI_CAUSE;		/* cause ie */
@@ -516,7 +484,7 @@ isdn_l3_tx_status(struct isdn_bc *bc, uint8_t q850cause)
 
 	*ptr++ = IEI_CALLSTATE;		/* call state ie */
 	*ptr++ = CALLSTATE_LEN;
-	*ptr++ = isdn_l2_status_tab[bc->bc_Q931state];
+	*ptr++ = isdn_l2_status_tab[bc->bc_Q931_state];
 
 	isdn_l2_data_req(bc->bc_sc, m);
 }
@@ -537,14 +505,14 @@ isdn_l3_tx_release(struct isdn_bc *bc, int send_cause_flag)
 	if (send_cause_flag == 0)
 		len -= 4;
 
-	if ((m = isdn_getmbuf(len, M_DONTWAIT, MT_I4B_D)) == NULL)
+	if ((m = isdn_getmbuf(len, M_NOWAIT, MT_I4B_D)) == NULL)
 		panic("%s: can't allocate mbuf", __func__);
 
 	ptr = mtod(m, uint8_t *) + I_FRAME_HDRLEN;
 
 	*ptr++ = PD_Q931;		/* protocol discriminator */
 	*ptr++ = 0x01;			/* call reference length */
-	*ptr++ = setup_cr(bc, bc->bc_cr);	/* call reference value */
+	*ptr++ = isdn_q931_setup_cr(bc, bc->bc_cr);	/* call reference value */
 	*ptr++ = RELEASE;		/* message type = release complete */
 
 	if (send_cause_flag) {
@@ -567,7 +535,7 @@ isdn_l3_tx_alert(struct isdn_bc *bc)
 	uint8_t *ptr;
 	int len = I_FRAME_HDRLEN + MSG_ALERT_LEN;
 
-	if ((m = isdn_getmbuf(len, M_DONTWAIT, MT_I4B_D)) == NULL) {
+	if ((m = isdn_getmbuf(len, M_NOWAIT, MT_I4B_D)) == NULL) {
 		panic("%s: can't allocate mbuf", __func__);
 	}
 	NDBGL3(L3_PRIM, "isdnif %d, cr = 0x%02x", 
@@ -577,7 +545,7 @@ isdn_l3_tx_alert(struct isdn_bc *bc)
 
 	*ptr++ = PD_Q931;		/* protocol discriminator */
 	*ptr++ = 0x01;			/* call reference length */
-	*ptr++ = setup_cr(cd, bc->bc_cr);	/* call reference value */
+	*ptr++ = isdn_q931_setup_cr(bc, bc->bc_cr);	/* call reference value */
 	*ptr++ = ALERT;			/* message type = alert */
 
 	isdn_l2_data_req(bc->bc_sc, m);

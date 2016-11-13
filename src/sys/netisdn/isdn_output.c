@@ -43,17 +43,26 @@
 #include <netisdn/i4b_var.h>
 
 /*
- * XXX fn signature is wrong ... well ... this is a sketch
+ * XXX ...
  */
 
 int
-isdn_output(struct ifnet *ifp, struct mbuf *m, struct sockaddr_isdn *sisdn)
+isdn_output(struct isdn_softc *sc, struct mbuf *m, uint8_t chan, 
+	uint8_t proto, uint8_t sapi, uint8_t tei)
 {	
+	struct sockaddr_isdn sisdn;
 	struct isdn_rd *rd;
 	int error;
-/*
- * XXX ...
- */	
+
+	bzero(&sisdn, sizeof(sisdn));
+	
+	sisdn.sisdn_type = AF_ISDN;
+	sisdn.sisdn_len = sizeof(sisdn);
+	sisdn.sisdn_rd.rd_chan = chan;
+	sisdn.sisdn_rd.rd_proto = proto;
+	sisdn.sisdn_rd.rd_sapi = sapi;
+	sisdn.sisdn_rd.rd_tei = tei;
+
 	M_PREPEND(m, sizeof(*rd), (M_ZERO|M_NOWAIT));
 	if (m == NULL) {
 		error = ENOBUFS;

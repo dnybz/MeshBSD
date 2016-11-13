@@ -62,8 +62,11 @@
 #include <netisdn/isdn.h>
 #include <netisdn/isdn_var.h>
 
+static int 	isdn_q931_decode_cs0_ie(struct isdn_bc *, int, uint8_t *);
+static void 	isdn_q931_decode_msg(struct isdn_bc *, uint8_t);
+
 /*
- * XXX: well, I'll transform it into an OID.
+ * XXX: well, I'll transform it into an MIB item.
  *
 int isdn_l3_debug = L3_DEBUG_DEFAULT;
  *
@@ -130,7 +133,7 @@ isdn_q931_setup_cr(struct isdn_bc *bc, uint8_t cr)
  *	decode and process a Q.931 message
  *---------------------------------------------------------------------------*/
 void
-isdn_q931_decode(struct isdn_softc *sc, int msg_len, uint8_t *msg_ptr)
+isdn_q931_decode(struct isdn_softc *sc, struct mbuf *m)
 {
 	struct isdn_bc *bc = NULL;
 	int codeset = CODESET_0;
@@ -141,6 +144,11 @@ isdn_q931_decode(struct isdn_softc *sc, int msg_len, uint8_t *msg_ptr)
 	int cr_flag = 0;
 	int i;
 	int offset;
+	int msg_len;  
+	uint8_t *msg_ptr;  
+	
+	msg_len = m->m_len;  
+	msg_ptr = mtod(m, uint8_t *);  
 /* 
  * check protocol discriminator 
  */
@@ -154,7 +162,7 @@ isdn_q931_decode(struct isdn_softc *sc, int msg_len, uint8_t *msg_ptr)
 			NDBGL3(L3_P_MSG, "unknown protocol discriminator 0x%x!", *msg_ptr);
 			proto_flag = *msg_ptr;
 		}
-		return;
+		goto out;
 	}
 	
 	msg_ptr++;
@@ -193,7 +201,15 @@ isdn_q931_decode(struct isdn_softc *sc, int msg_len, uint8_t *msg_ptr)
 /*
  * get and init new calldescriptor 
  */
-			bc = isdn_bc_alloc(sc);
+			if ((bc = isdn_bc_alloc(sc)) == NULL) {
+				NDBGL3(L3_P_ERR, "cannot allocate calldescriptor "
+					"for cr = 0x%x, cr_flag = 0x%x, "
+					"msg = 0x%x, frame = ", 
+					cr, cr_flag, *msg_ptr);
+				
+				isdn_l2_print_frame(msg_len, msg_ptr);
+				goto out;
+			}
 			bc->bc_cr = cr;
 			bc->bc_cr_flag = CRF_DEST;	/* we are the dest side */
 		} else {
@@ -211,7 +227,7 @@ isdn_q931_decode(struct isdn_softc *sc, int msg_len, uint8_t *msg_ptr)
 				
 				isdn_l2_print_frame(msg_len, msg_ptr);
 			}
-			return;
+			goto out;
 		}
 	}
 /* 
@@ -270,12 +286,14 @@ isdn_q931_decode(struct isdn_softc *sc, int msg_len, uint8_t *msg_ptr)
 		}
 	}
 	isdn_l3_next_state(bc, bc->bc_event);
+out:
+	m_freem(m);	
 }
 
 /*---------------------------------------------------------------------------*
  *	decode and process one Q.931 codeset 0 information element
  *---------------------------------------------------------------------------*/
-int
+static int
 isdn_q931_decode_cs0_ie(struct isdn_bc *bc, int msg_len, uint8_t *msg_ptr)
 {
 	int i, j;
@@ -314,7 +332,7 @@ isdn_q931_decode_cs0_ie(struct isdn_bc *bc, int msg_len, uint8_t *msg_ptr)
 /* 
  * XXX 
  */	
-			bc->bc_bproto = BPROT_NONE;
+			bc->bc_proto = BPROT_NONE;
 			NDBGL3(L3_P_MSG, "IEI_BEARERCAP - Telephony");
 			break;
 		case 0x88:	
@@ -323,14 +341,14 @@ isdn_q931_decode_cs0_ie(struct isdn_bc *bc, int msg_len, uint8_t *msg_ptr)
  *
  * XXX 
  */	
- 			bc->bc_bproto = BPROT_RHDLC;
+ 			bc->bc_proto = BPROT_RHDLC;
 			NDBGL3(L3_P_MSG, "IEI_BEARERCAP - Raw HDLC");
 			break;
 		default:
 /* 
  * XXX 
  */		
- 			bc->bc_bproto = BPROT_NONE;
+ 			bc->bc_proto = BPROT_NONE;
 			NDBGL3(L3_P_ERR, "IEI_BEARERCAP - Unsupported "
 				"B-Protocol 0x%x", msg_ptr[2]);
 			break;
@@ -401,19 +419,14 @@ isdn_q931_decode_cs0_ie(struct isdn_bc *bc, int msg_len, uint8_t *msg_ptr)
 				
 				if ((bc->bc_id == CHAN_B1) || 
 					(bc->bc_id == CHAN_B2)) {
-					struct isdn_l3 *d = bc->bc_l3drv;
-
-					if (i4b_l2_channel_get_state(d, 
-						bc->bc_id) == BCH_ST_FREE) {
-						
-						if (d != NULL) {
-							d->bch_state[bc->bc_id] = BCH_ST_RSVD;
-							update_controller_leds(d);
-						}
-						i4b_l2_channel_set_state(d, bc->bc_id, BCH_ST_RSVD);
-					} else
-						NDBGL3(L3_P_ERR, "IE ChannelID, Channel NOT free!!");
+					
+					if (bc->bc_state == BCH_ST_FREE) 
+						bc->bc_state = BCH_ST_RSVD;
+					else {
+						NDBGL3(L3_P_ERR, 
+							"IE ChannelID, Channel NOT free!!");
 				
+					}
 				} else if (bc->bc_id == CHAN_NO) {
 					NDBGL3(L3_P_MSG, "IE ChannelID, SETUP "
 						"with channel = No channel (CW)");
@@ -637,7 +650,7 @@ isdn_q931_decode_cs0_ie(struct isdn_bc *bc, int msg_len, uint8_t *msg_ptr)
 /*---------------------------------------------------------------------------*
  *	decode and process one Q.931 codeset 0 information element
  *---------------------------------------------------------------------------*/
-void
+static void 	
 isdn_q931_decode_msg(struct isdn_bc *bc, uint8_t msg_type)
 {
 	const char *m = NULL;
@@ -666,7 +679,7 @@ isdn_q931_decode_msg(struct isdn_bc *bc, uint8_t msg_type)
 	case SETUP:
 		m = "SETUP";
 
-		bc->bc_bproto = BPROT_NONE;
+		bc->bc_proto = BPROT_NONE;
 		bc->bc_cause_in = 0;
 		bc->bc_cause_out = 0;
 		bc->bc_dst.se167_telno[0] = '\0';
