@@ -462,7 +462,7 @@ isdn_u_frame_input(struct isdn_softc *sc, struct mbuf *m)
  * layer 2 management (SAPI = 63) 
  */
 			sc->sc_l2.l2_stat.rx_tei++;
-			isdn_l2_rxd_tei(sc, m);
+			isdn_tei_rxd(sc, m);
 		} else if ((sapi == SAPI_CCP) && (tei == GROUP_TEI)) {
 /* 
  * call control (SAPI = 0) 
@@ -475,7 +475,7 @@ isdn_u_frame_input(struct isdn_softc *sc, struct mbuf *m)
 /* 
  * to upper layer 
  */	
-			isdn_q931_decode(sc, m);	
+			isdn_q931_decode(sc, m);
 		} else {
 			sc->sc_l2.l2_stat.err_rx_badui++;
 			NDBGL2(L2_U_ERR, "unknown UI frame!");

@@ -75,12 +75,11 @@ isdn_ack_pending(struct isdn_softc *sc)
 	}
 }
 
-
 /*---------------------------------------------------------------------------*
  *	internal I FRAME QUEUED UP routine (Q.921 03/93 p 61)
  *---------------------------------------------------------------------------*/
 void
-isdn_l2_queue_i_frame(struct isdn_softc *sc)
+isdn_queue_i_frame(struct isdn_softc *sc)
 {
 	if ((sc->sc_l2.l2_peer_busy) || 
 		(sc->sc_l2.l2_vs == ((sc->sc_l2.l2_va + MAX_K_VALUE) & 127))) {
@@ -341,10 +340,10 @@ isdn_output(struct ifnet *ifp, struct mbuf *m, uint8_t chan,
 		goto out;
 	}		
 	rd = mtod(m, struct isdn_rd *);
-	rd->rd_chan = sisdn.sisdn_rd.rd_chan;
-	rd->rd_proto = sisdn.sisdn_rd.rd_proto;
-	rd->rd_sapi = sisdn.sisdn_rd.rd_sapi; 	
-	rd->rd_tei = sisdn.sisdn_rd.rd_tei;	 
+	rd->rd_chan = chan;
+	rd->rd_proto = proto;
+	rd->rd_sapi = sapi; 	
+	rd->rd_tei = tei;	 
 /*
  * XXX ...
  */

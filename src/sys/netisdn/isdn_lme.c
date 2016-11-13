@@ -101,13 +101,13 @@ isdn_lme_assign_ind(struct isdn_softc *sc)
 	NDBGL2(L2_PRIM, "isdnif %d", sc->sc_ifp->if_index);
 
 	if (sc->sc_l2.l2_tei_valid == TEI_VALID) {
-		sc->sc_l2.l2_T202_fn = (void(*)(void *))isdn_l2_verify_tei;
+		sc->sc_l2.l2_T202_fn = (void(*)(void *))isdn_tei_verify;
 		sc->sc_l2.l2_N202 = N202DEF;
-		isdn_l2_verify_tei((sc);
+		isdn_tei_verify((sc);
 	} else {
-		sc->sc_l2.l2_T202_fn = (void(*)(void *))isdn_l2_assign_tei;
+		sc->sc_l2.l2_T202_fn = (void(*)(void *))isdn_tei_assign;
 		sc->sc_l2.l2_N202 = N202DEF;
-		isdn_l2_assign_tei((sc);
+		isdn_tei_assign((sc);
 	}
 }
 
@@ -131,14 +131,14 @@ isdn_lme_error_ind(struct isdn_softc *sc, const char *where, int error)
 		break;
 	case MDL_ERR_C:
 	case MDL_ERR_D:
-		isdn_l2_verify_tei(sc);
+		isdn_tei_verify(sc);
 		break;
 	case MDL_ERR_E:
 	case MDL_ERR_F:
 		break;
 	case MDL_ERR_G:
 	case MDL_ERR_H:
-		isdn_l2_verify_tei(sc);
+		isdn_tei_verify(sc);
 		break;
 	case MDL_ERR_I:
 	case MDL_ERR_J:
