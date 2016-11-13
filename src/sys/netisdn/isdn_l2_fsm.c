@@ -754,7 +754,7 @@ F_T07(struct isdn_softc *sc)
 /* XXX */
 #ifdef NOTDEF
 	if (NOT able to establish) {
-		(void)isdn_l2_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, DM);
+		(void)isdn_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, DM);
 		sc->sc_l2.l2_Q921_state = ST_TEI_ASGD;
 		return;
 	}
@@ -764,7 +764,7 @@ F_T07(struct isdn_softc *sc)
 
 	i4b_mdl_status_ind(sc->sc_l2.l2_l3, STI_L2STAT, LAYER_ACTIVE);
 
-	(void)isdn_l2_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
+	(void)isdn_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
 
 	sc->sc_l2.l2_vs = 0;
 	sc->sc_l2.l2_va = 0;
@@ -785,7 +785,7 @@ F_T08(struct isdn_softc *sc)
 {
 	NDBGL2(L2_F_MSG, "%s executing", __func__);
 	i4b_mdl_status_ind(sc->sc_l2.l2_l3, STI_L2STAT, LAYER_IDLE);
-	(void)isdn_l2_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
+	(void)isdn_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
 }
 
 /*---------------------------------------------------------------------------*
@@ -889,7 +889,7 @@ F_AE07(struct isdn_softc *sc)
 {
 	NDBGL2(L2_F_MSG, "%s executing", __func__);
 	i4b_mdl_status_ind(sc->sc_l2.l2_l3, STI_L2STAT, LAYER_ACTIVE);
-	(void)isdn_l2_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
+	(void)isdn_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
 }
 
 /*---------------------------------------------------------------------------*
@@ -899,7 +899,7 @@ static void
 F_AE08(struct isdn_softc *sc)
 {
 	NDBGL2(L2_F_MSG, "%s executing", __func__);
-	(void)isdn_l2_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, DM);
+	(void)isdn_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, DM);
 }
 
 /*---------------------------------------------------------------------------*
@@ -976,7 +976,7 @@ F_AE11(struct isdn_softc *sc)
 	} else {
 		sc->sc_l2.l2_RC++;
 
-		(void)isdn_l2_tx_u_frame(sc, CR_CMD_TO_NT, P1, SABME);
+		(void)isdn_tx_u_frame(sc, CR_CMD_TO_NT, P1, SABME);
 
 		isdn_T200_start(sc);
 
@@ -1034,7 +1034,7 @@ F_AR07(struct isdn_softc *sc)
 {
 	NDBGL2(L2_F_MSG, "%s executing", __func__);
 	
-	(void)isdn_l2_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, DM);
+	(void)isdn_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, DM);
 }
 
 /*---------------------------------------------------------------------------*
@@ -1045,7 +1045,7 @@ F_AR08(struct isdn_softc *sc)
 {
 	NDBGL2(L2_F_MSG, "%s executing", __func__);
 	i4b_mdl_status_ind(sc->sc_l2.l2_l3, STI_L2STAT, LAYER_IDLE);
-	(void)isdn_l2_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
+	(void)isdn_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
 }
 
 /*---------------------------------------------------------------------------*
@@ -1104,7 +1104,7 @@ F_AR11(struct isdn_softc *sc)
 	} else {
 		sc->sc_l2.l2_RC++;
 
-		(void)isdn_l2_tx_u_frame(sc, CR_CMD_TO_NT, P1, DISC);
+		(void)isdn_tx_u_frame(sc, CR_CMD_TO_NT, P1, DISC);
 
 		isdn_T200_start(sc);
 
@@ -1177,7 +1177,7 @@ F_MF07(struct isdn_softc *sc)
  *
 	i4b_mdl_status_ind(sc->sc_l2.l2_l3, STI_L2STAT, LAYER_ACTIVE);
  */
-	(void)isdn_l2_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
+	(void)isdn_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
 
 	isdn_lme_error_ind(sc, "F_MF07", MDL_ERR_F);
 
@@ -1209,7 +1209,7 @@ F_MF08(struct isdn_softc *sc)
 	
 	i4b_mdl_status_ind(sc->sc_l2.l2_l3, STI_L2STAT, LAYER_IDLE);
 	
-	(void)isdn_l2_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
+	(void)isdn_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
 
 	sc->sc_l2.l2_post_fsm_fn = isdn_l2_release_ind;
 
@@ -1292,7 +1292,7 @@ F_MF13(struct isdn_softc *sc)
 
 	sc->sc_l2.l2_RC = 0;
 
-	(void)isdn_l2_tx_u_frame(sc, CR_CMD_TO_NT, P1, DISC);
+	(void)isdn_tx_u_frame(sc, CR_CMD_TO_NT, P1, DISC);
 
 	isdn_T203_stop(sc);
 	isdn_T200_restart(sc);
@@ -1324,7 +1324,7 @@ F_MF15(struct isdn_softc *sc)
 /* 
  * wrong in Q.921 03/93 p 64 
  */
-		(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, F0, RNR);	
+		(void)isdn_tx_s_frame(sc, CR_RSP_TO_NT, F0, RNR);	
 		
 		sc->sc_l2.l2_ack_pend = 0;
 	}
@@ -1343,7 +1343,7 @@ F_MF16(struct isdn_softc *sc)
 /* 
  * wrong in Q.921 03/93 p 64 
  */
-		(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, F0, RR);	
+		(void)isdn_tx_s_frame(sc, CR_RSP_TO_NT, F0, RR);	
 		
 		sc->sc_l2.l2_ack_pend = 0;
 	}
@@ -1519,7 +1519,7 @@ F_TR07(struct isdn_softc *sc)
 
 	i4b_mdl_status_ind(sc->sc_l2.l2_l3, STI_L2STAT, LAYER_ACTIVE);
 
-	(void)isdn_l2_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
+	(void)isdn_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
 
 	isdn_lme_error_ind(sc, "F_TR07", MDL_ERR_F);
 
@@ -1549,7 +1549,7 @@ F_TR08(struct isdn_softc *sc)
 	IF_DRAIN(&sc->sc_l2.l2_i_queue);
 	i4b_mdl_status_ind(l3, STI_L2STAT, LAYER_IDLE);
 	
-	(void)isdn_l2_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
+	(void)isdn_tx_u_frame(sc, CR_RSP_TO_NT, sc->sc_l2.l2_rxd_PF, UA);
 
 	sc->sc_l2.l2_post_fsm_fn = isdn_l2_release_ind;
 
@@ -1635,7 +1635,7 @@ F_TR13(struct isdn_softc *sc)
 
 	sc->sc_l2.l2_RC = 0;
 
-	(void)isdn_l2_tx_u_frame(sc, CR_CMD_TO_NT, P1, DISC);
+	(void)isdn_tx_u_frame(sc, CR_CMD_TO_NT, P1, DISC);
 
 	isdn_T200_restart(sc);
 }
@@ -1653,7 +1653,7 @@ F_TR15(struct isdn_softc *sc)
 /*
  * Tx RNR response.
  */				
-		(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, F0, RNR);		
+		(void)isdn_tx_s_frame(sc, CR_RSP_TO_NT, F0, RNR);		
 
 		sc->sc_l2.l2_ack_pend = 0;
 	}
@@ -1672,7 +1672,7 @@ F_TR16(struct isdn_softc *sc)
 /*
  * Tx RNR response, this is wrong in Q.921 03/93 p 74 !
  */				
-		(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, F0, RR);		
+		(void)isdn_tx_s_frame(sc, CR_RSP_TO_NT, F0, RR);		
 
 		sc->sc_l2.l2_ack_pend = 0;
 	}

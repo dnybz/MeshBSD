@@ -276,7 +276,7 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
 /*
  * Tx RNR response.
  */				
-			(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, p, RNR);		
+			(void)isdn_tx_s_frame(sc, CR_RSP_TO_NT, p, RNR);		
 
 			sc->sc_l2.l2_ack_pend = 0;	/* clear ACK pending */
 		}
@@ -301,7 +301,7 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
 /*
  * Tx RR response.
  */				
-				(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, p, RR);
+				(void)isdn_tx_s_frame(sc, CR_RSP_TO_NT, p, RR);
 				
 				sc->sc_l2.l2_ack_pend = 0;	/* clr ACK pending */
 			}	
@@ -321,7 +321,7 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
 /*
  * Tx RR response.
  */				
-					(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, p, RR);
+					(void)isdn_tx_s_frame(sc, CR_RSP_TO_NT, p, RR);
 					
 					sc->sc_l2.l2_ack_pend = 0; /* clr ack pend */
 				}
@@ -334,7 +334,7 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
 /*
  * Tx REJ response.
  */				
-				(void)isdn_l2_tx_s_frame(sc, CR_RSP_TO_NT, p, REJ);			
+				(void)isdn_tx_s_frame(sc, CR_RSP_TO_NT, p, REJ);			
 				
 				sc->sc_l2.l2_ack_pend = 0;	/* clr ack pending */
 			}

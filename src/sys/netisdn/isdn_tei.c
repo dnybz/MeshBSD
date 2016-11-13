@@ -274,7 +274,7 @@ isdn_l2_tx_tei_frame(struct isdn_softc *sc, uint8_t type)
 	struct mbuf *m;
 	int error;
 
-	if ((m = isdn_getmbuf(TEI_MGMT_FRM_LEN, M_DONTWAIT, MT_I4B_D)) == NULL) {
+	if ((m = isdn_getmbuf(TEI_MGMT_FRM_LEN, M_NOWAIT, MT_I4B_D)) == NULL) {
 		error = ENOBUFS;
 		goto out;
 	}
@@ -334,7 +334,9 @@ isdn_l2_mk_rand_ri(struct isdn_softc *sc)
 {
 	uint16_t val;
 
-	(void)read_random((char *)&val, sizeof(val));
+	val = 0;
+
+	arc4rand(&val, sizeof(val), 0);
 
 	sc->sc_l2.l2_last_rih = (val >> 8) & 0x00ff;
 	sc->sc_l2.l2_last_ril = val & 0x00ff;

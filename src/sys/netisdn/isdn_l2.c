@@ -80,6 +80,65 @@ static void 	isdn_bc_stop_callout(struct isdn_bc *);
 
 static struct isdn_bcq 	isdn_l2_bcq;
 
+/*
+ * XXX: I'll transform this in to MIB.
+ *
+int isdn_l2_debug = L2_DEBUG_DEFAULT;
+ */
+
+/*---------------------------------------------------------------------------*
+ *	isdn_print_frame - just print the hex contents of a frame
+ *---------------------------------------------------------------------------*/
+
+void
+isdn_l2_print_frame(int len, uint8_t *buf)
+{
+#ifdef ISDN_DEBUG
+	int i;
+/* 
+ * XXX: ...
+ */
+	if (isdn_l2_debug & L2_ERROR) {
+		for (i = 0; i < len; i++)
+			(void)printf(" 0x%x", buf[i]);
+	
+		(void)printf("\n");
+	}
+#endif
+}
+
+/*---------------------------------------------------------------------------*
+ *	check for v(a) <= n(r) <= v(s)
+ *	nr = receive sequence frame counter, va = acknowledge sequence frame
+ *	counter and vs = transmit sequence frame counter
+ *---------------------------------------------------------------------------*/
+int
+isdn_l2_nr_ok(int nr, int va, int vs)
+{
+	int error = 1;
+	
+	if ((va > nr) && ((nr != 0) || (va != 127))) {
+		NDBGL2(L2_ERROR, 
+			"ERROR, va = %d, nr = %d, vs = %d [1]", va, nr, vs);
+/* 
+ * fail 
+ */	
+		error = 0;	
+		goto out;
+	}
+
+	if ((nr > vs) && ((vs != 0) || (nr != 127))) {
+		NDBGL2(L2_ERROR, 
+			"ERROR, va = %d, nr = %d, vs = %d [2]", va, nr, vs);
+/* 
+ * fail 
+ */		
+		error = 0;
+	}
+out:	
+	return (error);		/* good */
+}
+
 
 /*---------------------------------------------------------------------------*
  *	routine ESTABLISH DATA LINK (Q.921 03/93 page 83)
