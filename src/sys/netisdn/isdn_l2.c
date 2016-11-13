@@ -71,8 +71,8 @@
 
 static void 	isdn_l2_init(struct isdn_softc *);
 
-static void 	isdn_bc_init_callout(struct isdn_bc *);
-static void 	isdn_bc_stop_callout(struct isdn_bc *);
+static void 	isdn_bc_callout_init(struct isdn_bc *);
+static void 	isdn_bc_callout_stop(struct isdn_bc *);
 
 /*
  * XXX: ... 
@@ -512,7 +512,7 @@ isdn_bc_alloc(struct isdn_softc *sc)
 	if ((bc = malloc(sizeof(*bc), M_IFADDR, M_NOWAIT|M_ZERO)) != NULL) { 
 		TAILQ_INSERT_HEAD(&sc->sc_bcq, bc, bc_link);
 		TAILQ_INSERT_HEAD(&isdn_l2_bcq, bc, bc_chain);
-		isdn_bc_init_callout(bc);
+		isdn_bc_callout_init(bc);
 	}
 	return (bc);
 }
@@ -522,7 +522,7 @@ isdn_bc_free(struct isdn_bc *bc)
 {
 	struct isdn_softc *sc = bc->bc_sc;
 	
-	isdn_bc_stop_callout(bc);
+	isdn_bc_callout_stop(bc);
 	TAILQ_REMOVE(&sc->sc_bcq, bc, bc_link);
 	TAILQ_REMOVE(&isdn_l2_bcq, bc, bc_chain);
 	free(bc, M_IFADDR);
@@ -552,7 +552,7 @@ isdn_bc_by_cr(struct isdn_softc *sc, int cr, int crf)
 	if (bc != NULL) {
 		NDBGL4(L4_MSG, "found b-cahnnel @ isdnif=%d id=%u cr=%d",
 			sc->sc_ifp->if_index, bc->bc_id, bc->bc_cr);
-		isdn_bc_init_callout(bc);
+		isdn_bc_callout_init(bc);
 	}
 	return (bc);
 }
@@ -566,9 +566,9 @@ isdn_bc_get_cr(void)
 	register int i;
 	uint8_t val, cr;
 
-	val = 0;
+	val = 42;
 
-	for (i = 0; i < 50 ; i++, val++) {
+	for (i = 0; i < 50; i++) {
 	
 		arc4rand(&val, sizeof(val), 0);
 
@@ -596,9 +596,8 @@ isdn_bc_get_cr(void)
  * XXX: ... 
  */
 
-
 static void
-isdn_bc_stop_callout(struct isdn_bc *bc)
+isdn_bc_callout_stop(struct isdn_bc *bc)
 {
 	if (bc->bc_callouts_inited) {
 		callout_stop(&bc->bc_idle_timeout_handle);
@@ -614,7 +613,7 @@ isdn_bc_stop_callout(struct isdn_bc *bc)
 
 
 void
-isdn_bc_init_callout(struct isdn_bc *bc)
+isdn_bc_callout_init(struct isdn_bc *bc)
 {
 	if (bc->bc_callouts_inited == 0) {
 		callout_init(&bc->bc_idle_timeout_handle, 0);

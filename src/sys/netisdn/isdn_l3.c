@@ -274,7 +274,7 @@ isdn_l3_tx_release_complete(struct isdn_bc *bc, int send_cause_flag)
 
 	*ptr++ = PD_Q931;		/* protocol discriminator */
 	*ptr++ = 0x01;			/* call reference length */
-	*ptr++ = isdn_q931_setup_cr(cd, bc->bc_cr);	/* call reference value */
+	*ptr++ = isdn_q931_setup_cr(bc, bc->bc_cr);	/* call reference value */
 	*ptr++ = RELEASE_COMPLETE;	/* message type = release complete */
 
 	if (send_cause_flag) {
@@ -349,7 +349,7 @@ isdn_l3_tx_setup(struct isdn_bc *bc)
 
 	bc->bc_crflag = CRF_ORIG;		/* we are the originating side */
 
-	ptr = mtod(m, uint8_t) + I_FRAME_HDRLEN;
+	ptr = mtod(m, uint8_t *) + I_FRAME_HDRLEN;
 
 	*ptr++ = PD_Q931;		/* protocol discriminator */
 	*ptr++ = 0x01;			/* call ref length */

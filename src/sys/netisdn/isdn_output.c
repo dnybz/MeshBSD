@@ -101,7 +101,7 @@ isdn_queue_i_frame(struct isdn_softc *sc)
 			NDBGL2(L2_I_MSG, 
 				"%s: re-scheduling IFQU call!", __func__);
 			START_TIMER(sc->sc_l2.l2_IFQU_callout, 
-				isdn_l2_queue_i_frame, sc, IFQU_DLY);
+				isdn_queue_i_frame, sc, IFQU_DLY);
 		}	
 	} else {
 /* 

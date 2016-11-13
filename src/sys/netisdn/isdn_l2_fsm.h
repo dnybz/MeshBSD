@@ -35,8 +35,8 @@
  *
  *---------------------------------------------------------------------------*/
 
-#ifndef _NETISDN_I4B_L2FSM_H_
-#define _NETISDN_I4B_L2FSM_H_
+#ifndef _NETISDN_ISDN_L2_FSM_H_
+#define _NETISDN_ISDN_L2_FSM_H_
 
 enum Q921_states {
 	ST_TEI_UNAS,	/* TEI unassigned */
@@ -80,4 +80,4 @@ enum Q921_events {
 	N_EVENTS
 };
 
-#endif /* !_NETISDN_I4B_L2FSM_H_ */
+#endif /* !_NETISDN_ISDN_L2_FSM_H_ */

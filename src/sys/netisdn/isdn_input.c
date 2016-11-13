@@ -73,9 +73,9 @@
  */
 static void 	isdn_rxd_ack(struct isdn_softc *, int);
 
-static void 	isdn_i_frame_input(struct isdn_softc *, struct mbuf *);
-static void 	isdn_s_frame_input(struct isdn_softc *, struct mbuf *);
-static void 	isdn_u_frame_input(struct isdn_softc *, struct mbuf *);
+static void 	isdn_rxd_i_frame(struct isdn_softc *, struct mbuf *);
+static void 	isdn_rxd_s_frame(struct isdn_softc *, struct mbuf *);
+static void 	isdn_rxd_u_frame(struct isdn_softc *, struct mbuf *);
 
 static void 	isdn_input(struct mbuf *);
 
@@ -129,13 +129,10 @@ isdn_input(struct mbuf *m)
 {	
 	struct ifnet *ifp;
 	struct isdn_sc *sc;
-	struct isdn_rd *rd;
-	
+	struct isdn_rd rd;
+
 	uint8_t *ptr;
 	
-	uint8_t chan;
-	uint8_t proto;
-
 	M_ASSERTPKTHDR(m);
 		
 	if (m->m_pkthdr.len < ISDN_HDRLEN) 
@@ -148,16 +145,13 @@ isdn_input(struct mbuf *m)
 	
 	if ((ifp = m->m_pkthdr.rcvif) == NULL)
 		goto bad;
-
+		
 	IF_AFDATA_RLOCK(ifp);
 	sc = ISDN_SOFTC(ifp);
 	IF_AFDATA_RUNLOCK(ifp);	
 
-	rd = mtod(m, struct isdn_rd *);	
-	
-	chan = rd->rd_chan;
-	proto = rd->rd_proto;
-	
+	rd = *mtod(m, struct isdn_rd *);	
+
 	m_adj(m, ISDN_HDRLEN);
 	
 	ptr = mtod(m, uint8_t *);
@@ -166,45 +160,23 @@ isdn_input(struct mbuf *m)
 	(void)printf("%s: on=%s \n", __func__, ifp->if_xname);
 #endif /* ISDN_DEBUG */
 
-	switch (chan) {
+	switch (rd.rd_chan) {
 	case ISDN_D_CHAN:
 /*
  * LAPD Frame received. 
  */	
 		if ((*(ptr + OFF_CNTL) & 0x01) == 0) {
-/* 
- * 6 oct - 2 chksum oct 
- */
-			if (m->m_len < 4) {
-				sc->sc_l2.l2_stat.err_rx_len++;
-				NDBGL2(L2_ERROR, "ERROR, I-frame < 6 octetts!");
-				goto bad;
-			}
-			isdn_i_frame_input(sc, m);
+			isdn_rxd_i_frame(sc, m);
 		} else if ((*(ptr + OFF_CNTL) & 0x03) == 0x01 ) {
-/* 
- * 6 oct - 2 chksum oct 
- */
-			if (m->m_len < 4) {
-				sc->sc_l2.l2_stat.err_rx_len++;
-				NDBGL2(L2_ERROR, "ERROR, S-frame < 6 octetts!");
-				goto bad;
-			}
-			isdn_s_frame_input(sc, m);
+			isdn_rxd_s_frame(sc, m);
 		} else if ((*(ptr + OFF_CNTL) & 0x03) == 0x03 ) {
-/* 
- * 5 oct - 2 chksum oct 
- */
-			if (m->m_len < 3) {
-				sc->sc_l2.l2_stat.err_rx_len++;
-				NDBGL2(L2_ERROR, "ERROR, U-frame < 5 octetts!");
-				goto bad;
-			}
-			isdn_u_frame_input(sc, m);
+			isdn_rxd_u_frame(sc, m);
 		} else {
 			sc->sc_l2.l2_stat.err_rx_badf++;
-			NDBGL2(L2_ERROR, "ERROR, bad frame rx'd - ");
-			isdn_l2_print_frame(m->m_len, m->m_data);
+			NDBGL2(L2_ERROR, 
+				"%s: bad frame rx'd - ", __func__);
+				
+			isdn_l2_print_frame(m->m_len, mtod(m, uint8_t *));
 			goto bad;
 		}
 		break;
@@ -217,8 +189,10 @@ isdn_input(struct mbuf *m)
  */	
 		break;
 	default:
-		NDBGL2(L2_ERROR, "ERROR, unknown frame rx'd - ");
-		isdn_l2_print_frame(m->m_len, m->m_data);
+		NDBGL2(L2_ERROR, 
+			"%s: unknown frame rx'd - ", __func__);
+			
+		isdn_l2_print_frame(m->m_len, mtod(m, uint8_t *));
 		goto bad;
 	}	
 out:	
@@ -231,13 +205,24 @@ bad:
  *	Process I frame, "I COMMAND" Q.921 03/93 pp 68 and pp 77
  */
 static void
-isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
+isdn_rxd_i_frame(struct isdn_softc *sc, struct mbuf *m)
 {
-	u_char ptr = mtod(m, uint8_t *);
+	uint8_t *ptr = mtod(m, uint8_t *);
 	
 	int nr;
 	int ns;
 	int p;
+
+
+	if (m->m_len < 4) {		
+/* 
+ * 6 oct - 2 chksum oct 
+ */		
+		sc->sc_l2.l2_stat.err_rx_len++;
+		NDBGL2(L2_ERROR, "%s: I-frame < 6 octetts!", __func__);
+		m_freem(m);
+		return;
+	}
 
 	if (!((sc->sc_l2.l2_tei_valid == TEI_VALID) &&
 	     (sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI))))) {
@@ -382,14 +367,24 @@ isdn_i_frame_input(struct isdn_softc *sc, struct mbuf *m)
 	SC_WUNLOCK(sc);
 }
 
+
 /*
  * Process S frame.
  */
 static void
-isdn_s_frame_input(struct isdn_softc *sc, struct mbuf *m)
+isdn_rxd_s_frame(struct isdn_softc *sc, struct mbuf *m)
 {
-	u_char *ptr = mtod(m, uint8_t *);
+	uint8_t *ptr = mtod(m, uint8_t *);
 
+	if (m->m_len < 4) {	
+/* 
+ * 6 oct - 2 chksum oct 
+ */	
+		sc->sc_l2.l2_stat.err_rx_len++;
+		NDBGL2(L2_ERROR, "%s: S-frame < 6 octetts!", __func__);
+		goto out;
+	}
+	
 	if (!((sc->sc_l2.l2_tei_valid == TEI_VALID) &&
 	     (sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI))))) {
 		goto out;
@@ -419,8 +414,8 @@ isdn_s_frame_input(struct isdn_softc *sc, struct mbuf *m)
 		break;
 	default:
 		sc->sc_l2.l2_stat.err_rx_bads++; /* update statistics */
-		NDBGL2(L2_S_ERR, "ERROR, unknown code, frame = ");
-		isdn_l2_print_frame(m->m_len, m->m_data);
+		NDBGL2(L2_S_ERR, "%s: unknown code, frame = ");
+		isdn_l2_print_frame(m->m_len, mtod(m, uint8_t *));
 		break;
 	}
 out:	
@@ -431,14 +426,24 @@ out:
  * Process a received U frame.
  */
 static void
-isdn_u_frame_input(struct isdn_softc *sc, struct mbuf *m)
+isdn_rxd_u_frame(struct isdn_softc *sc, struct mbuf *m)
 {
-	u_char *ptr = mtod(m, uint8_t *);
+	uint8_t *ptr = mtod(m, uint8_t *);
 
 	int sapi = GETSAPI(*(ptr + OFF_SAPI));
 	int tei = GETTEI(*(ptr + OFF_TEI));
 	int pfbit = GETUPF(*(ptr + OFF_CNTL));
 
+	if (m->m_len < 3) {
+/* 
+ * 5 oct - 2 chksum oct 
+ */
+		sc->sc_l2.l2_stat.err_rx_len++;
+		NDBGL2(L2_ERROR, "%s: U-frame < 5 octetts!", __func__);
+		m_freem(m);
+		return;
+	}
+	
 	switch (*(ptr + OFF_CNTL) & ~UPFBIT) {
 /* 
  * commands 
@@ -512,7 +517,7 @@ isdn_u_frame_input(struct isdn_softc *sc, struct mbuf *m)
 				sc->sc_l2.l2_stat.rx_dm++;
 			NDBGL2(L2_U_MSG, 
 				"DM, sapi = %d, tei = %d", sapi, tei);
-			isdn_l2_print_frame(m->m_len, m->m_data);
+			isdn_l2_print_frame(m->m_len, mtod(m, uint8_t *));
 			sc->sc_l2.l2_rxd_PF = pfbit;
 			isdn_l2_next_state(sc, EV_RXDM);
 		}
@@ -543,11 +548,11 @@ isdn_u_frame_input(struct isdn_softc *sc, struct mbuf *m)
 			(sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI)))) {
 			NDBGL2(L2_U_ERR, "UNKNOWN TYPE ERROR, sapi = %d, "
 				"tei = %d, frame = ", sapi, tei);
-			isdn_l2_print_frame(m->m_len, m->m_data);
+			isdn_l2_print_frame(m->m_len, mtod(m, uint8_t *));
 		} else {
 			NDBGL2(L2_U_ERR, "not mine -  UNKNOWN TYPE ERROR, "
 				"sapi = %d, tei = %d, frame = ", sapi, tei);
-			isdn_l2_print_frame(m->m_len, m->m_data);
+			isdn_l2_print_frame(m->m_len, mtod(m, uint8_t *));
 		}
 		sc->sc_l2.l2_stat.err_rx_badui++;
 		m_freem(m);
