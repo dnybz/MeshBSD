@@ -140,8 +140,8 @@ struct isdn_llentry {
 };
 
 #define	ISDN_LLTBL_DEFAULT_HSIZE	32
-#define	ISDN_LLTBL_HASH(chan, proto, sapi, tei, h) \
-	(((((((chan) ^ proto)) ^ sapi)) ^ tei) & ((h) - 1))
+#define	ISDN_LLTBL_HASH(chan, cr, sapi, tei, h) \
+	(((((((chan) ^ cr)) ^ sapi)) ^ tei) & ((h) - 1))
 
 /*
  * Called by LLE_FREE_LOCKED when number of references
@@ -336,7 +336,7 @@ static inline uint32_t
 isdn_lltable_hash_rd(const struct isdn_rd rd, uint32_t hsize)
 {
 
-	return (ISDN_LLTBL_HASH(rd.rd_chan, rd.rd_proto,
+	return (ISDN_LLTBL_HASH(rd.rd_chan, rd.rd_cr,
 		rd.rd_sapi, rd.rd_tei, hsize));
 }
 

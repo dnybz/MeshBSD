@@ -345,7 +345,7 @@ out:
 
 int
 isdn_output(struct ifnet *ifp, struct mbuf *m, uint8_t chan, 
-	uint8_t proto, uint8_t sapi, uint8_t tei)
+	uint8_t cr, uint8_t sapi, uint8_t tei)
 {	
 	struct sockaddr_isdn sisdn;
 	struct isdn_rd *rd;
@@ -356,7 +356,7 @@ isdn_output(struct ifnet *ifp, struct mbuf *m, uint8_t chan,
 	sisdn.sisdn_type = AF_ISDN;
 	sisdn.sisdn_len = sizeof(sisdn);
 	sisdn.sisdn_rd.rd_chan = chan;
-	sisdn.sisdn_rd.rd_proto = proto;
+	sisdn.sisdn_rd.rd_cr = cr;
 	sisdn.sisdn_rd.rd_sapi = sapi;
 	sisdn.sisdn_rd.rd_tei = tei;
 
@@ -367,7 +367,7 @@ isdn_output(struct ifnet *ifp, struct mbuf *m, uint8_t chan,
 	}		
 	rd = mtod(m, struct isdn_rd *);
 	rd->rd_chan = chan;
-	rd->rd_proto = proto;
+	rd->rd_cr = cr;
 	rd->rd_sapi = sapi; 	
 	rd->rd_tei = tei;	 
 /*

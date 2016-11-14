@@ -27,24 +27,23 @@
 #define _NETISDN_ISDN_H_
 
 /*
- * Routing distinguisher, < channel, proto ,sapi, tei > maps to < lla >
+ * Routing distinguisher, < channel, cr ,sapi, tei > maps to < lla >
  */
 struct isdn_rd {
 	uint8_t 	rd_chan;
-	uint8_t 	rd_proto;
+	uint8_t 	rd_cr;
 	uint8_t 	rd_sapi; 	
 	uint8_t 	rd_tei;	 
 } __packed;
 #define ISDN_HDRLEN			(sizeof(struct isdn_rd))
 
 /*
- * Denotes ISDN on datalink-layer.
+ * Denotes ISDN Channel.
  */
 struct sockaddr_isdn {
 	uint8_t 	sisdn_len; 	/* length */
 	sa_family_t 	sisdn_family; 	/* AF_ISDN */
-	uint16_t 	sisdn_ctlr; 	/* Index of < lla > */
-	struct isdn_rd 	sisdn_rd;	/* < channel, proto ,sapi, tei > */		
+	struct isdn_rd 	sisdn_rd;	/* < channel, cr ,sapi, tei > */		
 };
 #define SISDN_LEN 	(sizeof(struct sockaddr_isdn))
 

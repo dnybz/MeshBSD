@@ -299,9 +299,7 @@ struct isdn_bc {
 #define DIR_INCOMING	1
 
 	int	bc_timeout_active;		/* idle timeout() active flag	*/
-/*
- * XXX: I'll refactor it by rplacment of callout_handle(9).
- */
+
 	struct callout_handle	bc_idle_timeout_handle;
 	struct callout_handle	bc_T303_callout;
 	struct callout_handle	bc_T305_callout;
@@ -310,6 +308,7 @@ struct isdn_bc {
 	struct callout_handle	bc_T310_callout;
 	struct callout_handle	bc_T313_callout;
 	struct callout_handle	bc_T400_callout;
+	
 	int	bc_callouts_inited;		/* must init before use */
 
 	int	bc_idletime_state;		/* wait for idle_time begin	*/
@@ -474,7 +473,7 @@ struct isdn_ifinfo {
 	(((struct isdn_ifinfo *)(ifp)->if_afdata[AF_ISDN])->iii_sc)
 
 /*
- * Descripbes an ISDN TEI on IEEE802.{3,11} link-layer.
+ * ISDN Channel on TEI for call-routing @ NT.
  */
 struct isdn_ifaddr {
 	struct ifaddr 	ii_ifa;		/* protocol-independent info */
@@ -486,9 +485,9 @@ struct isdn_ifaddr {
 #define ii_metric 	ii_ifa.ifa_metric
 	TAILQ_ENTRY(isdn_ifaddr)	ii_link;
 /* 
- * < channel, proto ,sapi, tei >  
+ * < channel, cr , sapi, tei >  
  */	
-	struct sockaddr_isdn 	ii_seg;	
+	struct sockaddr_isdn 	ii_tei;	
 /* 
  * < telno, subaddr > 
  */

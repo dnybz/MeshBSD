@@ -252,7 +252,7 @@ isdn_rxd_i_frame(struct isdn_softc *sc, struct mbuf *m)
 /* 
  * own receiver busy ? 
  */
-	if (sc->sc_own_busy)	{
+	if (sc->sc_own_busy) {
 		m_freem(m);	/* yes, discard information */
 /* 
  * P bit == 1 ? 
@@ -577,11 +577,13 @@ isdn_rxd_ack(struct isdn_softc *sc, int nr)
 	if (sc->sc_ua_num != UA_EMPTY) {
 
 		M128DEC(nr);
-
+/* 
+ * Discard cached frame.
+ */
 		if (sc->sc_ua_num != nr) {
 			NDBGL2(L2_ERROR, 
-				"((N(R)-1)=%d) != (UA=%d) !!!", 
-				nr, sc->sc_ua_num);
+				"%s: ((N(R)-1)=%d) != (UA=%d) !!!", 
+				__func__, nr, sc->sc_ua_num);
 		}
 		m_freem(sc->sc_ua_frame);
 		sc->sc_ua_num = UA_EMPTY;

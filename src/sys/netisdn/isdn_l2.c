@@ -78,7 +78,7 @@ static void 	isdn_bc_callout_stop(struct isdn_bc *);
  * XXX: ... 
  */
 
-static struct isdn_bcq 	isdn_l2_bcq;
+struct isdn_bcq 	isdn_l2_bcq;
 
 /*
  * XXX: I'll transform this in to MIB.
@@ -384,12 +384,13 @@ isdn_l2_init(struct isdn_softc *sc)
 int
 isdn_l2_status_ind(struct isdn_softc *sc, int status, int parm)
 {
-	int sendup;
+	int send_up, init_l2;
 
 	NDBGL2(L2_PRIM, "isdnif %d, status=%d, parm=%d", 
 		sc->sc_ifp->if_index, status, parm);
 
-	sendup = 1;
+	send_up = 1;
+	init_l2 = 0;
 
 	switch (status) {
 	case STI_ATTACH:
@@ -415,7 +416,7 @@ isdn_l2_status_ind(struct isdn_softc *sc, int status, int parm)
 		callout_init(&sc->sc_T203_callout, 0);
 		callout_init(&sc->sc_IFQU_callout, 0);
 
-		isdn_l2_init(sc);
+		init_l2 = 1;
 		break;
 	case STI_L1STAT:	/* state of layer 1 */
 		break;
@@ -427,14 +428,14 @@ isdn_l2_status_ind(struct isdn_softc *sc, int status, int parm)
 			   (sc->sc_Q921_state <= ST_TIMREC)) {
 			NDBGL2(L2_ERROR, "isdnif %d, persistent deactivation!", 
 				sc->sc_ifp->if_index);
-			isdn_l2_init(sc);
+			init_l2 = 1;
 			parm = -1;	/* this is passed as the new
 						 * TEI to upper layers */
 		} else 
-			sendup = 0;
+			send_up = 0;
 		break;
 	case STI_NOL1ACC:
-		isdn_l2_init(sc);
+		init_l2 = 1;
 		NDBGL2(L2_ERROR, "isdnif %d, cannot access S0 bus!", 
 			sc->sc_ifp->if_index);
 		break;
@@ -444,7 +445,10 @@ isdn_l2_status_ind(struct isdn_softc *sc, int status, int parm)
 		break;
 	}
 
-	if (sendup)
+	if (init_l2) 
+		isdn_l2_init(sc);
+
+	if (send_up)
 		isdn_mdl_status_ind(sc, status, parm);  /* send up to layer 3 */
 
 	return (0);
@@ -520,6 +524,7 @@ isdn_bc_alloc(struct isdn_softc *sc)
 	struct isdn_bc *bc;
 
 	if ((bc = malloc(sizeof(*bc), M_IFADDR, M_NOWAIT|M_ZERO)) != NULL) { 
+		
 		TAILQ_INSERT_HEAD(&sc->sc_bcq, bc, bc_link);
 		TAILQ_INSERT_HEAD(&isdn_l2_bcq, bc, bc_chain);
 		isdn_bc_callout_init(bc);
