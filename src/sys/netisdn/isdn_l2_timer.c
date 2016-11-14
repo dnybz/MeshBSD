@@ -77,7 +77,7 @@ static void
 isdn_T200_timeout(struct isdn_softc *sc)
 {
 	NDBGL2(L2_T_ERR, "isdnif %d, RC = %d", 
-		sc->sc_ifp->if_index, sc->sc_l2.l2_RC);
+		sc->sc_ifp->if_index, sc->sc_RC);
 	
 	isdn_l2_next_state(sc, EV_T200EXP);
 }
@@ -89,10 +89,10 @@ static void
 isdn_T202_timeout(struct isdn_softc *sc)
 {
 	NDBGL2(L2_T_ERR, "isdnif %d, N202 = %d", 
-		sc->sc_ifp->if_index, sc->sc_l2.l2_N202);
+		sc->sc_ifp->if_index, sc->sc_N202);
 
-	if (--(sc->sc_l2.l2_N202))
-		(*sc->sc_l2.l2_T202_fn)(sc);
+	if (--(sc->sc_N202))
+		(*sc->sc_T202_fn)(sc);
 }
 
 /*---------------------------------------------------------------------------*
@@ -112,13 +112,13 @@ isdn_T203_timeout(struct isdn_softc *sc)
 void
 isdn_T200_start(struct isdn_softc *sc)
 {
-	if (sc->sc_l2.l2_T200 == TIMER_ACTIVE)
+	if (sc->sc_T200 == TIMER_ACTIVE)
 		return;
 
 	NDBGL2(L2_T_MSG, "isdnif %d", sc->sc_ifp->if_index);
-	sc->sc_l2.l2_T200 = TIMER_ACTIVE;
+	sc->sc_T200 = TIMER_ACTIVE;
 
-	START_TIMER(sc->sc_l2.l2_T200_callout, 
+	START_TIMER(sc->sc_T200_callout, 
 		isdn_T200_timeout, sc, T200DEF);
 }
 
@@ -130,10 +130,10 @@ isdn_T200_stop(struct isdn_softc *sc)
 {
 	SC_WLOCK(sc);
 	
-	if (sc->sc_l2.l2_T200 != TIMER_IDLE) {
-		STOP_TIMER(sc->sc_l2.l2_T200_callout, 
+	if (sc->sc_T200 != TIMER_IDLE) {
+		STOP_TIMER(sc->sc_T200_callout, 
 			isdn_T200_timeout, sc);
-		sc->sc_l2.l2_T200 = TIMER_IDLE;
+		sc->sc_T200 = TIMER_IDLE;
 	}
 	
 	SC_WUNLOCK(sc);
@@ -149,13 +149,13 @@ isdn_T200_restart(struct isdn_softc *sc)
 {
 	SC_WLOCK(sc);
 	
-	if (sc->sc_l2.l2_T200 != TIMER_IDLE) {
-		STOP_TIMER(sc->sc_l2.l2_T200_callout, 
+	if (sc->sc_T200 != TIMER_IDLE) {
+		STOP_TIMER(sc->sc_T200_callout, 
 			isdn_T200_timeout, sc);
 	} else 
-		sc->sc_l2.l2_T200 = TIMER_ACTIVE;
+		sc->sc_T200 = TIMER_ACTIVE;
 	
-	START_TIMER(sc->sc_l2.l2_T200_callout, 
+	START_TIMER(sc->sc_T200_callout, 
 		isdn_T200_timeout, sc, T200DEF);
 	
 	SC_WUNLOCK(sc);
@@ -170,15 +170,15 @@ isdn_T200_restart(struct isdn_softc *sc)
 void
 isdn_T202_start(struct isdn_softc *sc)
 {
-	if (sc->sc_l2.l2_N202 == TIMER_ACTIVE)
+	if (sc->sc_N202 == TIMER_ACTIVE)
 		return;
 
 	NDBGL2(L2_T_MSG, "isdnif %d", sc->sc_ifp->if_index);
 	
-	sc->sc_l2.l2_N202 = N202DEF;
-	sc->sc_l2.l2_T202 = TIMER_ACTIVE;
+	sc->sc_N202 = N202DEF;
+	sc->sc_T202 = TIMER_ACTIVE;
 
-	START_TIMER(sc->sc_l2.l2_T202_callout, 
+	START_TIMER(sc->sc_T202_callout, 
 		isdn_T202_timeout, sc, T202DEF);
 }
 
@@ -190,10 +190,10 @@ isdn_T202_stop(struct isdn_softc *sc)
 {
 	SC_WLOCK(sc);
 	
-	if (sc->sc_l2.l2_T202 != TIMER_IDLE) {
-		STOP_TIMER(sc->sc_l2.l2_T202_callout, 
+	if (sc->sc_T202 != TIMER_IDLE) {
+		STOP_TIMER(sc->sc_T202_callout, 
 			isdn_T202_timeout, sc);
-		sc->sc_l2.l2_T202 = TIMER_IDLE;
+		sc->sc_T202 = TIMER_IDLE;
 	}
 	SC_WUNLOCK(sc);
 	
@@ -206,13 +206,13 @@ isdn_T202_stop(struct isdn_softc *sc)
 void
 isdn_T203_start(struct isdn_softc *sc)
 {
-	if (sc->sc_l2.l2_T203 == TIMER_ACTIVE)
+	if (sc->sc_T203 == TIMER_ACTIVE)
 		return;
 
 	NDBGL2(L2_T_MSG, "isdnif %d", sc->sc_ifp->if_index);
-	sc->sc_l2.l2_T203 = TIMER_ACTIVE;
+	sc->sc_T203 = TIMER_ACTIVE;
 
-	START_TIMER(sc->sc_l2.l2_T203_callout, 
+	START_TIMER(sc->sc_T203_callout, 
 		isdn_T203_timeout, sc, T203DEF);
 }
 
@@ -224,10 +224,10 @@ isdn_T203_stop(struct isdn_softc *sc)
 {
 	SC_WLOCK(sc);
 	
-	if (sc->sc_l2.l2_T203 != TIMER_IDLE) {
-		STOP_TIMER(sc->sc_l2.l2_T203_callout, 
+	if (sc->sc_T203 != TIMER_IDLE) {
+		STOP_TIMER(sc->sc_T203_callout, 
 			isdn_T203_timeout, sc);
-		sc->sc_l2.l2_T203 = TIMER_IDLE;
+		sc->sc_T203 = TIMER_IDLE;
 	}
 	SC_WUNLOCK(sc);
 	
@@ -242,13 +242,13 @@ isdn_T203_restart(struct isdn_softc *sc)
 {
 	SC_WLOCK(sc);
 
-	if (sc->sc_l2.l2_T203 != TIMER_IDLE) {
-		STOP_TIMER(sc->sc_l2.l2_T203_callout, 
+	if (sc->sc_T203 != TIMER_IDLE) {
+		STOP_TIMER(sc->sc_T203_callout, 
 			isdn_T203_timerout, sc);
 	} else 
-		sc->sc_l2.l2_T203 = TIMER_ACTIVE;
+		sc->sc_T203 = TIMER_ACTIVE;
 
-	START_TIMER(sc->sc_l2.l2_T203_callout, 
+	START_TIMER(sc->sc_T203_callout, 
 		isdn_T203_timerout, sc, T203DEF);
 
 	SC_WUNLOCK(sc);

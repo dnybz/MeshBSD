@@ -172,7 +172,7 @@ isdn_input(struct mbuf *m)
 		} else if ((*(ptr + OFF_CNTL) & 0x03) == 0x03 ) {
 			isdn_rxd_u_frame(sc, m);
 		} else {
-			sc->sc_l2.l2_stat.err_rx_badf++;
+			sc->sc_stat.err_rx_badf++;
 			NDBGL2(L2_ERROR, 
 				"%s: bad frame rx'd - ", __func__);
 				
@@ -218,20 +218,20 @@ isdn_rxd_i_frame(struct isdn_softc *sc, struct mbuf *m)
 /* 
  * 6 oct - 2 chksum oct 
  */		
-		sc->sc_l2.l2_stat.err_rx_len++;
+		sc->sc_stat.err_rx_len++;
 		NDBGL2(L2_ERROR, "%s: I-frame < 6 octetts!", __func__);
 		m_freem(m);
 		return;
 	}
 
-	if (!((sc->sc_l2.l2_tei_valid == TEI_VALID) &&
-	     (sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI))))) {
+	if (!((sc->sc_tei_valid == TEI_VALID) &&
+	     (sc->sc_tei == GETTEI(*(ptr+OFF_TEI))))) {
 		m_freem(m);
 		return;
 	}
 
-	if ((sc->sc_l2.l2_Q921_state != ST_MULTIFR) && 
-		(sc->sc_l2.l2_Q921_state != ST_TIMREC)) {
+	if ((sc->sc_Q921_state != ST_MULTIFR) && 
+		(sc->sc_Q921_state != ST_TIMREC)) {
 		NDBGL2(L2_I_ERR, "%s: state != (MF || TR)!", __func__);
 		m_freem(m);
 		return;
@@ -240,7 +240,7 @@ isdn_rxd_i_frame(struct isdn_softc *sc, struct mbuf *m)
 /* 
  * update frame count 
  */
-	sc->sc_l2.l2_stat.rx_i++;
+	sc->sc_stat.rx_i++;
 	
 	nr = GETINR(*(ptr + OFF_INR));
 	ns = GETINS(*(ptr + OFF_INS));
@@ -252,7 +252,7 @@ isdn_rxd_i_frame(struct isdn_softc *sc, struct mbuf *m)
 /* 
  * own receiver busy ? 
  */
-	if (sc->sc_l2.l2_own_busy)	{
+	if (sc->sc_own_busy)	{
 		m_freem(m);	/* yes, discard information */
 /* 
  * P bit == 1 ? 
@@ -263,32 +263,32 @@ isdn_rxd_i_frame(struct isdn_softc *sc, struct mbuf *m)
  */				
 			(void)isdn_tx_s_frame(sc, CR_RSP_TO_NT, p, RNR);		
 
-			sc->sc_l2.l2_ack_pend = 0;	/* clear ACK pending */
+			sc->sc_ack_pend = 0;	/* clear ACK pending */
 		}
 	} else {
 /* 
  * own receiver ready, if expected sequence number ?  
  */	
-		if (ns == sc->sc_l2.l2_vr)	{
-			M128INC(sc->sc_l2.l2_vr);	/* yes, update */
+		if (ns == sc->sc_vr)	{
+			M128INC(sc->sc_vr);	/* yes, update */
 
-			sc->sc_l2.l2_rej_excpt = 0;	/* clr reject exception */
+			sc->sc_rej_excpt = 0;	/* clr reject exception */
 
 			m_adj(m, I_HDR_LEN);	/* strip i frame header */
 
-			sc->sc_l2.l2_iframe_sent = 0;	/* reset i ack'd already */
+			sc->sc_iframe_sent = 0;	/* reset i ack'd already */
 /* 
  * pass data up 
  */
 			isdn_q931_decode(sc, m);
 			
-			if (!sc->sc_l2.l2_iframe_sent) {
+			if (!sc->sc_iframe_sent) {
 /*
  * Tx RR response.
  */				
 				(void)isdn_tx_s_frame(sc, CR_RSP_TO_NT, p, RR);
 				
-				sc->sc_l2.l2_ack_pend = 0;	/* clr ACK pending */
+				sc->sc_ack_pend = 0;	/* clr ACK pending */
 			}	
 		} else {
 /* 
@@ -298,7 +298,7 @@ isdn_rxd_i_frame(struct isdn_softc *sc, struct mbuf *m)
 /* 
  * already exception ? 
  */
-			if (sc->sc_l2.l2_rej_excpt == 1) {
+			if (sc->sc_rej_excpt == 1) {
 /* 
  * immediate resp ? 
  */
@@ -308,49 +308,49 @@ isdn_rxd_i_frame(struct isdn_softc *sc, struct mbuf *m)
  */				
 					(void)isdn_tx_s_frame(sc, CR_RSP_TO_NT, p, RR);
 					
-					sc->sc_l2.l2_ack_pend = 0; /* clr ack pend */
+					sc->sc_ack_pend = 0; /* clr ack pend */
 				}
 			} else {
 /* 
  * not in exception cond 
  */			
-				sc->sc_l2.l2_rej_excpt = 1;	/* set exception */
+				sc->sc_rej_excpt = 1;	/* set exception */
 				
 /*
  * Tx REJ response.
  */				
 				(void)isdn_tx_s_frame(sc, CR_RSP_TO_NT, p, REJ);			
 				
-				sc->sc_l2.l2_ack_pend = 0;	/* clr ack pending */
+				sc->sc_ack_pend = 0;	/* clr ack pending */
 			}
 		}
 	}
 /* 
  * sequence number ranges as expected ? 
  */
-	if (isdn_l2_nr_ok(nr, sc->sc_l2.l2_va, sc->sc_l2.l2_vs)) {
-		if (sc->sc_l2.l2_Q921_state == ST_TIMREC) {
-			sc->sc_l2.l2_va = nr;
+	if (isdn_l2_nr_ok(nr, sc->sc_va, sc->sc_vs)) {
+		if (sc->sc_Q921_state == ST_TIMREC) {
+			sc->sc_va = nr;
 		} else {
 /* 
  * yes, other side busy ? 
  */
-			if (sc->sc_l2.l2_peer_busy) {
-				sc->sc_l2.l2_va = nr;	/* yes, update ack count */
+			if (sc->sc_peer_busy) {
+				sc->sc_va = nr;	/* yes, update ack count */
 			} else {
 /* 
  * other side ready 
  */		
-				if (nr == sc->sc_l2.l2_vs) {
+				if (nr == sc->sc_vs) {
 /* 
  * count expected ? 
  */								
-					sc->sc_l2.l2_va = nr;	/* update ack */
+					sc->sc_va = nr;	/* update ack */
 					isdn_T200_stop(sc);
 					isdn_T203_restart(sc);
 				} else {
-					if (nr != sc->sc_l2.l2_va) {
-						sc->sc_l2.l2_va = nr;
+					if (nr != sc->sc_va) {
+						sc->sc_va = nr;
 						isdn_T200_restart(sc);
 					}
 				}
@@ -362,7 +362,7 @@ isdn_rxd_i_frame(struct isdn_softc *sc, struct mbuf *m)
  */		
 		isdn_l2_nr_error_recovery(sc);	
 		
-		sc->sc_l2.l2_Q921_state = ST_AW_EST;
+		sc->sc_Q921_state = ST_AW_EST;
 	}
 	SC_WUNLOCK(sc);
 }
@@ -380,40 +380,40 @@ isdn_rxd_s_frame(struct isdn_softc *sc, struct mbuf *m)
 /* 
  * 6 oct - 2 chksum oct 
  */	
-		sc->sc_l2.l2_stat.err_rx_len++;
+		sc->sc_stat.err_rx_len++;
 		NDBGL2(L2_ERROR, "%s: S-frame < 6 octetts!", __func__);
 		goto out;
 	}
 	
-	if (!((sc->sc_l2.l2_tei_valid == TEI_VALID) &&
-	     (sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI))))) {
+	if (!((sc->sc_tei_valid == TEI_VALID) &&
+	     (sc->sc_tei == GETTEI(*(ptr+OFF_TEI))))) {
 		goto out;
 	}
 
-	sc->sc_l2.l2_rxd_CR = GETCR(*(ptr + OFF_SAPI));
-	sc->sc_l2.l2_rxd_PF = GETSPF(*(ptr + OFF_SNR));
-	sc->sc_l2.l2_rxd_NR = GETSNR(*(ptr + OFF_SNR));
+	sc->sc_rxd_CR = GETCR(*(ptr + OFF_SAPI));
+	sc->sc_rxd_PF = GETSPF(*(ptr + OFF_SNR));
+	sc->sc_rxd_NR = GETSNR(*(ptr + OFF_SNR));
 
-	isdn_rxd_ack(sc, sc->sc_l2.l2_rxd_NR);
+	isdn_rxd_ack(sc, sc->sc_rxd_NR);
 
 	switch(*(ptr + OFF_SRCR)) {
 	case RR:
-		sc->sc_l2.l2_stat.rx_rr++; /* update statistics */
-		NDBGL2(L2_S_MSG, "rx'd RR, N(R) = %d", sc->sc_l2.l2_rxd_NR);
+		sc->sc_stat.rx_rr++; /* update statistics */
+		NDBGL2(L2_S_MSG, "rx'd RR, N(R) = %d", sc->sc_rxd_NR);
 		isdn_l2_next_state(sc, EV_RXRR);
 		break;
 	case RNR:
-		sc->sc_l2.l2_stat.rx_rnr++; /* update statistics */
-		NDBGL2(L2_S_MSG, "rx'd RNR, N(R) = %d", sc->sc_l2.l2_rxd_NR);
+		sc->sc_stat.rx_rnr++; /* update statistics */
+		NDBGL2(L2_S_MSG, "rx'd RNR, N(R) = %d", sc->sc_rxd_NR);
 		isdn_l2_next_state(sc, EV_RXRNR);
 		break;
 	case REJ:
-		sc->sc_l2.l2_stat.rx_rej++; /* update statistics */
-		NDBGL2(L2_S_MSG, "rx'd REJ, N(R) = %d", sc->sc_l2.l2_rxd_NR);
+		sc->sc_stat.rx_rej++; /* update statistics */
+		NDBGL2(L2_S_MSG, "rx'd REJ, N(R) = %d", sc->sc_rxd_NR);
 		isdn_l2_next_state(sc, EV_RXREJ);
 		break;
 	default:
-		sc->sc_l2.l2_stat.err_rx_bads++; /* update statistics */
+		sc->sc_stat.err_rx_bads++; /* update statistics */
 		NDBGL2(L2_S_ERR, "%s: unknown code, frame = ");
 		isdn_l2_print_frame(m->m_len, mtod(m, uint8_t *));
 		break;
@@ -438,7 +438,7 @@ isdn_rxd_u_frame(struct isdn_softc *sc, struct mbuf *m)
 /* 
  * 5 oct - 2 chksum oct 
  */
-		sc->sc_l2.l2_stat.err_rx_len++;
+		sc->sc_stat.err_rx_len++;
 		NDBGL2(L2_ERROR, "%s: U-frame < 5 octetts!", __func__);
 		m_freem(m);
 		return;
@@ -449,12 +449,12 @@ isdn_rxd_u_frame(struct isdn_softc *sc, struct mbuf *m)
  * commands 
  */
 	case SABME:
-		if ((sc->sc_l2.l2_tei_valid == TEI_VALID) && 
-			(sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI)))) {
-			sc->sc_l2.l2_stat.rx_sabme++;
+		if ((sc->sc_tei_valid == TEI_VALID) && 
+			(sc->sc_tei == GETTEI(*(ptr+OFF_TEI)))) {
+			sc->sc_stat.rx_sabme++;
 			NDBGL2(L2_U_MSG, 
 				"SABME, sapi = %d, tei = %d", sapi, tei);
-			sc->sc_l2.l2_rxd_PF = pfbit;
+			sc->sc_rxd_PF = pfbit;
 			isdn_l2_next_state(sc, EV_RXSABME);
 		}
 		m_freem(m);
@@ -466,13 +466,13 @@ isdn_rxd_u_frame(struct isdn_softc *sc, struct mbuf *m)
 /* 
  * layer 2 management (SAPI = 63) 
  */
-			sc->sc_l2.l2_stat.rx_tei++;
+			sc->sc_stat.rx_tei++;
 			isdn_tei_rxd(sc, m);
 		} else if ((sapi == SAPI_CCP) && (tei == GROUP_TEI)) {
 /* 
  * call control (SAPI = 0) 
  */
-			sc->sc_l2.l2_stat.rx_ui++;
+			sc->sc_stat.rx_ui++;
 /* 
  * strip ui header 
  */
@@ -482,27 +482,27 @@ isdn_rxd_u_frame(struct isdn_softc *sc, struct mbuf *m)
  */	
 			isdn_q931_decode(sc, m);
 		} else {
-			sc->sc_l2.l2_stat.err_rx_badui++;
+			sc->sc_stat.err_rx_badui++;
 			NDBGL2(L2_U_ERR, "unknown UI frame!");
 			m_freem(m);
 		}
 		break;
 	case DISC:
-		if ((sc->sc_l2.l2_tei_valid == TEI_VALID) && 
-			(sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI)))) {
-			sc->sc_l2.l2_stat.rx_disc++;
+		if ((sc->sc_tei_valid == TEI_VALID) && 
+			(sc->sc_tei == GETTEI(*(ptr+OFF_TEI)))) {
+			sc->sc_stat.rx_disc++;
 			NDBGL2(L2_U_MSG, 
 				"DISC, sapi = %d, tei = %d", sapi, tei);
-			sc->sc_l2.l2_rxd_PF = pfbit;
+			sc->sc_rxd_PF = pfbit;
 			isdn_l2_next_state(sc, EV_RXDISC);
 		}
 		m_freem(m);
 		break;
 	case XID:
 		
-		if ((sc->sc_l2.l2_tei_valid == TEI_VALID) && 
-			(sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI)))) {
-			sc->sc_l2.l2_stat.rx_xid++;
+		if ((sc->sc_tei_valid == TEI_VALID) && 
+			(sc->sc_tei == GETTEI(*(ptr+OFF_TEI)))) {
+			sc->sc_stat.rx_xid++;
 			NDBGL2(L2_U_MSG, 
 				"XID, sapi = %d, tei = %d", sapi, tei);
 		}
@@ -512,40 +512,40 @@ isdn_rxd_u_frame(struct isdn_softc *sc, struct mbuf *m)
  * responses 
  */
 	case DM:
-		if ((sc->sc_l2.l2_tei_valid == TEI_VALID) && 
-			(sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI)))) {
-				sc->sc_l2.l2_stat.rx_dm++;
+		if ((sc->sc_tei_valid == TEI_VALID) && 
+			(sc->sc_tei == GETTEI(*(ptr+OFF_TEI)))) {
+				sc->sc_stat.rx_dm++;
 			NDBGL2(L2_U_MSG, 
 				"DM, sapi = %d, tei = %d", sapi, tei);
 			isdn_l2_print_frame(m->m_len, mtod(m, uint8_t *));
-			sc->sc_l2.l2_rxd_PF = pfbit;
+			sc->sc_rxd_PF = pfbit;
 			isdn_l2_next_state(sc, EV_RXDM);
 		}
 		m_freem(m);
 		break;
 	case UA:
-		if ((sc->sc_l2.l2_tei_valid == TEI_VALID) && 
-			(sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI)))) {
-			sc->sc_l2.l2_stat.rx_ua++;
+		if ((sc->sc_tei_valid == TEI_VALID) && 
+			(sc->sc_tei == GETTEI(*(ptr+OFF_TEI)))) {
+			sc->sc_stat.rx_ua++;
 			NDBGL2(L2_U_MSG, "UA, sapi = %d, tei = %d", sapi, tei);
-			sc->sc_l2.l2_rxd_PF = pfbit;
+			sc->sc_rxd_PF = pfbit;
 			isdn_l2_next_state(sc, EV_RXUA);
 		}
 		m_freem(m);
 		break;
 	case FRMR:
-		if ((sc->sc_l2.l2_tei_valid == TEI_VALID) && 
-			(sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI)))) {
-			sc->sc_l2.l2_stat.rx_frmr++;
+		if ((sc->sc_tei_valid == TEI_VALID) && 
+			(sc->sc_tei == GETTEI(*(ptr+OFF_TEI)))) {
+			sc->sc_stat.rx_frmr++;
 			NDBGL2(L2_U_MSG, "FRMR, sapi = %d, tei = %d", sapi, tei);
-			sc->sc_l2.l2_rxd_PF = pfbit;
+			sc->sc_rxd_PF = pfbit;
 			isdn_l2_next_state(sc, EV_RXFRMR);
 		}
 		m_freem(m);
 		break;
 	default:
-		if ((sc->sc_l2.l2_tei_valid == TEI_VALID) && 
-			(sc->sc_l2.l2_tei == GETTEI(*(ptr+OFF_TEI)))) {
+		if ((sc->sc_tei_valid == TEI_VALID) && 
+			(sc->sc_tei == GETTEI(*(ptr+OFF_TEI)))) {
 			NDBGL2(L2_U_ERR, "UNKNOWN TYPE ERROR, sapi = %d, "
 				"tei = %d, frame = ", sapi, tei);
 			isdn_l2_print_frame(m->m_len, mtod(m, uint8_t *));
@@ -554,7 +554,7 @@ isdn_rxd_u_frame(struct isdn_softc *sc, struct mbuf *m)
 				"sapi = %d, tei = %d, frame = ", sapi, tei);
 			isdn_l2_print_frame(m->m_len, mtod(m, uint8_t *));
 		}
-		sc->sc_l2.l2_stat.err_rx_badui++;
+		sc->sc_stat.err_rx_badui++;
 		m_freem(m);
 		break;
 	}
@@ -569,21 +569,21 @@ isdn_rxd_ack(struct isdn_softc *sc, int nr)
 
 	NDBGL2(L2_ERROR, "N(R)=%d, UA=%d, V(R)=%d, V(S)=%d, V(A)=%d",
 		nr,
-		sc->sc_l2.l2_ua_num,
-		sc->sc_l2.l2_vr,
-		sc->sc_l2.l2_vs,
-		sc->sc_l2.l2_va);
+		sc->sc_ua_num,
+		sc->sc_vr,
+		sc->sc_vs,
+		sc->sc_va);
 
-	if (sc->sc_l2.l2_ua_num != UA_EMPTY) {
+	if (sc->sc_ua_num != UA_EMPTY) {
 
 		M128DEC(nr);
 
-		if (sc->sc_l2.l2_ua_num != nr) {
+		if (sc->sc_ua_num != nr) {
 			NDBGL2(L2_ERROR, 
 				"((N(R)-1)=%d) != (UA=%d) !!!", 
-				nr, sc->sc_l2.l2_ua_num);
+				nr, sc->sc_ua_num);
 		}
-		m_freem(sc->sc_l2.l2_ua_frame);
-		sc->sc_l2.l2_ua_num = UA_EMPTY;
+		m_freem(sc->sc_ua_frame);
+		sc->sc_ua_num = UA_EMPTY;
 	}
 }

@@ -56,218 +56,6 @@
 
 struct isdn_softc;
 
-/*
- * Callout handling.
- */
-
-#define TIMEOUT_FUNC_T	timeout_t *
-#define SECOND		time_second
-#define MICROTIME(x)	getmicrotime(&(x))
-
-#define START_TIMER(XHANDLE, XF, XSC, XTIME) \
-	XHANDLE = timeout((TIMEOUT_FUNC_T)XF, (void *)XSC, XTIME)
-#define	STOP_TIMER(XHANDLE, XF, XSC)	\
-	untimeout((TIMEOUT_FUNC_T)XF, (void*)XSC, XHANDLE)
-
-#define TIMER_IDLE	1		/* a timer is running	*/
-#define TIMER_ACTIVE	2		/* a timer is idle	*/
-
-/*
- *	Call / connection on one B-channel and all its parameters.
- */
-struct isdn_bc {
-	struct isdn_softc 	*bc_sc;
-	
-	TAILQ_ENTRY(isdn_bc)	bc_link;
-	TAILQ_ENTRY(isdn_bc)	bc_chain;
-	
-	int	bc_cr;			/* call reference value		*/
-
-	int	bc_cr_flag;			/* call reference flag		*/
-#define CRF_ORIG	0		/* originating side		*/
-#define CRF_DEST	1		/* destinating side		*/
-
-	int	bc_id;		/* channel id value		*/
-	int	bc_excl;		/* channel exclusive		*/
-
-	int	bc_proto;			/* B channel protocol BPROT_XXX */
-
-	int bc_state;
-#define BCH_ST_FREE	0		/* free to be used, idle */
-#define BCH_ST_RSVD	1		/* reserved, may become free or used */
-#define BCH_ST_USED	2 		/* self explanatory */
-
-	cause_t	bc_cause_in;		/* cause value from NT	*/
-	cause_t	bc_cause_out;		/* cause value to NT	*/
-
-	int	bc_call_state;		/* from incoming SETUP	*/
-
-	struct sockaddr_e167 	bc_dst; 	
-	struct sockaddr_e167 	bc_src;
-	
-	int	bc_scr_ind;		/* screening ind for incoming call */
-	int	bc_prs_ind;		/* presentation ind for incoming call */
-	int	bc_type_plan;		/* type and plan for incoming number */
-
-	int	bc_Q931state;		/* Q.931 state for call	*/
-	int	bc_event;			/* event to be processed */
-
-	int	bc_resp;		/* setup response type	*/
-
-	int	bc_T303;			/* SETUP sent response timeout	*/
-	int	bc_T303_first_to;		/* first timeout flag		*/
-
-	int	bc_T305;			/* DISC without PROG IND	*/
-
-	int	bc_T308;			/* RELEASE sent response timeout*/
-	int	bc_T308_first_to;		/* first timeout flag		*/
-
-	int	bc_T309;			/* data link disconnect timeout	*/
-
-	int	bc_T310;			/* CALL PROC received		*/
-
-	int	bc_T313;			/* CONNECT sent timeout		*/
-
-	int	bc_T400;			/* L4 timeout */
-
-	int	bc_dir;			/* outgoing or incoming call	*/
-#define DIR_OUTGOING	0
-#define DIR_INCOMING	1
-
-	int	bc_timeout_active;		/* idle timeout() active flag	*/
-/*
- * XXX: I'll refactor it by rplacment of callout_handle(9).
- */
-	struct callout_handle	bc_idle_timeout_handle;
-	struct callout_handle	bc_T303_callout;
-	struct callout_handle	bc_T305_callout;
-	struct callout_handle	bc_T308_callout;
-	struct callout_handle	bc_T309_callout;
-	struct callout_handle	bc_T310_callout;
-	struct callout_handle	bc_T313_callout;
-	struct callout_handle	bc_T400_callout;
-	int	bc_callouts_inited;		/* must init before use */
-
-	int	bc_idletime_state;		/* wait for idle_time begin	*/
-#define IST_IDLE	0	/* shorthold mode disabled 	*/
-#define IST_NONCHK	1	/* in non-checked window	*/
-#define IST_CHECK	2	/* in idle check window		*/
-#define IST_SAFE	3	/* in safety zone		*/
-
-	time_t	bc_idletimechk_start;	/* check idletime window start	*/
-	time_t	bc_connect_time;		/* time connect was made	*/
-	time_t	bc_last_active_time;	/* last time with activity	*/
-
-					/* for incoming connections:	*/
-	time_t	bc_max_idle_time;		/* max time without activity	*/
-
-					/* for outgoing connections:	*/
-	msg_shorthold_t bc_shorthold_data;	/* shorthold data to use */
-
-	int	bc_aocd_flag;		/* AOCD used for unitlength calc*/
-	time_t	bc_last_aocd_time;		/* last time AOCD received	*/
-	
-	int	bc_units;			/* number of AOCD charging units*/
-	int	bc_units_type;		/* units type: AOCD, AOCE	*/
-	int	bc_cunits;			/* calculated units		*/
-
-	int	bc_isdntxdelay;		/* isdn tx delay after connect	*/
-
-	uint8_t	bc_display[ISDN_DISPLAY_MAX];	/* display information element	*/
-	char	bc_datetime[ISDN_DATETIME_MAX];	/* date/time information element*/
-};
-#define T303VAL	(hz*4)			/* 4 seconds timeout		*/
-#define T305VAL	(hz*30)			/* 30 seconds timeout		*/
-#define T308VAL	(hz*4)			/* 4 seconds timeout		*/
-#define T309VAL	(hz*90)			/* 90 seconds timeout		*/
-#define T310VAL	(hz*60)			/* 30-120 seconds timeout	*/
-#define T313VAL	(hz*4)			/* 4 seconds timeout		*/
-#define T400DEF	(hz*10)			/* 10 seconds timeout		*/
-
-TAILQ_HEAD(isdn_bcq, isdn_bc);
-
-/*
- * Software context for LAPD.
- */
-struct isdn_l2 {
-	int	l2_Q921_state;	/* state according to Q.921 */
-
-	uint8_t	l2_last_ril;	/* last reference number from TEI management */
-	uint8_t	l2_last_rih;
-
-	int	l2_tei_valid;	/* tei is valid flag */
-#define TEI_INVALID	0
-#define TEI_VALID	1
-	int	l2_tei;		/* tei, if tei flag valid */
-	int l2_tei_last;
-
-	int	l2_ph_active;	/* Layer 1 active flag */
-#define PH_INACTIVE	0	/* layer 1 inactive */
-#define PH_ACTIVEPEND	1	/* already tried to activate */
-#define PH_ACTIVE	2	/* layer 1 active */
-
-	int	l2_T200;		/* Multiframe timeout timer */
-	int	l2_T201;		/* min time between TEI ID check */
-	int	l2_T202;		/* min time between TEI ID Req messages */
-	int	l2_N202;		/* TEI ID Req tx counter */
-/* 
- * call-back function, when T202 expires 
- */	
-	void 	(*l2_T202_fn)(void *);
-	
-	int	l2_T203;		/* max line idle time */
-	
-	struct callout_handle 	l2_T200_callout;
-	struct callout_handle 	l2_T202_callout;
-	struct callout_handle 	l2_T203_callout;
-	struct callout_handle 	l2_IFQU_callout;
-/*
- * isdn_l2_queue_i_frame: 
- *
- * 	value of IFQU_DLY some experimentation Gary did showed 
- * 	a minimal value of (hz/20) was possible to let this work, 
- * 	Gary suggested using (hz/10) but i settled down to using 
- * 	(hz/5) for now (-hm).
- */
-#define IFQU_DLY (hz/5)		/* reschedule I-FRAME-QUEUED-UP 0.2 sec */
-
-	int	l2_vr;		/* receive sequence frame counter */
-	int	l2_vs;		/* transmit sequence frame counter */
-	int	l2_va;		/* acknowledge sequence frame counter */
-
-	int	l2_ack_pend;	/* acknowledge pending */
-	int	l2_rej_excpt;	/* reject exception */
-	int	l2_peer_busy;	/* peer receiver busy */
-	int	l2_own_busy;	/* own receiver busy */
-	int	l2_l3_init;	/* layer 3 initiated */
-	
-	struct ifqueue l2_i_queue;	/* queue of outgoing i frames */
-#define IQUEUE_MAXLEN	20
-
-/* 
- * XXX: this implementation only supports a k-value of 1 !!! 
- */
-	struct mbuf *l2_ua_frame;	/* last unacked frame */
-	
-	int	l2_ua_num;		/* last unacked frame number */
-#define UA_EMPTY (-1)		/* ua_frame is unused	*/
-
-	int	l2_rxd_CR;		/* received Command Response bit */
-	int	l2_rxd_PF;		/* received Poll/Final bit */
-	int	l2_rxd_NR;		/* received N(R) field */
-	int	l2_RC;		/* Retry Counter */
-
-	int	l2_iframe_sent;	/* check if i frame acked by another i frame */
-/* 
- * function to be called at fsm exit 
- */
-	int 	(*l2_post_fsm_fn)(struct isdn_softc *);	
-/* 
- * statistics 
- */
-	lapdstat_t	l2_stat;	/* lapd protocol statistics */
-};
-
 /* Q.912 system parameters (Q.921 03/93 pp 43) */
 
 #define MAX_K_VALUE	1	/* BRI - # of outstanding frames 	*/
@@ -433,12 +221,140 @@ enum MDL_ERROR_CODES {
 };
 
 /*
+ * Callout handling.
+ */
+
+#define TIMEOUT_FUNC_T	timeout_t *
+#define SECOND		time_second
+#define MICROTIME(x)	getmicrotime(&(x))
+
+#define START_TIMER(XHANDLE, XF, XSC, XTIME) \
+	XHANDLE = timeout((TIMEOUT_FUNC_T)XF, (void *)XSC, XTIME)
+#define	STOP_TIMER(XHANDLE, XF, XSC)	\
+	untimeout((TIMEOUT_FUNC_T)XF, (void*)XSC, XHANDLE)
+
+#define TIMER_IDLE	1		/* a timer is running	*/
+#define TIMER_ACTIVE	2		/* a timer is idle	*/
+
+/*
+ *	Call / connection on one B-channel and all its parameters.
+ */
+struct isdn_bc {
+	struct isdn_softc 	*bc_sc;
+	
+	TAILQ_ENTRY(isdn_bc)	bc_link;
+	TAILQ_ENTRY(isdn_bc)	bc_chain;
+	
+	int	bc_cr;			/* call reference value		*/
+
+	int	bc_cr_flag;			/* call reference flag		*/
+#define CRF_ORIG	0		/* originating side		*/
+#define CRF_DEST	1		/* destinating side		*/
+
+	int	bc_id;		/* channel id value		*/
+	int	bc_excl;		/* channel exclusive		*/
+
+	int	bc_proto;			/* B channel protocol BPROT_XXX */
+
+	int bc_state;
+#define BCH_ST_FREE	0		/* free to be used, idle */
+#define BCH_ST_RSVD	1		/* reserved, may become free or used */
+#define BCH_ST_USED	2 		/* self explanatory */
+
+	cause_t	bc_cause_in;		/* cause value from NT	*/
+	cause_t	bc_cause_out;		/* cause value to NT	*/
+
+	int	bc_call_state;		/* from incoming SETUP	*/
+
+	struct sockaddr_e167 	bc_dst; 	
+	struct sockaddr_e167 	bc_src;
+	
+	int	bc_scr_ind;		/* screening ind for incoming call */
+	int	bc_prs_ind;		/* presentation ind for incoming call */
+	int	bc_type_plan;		/* type and plan for incoming number */
+
+	int	bc_Q931_state;		/* Q.931 state for call	*/
+	int	bc_event;			/* event to be processed */
+
+	int	bc_resp;		/* setup response type	*/
+
+	int	bc_T303;			/* SETUP sent response timeout	*/
+	int	bc_T303_first_to;		/* first timeout flag		*/
+
+	int	bc_T305;			/* DISC without PROG IND	*/
+
+	int	bc_T308;			/* RELEASE sent response timeout*/
+	int	bc_T308_first_to;		/* first timeout flag		*/
+
+	int	bc_T309;			/* data link disconnect timeout	*/
+
+	int	bc_T310;			/* CALL PROC received		*/
+
+	int	bc_T313;			/* CONNECT sent timeout		*/
+
+	int	bc_T400;			/* L4 timeout */
+
+	int	bc_dir;			/* outgoing or incoming call	*/
+#define DIR_OUTGOING	0
+#define DIR_INCOMING	1
+
+	int	bc_timeout_active;		/* idle timeout() active flag	*/
+/*
+ * XXX: I'll refactor it by rplacment of callout_handle(9).
+ */
+	struct callout_handle	bc_idle_timeout_handle;
+	struct callout_handle	bc_T303_callout;
+	struct callout_handle	bc_T305_callout;
+	struct callout_handle	bc_T308_callout;
+	struct callout_handle	bc_T309_callout;
+	struct callout_handle	bc_T310_callout;
+	struct callout_handle	bc_T313_callout;
+	struct callout_handle	bc_T400_callout;
+	int	bc_callouts_inited;		/* must init before use */
+
+	int	bc_idletime_state;		/* wait for idle_time begin	*/
+#define IST_IDLE	0	/* shorthold mode disabled 	*/
+#define IST_NONCHK	1	/* in non-checked window	*/
+#define IST_CHECK	2	/* in idle check window		*/
+#define IST_SAFE	3	/* in safety zone		*/
+
+	time_t	bc_idletimechk_start;	/* check idletime window start	*/
+	time_t	bc_connect_time;		/* time connect was made	*/
+	time_t	bc_last_active_time;	/* last time with activity	*/
+
+					/* for incoming connections:	*/
+	time_t	bc_max_idle_time;		/* max time without activity	*/
+
+					/* for outgoing connections:	*/
+	msg_shorthold_t bc_shorthold_data;	/* shorthold data to use */
+
+	int	bc_aocd_flag;		/* AOCD used for unitlength calc*/
+	time_t	bc_last_aocd_time;		/* last time AOCD received	*/
+	
+	int	bc_units;			/* number of AOCD charging units*/
+	int	bc_units_type;		/* units type: AOCD, AOCE	*/
+	int	bc_cunits;			/* calculated units		*/
+
+	int	bc_isdntxdelay;		/* isdn tx delay after connect	*/
+
+	uint8_t	bc_display[ISDN_DISPLAY_MAX];	/* display information element	*/
+	char	bc_datetime[ISDN_DATETIME_MAX];	/* date/time information element*/
+};
+#define T303VAL	(hz*4)			/* 4 seconds timeout		*/
+#define T305VAL	(hz*30)			/* 30 seconds timeout		*/
+#define T308VAL	(hz*4)			/* 4 seconds timeout		*/
+#define T309VAL	(hz*90)			/* 90 seconds timeout		*/
+#define T310VAL	(hz*60)			/* 30-120 seconds timeout	*/
+#define T313VAL	(hz*4)			/* 4 seconds timeout		*/
+#define T400DEF	(hz*10)			/* 10 seconds timeout		*/
+
+TAILQ_HEAD(isdn_bcq, isdn_bc);
+
+/*
  * Software context.
  */
 struct isdn_softc {
 	struct ifnet 	*sc_ifp; 	
-	struct isdn_l2 	sc_l2;
-	struct isdn_l3 	sc_l3;
 /*
  * RW Lock.
  */
@@ -447,6 +363,85 @@ struct isdn_softc {
  * Set contains softc, b-channel.
  */	
 	struct isdn_bcq 	sc_bcq;
+/*
+ * Software context for LAPD.
+ */	
+	int	sc_Q921_state;	/* state according to Q.921 */
+
+	uint8_t	sc_last_ril;	/* last reference number from TEI management */
+	uint8_t	sc_last_rih;
+
+	int	sc_tei_valid;	/* tei is valid flag */
+#define TEI_INVALID	0
+#define TEI_VALID	1
+	int	sc_tei;		/* tei, if tei flag valid */
+	int sc_tei_last;
+
+	int	sc_ph_active;	/* Layer 1 active flag */
+#define PH_INACTIVE	0	/* layer 1 inactive */
+#define PH_ACTIVEPEND	1	/* already tried to activate */
+#define PH_ACTIVE	2	/* layer 1 active */
+
+	int	sc_T200;		/* Multiframe timeout timer */
+	int	sc_T201;		/* min time between TEI ID check */
+	int	sc_T202;		/* min time between TEI ID Req messages */
+	int	sc_N202;		/* TEI ID Req tx counter */
+/* 
+ * call-back function, when T202 expires 
+ */	
+	void 	(*sc_T202_fn)(void *);
+	
+	int	sc_T203;		/* max line idle time */
+	
+	struct callout_handle 	sc_T200_callout;
+	struct callout_handle 	sc_T202_callout;
+	struct callout_handle 	sc_T203_callout;
+	struct callout_handle 	sc_IFQU_callout;
+/*
+ * isdn_sc_queue_i_frame: 
+ *
+ * 	value of IFQU_DLY some experimentation Gary did showed 
+ * 	a minimal value of (hz/20) was possible to let this work, 
+ * 	Gary suggested using (hz/10) but i settled down to using 
+ * 	(hz/5) for now (-hm).
+ */
+#define IFQU_DLY (hz/5)		/* reschedule I-FRAME-QUEUED-UP 0.2 sec */
+
+	int	sc_vr;		/* receive sequence frame counter */
+	int	sc_vs;		/* transmit sequence frame counter */
+	int	sc_va;		/* acknowledge sequence frame counter */
+
+	int	sc_ack_pend;	/* acknowledge pending */
+	int	sc_rej_excpt;	/* reject exception */
+	int	sc_peer_busy;	/* peer receiver busy */
+	int	sc_own_busy;	/* own receiver busy */
+	int	sc_l3_init;	/* layer 3 initiated */
+	
+	struct ifqueue sc_i_queue;	/* queue of outgoing i frames */
+#define IQUEUE_MAXLEN	20
+
+/* 
+ * XXX: this implementation only supports a k-value of 1 !!! 
+ */
+	struct mbuf *sc_ua_frame;	/* last unacked frame */
+	
+	int	sc_ua_num;		/* last unacked frame number */
+#define UA_EMPTY (-1)		/* ua_frame is unused	*/
+
+	int	sc_rxd_CR;		/* received Command Response bit */
+	int	sc_rxd_PF;		/* received Poll/Final bit */
+	int	sc_rxd_NR;		/* received N(R) field */
+	int	sc_RC;		/* Retry Counter */
+
+	int	sc_iframe_sent;	/* check if i frame acked by another i frame */
+/* 
+ * function to be called at fsm exit 
+ */
+	int 	(*sc_post_fsm_fn)(struct isdn_softc *);	
+/* 
+ * statistics 
+ */
+	lapdstat_t	sc_stat;	/* lapd protocol statistics */
 };
 
 #define SC_LOCK_INIT(sc, d, t) \

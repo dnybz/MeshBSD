@@ -100,13 +100,13 @@ isdn_lme_assign_ind(struct isdn_softc *sc)
 {
 	NDBGL2(L2_PRIM, "isdnif %d", sc->sc_ifp->if_index);
 
-	if (sc->sc_l2.l2_tei_valid == TEI_VALID) {
-		sc->sc_l2.l2_T202_fn = (void(*)(void *))isdn_tei_verify;
-		sc->sc_l2.l2_N202 = N202DEF;
+	if (sc->sc_tei_valid == TEI_VALID) {
+		sc->sc_T202_fn = (void(*)(void *))isdn_tei_verify;
+		sc->sc_N202 = N202DEF;
 		isdn_tei_verify((sc);
 	} else {
-		sc->sc_l2.l2_T202_fn = (void(*)(void *))isdn_tei_assign;
-		sc->sc_l2.l2_N202 = N202DEF;
+		sc->sc_T202_fn = (void(*)(void *))isdn_tei_assign;
+		sc->sc_N202 = N202DEF;
 		isdn_tei_assign((sc);
 	}
 }

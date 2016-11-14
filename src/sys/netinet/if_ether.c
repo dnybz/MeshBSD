@@ -689,7 +689,7 @@ arpintr(struct mbuf *m)
 		 */
 		if (ar->ar_hln >= 20)
 			hlen = 16;
-		break;
+		break;	
 	default:
 		ARP_LOG(LOG_NOTICE,
 		    "packet with unknown hardware format 0x%02d received on "
@@ -713,6 +713,11 @@ arpintr(struct mbuf *m)
 		in_arpinput(m);
 		return;
 #endif
+#ifdef ISDN		
+	case ETHERTYPE_ISDN:
+		isdn_arpinput(m);
+		return;
+#endif /* ISDN */
 	}
 	m_freem(m);
 }

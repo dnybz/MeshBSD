@@ -106,38 +106,38 @@ isdn_tei_rxd(struct isdn_softc *sc, struct mbuf *m)
 	switch (*(ptr + OFF_MT)) {
 	case MT_ID_ASSIGN:
 		
-		if (*(ptr + OFF_RIL) == sc->sc_l2.l2_last_ril) &&
-			(*(ptr + OFF_RIH) == sc->sc_l2.l2_last_rih)) {
+		if (*(ptr + OFF_RIL) == sc->sc_last_ril) &&
+			(*(ptr + OFF_RIH) == sc->sc_last_rih)) {
 			
-			sc->sc_l2.l2_tei = GET_TEIFROMAI(*(ptr+OFF_AI));
-			sc->sc_l2.l2_tei_valid = TEI_VALID;
+			sc->sc_tei = GET_TEIFROMAI(*(ptr+OFF_AI));
+			sc->sc_tei_valid = TEI_VALID;
 
-			if (sc->sc_l2.l2_T202 == TIMER_ACTIVE)
+			if (sc->sc_T202 == TIMER_ACTIVE)
 				isdn_T202_stop(sc);
 /*
  * XXX ...
  *
-			i4b_mdl_status_ind(drv, STI_TEIASG, sc->sc_l2.l2_tei);
+			i4b_mdl_status_ind(drv, STI_TEIASG, sc->sc_tei);
  */
 			log(LOG_INFO, "isdn: isdnif %d, assigned "
 				"TEI = %d = 0x%02x\n", 
 				sc->sc_ifp->if_index, 
-				sc->sc_l2.l2_tei, sc->sc_l2.l2_tei);
+				sc->sc_tei, sc->sc_tei);
 
 			NDBGL2(L2_TEI_MSG, "TEI ID Assign - TEI = %d", 
-				sc->sc_l2.l2_tei);
+				sc->sc_tei);
 
 			isdn_l2_next_state(sc, EV_MDASGRQ);
 		}
 		break;
 	case MT_ID_DENY:
-		if (*(ptr + OFF_RIL) == sc->sc_l2.l2_last_ril) &&
-			(*(ptr + OFF_RIH) == sc->sc_l2.l2_last_rih)) {
+		if (*(ptr + OFF_RIL) == sc->sc_last_ril) &&
+			(*(ptr + OFF_RIH) == sc->sc_last_rih)) {
 			
-			sc->sc_l2.l2_tei_valid = TEI_INVALID;
-			sc->sc_l2.l2_tei = GET_TEIFROMAI(*(ptr+OFF_AI));
+			sc->sc_tei_valid = TEI_INVALID;
+			sc->sc_tei = GET_TEIFROMAI(*(ptr+OFF_AI));
 
-			if (sc->sc_l2.l2_tei == GROUP_TEI) {
+			if (sc->sc_tei == GROUP_TEI) {
 				log(LOG_WARNING, "isdn: isdnif %d, denied TEI, "
 					"no TEI values available from exchange!\n", 
 						sc->sc_ifp->if_index);
@@ -147,11 +147,11 @@ isdn_tei_rxd(struct isdn_softc *sc, struct mbuf *m)
 			} else {
 				log(LOG_WARNING, "isdn: isdnif %d, "
 					"denied TEI = %d = 0x%02x\n", 
-					sc->sc_ifp->if_index, sc->sc_l2.l2_tei, 
-					sc->sc_l2.l2_tei);
+					sc->sc_ifp->if_index, sc->sc_tei, 
+					sc->sc_tei);
 				NDBGL2(L2_TEI_ERR, 
 					"TEI ID Denied - TEI = %d", 
-					sc->sc_l2.l2_tei);
+					sc->sc_tei);
 			}
 /*
  * XXX ...
@@ -163,38 +163,38 @@ isdn_tei_rxd(struct isdn_softc *sc, struct mbuf *m)
 		break;
 	case MT_ID_CHK_REQ:
 		
-		if (sc->sc_l2.l2_tei_valid == TEI_VALID) && 
-			((sc->sc_l2.l2_tei == GET_TEIFROMAI(*(ptr+OFF_AI))) || 
+		if (sc->sc_tei_valid == TEI_VALID) && 
+			((sc->sc_tei == GET_TEIFROMAI(*(ptr+OFF_AI))) || 
 			(GROUP_TEI == GET_TEIFROMAI(*(ptr+OFF_AI))))) {
 			
-			sc->sc_l2.l2_tei_last = -1;
+			sc->sc_tei_last = -1;
 
-			if (sc->sc_l2.l2_tei != sc->sc_l2.l2_tei_last) {
+			if (sc->sc_tei != sc->sc_tei_last) {
 				NDBGL2(L2_TEI_MSG, 
 					"TEI ID Check Req - TEI = %d", 
-					sc->sc_l2.l2_tei);
-				sc->sc_l2.l2_tei_last = sc->sc_l2.l2_tei;
+					sc->sc_tei);
+				sc->sc_tei_last = sc->sc_tei;
 			}
 
-			if (sc->sc_l2.l2_T202 == TIMER_ACTIVE)
+			if (sc->sc_T202 == TIMER_ACTIVE)
 				isdn_T202_stop(sc);
 			
 			isdn_tei_chk_resp(sc);
 		}
 		break;
 	case MT_ID_REMOVE:
-		if (sc->sc_l2.l2_tei_valid == TEI_VALID) && 
-			((sc->sc_l2.l2_tei == GET_TEIFROMAI(*(ptr+OFF_AI))) || 
-			(sc->sc_l2.l2_tei == GET_TEIFROMAI(*(ptr+OFF_AI))))) {
+		if (sc->sc_tei_valid == TEI_VALID) && 
+			((sc->sc_tei == GET_TEIFROMAI(*(ptr+OFF_AI))) || 
+			(sc->sc_tei == GET_TEIFROMAI(*(ptr+OFF_AI))))) {
 			
-			sc->sc_l2.l2_tei_valid = TEI_INVALID;
-			sc->sc_l2.l2_tei = GET_TEIFROMAI(*(ptr+OFF_AI));
+			sc->sc_tei_valid = TEI_INVALID;
+			sc->sc_tei = GET_TEIFROMAI(*(ptr+OFF_AI));
 
 			log(LOG_INFO, "isdn: isdnif %d, "
 				"removed TEI = %d = 0x%02x\n", 
-				drv->isdnif, sc->sc_l2.l2_tei, sc->sc_l2.l2_tei);
+				drv->isdnif, sc->sc_tei, sc->sc_tei);
 				
-			NDBGL2(L2_TEI_MSG, "TEI ID Remove - TEI = %d", sc->sc_l2.l2_tei);
+			NDBGL2(L2_TEI_MSG, "TEI ID Remove - TEI = %d", sc->sc_tei);
 /*
  * XXX
  *
@@ -254,8 +254,8 @@ isdn_tei_chk_resp(struct isdn_softc *sc)
 {
 	int lasttei = 0, error;
 
-	if (sc->sc_l2.l2_tei != lasttei) {
-		lasttei = sc->sc_l2.l2_tei;
+	if (sc->sc_tei != lasttei) {
+		lasttei = sc->sc_tei;
 		NDBGL2(L2_TEI_MSG, "tx TEI ID_Check_Response");
 	}
 	
@@ -289,27 +289,27 @@ isdn_tei_tx(struct isdn_softc *sc, uint8_t type)
 	switch (type) {
 	case MT_ID_REQEST:
 		isdn_tei_mk_rand_ri(sc);
-		m->m_data[TEIM_RILO] = sc->sc_l2.l2_last_ril;
-		m->m_data[TEIM_RIHO] = sc->sc_l2.l2_last_rih;
+		m->m_data[TEIM_RILO] = sc->sc_last_ril;
+		m->m_data[TEIM_RIHO] = sc->sc_last_rih;
 		m->m_data[TEIM_AIO] = (GROUP_TEI << 1) | 0x01;
 		break;
 	case MT_ID_CHK_RSP:
 		isdn_tei_mk_rand_ri(sc);
-		m->m_data[TEIM_RILO] = sc->sc_l2.l2_last_ril;
-		m->m_data[TEIM_RIHO] = sc->sc_l2.l2_last_rih;
-		m->m_data[TEIM_AIO] = (sc->sc_l2.l2_tei << 1) | 0x01;
+		m->m_data[TEIM_RILO] = sc->sc_last_ril;
+		m->m_data[TEIM_RIHO] = sc->sc_last_rih;
+		m->m_data[TEIM_AIO] = (sc->sc_tei << 1) | 0x01;
 		break;
 	case MT_ID_VERIFY:
 		m->m_data[TEIM_RILO] = 0;
 		m->m_data[TEIM_RIHO] = 0;
-		m->m_data[TEIM_AIO] = (sc->sc_l2.l2_tei << 1) | 0x01;
+		m->m_data[TEIM_AIO] = (sc->sc_tei << 1) | 0x01;
 		break;
 	default:
 		error = EINVAL;
 		m_freem(m);
 		goto out;
 	}
-	sc->sc_l2.l2_stat.tx_tei++;
+	sc->sc_stat.tx_tei++;
 	
 	switch (type) {
 	case MT_ID_REQEST:
@@ -336,6 +336,6 @@ isdn_tei_mk_rand_ri(struct isdn_softc *sc)
 
 	arc4rand(&val, sizeof(val), 0);
 
-	sc->sc_l2.l2_last_rih = (val >> 8) & 0x00ff;
-	sc->sc_l2.l2_last_ril = val & 0x00ff;
+	sc->sc_last_rih = (val >> 8) & 0x00ff;
+	sc->sc_last_ril = val & 0x00ff;
 }

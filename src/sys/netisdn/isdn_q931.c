@@ -78,39 +78,39 @@ int isdn_l3_debug = L3_DEBUG_DEFAULT;
 
 uint8_t isdn_q931_cause_tab[ISDN_CAUSE_MAX] = {
 /* 
- * CAUSE_I4B_NORMAL -> normal call clearing 
+ * CAUSE_ISDN_NORMAL -> normal call clearing 
  */	
 	CAUSE_Q850_NCCLR, 	
 /* 
- * CAUSE_I4B_BUSY -> user busy 
+ * CAUSE_ISDN_BUSY -> user busy 
  */	
 	CAUSE_Q850_USRBSY,	
 /* 
- * CAUSE_I4B_NOCHAN -> no circuit/channel available
+ * CAUSE_ISDN_NOCHAN -> no circuit/channel available
  */	
 	CAUSE_Q850_NOCAVAIL,
 /* 
- * CAUSE_I4B_INCOMP -> incompatible destination 
+ * CAUSE_ISDN_INCOMP -> incompatible destination 
  */	
 	CAUSE_Q850_INCDEST,	
 /* 
- * CAUSE_I4B_REJECT -> call rejected 
+ * CAUSE_ISDN_REJECT -> call rejected 
  */	
 	CAUSE_Q850_CALLREJ,	
 /* 
- * CAUSE_I4B_OOO -> destination out of order 
+ * CAUSE_ISDN_OOO -> destination out of order 
  */	
 	CAUSE_Q850_DSTOOORDR,
 /* 
- * CAUSE_I4B_TMPFAIL -> temporary failure 
+ * CAUSE_ISDN_TMPFAIL -> temporary failure 
  */		
 	CAUSE_Q850_TMPFAIL,	
 /* 
- * CAUSE_I4B_L1ERROR -> L1 error / persistent deact XXX 
+ * CAUSE_ISDN_L1ERROR -> L1 error / persistent deact XXX 
  */	
 	CAUSE_Q850_USRBSY,
 /* 
- * CAUSE_I4B_LLDIAL -> no dialout on leased line XXX 
+ * CAUSE_ISDN_LLDIAL -> no dialout on leased line XXX 
  */	
 	CAUSE_Q850_USRBSY,	
 };
