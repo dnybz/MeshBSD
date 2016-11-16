@@ -28,10 +28,12 @@
 
 /*
  * Routing distinguisher, < channel, cr ,sapi, tei > maps to < lla >
+ * 
+ * XXX: Btw, there exists some likelyhood that I'll redefine this RD.
  */
 struct isdn_rd {
 	uint8_t 	rd_chan;
-	uint8_t 	rd_cr;
+	uint8_t 	rd_cr; 		/* XXX: Q.931 dictates cr >= 2byte */
 	uint8_t 	rd_sapi; 	
 	uint8_t 	rd_tei;	 
 } __packed;

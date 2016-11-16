@@ -62,6 +62,10 @@
 #include <netisdn/isdn.h>
 #include <netisdn/isdn_var.h>
 
+/*
+ * XXX: Well... by "N" prefix denotes states are not implemented yet.
+ */
+
 static void 
 F_00A(struct isdn_bc *), 
 	F_00H(struct isdn_bc *), 

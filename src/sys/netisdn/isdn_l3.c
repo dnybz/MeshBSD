@@ -377,14 +377,6 @@ isdn_l3_tx_setup(struct isdn_bc *bc)
 		*ptr++ = IT_RATE_64K;
 		*ptr++ = IT_UL1_G711A;
 		break;
-	case BPROT_RHDLC:	
-/* 
- * raw HDLC 
- */
-		*ptr++ = IEI_BEARERCAP_LEN;
-		*ptr++ = IT_CAP_UNR_DIG_INFO;
-		*ptr++ = IT_RATE_64K;
-		break;
 	default:
 		*ptr++ = IEI_BEARERCAP_LEN;
 		*ptr++ = IT_CAP_UNR_DIG_INFO;
@@ -394,18 +386,10 @@ isdn_l3_tx_setup(struct isdn_bc *bc)
 
 	*ptr++ = IEI_CHANNELID;		/* channel id */
 	*ptr++ = IEI_CHANNELID_LEN;	/* channel id length */
-
-	switch (bc->bc_id) {
-	case CHAN_B1:
-		*ptr++ = CHANNELID_B1;
-		break;
-	case CHAN_B2:
-		*ptr++ = CHANNELID_B2;
-		break;
-	default:
-		*ptr++ = CHANNELID_ANY;
-		break;
-	}
+/*
+ * Better leave channel allocation to the switch.
+ */
+	*ptr++ = CHANNELID_ANY;
 
 	if (slen) {
 		*ptr++ = IEI_CALLINGPN;		/* calling party no */

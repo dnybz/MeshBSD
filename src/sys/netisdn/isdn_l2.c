@@ -572,9 +572,11 @@ isdn_bc_by_cr(struct isdn_softc *sc, int cr, int crf)
 	return (bc);
 }
 
-/*---------------------------------------------------------------------------*
+/*
  *	generate 7 bit "random" number used for outgoing Call Reference
- *---------------------------------------------------------------------------*/
+ *
+ * XXX: This fn is completely wrong, because Q.931 dictates cr >= 2byte.
+ */
 uint8_t
 isdn_bc_get_cr(void)
 {

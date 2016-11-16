@@ -180,12 +180,9 @@ isdn_input(struct mbuf *m)
 			goto bad;
 		}
 		break;
-	case ISDN_B1_CHAN: 
-	case ISDN_B2_CHAN:
-			
-			/* FALLTHROUGH */
+	case ISDN_B:
 /*
- * XXX: Well, any ethernet port aggregates two B-chans.
+ * XXX: Well, any ethernet port aggregates n B-chans.
  */	
 		break;
 	default:
