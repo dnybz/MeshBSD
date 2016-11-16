@@ -62,7 +62,7 @@ If someone wants to contact me by electronic mail, use encryption!
 
 <pre><code>
 Otherwise, any connection attempt will be discarded. 
-</code><pre>
+</code></pre>
 
 This is a necessary security measure, because modern
 telecommunication networks are a "tough" place. :)
