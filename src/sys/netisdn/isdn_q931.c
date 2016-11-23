@@ -66,7 +66,7 @@ static int 	isdn_q931_decode_cs0_ie(struct isdn_bc *, int, uint8_t *);
 static void 	isdn_q931_decode_msg(struct isdn_bc *, uint8_t);
 
 /*
- * XXX: well, I'll transform it into an MIB item.
+ * XXX: well, I'll transform it into an OID.
  *
 int isdn_l3_debug = L3_DEBUG_DEFAULT;
  *
@@ -133,7 +133,7 @@ isdn_q931_setup_cr(struct isdn_bc *bc, uint8_t cr)
  *	decode and process a Q.931 message
  *---------------------------------------------------------------------------*/
 void
-isdn_q931_decode(struct isdn_softc *sc, struct mbuf *m)
+isdn_q931_decode(struct isdn_ifaddr *ii, struct mbuf *m)
 {
 	struct isdn_bc *bc = NULL;
 	int codeset = CODESET_0;
@@ -180,7 +180,7 @@ isdn_q931_decode(struct isdn_softc *sc, struct mbuf *m)
 		msg_ptr++;
 		msg_len--;
 
-		for (i=1; i < cr_len; i++) {
+		for (i = 1; i < cr_len; i++) {
 			cr += *msg_ptr;
 			msg_ptr++;
 			msg_len--;
@@ -335,19 +335,8 @@ isdn_q931_decode_cs0_ie(struct isdn_bc *bc, int msg_len, uint8_t *msg_ptr)
 			bc->bc_proto = BPROT_NONE;
 			NDBGL3(L3_P_MSG, "IEI_BEARERCAP - Telephony");
 			break;
-		case 0x88:	
-/* 
- * unrestricted digital info 
- *
- * XXX 
- */	
- 			bc->bc_proto = BPROT_RHDLC;
-			NDBGL3(L3_P_MSG, "IEI_BEARERCAP - Raw HDLC");
-			break;
 		default:
-/* 
- * XXX 
- */		
+
  			bc->bc_proto = BPROT_NONE;
 			NDBGL3(L3_P_ERR, "IEI_BEARERCAP - Unsupported "
 				"B-Protocol 0x%x", msg_ptr[2]);

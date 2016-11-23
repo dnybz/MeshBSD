@@ -362,85 +362,6 @@ struct isdn_softc {
  * Set contains softc, b-channel.
  */	
 	struct isdn_bcq 	sc_bcq;
-/*
- * Software context for LAPD.
- */	
-	int	sc_Q921_state;	/* state according to Q.921 */
-
-	uint8_t	sc_last_ril;	/* last reference number from TEI management */
-	uint8_t	sc_last_rih;
-
-	int	sc_tei_valid;	/* tei is valid flag */
-#define TEI_INVALID	0
-#define TEI_VALID	1
-	int	sc_tei;		/* tei, if tei flag valid */
-	int sc_tei_last;
-
-	int	sc_ph_active;	/* Layer 1 active flag */
-#define PH_INACTIVE	0	/* layer 1 inactive */
-#define PH_ACTIVEPEND	1	/* already tried to activate */
-#define PH_ACTIVE	2	/* layer 1 active */
-
-	int	sc_T200;		/* Multiframe timeout timer */
-	int	sc_T201;		/* min time between TEI ID check */
-	int	sc_T202;		/* min time between TEI ID Req messages */
-	int	sc_N202;		/* TEI ID Req tx counter */
-/* 
- * call-back function, when T202 expires 
- */	
-	void 	(*sc_T202_fn)(void *);
-	
-	int	sc_T203;		/* max line idle time */
-	
-	struct callout_handle 	sc_T200_callout;
-	struct callout_handle 	sc_T202_callout;
-	struct callout_handle 	sc_T203_callout;
-	struct callout_handle 	sc_IFQU_callout;
-/*
- * isdn_sc_queue_i_frame: 
- *
- * 	value of IFQU_DLY some experimentation Gary did showed 
- * 	a minimal value of (hz/20) was possible to let this work, 
- * 	Gary suggested using (hz/10) but i settled down to using 
- * 	(hz/5) for now (-hm).
- */
-#define IFQU_DLY (hz/5)		/* reschedule I-FRAME-QUEUED-UP 0.2 sec */
-
-	int	sc_vr;		/* receive sequence frame counter */
-	int	sc_vs;		/* transmit sequence frame counter */
-	int	sc_va;		/* acknowledge sequence frame counter */
-
-	int	sc_ack_pend;	/* acknowledge pending */
-	int	sc_rej_excpt;	/* reject exception */
-	int	sc_peer_busy;	/* peer receiver busy */
-	int	sc_own_busy;	/* own receiver busy */
-	int	sc_l3_init;	/* layer 3 initiated */
-	
-	struct ifqueue sc_i_queue;	/* queue of outgoing i frames */
-#define IQUEUE_MAXLEN	20
-
-/* 
- * XXX: this implementation only supports a k-value of 1 !!! 
- */
-	struct mbuf *sc_ua_frame;	/* last unacked frame */
-	
-	int	sc_ua_num;		/* last unacked frame number */
-#define UA_EMPTY (-1)		/* ua_frame is unused	*/
-
-	int	sc_rxd_CR;		/* received Command Response bit */
-	int	sc_rxd_PF;		/* received Poll/Final bit */
-	int	sc_rxd_NR;		/* received N(R) field */
-	int	sc_RC;		/* Retry Counter */
-
-	int	sc_iframe_sent;	/* check if i frame acked by another i frame */
-/* 
- * function to be called at fsm exit 
- */
-	int 	(*sc_post_fsm_fn)(struct isdn_softc *);	
-/* 
- * statistics 
- */
-	lapdstat_t	sc_stat;	/* lapd protocol statistics */
 };
 
 #define SC_LOCK_INIT(sc, d, t) \
@@ -488,11 +409,101 @@ struct isdn_ifaddr {
  * < channel, cr , sapi, tei >  
  */	
 	struct sockaddr_isdn 	ii_tei;	
+/*
+ * Software context for LAPD.
+ */	
+	int	ii_Q921_state;	/* state according to Q.921 */
+
+	uint8_t	ii_last_ril;	/* last reference number from TEI management */
+	uint8_t	ii_last_rih;
+
+	int	ii_tei_valid;	/* tei is valid flag */
+#define TEI_INVALID	0
+#define TEI_VALID	1
+	int	ii_tei;		/* XXX: tei, if tei flag valid */
+	int ii_tei_last;
+
+	int	ii_ph_active;	/* Layer 1 active flag */
+#define PH_INACTIVE	0	/* layer 1 inactive */
+#define PH_ACTIVEPEND	1	/* already tried to activate */
+#define PH_ACTIVE	2	/* layer 1 active */
+
+	int	ii_T200;		/* Multiframe timeout timer */
+	int	ii_T201;		/* min time between TEI ID check */
+	int	ii_T202;		/* min time between TEI ID Req messages */
+	int	ii_N202;		/* TEI ID Req tx counter */
 /* 
- * < telno, subaddr > 
+ * call-back function, when T202 expires 
+ */	
+	void 	(*ii_T202_fn)(void *);
+	
+	int	ii_T203;		/* max line idle time */
+	
+	struct callout_handle 	ii_T200_callout;
+	struct callout_handle 	ii_T202_callout;
+	struct callout_handle 	ii_T203_callout;
+	struct callout_handle 	ii_IFQU_callout;
+/*
+ * isdn_ii_queue_i_frame: 
+ *
+ * 	value of IFQU_DLY some experimentation Gary did showed 
+ * 	a minimal value of (hz/20) was possible to let this work, 
+ * 	Gary suggested using (hz/10) but i settled down to using 
+ * 	(hz/5) for now (-hm).
  */
-	struct sockaddr_e167 	ii_no; 	 
+#define IFQU_DLY (hz/5)		/* reschedule I-FRAME-QUEUED-UP 0.2 sec */
+
+	int	ii_vr;		/* receive sequence frame counter */
+	int	ii_vs;		/* transmit sequence frame counter */
+	int	ii_va;		/* acknowledge sequence frame counter */
+
+	int	ii_ack_pend;	/* acknowledge pending */
+	int	ii_rej_excpt;	/* reject exception */
+	int	ii_peer_busy;	/* peer receiver busy */
+	int	ii_own_busy;	/* own receiver busy */
+	int	ii_l3_init;	/* layer 3 initiated */
+	
+	struct ifqueue ii_i_queue;	/* queue of outgoing i frames */
+#define IQUEUE_MAXLEN	20
+
+/* 
+ * XXX: this implementation only supports a k-value of 1 !!! 
+ */
+	struct mbuf *ii_ua_frame;	/* last unacked frame */
+	
+	int	ii_ua_num;		/* last unacked frame number */
+#define UA_EMPTY (-1)		/* ua_frame is unused	*/
+
+	int	ii_rxd_CR;		/* received Command Response bit */
+	int	ii_rxd_PF;		/* received Poll/Final bit */
+	int	ii_rxd_NR;		/* received N(R) field */
+	int	ii_RC;		/* Retry Counter */
+
+	int	ii_iframe_sent;	/* check if i frame acked by another i frame */
+/* 
+ * function to be called at fsm exit 
+ */
+	int 	(*ii_post_fsm_fn)(struct isdn_softc *);	
+/* 
+ * statistics 
+ */
+	lapdstat_t	ii_stat;	/* lapd protocol statistics */ 
 };
+#define RTF_Q921 	0x80
+#define RTF_Q922 	0x100
+#define RTF_Q931 	0x100000
+
+#define IFA_Q921 	RTF_Q921
+
+extern struct rwlock		isdn_ifaddr_rw;
+extern struct isdn_ifaddrhead	isdn_ifaddrhead;
+
+#define	ISDN_IFADDR_LOCK_INIT()	rw_init(&isdn_ifaddr_rw, "isdn_ifaddr_rw")
+#define	ISDN_IFADDR_LOCK_ASSERT()	rw_assert(&isdn_ifaddr_rw, RA_LOCKED)
+#define	ISDN_IFADDR_RLOCK()	rw_rlock(&isdn_ifaddr_rw)
+#define	ISDN_IFADDR_RUNLOCK()	rw_runlock(&isdn_ifaddr_rw)
+#define	ISDN_IFADDR_WLOCK()	rw_wlock(&isdn_ifaddr_rw)
+#define	ISDN_IFADDR_WUNLOCK()	rw_wunlock(&isdn_ifaddr_rw)
 
 #endif /* _KERNEL */
 #endif /* _NETISDN_ISDN_VAR_H_ */
