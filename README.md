@@ -64,8 +64,10 @@ If someone wants to contact me by electronic mail, use encryption!
 Otherwise, any connection attempt will be discarded. 
 </code></pre>
 
-This is a necessary security measure, because modern
-telecommunication networks are a "tough" place. :)
+This is a necessary security measure, because I want 
+to know exactly who is contacting me. This world is 
+full of individuals whose are operating on one's own 
+merits. :)
 
 <pre><code>
 -----BEGIN PGP PUBLIC KEY BLOCK-----
