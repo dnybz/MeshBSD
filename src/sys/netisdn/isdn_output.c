@@ -68,36 +68,36 @@
 #include <netisdn/i4b.h>
 #include <netisdn/i4b_var.h>
 
-static void 	isdn_ack_pending(struct isdn_softc *);
-static void 	isdn_print_var(struct isdn_softc *);
-static void 	isdn_tx_i_frame(struct isdn_softc *, struct mbuf *);
+static void 	isdn_ack_pending(struct isdn_ifaddr *);
+static void 	isdn_print_var(struct isdn_ifaddr *);
+static void 	isdn_tx_i_frame(struct isdn_ifaddr *, struct mbuf *);
 
 /*---------------------------------------------------------------------------*
  *	isdn_print_var - print some l2softc vars
  *---------------------------------------------------------------------------*/
 static void
-isdn_print_var(struct isdn_softc *sc)
+isdn_print_var(struct isdn_ifaddr *ii)
 {	
 	NDBGL2(L2_ERROR, "isdnif %d V(R)=%d, V(S)=%d, "
 		"V(A)=%d,ACKP=%d,PBSY=%d,OBSY=%d",
-		sc->sc_ifp->if_index,
-		sc->sc_vr,
-		sc->sc_vs,
-		sc->sc_va,
-		sc->sc_ack_pend,
-		sc->sc_peer_busy,
-		sc->sc_own_busy);
+		ii->ii_ifp->if_index,
+		ii->ii_vr,
+		ii->ii_vs,
+		ii->ii_va,
+		ii->ii_ack_pend,
+		ii->ii_peer_busy,
+		ii->ii_own_busy);
 }
 
 /*---------------------------------------------------------------------------*
  *	routine ACKNOWLEDGE PENDING (Q.921 03/93 p 70)
  *---------------------------------------------------------------------------*/
 static void
-isdn_ack_pending(struct isdn_softc *sc)
+isdn_ack_pending(struct isdn_ifaddr *ii)
 {
-	if (sc->sc_ack_pend) {
-		sc->sc_ack_pend = 0;
-		isdn_l2_tx_rr_resp(sc, F0);
+	if (ii->ii_ack_pend) {
+		ii->ii_ack_pend = 0;
+		isdn_dl_tx_rr_resp(ii, F0);
 	}
 }
 
@@ -105,17 +105,17 @@ isdn_ack_pending(struct isdn_softc *sc)
  *	internal I FRAME QUEUED UP routine (Q.921 03/93 p 61)
  *---------------------------------------------------------------------------*/
 void
-isdn_queue_i_frame(struct isdn_softc *sc)
+isdn_queue_i_frame(struct isdn_ifaddr *ii)
 {
-	if ((sc->sc_peer_busy) || 
-		(sc->sc_vs == ((sc->sc_va + MAX_K_VALUE) & 127))) {
+	if ((ii->ii_peer_busy) || 
+		(ii->ii_vs == ((ii->ii_va + MAX_K_VALUE) & 127))) {
 		
-		if (sc->sc_peer_busy) {
+		if (ii->ii_peer_busy) {
 			NDBGL2(L2_I_MSG, 
 				"%s: IFQUP, cause: peer busy!", __func__);
 		}
 
-		if (sc->sc_vs == ((sc->sc_va + MAX_K_VALUE) & 127)) {
+		if (ii->ii_vs == ((ii->ii_va + MAX_K_VALUE) & 127)) {
 			NDBGL2(L2_I_MSG, 
 				"%s: IFQUP, cause: vs=va+k!", __func__);
 		}
@@ -123,23 +123,23 @@ isdn_queue_i_frame(struct isdn_softc *sc)
  * XXX: see: Q.921, page 36, 5.6.1 ".. may retransmit an I
  * XXX: frame ...", shall we retransmit the last i frame ?
  */
-		if (!(_IF_QEMPTY(&sc->sc_i_queue))) {
+		if (!(_IF_QEMPTY(&ii->ii_i_queue))) {
 			NDBGL2(L2_I_MSG, 
 				"%s: re-scheduling IFQU call!", __func__);
-			START_TIMER(sc->sc_IFQU_callout, 
+			START_TIMER(ii->ii_IFQU_callout, 
 				isdn_queue_i_frame, sc, IFQU_DLY);
 		}	
 	} else {
 /* 
  * Fetch next frame for transmission. 
  */
-		IF_DEQUEUE(&sc->sc_i_queue, m);   
+		IF_DEQUEUE(&ii->ii_i_queue, m);   
 
 		if (m == NULL) {
 			NDBGL2(L2_I_ERR, "%s: mbuf NULL after "
 				"IF_DEQUEUE", __func__);
 		} else
-			isdn_tx_i_frame(sc, m);
+			isdn_tx_i_frame(ii, m);
 	}
 }
 
@@ -147,72 +147,72 @@ isdn_queue_i_frame(struct isdn_softc *sc)
  * Transmit I Frame
  */
 static void 	
-isdn_tx_i_frame(struct isdn_softc *sc, struct mbuf *m)
+isdn_tx_i_frame(struct isdn_ifaddr *ii, struct mbuf *m)
 {
 	struct mbuf *n;
 	uint8_t *ptr;
 
-	SC_WLOCK(sc);
+	SC_WLOCK(ii);
 	
 	ptr = mtod(m, uint8_t *);
 
 	PUTSAPI(SAPI_CCP, CR_CMD_TO_NT, *(ptr + OFF_SAPI));
-	PUTTEI(sc->sc_tei, *(ptr + OFF_TEI));
+	PUTTEI(ii->ii_tei, *(ptr + OFF_TEI));
 
-	*(ptr + OFF_INS) = (sc->sc_vs << 1) & 0xfe; /* bit 0 = 0 */
-	*(ptr + OFF_INR) = (sc->sc_vr << 1) & 0xfe; /* P bit = 0 */
+	*(ptr + OFF_INS) = (ii->ii_vs << 1) & 0xfe; /* bit 0 = 0 */
+	*(ptr + OFF_INR) = (ii->ii_vr << 1) & 0xfe; /* P bit = 0 */
 
-	sc->sc_stat.tx_i++;	/* update frame counter */
+	ii->ii_stat.tx_i++;	/* update frame counter */
 /*
  * Transmit writable copy of frame.
  */
  	if ((n = m_dup(m, M_NOWAIT)) != NULL) {
- 		(void)isdn_output(sc->sc_ifp, n, 
- 			ISDN_D_CHAN, 0, SAPI_CCP, sc->sc_tei);
+ 		(void)isdn_output(ii->ii_ifp, n, 
+ 			ISDN_D_CHAN, 0, SAPI_CCP, ii->ii_tei);
  	}	
 /*
  * in case we ack an I frame with another I frame 
  */	
-	sc->sc_iframe_sent = 1;
+	ii->ii_iframe_sent = 1;
 
-	if (sc->sc_ua_num != UA_EMPTY) {
+	if (ii->ii_ua_num != UA_EMPTY) {
 /* 
  * failsafe 
  */	
-		NDBGL2(L2_I_ERR, "%s: sc->sc_ua_num: %d != UA_EMPTY", 
-			__func__, sc->sc_ua_num);
+		NDBGL2(L2_I_ERR, "%s: ii->ii_ua_num: %d != UA_EMPTY", 
+			__func__, ii->ii_ua_num);
 /*
  * XXX
  */		
-		isdn_print_var(sc);
+		isdn_print_var(ii);
 		
-		m_freem(sc->sc_ua_frame);
+		m_freem(ii->ii_ua_frame);
 	}
 /* 
  * save unack'd frame 
  */
-	sc->sc_ua_frame = m;		
+	ii->ii_ua_frame = m;		
 /* 
  * save frame number 
  */
-	sc->sc_ua_num = sc->sc_vs;	
+	ii->ii_ua_num = ii->ii_vs;	
 
-	M128INC(sc->sc_vs);
+	M128INC(ii->ii_vs);
 
-	sc->sc_ack_pend = 0;
+	ii->ii_ack_pend = 0;
 
-	if (sc->sc_T200 == TIMER_IDLE) {
+	if (ii->ii_T200 == TIMER_IDLE) {
 		isdn_T203_stop(l2);
 		isdn_T200_start(l2);
 	}
-	SC_WUNLOCK(sc);
+	SC_WUNLOCK(ii);
 }
 
 /*
  * Transmit S frame
  */
 int  
-isdn_tx_s_frame(struct isdn_softc *sc, crbit_to_nt_t crbit, 
+isdn_tx_s_frame(struct isdn_ifaddr *ii, crbit_to_nt_t crbit, 
 	pbit_t pbit, uint8_t type)
 {
 	struct mbuf *m;
@@ -225,13 +225,13 @@ isdn_tx_s_frame(struct isdn_softc *sc, crbit_to_nt_t crbit,
 	
 	switch (type) {
 	case RR:
-		NDBGL2(L2_S_MSG, "tx RR, isdnif = %d", sc->sc_ifp->if_index);
+		NDBGL2(L2_S_MSG, "tx RR, isdnif = %d", ii->ii_ifp->if_index);
 		break;
 	case RNR:
-		NDBGL2(L2_S_MSG, "tx RNR, isdnif= %d", sc->sc_ifp->if_index);
+		NDBGL2(L2_S_MSG, "tx RNR, isdnif= %d", ii->ii_ifp->if_index);
 		break;
 	case REJ:
-		NDBGL2(L2_S_MSG, "tx REJ, isdnif = %d", sc->sc_ifp->if_index);
+		NDBGL2(L2_S_MSG, "tx REJ, isdnif = %d", ii->ii_ifp->if_index);
 		break;
 	default:
 		error = EINVAL;
@@ -241,24 +241,24 @@ isdn_tx_s_frame(struct isdn_softc *sc, crbit_to_nt_t crbit,
 	
 	PUTSAPI(SAPI_CCP, crbit, m->m_data[OFF_SAPI]);
 
-	PUTTEI(sc->sc_tei, m->m_data[OFF_TEI]);
+	PUTTEI(ii->ii_tei, m->m_data[OFF_TEI]);
 
 	m->m_data[OFF_SRCR] = type;
 
-	m->m_data[OFF_SNR] = (sc->sc_vr << 1) | (pbit & 0x01);
+	m->m_data[OFF_SNR] = (ii->ii_vr << 1) | (pbit & 0x01);
 	
-	error = isdn_output(sc->sc_ifp, m, 
-		ISDN_D_CHAN, 0, SAPI_CCP, sc->sc_tei);	
+	error = isdn_output(ii->ii_ifp, m, 
+		ISDN_D_CHAN, 0, SAPI_CCP, ii->ii_tei);	
 	
 	switch (type) {
 	case RR:
-		sc->sc_stat.tx_rr++; /* update statistics */
+		ii->ii_stat.tx_rr++; /* update statistics */
 		break;
 	case RNR:
-		sc->sc_stat.tx_rnr++; /* update statistics */
+		ii->ii_stat.tx_rnr++; /* update statistics */
 		break;
 	case REJ:
-		sc->sc_stat.tx_rej++; /* update statistics */
+		ii->ii_stat.tx_rej++; /* update statistics */
 		break;
 	default:
 		break;
@@ -271,7 +271,7 @@ out:
  * Transmit U frame
  */
 int  
-isdn_tx_u_frame(struct isdn_softc *sc, crbit_to_nt_t crbit, 
+isdn_tx_u_frame(struct isdn_ifaddr *ii, crbit_to_nt_t crbit, 
 	pbit_t pbit, uint8_t type)
 {
 	struct mbuf *m;
@@ -287,36 +287,36 @@ isdn_tx_u_frame(struct isdn_softc *sc, crbit_to_nt_t crbit,
 /*
  * tx SABME command
  */	
-		sc->sc_stat.tx_sabme++;
-		NDBGL2(L2_U_MSG, "tx SABME, tei = %d", sc->sc_tei);
+		ii->ii_stat.tx_sabme++;
+		NDBGL2(L2_U_MSG, "tx SABME, tei = %d", ii->ii_tei);
 		break;
 	case DM:
 /*
  * tx DM response
  */	
-		sc->sc_stat.tx_dm++;
-		NDBGL2(L2_U_MSG, "tx DM, tei = %d", sc->sc_tei);
+		ii->ii_stat.tx_dm++;
+		NDBGL2(L2_U_MSG, "tx DM, tei = %d", ii->ii_tei);
 		break;
 	case DISC:
 /*
  * tx DISC cmd
  */		
-		sc->sc_stat.tx_disc++;
-		NDBGL2(L2_U_MSG, "tx DISC, tei = %d", sc->sc_tei);
+		ii->ii_stat.tx_disc++;
+		NDBGL2(L2_U_MSG, "tx DISC, tei = %d", ii->ii_tei);
 		break;
 	case UA:
 /*
  * tx UA response
  */			
-		sc->sc_stat.tx_ua++;
-		NDBGL2(L2_U_MSG, "tx UA, tei = %d", sc->sc_tei);
+		ii->ii_stat.tx_ua++;
+		NDBGL2(L2_U_MSG, "tx UA, tei = %d", ii->ii_tei);
 		break;
 	case FRMR:	
 /*
  * tx FRMR response
  */
-		sc->sc_stat.tx_frmr++;
-		NDBGL2(L2_U_MSG, "tx FRMR, tei = %d", sc->sc_tei);
+		ii->ii_stat.tx_frmr++;
+		NDBGL2(L2_U_MSG, "tx FRMR, tei = %d", ii->ii_tei);
 		break;
 	default:
 		error = EINVAL;
@@ -326,21 +326,23 @@ isdn_tx_u_frame(struct isdn_softc *sc, crbit_to_nt_t crbit,
 	
 	PUTSAPI(SAPI_CCP, crbit, m->m_data[OFF_SAPI]);
 
-	PUTTEI(sc->sc_tei, m->m_data[OFF_TEI]);
+	PUTTEI(ii->ii_tei, m->m_data[OFF_TEI]);
 
 	if (pbit)
 		m->m_data[OFF_CNTL] = type | UPBITSET;
 	else
 		m->m_data[OFF_CNTL] = type & ~UPBITSET;
 	
-	error = isdn_output(sc->sc_ifp, m, 
-		ISDN_D_CHAN, 0, SAPI_CCP, sc->sc_tei);	
+	error = isdn_output(ii->ii_ifp, m, 
+		ISDN_D_CHAN, 0, SAPI_CCP, ii->ii_tei);	
 out:
 	return (error);
 }
 
 /*
  * Handoff to IEE802.{3,11} link-layer.
+ *
+ * XXX: fn signature is wrong...
  */
 
 int

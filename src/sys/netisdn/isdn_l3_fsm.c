@@ -1129,7 +1129,7 @@ F_00A(struct isdn_bc *bc)
 
 	if (bc->bc_sc->sc_l3.l3_dl_est == DL_DOWN) {
 	
-		isdn_l2_establish_req(bc->bc_sc);
+		isdn_dl_establish_req(bc->bc_sc);
 		
 		bc->bc_Q931_state = ST_OW;
 	} else {
@@ -1376,7 +1376,7 @@ F_06D(struct isdn_bc *bc)
 	NDBGL3(L3_F_MSG, "%s executing", __func__);
 
 	if (bc->bc_sc->sc_l3.l3_dl_est == DL_DOWN) {
-		isdn_l2_establish_req(bc->bc_sc);
+		isdn_dl_establish_req(bc->bc_sc);
 		bc->bc_Q931_state = ST_IWL;
 	} else {
 		isdn_l3_tx_alert(bc);
@@ -1393,7 +1393,7 @@ F_06E(struct isdn_bc *bc)
 	NDBGL3(L3_F_MSG, "%s executing", __func__);
 
 	if (bc->bc_sc->sc_l3.l3_dl_est == DL_DOWN) {
-		isdn_l2_establish_req(bc->bc_sc);
+		isdn_dl_establish_req(bc->bc_sc);
 		bc->bc_Q931_state = ST_IWA;
 	} else {
 		isdn_l3_tx_connect(bc);
@@ -1411,7 +1411,7 @@ F_06F(struct isdn_bc *bc)
 	NDBGL3(L3_F_MSG, "%s executing", __func__);
 
 	if (bc->bc_sc->sc_l3.l3_dl_est == DL_DOWN) {
-		isdn_l2_establish_req(bc->bc_sc);
+		isdn_dl_establish_req(bc->bc_sc);
 		bc->bc_Q931_state = ST_IWR;
 	} else {
 		isdn_l3_tx_release_complete(bc, 1);
@@ -1934,11 +1934,11 @@ F_DLRI(struct isdn_bc *bc)
 static void 
 F_DLRIA(struct isdn_bc *bc)
 {
-	struct isdn_l2 * l2 = (l2_softc_t*)bc->bc_l3drv->l1_token;
+	struct isdn_dl * l2 = (l2_softc_t*)bc->bc_l3drv->l1_token;
 	NDBGL3(L3_F_MSG, "%s executing", __func__);
 
 	if (bc->bc_T309 == TIMER_IDLE)
 		T309_start(bc);
 
-	isdn_l2_establish_req(bc->bc_sc);
+	isdn_dl_establish_req(bc->bc_sc);
 }

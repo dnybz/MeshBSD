@@ -112,6 +112,7 @@ static struct netisr_handler isdn_nh = {
 void
 isdn_init(void)
 {
+	ISDN_IFADDR_LOCK_INIT();
 	TAILQ_INIT(&isdn_ifaddrhead);
 	netisr_register(&isdn_nh);
 }

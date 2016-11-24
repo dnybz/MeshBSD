@@ -63,13 +63,13 @@
 
 #include <netisdn/isdn.h>
 #include <netisdn/isdn_var.h>
-#include <netisdn/isdn_l2.h>
+#include <netisdn/isdn_dl.h>
 
 /*
  * XXX: ...
  */
 
-static void 	isdn_l2_init(struct isdn_softc *);
+static void 	isdn_dl_init(struct isdn_softc *);
 
 static void 	isdn_bc_callout_init(struct isdn_bc *);
 static void 	isdn_bc_callout_stop(struct isdn_bc *);
@@ -78,12 +78,12 @@ static void 	isdn_bc_callout_stop(struct isdn_bc *);
  * XXX: ... 
  */
 
-struct isdn_bcq 	isdn_l2_bcq;
+struct isdn_bcq 	isdn_dl_bcq;
 
 /*
  * XXX: I'll transform this in to MIB.
  *
-int isdn_l2_debug = L2_DEBUG_DEFAULT;
+int isdn_dl_debug = L2_DEBUG_DEFAULT;
  */
 
 /*---------------------------------------------------------------------------*
@@ -91,14 +91,14 @@ int isdn_l2_debug = L2_DEBUG_DEFAULT;
  *---------------------------------------------------------------------------*/
 
 void
-isdn_l2_print_frame(int len, uint8_t *buf)
+isdn_dl_print_frame(int len, uint8_t *buf)
 {
 #ifdef ISDN_DEBUG
 	int i;
 /* 
  * XXX: ...
  */
-	if (isdn_l2_debug & L2_ERROR) {
+	if (isdn_dl_debug & L2_ERROR) {
 		for (i = 0; i < len; i++)
 			(void)printf(" 0x%x", buf[i]);
 	
@@ -113,7 +113,7 @@ isdn_l2_print_frame(int len, uint8_t *buf)
  *	counter and vs = transmit sequence frame counter
  *---------------------------------------------------------------------------*/
 int
-isdn_l2_nr_ok(int nr, int va, int vs)
+isdn_dl_nr_ok(int nr, int va, int vs)
 {
 	int error = 1;
 	
@@ -144,13 +144,13 @@ out:
  *	routine ESTABLISH DATA LINK (Q.921 03/93 page 83)
  *---------------------------------------------------------------------------*/
 void
-isdn_l2_establish(struct isdn_ifaddr *ii)
+isdn_dl_establish(struct isdn_ifaddr *ii)
 {
-	isdn_l2_clear_exception_cond(ii);
+	isdn_dl_clear_exception_cond(ii);
 
 	ii->ii_RC = 0;
 
-	(void)isdn_l2_tx_u_frame(ii, CR_CMD_TO_NT, P1, SABME);
+	(void)isdn_dl_tx_u_frame(ii, CR_CMD_TO_NT, P1, SABME);
 	
 	isdn_T200_restart(ii);
 
@@ -161,7 +161,7 @@ isdn_l2_establish(struct isdn_ifaddr *ii)
  *	routine CLEAR EXCEPTION CONDITIONS (Q.921 03/93 page 83)
  *---------------------------------------------------------------------------*/
 void
-isdn_l2_clear_exception_cond(struct isdn_ifaddr *ii) 
+isdn_dl_clear_exception_cond(struct isdn_ifaddr *ii) 
 {
 
 /*XXX -------------------------------------------------------------- */
@@ -183,12 +183,12 @@ isdn_l2_clear_exception_cond(struct isdn_ifaddr *ii)
  *	routine TRANSMIT ENQUIRE (Q.921 03/93 page 83)
  *---------------------------------------------------------------------------*/
 void
-isdn_l2_tx_enquire(struct isdn_ifaddr *ii)
+isdn_dl_tx_enquire(struct isdn_ifaddr *ii)
 {
 	if (ii->ii_own_busy)
-		(void)isdn_l2_tx_s_frame(ii, CR_RSP_TO_NT, P1, RNR);	
+		(void)isdn_dl_tx_s_frame(ii, CR_RSP_TO_NT, P1, RNR);	
 	else
-		(void)isdn_l2_tx_s_frame(ii, CR_RSP_TO_NT, P1, RR);	
+		(void)isdn_dl_tx_s_frame(ii, CR_RSP_TO_NT, P1, RR);	
 
 	ii->ii_ack_pend = 0;
 
@@ -199,12 +199,12 @@ isdn_l2_tx_enquire(struct isdn_ifaddr *ii)
  *	routine NR ERROR RECOVERY (Q.921 03/93 page 83)
  *---------------------------------------------------------------------------*/
 void
-isdn_l2_nr_error_recovery(struct isdn_ifaddr *ii)
+isdn_dl_nr_error_recovery(struct isdn_ifaddr *ii)
 {
 
-	isdn_lme_error_ind(ii, "isdn_l2_nr_error_recovery", MDL_ERR_J);
+	isdn_lme_error_ind(ii, "isdn_dl_nr_error_recovery", MDL_ERR_J);
 
-	isdn_l2_establish(ii);
+	isdn_dl_establish(ii);
 
 	ii->ii_l3_init = 0;
 }
@@ -213,12 +213,12 @@ isdn_l2_nr_error_recovery(struct isdn_ifaddr *ii)
  *	routine ENQUIRY RESPONSE (Q.921 03/93 page 84)
  *---------------------------------------------------------------------------*/
 void
-isdn_l2_enquiry_resp(struct isdn_ifaddr *ii)
+isdn_dl_enquiry_resp(struct isdn_ifaddr *ii)
 {
 	if (ii->ii_own_busy)
-		(void)isdn_l2_tx_s_frame(ii, CR_RSP_TO_NT, F1, RNR);	
+		(void)isdn_dl_tx_s_frame(ii, CR_RSP_TO_NT, F1, RNR);	
 	else
-		(void)isdn_l2_tx_s_frame(ii, CR_RSP_TO_NT, F1, RR);
+		(void)isdn_dl_tx_s_frame(ii, CR_RSP_TO_NT, F1, RR);
 
 	ii->ii_ack_pend = 0;
 }
@@ -227,7 +227,7 @@ isdn_l2_enquiry_resp(struct isdn_ifaddr *ii)
  *	routine INVOKE RETRANSMISSION (Q.921 03/93 page 84)
  *---------------------------------------------------------------------------*/
 void
-isdn_l2_invoke_rtx(struct isdn_ifaddr *ii, int nr)
+isdn_dl_invoke_rtx(struct isdn_ifaddr *ii, int nr)
 {
 	NDBGL2(L2_ERROR, "nr = %d", nr);
 
@@ -265,12 +265,12 @@ isdn_l2_invoke_rtx(struct isdn_ifaddr *ii, int nr)
  *	DL_ESTABLISH_REQ from layer 3
  *---------------------------------------------------------------------------*/
 int 
-isdn_l2_establish_req(struct isdn_ifaddr *ii)
+isdn_dl_establish_req(struct isdn_ifaddr *ii)
 {
 	
 	NDBGL2(L2_PRIM, "isdnif %d", ii->ii_ifp->if_index);
 	
-	isdn_l2_next_state(ii, EV_DLESTRQ);
+	isdn_dl_next_state(ii, EV_DLESTRQ);
 	return (0);
 }
 
@@ -278,10 +278,10 @@ isdn_l2_establish_req(struct isdn_ifaddr *ii)
  *	DL_RELEASE_REQ from layer 3
  *---------------------------------------------------------------------------*/
 int 
-isdn_l2_release_req(struct isdn_ifaddr *ii)
+isdn_dl_release_req(struct isdn_ifaddr *ii)
 {
 	NDBGL2(L2_PRIM, "isdnif %d", ii->ii_ifp->if_index);
-	isdn_l2_next_state(ii, EV_DLRELRQ);
+	isdn_dl_next_state(ii, EV_DLRELRQ);
 	return (0);
 }
 
@@ -289,7 +289,7 @@ isdn_l2_release_req(struct isdn_ifaddr *ii)
  *	DL UNIT DATA REQUEST from Layer 3
  *---------------------------------------------------------------------------*/
 int 
-isdn_l2_unit_data_req(struct isdn_ifaddr *ii, struct mbuf *m)
+isdn_dl_unit_data_req(struct isdn_ifaddr *ii, struct mbuf *m)
 {
 #ifdef NOTDEF
 	NDBGL2(L2_PRIM, "isdnif %d", ii->ii_ifp->if_index);
@@ -301,7 +301,7 @@ isdn_l2_unit_data_req(struct isdn_ifaddr *ii, struct mbuf *m)
  *	DL DATA REQUEST from Layer 3
  *---------------------------------------------------------------------------*/
 int 
-isdn_l2_data_req(struct isdn_ifaddr *ii, struct mbuf *m)
+isdn_dl_data_req(struct isdn_ifaddr *ii, struct mbuf *m)
 {
 	int error = 0;
 
@@ -331,7 +331,7 @@ isdn_l2_data_req(struct isdn_ifaddr *ii, struct mbuf *m)
 	default:
 		NDBGL2(L2_ERROR, "isdnif %d ERROR in state [%s], "
 			"freeing mbuf", ii->ii_ifp->if_index, 
-			isdn_l2_print_state(ii));
+			isdn_dl_print_state(ii));
 		m_freem(m);
 		error = EINVAL;
 		break;
@@ -340,10 +340,10 @@ isdn_l2_data_req(struct isdn_ifaddr *ii, struct mbuf *m)
 }
 
 /*---------------------------------------------------------------------------*
- *	isdn_l2_init - place layer 2 unit into known state
+ *	isdn_dl_init - place layer 2 unit into known state
  *---------------------------------------------------------------------------*/
 static void
-isdn_l2_init(struct isdn_ifaddr *ii)
+isdn_dl_init(struct isdn_ifaddr *ii)
 {
 	ii->ii_Q921_state = ST_TEI_UNAS;
 	ii->ii_tei_valid = TEI_INVALID;
@@ -376,10 +376,10 @@ isdn_l2_init(struct isdn_ifaddr *ii)
 }
 
 /*---------------------------------------------------------------------------*
- *	isdn_l2_status_ind - status indication upward
+ *	isdn_dl_status_ind - status indication upward
  *---------------------------------------------------------------------------*/
 int
-isdn_l2_status_ind(struct isdn_ifaddr *ii, int status, int parm)
+isdn_dl_status_ind(struct isdn_ifaddr *ii, int status, int parm)
 {
 	int send_up, init_l2;
 
@@ -443,7 +443,7 @@ isdn_l2_status_ind(struct isdn_ifaddr *ii, int status, int parm)
 	}
 
 	if (init_l2) 
-		isdn_l2_init(ii);
+		isdn_dl_init(ii);
 
 	if (send_up)
 		isdn_mdl_status_ind(ii, status, parm);  /* send up to layer 3 */
@@ -455,14 +455,14 @@ isdn_l2_status_ind(struct isdn_ifaddr *ii, int status, int parm)
  *	MDL_COMMAND_REQ from layer 3
  *---------------------------------------------------------------------------*/
 int 
-isdn_l2_cmd_req(struct isdn_ifaddr *ii, int cmd, void *arg)
+isdn_dl_cmd_req(struct isdn_ifaddr *ii, int cmd, void *arg)
 {
 	NDBGL2(L2_PRIM, "isdnif %d, cmd=%d, arg=%p",
 		 ii->ii_ifp->if_index, cmd, arg);
 
 	switch(cmd) {
 	case CMR_DOPEN:
-		isdn_l2_init(ii);
+		isdn_dl_init(ii);
 
 		break;
 	case CMR_DCLOSE:
@@ -523,7 +523,7 @@ isdn_bc_alloc(struct isdn_ifaddr *ii)
 	if ((bc = malloc(sizeof(*bc), M_IFADDR, M_NOWAIT|M_ZERO)) != NULL) { 
 		
 		TAILQ_INSERT_HEAD(&ii->ii_bcq, bc, bc_link);
-		TAILQ_INSERT_HEAD(&isdn_l2_bcq, bc, bc_chain);
+		TAILQ_INSERT_HEAD(&isdn_dl_bcq, bc, bc_chain);
 		isdn_bc_callout_init(bc);
 	}
 	return (bc);
@@ -536,7 +536,7 @@ isdn_bc_free(struct isdn_bc *bc)
 	
 	isdn_bc_callout_stop(bc);
 	TAILQ_REMOVE(&ii->ii_bcq, bc, bc_link);
-	TAILQ_REMOVE(&isdn_l2_bcq, bc, bc_chain);
+	TAILQ_REMOVE(&isdn_dl_bcq, bc, bc_chain);
 	free(bc, M_IFADDR);
 }
 
@@ -591,7 +591,7 @@ isdn_bc_get_cr(void)
 		if (cr == 0 || cr == 0x7f)
 			continue;
 
-		TAILQ_FOREACH(bc, &isdn_l2_bcq, bc_chain) {
+		TAILQ_FOREACH(bc, &isdn_dl_bcq, bc_chain) {
 		
 			if (bc->bc_cr == cr) {
 				cr = 0;

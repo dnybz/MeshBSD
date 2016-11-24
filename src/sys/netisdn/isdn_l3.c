@@ -63,13 +63,13 @@
 #include <netisdn/isdn.h>
 #include <netisdn/isdn_var.h>
 
-static uint8_t 	isdn_l2_mk_q931_cause(cause_t cause);
+static uint8_t 	isdn_dl_mk_q931_cause(cause_t cause);
 
 /*---------------------------------------------------------------------------*
  * this converts our internal state (number) to the number specified
  * in Q.931 and is used for reporting our state in STATUS messages.
  *---------------------------------------------------------------------------*/
-int isdn_l2_status_tab[] = {
+int isdn_dl_status_tab[] = {
 	0,	/*	ST_U0,	*/
 	1,	/*	ST_U1,	*/
 	3,	/*	ST_U3,	*/
@@ -92,7 +92,7 @@ int isdn_l2_status_tab[] = {
  *	return a valid q.931/q.850 cause from any of the internal causes
  *---------------------------------------------------------------------------*/
 static uint8_t
-isdn_l2_mk_q931_cause(cause_t cause)
+isdn_dl_mk_q931_cause(cause_t cause)
 {
 	register uint8_t ret;
 
@@ -104,7 +104,7 @@ isdn_l2_mk_q931_cause(cause_t cause)
 		ret = isdn_q931_cause_tab[GET_CAUSE_VAL(cause)];
 		break;
 	default:
-		panic("isdn_l2_mk_q931_cause: unknown cause type!");
+		panic("isdn_dl_mk_q931_cause: unknown cause type!");
 		break;
 	}
 	ret |= EXT_LAST;
@@ -115,7 +115,7 @@ isdn_l2_mk_q931_cause(cause_t cause)
  *	DL ESTABLISH INDICATION from Layer 2
  *---------------------------------------------------------------------------*/
 int
-isdn_l2_establish_ind(struct isdn_softc *sc)
+isdn_dl_establish_ind(struct isdn_softc *sc)
 {
 	struct isdn_bc *bc;
 	int found, error;
@@ -150,7 +150,7 @@ isdn_l2_establish_ind(struct isdn_softc *sc)
  *	DL ESTABLISH CONFIRM from Layer 2
  *---------------------------------------------------------------------------*/
 int
-isdn_l2_establish_cnf(struct isdn_softc *sc)
+isdn_dl_establish_cnf(struct isdn_softc *sc)
 {
 	struct isdn_bc *bc;
 	int found, error;
@@ -179,7 +179,7 @@ isdn_l2_establish_cnf(struct isdn_softc *sc)
  *	DL RELEASE INDICATION from Layer 2
  *---------------------------------------------------------------------------*/
 int
-isdn_l2_release_ind(struct isdn_softc *sc)
+isdn_dl_release_ind(struct isdn_softc *sc)
 {
 	struct isdn_bc *bc;
 	int found;
@@ -212,7 +212,7 @@ isdn_l2_release_ind(struct isdn_softc *sc)
  *	DL RELEASE CONFIRM from Layer 2
  *---------------------------------------------------------------------------*/
 int
-isdn_l2_release_cnf(struct isdn_softc *sc)
+isdn_dl_release_cnf(struct isdn_softc *sc)
 {
 	NDBGL2(L2_PRIM, "DL-RELEASE-CONF isdnif %d", sc->sc_ifp->if_index);
 
@@ -244,7 +244,7 @@ isdn_l3_tx_connect(struct isdn_bc *bc)
 	*ptr++ = isdn_q931_setup_cr(bc, bc->bc_cr);	/* call reference value */
 	*ptr++ = CONNECT;		/* message type = connect */
 
-	isdn_l2_data_req(bc->bc_sc, m);
+	isdn_dl_data_req(bc->bc_sc, m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -281,10 +281,10 @@ isdn_l3_tx_release_complete(struct isdn_bc *bc, int send_cause_flag)
 		*ptr++ = IEI_CAUSE;		/* cause ie */
 		*ptr++ = CAUSE_LEN;
 		*ptr++ = CAUSE_STD_LOC_OUT;
-		*ptr++ = isdn_l2_mk_q931_cause(bc->bc_cause_out);
+		*ptr++ = isdn_dl_mk_q931_cause(bc->bc_cause_out);
 	}
 
-	isdn_l2_data_req(bc->bc_sc, m);
+	isdn_dl_data_req(bc->bc_sc, m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -313,9 +313,9 @@ isdn_l3_tx_disconnect(struct isdn_bc *bc)
 	*ptr++ = IEI_CAUSE;		/* cause ie */
 	*ptr++ = CAUSE_LEN;
 	*ptr++ = CAUSE_STD_LOC_OUT;
-	*ptr++ = isdn_l2_mk_q931_cause(bc->bc_cause_out);
+	*ptr++ = isdn_dl_mk_q931_cause(bc->bc_cause_out);
 
-	isdn_l2_data_req(bc->bc_sc, m);
+	isdn_dl_data_req(bc->bc_sc, m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -409,7 +409,7 @@ isdn_l3_tx_setup(struct isdn_bc *bc)
 	
 	ptr += dlen;
 
-	isdn_l2_data_req(bc->bc_sc, m);
+	isdn_dl_data_req(bc->bc_sc, m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -435,7 +435,7 @@ isdn_l3_tx_connect_ack(struct isdn_bc *bc)
 	*ptr++ = isdn_q931_setup_cr(bc, bc->bc_cr);	/* call reference value */
 	*ptr++ = CONNECT_ACKNOWLEDGE;	/* message type = connect ack */
 
-	isdn_l2_data_req(bc->bc_sc, m);
+	isdn_dl_data_req(bc->bc_sc, m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -468,9 +468,9 @@ isdn_l3_tx_status(struct isdn_bc *bc, uint8_t q850cause)
 
 	*ptr++ = IEI_CALLSTATE;		/* call state ie */
 	*ptr++ = CALLSTATE_LEN;
-	*ptr++ = isdn_l2_status_tab[bc->bc_Q931_state];
+	*ptr++ = isdn_dl_status_tab[bc->bc_Q931_state];
 
-	isdn_l2_data_req(bc->bc_sc, m);
+	isdn_dl_data_req(bc->bc_sc, m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -503,10 +503,10 @@ isdn_l3_tx_release(struct isdn_bc *bc, int send_cause_flag)
 		*ptr++ = IEI_CAUSE;		/* cause ie */
 		*ptr++ = CAUSE_LEN;
 		*ptr++ = CAUSE_STD_LOC_OUT;
-		*ptr++ = isdn_l2_mk_q931_cause(bc->bc_cause_out);
+		*ptr++ = isdn_dl_mk_q931_cause(bc->bc_cause_out);
 	}
 
-	isdn_l2_data_req(bc->bc_sc, m);
+	isdn_dl_data_req(bc->bc_sc, m);
 }
 
 /*---------------------------------------------------------------------------*
@@ -532,5 +532,5 @@ isdn_l3_tx_alert(struct isdn_bc *bc)
 	*ptr++ = isdn_q931_setup_cr(bc, bc->bc_cr);	/* call reference value */
 	*ptr++ = ALERT;			/* message type = alert */
 
-	isdn_l2_data_req(bc->bc_sc, m);
+	isdn_dl_data_req(bc->bc_sc, m);
 }

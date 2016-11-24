@@ -350,51 +350,20 @@ struct isdn_bc {
 TAILQ_HEAD(isdn_bcq, isdn_bc);
 
 /*
- * Software context.
- */
-struct isdn_softc {
-	struct ifnet 	*sc_ifp; 	
-/*
- * RW Lock.
- */
-	struct rwlock 	sc_lock;
-/*
- * Set contains softc, b-channel.
- */	
-	struct isdn_bcq 	sc_bcq;
-};
-
-#define SC_LOCK_INIT(sc, d, t) \
-	rw_init_flags(&(sc)->sc_lock, (t), RW_RECURSE |  RW_DUPOK)
-#define SC_LOCK_DESTROY(sc) 	rw_destroy(&(sc)->sc_lock)
-#define SC_RLOCK(sc) 		rw_rlock(&(sc)->sc_lock)
-#define SC_WLOCK(sc) 		rw_wlock(&(sc)->sc_lock)
-#define SC_TRY_RLOCK(sc) 	rw_try_rlock(&(sc)->sc_lock)
-#define SC_TRY_WLOCK(sc) 	rw_try_wlock(&(sc)->sc_lock)
-#define SC_RUNLOCK(sc) 		rw_runlock(&(sc)->sc_lock)
-#define SC_WUNLOCK(sc) 		rw_wunlock(&(sc)->sc_lock)
-#define	SC_TRY_UPGRADE(sc) 	rw_try_upgrade(&(sc)->sc_lock)
-#define	SC_DOWNGRADE(sc) 	rw_downgrade(&(sc)->sc_lock)
-#define	SC_WLOCKED(sc) 		rw_wowned(&(sc)->sc_lock)
-#define	SC_LOCK_ASSERT(sc) 	rw_assert(&(sc)->sc_lock, RA_LOCKED)
-#define	SC_RLOCK_ASSERT(sc) 	rw_assert(&(sc)->sc_lock, RA_RLOCKED)
-#define	SC_WLOCK_ASSERT(sc) 	rw_assert(&(sc)->sc_lock, RA_WLOCKED)
-#define	SC_UNLOCK_ASSERT(sc) 	rw_assert(&(sc)->sc_lock, RA_UNLOCKED)
-
-/*
  * Denotes AF_ISDN partition on domain family..
  */ 
 struct isdn_ifinfo {
 	struct lltable		*iii_llt;	/* isdn_arp cache */
-	struct isdn_softc 	*iii_sc;
+/*
+ * Set contains softc, b-channel.
+ */		
+	struct isdn_bcq 	iii_bcq;
 };
 #define ISDN_LLTABLE(ifp)	\
 	(((struct isdn_ifinfo *)(ifp)->if_afdata[AF_ISDN])->iii_llt)
-#define ISDN_SOFTC(ifp) \
-	(((struct isdn_ifinfo *)(ifp)->if_afdata[AF_ISDN])->iii_sc)
 
 /*
- * ISDN Channel on TEI for call-routing @ NT.
+ * Denotes ISDN D-Channel.
  */
 struct isdn_ifaddr {
 	struct ifaddr 	ii_ifa;		/* protocol-independent info */

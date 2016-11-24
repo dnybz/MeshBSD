@@ -62,9 +62,9 @@
 #include <netisdn/isdn.h>
 #include <netisdn/isdn_var.h>
 
-#include <netisdn/isdn_l2.h>
+#include <netisdn/isdn_dl.h>
 #include <netisdn/isdn_mbuf.h>
-#include <netisdn/isdn_l2_fsm.h>
+#include <netisdn/isdn_dl_fsm.h>
 
 static void 	isdn_T200_timeout(struct isdn_softc *);
 static void 	isdn_T202_timeout(struct isdn_softc *);
@@ -79,7 +79,7 @@ isdn_T200_timeout(struct isdn_softc *sc)
 	NDBGL2(L2_T_ERR, "isdnif %d, RC = %d", 
 		sc->sc_ifp->if_index, sc->sc_RC);
 	
-	isdn_l2_next_state(sc, EV_T200EXP);
+	isdn_dl_next_state(sc, EV_T200EXP);
 }
 
 /*---------------------------------------------------------------------------*
@@ -103,7 +103,7 @@ isdn_T203_timeout(struct isdn_softc *sc)
 {
 	NDBGL2(L2_T_ERR, "isdnif %d", sc->sc_ifp->if_index);
 	
-	isdn_l2_next_state(sc, EV_T203EXP);
+	isdn_dl_next_state(sc, EV_T203EXP);
 }
 
 /*---------------------------------------------------------------------------*

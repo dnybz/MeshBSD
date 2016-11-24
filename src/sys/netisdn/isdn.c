@@ -587,11 +587,10 @@ isdn_domifattach(struct ifnet *ifp)
 
 	iii = malloc(sizeof(*iii), M_IFADDR, M_WAITOK|M_ZERO);
 	iii->iii_llt = isdn_lltattach(ifp);
-	iii->iii_sc = malloc(sizeof(*iii->iii_sc), M_IFADDR, M_WAITOK|M_ZERO);
 /*
  * XXX: ...
  */
-	TAILQ_INIT(&iii->iii_sc.sc_hd);
+	TAILQ_INIT(&iii->iii_bcq);
 /*
  * XXX: ...
  */	
@@ -604,9 +603,10 @@ isdn_domifattach(struct ifnet *ifp)
 void
 isdn_domifdetach(struct ifnet *ifp, void *aux)
 {
-	struct isdn_ifinfo *iii = (struct isdn_ifinfo *)aux;
-	
-	free(iii->iii_sc, M_IFADDR);
+	struct isdn_ifinfo *iii = (struct isdn_ifinfo *)aux;	
+/*
+ * XXX: ...
+ */	
 	lltable_free(iii->iii_llt);
 	free(iii, M_IFADDR);
 } 
