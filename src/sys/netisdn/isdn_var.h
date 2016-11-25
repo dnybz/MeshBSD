@@ -482,7 +482,7 @@ extern struct isdn_ifaddrhead	isdn_ifaddrhead;
  * further details.
  */
 
-#define ISDN_FRMRLEN 4
+#define ISDN_DLCI_LEN 	4
 
 struct isdn_frmr_seg {
 	uint8_t  fs_mask;

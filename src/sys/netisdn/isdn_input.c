@@ -129,21 +129,11 @@ const struct isdn_frmr_seg makeup[] = {
 	{ 0xfc, 2, 6 }
 };
 
-
-/*
- * Default mtx(9) on global scope.
- */
-struct mtx isdn_mtx;
-
-MTX_SYSINIT(isdn_mtx, &isdn_mtx, "isdn_lock");
-
 /*
  * Set containing ISDN channel. 
  */
 struct isdn_head isdn_ifaddrhead;
-struct rwlock isdn_ifaddr_lock;
-
-RW_SYSINIT(isdn_ifadddr_lock, &isdn_ifaddr_lock, "isdn_ifaddr_lock");
+struct rwlock isdn_ifaddr_rw;
 
 /*
  * ISDN input queue is managed by netisr(9).
@@ -176,7 +166,7 @@ isdn_input(struct mbuf *m)
 	struct ifnet *ifp;
 	struct isdn_ifaddr *ii;
 	
-	char *ptr;
+	char *data;
 	
 	int dlci_len;
 	int dlci;
@@ -189,40 +179,34 @@ isdn_input(struct mbuf *m)
 /*
  * XXX: Well, I've decided to encapsulate int by using FMRL semantics.
  */	
-	if (m->m_pkthdr.len < ISDN_FRMRLEN) 
+	if (m->m_pkthdr.len < ISDN_DLCI_LEN) 
 		goto out;
 
-	if (m->m_len < ISDN_FRMRLEN) {
-		if ((m = m_pullup(m, ISDN_FRMRLEN)) == NULL)
+	if (m->m_len < ISDN_DLCI_LEN) {
+		if ((m = m_pullup(m, ISDN_DLCI_LEN)) == NULL)
 			return;
 	}
 	
 	if ((ifp = m->m_pkthdr.rcvif) == NULL) 
 		goto out;
 			
-	ptr = mtod(m, char *);
-	
-	dlci_len = isdn_dlci_len(ptr);
-
-	switch (dlci_len) {
-	case 2:
-		SHIFTIN(makeup + 0, ptr[0], dlci);
-		SHIFTIN(makeup + 1, ptr[1], dlci);
-		break;
-	case 3:
-		SHIFTIN(makeup + 0, ptr[0], dlci);
-		SHIFTIN(makeup + 1, ptr[1], dlci);
-		SHIFTIN(makeup + 3, ptr[2], dlci);	/* 3 and 2 is correct */
-		break;
-	case 4:
-		SHIFTIN(makeup + 0, ptr[0], dlci);
-		SHIFTIN(makeup + 1, ptr[1], dlci);
-		SHIFTIN(makeup + 2, ptr[2], dlci);
-		SHIFTIN(makeup + 3, ptr[3], dlci);
-		break;
-	default:
+	data = mtod(m, char *);
+/*
+ * Determine, if valid DLCI.
+ */	
+	if (data[3] & BYTEX_EA) {
+		SHIFTIN(makeup + 0, data[0], dlci);
+		SHIFTIN(makeup + 1, data[1], dlci);
+		SHIFTIN(makeup + 2, data[2], dlci);
+		SHIFTIN(makeup + 3, data[3], dlci);
+	} else
 		goto out;
-	}
+/*
+ * Remove DLCI.
+ */
+	m_adj(m, ISDN_DLCI_LEN);
+
+	data = mtod(m, char *);
 
 /*
  * XXX ... 
@@ -235,9 +219,18 @@ isdn_input(struct mbuf *m)
  */		
 		goto out;
 	} 
+	
+	
+	
+	
+	
 /*
  * XXX Be patient, I'll reimplement this stuff completely ...
  */		
+
+
+
+
 
 	ISDN_IDADDR_RLOCK();
 	
@@ -253,10 +246,7 @@ isdn_input(struct mbuf *m)
 	}
 	ISDN_IDADDR_RUNLOCK();
 
-
-	m_adj(m, ISDN_FRMRLEN);
 	
-	ptr = mtod(m, uint8_t *);
 	
 #ifdef ISDN_DEBUG
 	(void)printf("%s: on=%s \n", __func__, ifp->if_xname);
@@ -265,7 +255,7 @@ isdn_input(struct mbuf *m)
 /*
  * LAPD Frame received. 
  */	
-	if ((*(ptr + OFF_CNTL) & 0x01) == 0) {	
+	if ((*(data + OFF_CNTL) & 0x01) == 0) {	
 /*
  *	Process I frame, "I COMMAND" Q.921 03/93 pp 68 and pp 77
  */
@@ -280,7 +270,7 @@ isdn_input(struct mbuf *m)
 		}
 
 		if (!((ii->ii_tei_valid == TEI_VALID) &&
-		     (ii->ii_tei == GETTEI(*(ptr+OFF_TEI))))) {
+		     (ii->ii_tei == GETTEI(*(data+OFF_TEI))))) {
 			goto out;
 		}
 
@@ -290,9 +280,9 @@ isdn_input(struct mbuf *m)
 				"%s: state != (MF || TR)!", __func__);
 			goto out;
 		}
-		nr = GETINR(*(ptr + OFF_INR));
-		ns = GETINS(*(ptr + OFF_INS));
-		p = GETIP(*(ptr + OFF_INR));
+		nr = GETINR(*(data + OFF_INR));
+		ns = GETINS(*(data + OFF_INS));
+		p = GETIP(*(data + OFF_INR));
 /* 
  * update frame count 
  */
@@ -421,7 +411,7 @@ isdn_input(struct mbuf *m)
 			ii->ii_Q921_state = ST_AW_EST;
 		}
 			
-	} else if ((*(ptr + OFF_CNTL) & 0x03) == 0x01 ) {
+	} else if ((*(data + OFF_CNTL) & 0x03) == 0x01 ) {
 /*
  * Process S frame.
  */	
@@ -436,17 +426,17 @@ isdn_input(struct mbuf *m)
 		}
 	
 		if (!((ii->ii_tei_valid == TEI_VALID) &&
-		     (ii->ii_tei == GETTEI(*(ptr+OFF_TEI))))) {
+		     (ii->ii_tei == GETTEI(*(data+OFF_TEI))))) {
 			goto out;
 		}
 
-		ii->ii_rxd_CR = GETCR(*(ptr + OFF_SAPI));
-		ii->ii_rxd_PF = GETSPF(*(ptr + OFF_SNR));
-		ii->ii_rxd_NR = GETSNR(*(ptr + OFF_SNR));
+		ii->ii_rxd_CR = GETCR(*(data + OFF_SAPI));
+		ii->ii_rxd_PF = GETSPF(*(data + OFF_SNR));
+		ii->ii_rxd_NR = GETSNR(*(data + OFF_SNR));
 
 		isdn_rxd_ack(ii, ii->ii_rxd_NR);
 
-		switch(*(ptr + OFF_SRCR)) {
+		switch(*(data + OFF_SRCR)) {
 		case RR:
 			ii->ii_stat.rx_rr++; /* update statistics */
 			NDBGL2(L2_S_MSG, 
@@ -473,7 +463,7 @@ isdn_input(struct mbuf *m)
 			break;
 		}	
 		
-	} else if ((*(ptr + OFF_CNTL) & 0x03) == 0x03 ) {
+	} else if ((*(data + OFF_CNTL) & 0x03) == 0x03 ) {
 /*
  * Process a received U frame.
  */
@@ -486,17 +476,17 @@ isdn_input(struct mbuf *m)
 				"%s: U-frame < 5 octetts!", __func__);
 			goto out;
 		}
-		sapi = GETSAPI(*(ptr + OFF_SAPI));
-		tei = GETTEI(*(ptr + OFF_TEI));
-		p = GETUPF(*(ptr + OFF_CNTL));
+		sapi = GETSAPI(*(data + OFF_SAPI));
+		tei = GETTEI(*(data + OFF_TEI));
+		p = GETUPF(*(data + OFF_CNTL));
 	
-		switch (*(ptr + OFF_CNTL) & ~UPFBIT) {
+		switch (*(data + OFF_CNTL) & ~UPFBIT) {
 /* 
  * commands 
  */
 		case SABME:
 			if ((ii->ii_tei_valid == TEI_VALID) && 
-				(ii->ii_tei == GETTEI(*(ptr+OFF_TEI)))) {
+				(ii->ii_tei == GETTEI(*(data+OFF_TEI)))) {
 				ii->ii_stat.rx_sabme++;
 				NDBGL2(L2_U_MSG, 
 					"SABME, sapi = %d, tei = %d", sapi, tei);
@@ -507,7 +497,7 @@ isdn_input(struct mbuf *m)
 		case UI:
 			if ((sapi == SAPI_L2M) && 
 				(tei == GROUP_TEI) &&
-				   (*(ptr + OFF_MEI) == MEI)) {
+				   (*(data + OFF_MEI) == MEI)) {
 /* 
  * layer 2 management (SAPI = 63) 
  */
@@ -536,7 +526,7 @@ isdn_input(struct mbuf *m)
 			break;
 		case DISC:
 			if ((ii->ii_tei_valid == TEI_VALID) && 
-				(ii->ii_tei == GETTEI(*(ptr+OFF_TEI)))) {
+				(ii->ii_tei == GETTEI(*(data+OFF_TEI)))) {
 				ii->ii_stat.rx_disc++;
 				NDBGL2(L2_U_MSG, 
 					"DISC, sapi = %d, tei = %d", sapi, tei);
@@ -547,7 +537,7 @@ isdn_input(struct mbuf *m)
 		case XID:
 		
 			if ((ii->ii_tei_valid == TEI_VALID) && 
-				(ii->ii_tei == GETTEI(*(ptr+OFF_TEI)))) {
+				(ii->ii_tei == GETTEI(*(data+OFF_TEI)))) {
 				ii->ii_stat.rx_xid++;
 				NDBGL2(L2_U_MSG, 
 					"XID, sapi = %d, tei = %d", sapi, tei);
@@ -558,7 +548,7 @@ isdn_input(struct mbuf *m)
  */
 		case DM:
 			if ((ii->ii_tei_valid == TEI_VALID) && 
-				(ii->ii_tei == GETTEI(*(ptr+OFF_TEI)))) {
+				(ii->ii_tei == GETTEI(*(data+OFF_TEI)))) {
 					ii->ii_stat.rx_dm++;
 				NDBGL2(L2_U_MSG, 
 					"DM, sapi = %d, tei = %d", sapi, tei);
@@ -569,7 +559,7 @@ isdn_input(struct mbuf *m)
 			break;
 		case UA:
 			if ((ii->ii_tei_valid == TEI_VALID) && 
-				(ii->ii_tei == GETTEI(*(ptr+OFF_TEI)))) {
+				(ii->ii_tei == GETTEI(*(data+OFF_TEI)))) {
 				ii->ii_stat.rx_ua++;
 				NDBGL2(L2_U_MSG, 
 					"UA, sapi = %d, tei = %d", sapi, tei);
@@ -579,7 +569,7 @@ isdn_input(struct mbuf *m)
 			break;
 		case FRMR:
 			if ((ii->ii_tei_valid == TEI_VALID) && 
-				(ii->ii_tei == GETTEI(*(ptr+OFF_TEI)))) {
+				(ii->ii_tei == GETTEI(*(data+OFF_TEI)))) {
 				ii->ii_stat.rx_frmr++;
 				NDBGL2(L2_U_MSG, 
 					"FRMR, sapi = %d, tei = %d", sapi, tei);
@@ -589,7 +579,7 @@ isdn_input(struct mbuf *m)
 			break;
 		default:
 			if ((ii->ii_tei_valid == TEI_VALID) && 
-				(ii->ii_tei == GETTEI(*(ptr+OFF_TEI)))) {
+				(ii->ii_tei == GETTEI(*(data+OFF_TEI)))) {
 				NDBGL2(L2_U_ERR, 
 					"UNKNOWN TYPE ERROR, sapi = %d, "
 					"tei = %d, frame = ", sapi, tei);
@@ -646,24 +636,3 @@ isdn_rxd_ack(struct isdn_softc *sc, int nr)
 }
 
 
-/*
- * Count up the size of the address header if we don't already know.
- */
-static int 	
-isdn_dlci_len(char *hdr)
-{
-	int len;
-	
-	if (hdr[0] & BYTEX_EA)
-		len = 0;
-	else if (hdr[1] & BYTEX_EA)
-		len = 2;
-	else if (hdr[2] & BYTEX_EA)
-		len = 3;
-	else if (hdr[3] & BYTEX_EA)
-		len = 4;
-	else
-		len = 0;
-	
-	return (len);
-}
