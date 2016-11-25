@@ -28,8 +28,9 @@
 
 /*
  * Routing distinguisher, < channel, cr ,sapi, tei > maps to < lla >
- * 
- * XXX: Btw, there exists some likelyhood that I'll redefine this RD.
+ *
+ * XXX: Well, I know that this kind of RD is trash, I'll 
+ * XXX: reimplement this by using FRMR like semantics. 	
  */
 struct isdn_rd {
 	uint8_t 	rd_chan;
@@ -58,4 +59,5 @@ struct sockaddr_e167 {
 	uint8_t 	se167_telno[ISDN_TELNO_MAX];
 	uint8_t 	se167_subaddr[ISDN_SUBADDR_MAX];
 };
+
 #endif /* _NETISDN_ISDN_H_ */

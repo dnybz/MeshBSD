@@ -46,7 +46,44 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
- 
+/*-
+ * Copyright (c) 1996-1999 Whistle Communications, Inc.
+ * All rights reserved.
+ * 
+ * Subject to the following obligations and disclaimer of warranty, use and
+ * redistribution of this software, in source or object code forms, with or
+ * without modifications are expressly permitted by Whistle Communications;
+ * provided, however, that:
+ * 1. Any and all reproductions of the source or object code must include the
+ *    copyright notice above and the following disclaimer of warranties; and
+ * 2. No rights are granted, in any manner or form, to use Whistle
+ *    Communications, Inc. trademarks, including the mark "WHISTLE
+ *    COMMUNICATIONS" on advertising, endorsements, or otherwise except as
+ *    such appears in the above copyright notice or in the software.
+ * 
+ * THIS SOFTWARE IS BEING PROVIDED BY WHISTLE COMMUNICATIONS "AS IS", AND
+ * TO THE MAXIMUM EXTENT PERMITTED BY LAW, WHISTLE COMMUNICATIONS MAKES NO
+ * REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, REGARDING THIS SOFTWARE,
+ * INCLUDING WITHOUT LIMITATION, ANY AND ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
+ * WHISTLE COMMUNICATIONS DOES NOT WARRANT, GUARANTEE, OR MAKE ANY
+ * REPRESENTATIONS REGARDING THE USE OF, OR THE RESULTS OF THE USE OF THIS
+ * SOFTWARE IN TERMS OF ITS CORRECTNESS, ACCURACY, RELIABILITY OR OTHERWISE.
+ * IN NO EVENT SHALL WHISTLE COMMUNICATIONS BE LIABLE FOR ANY DAMAGES
+ * RESULTING FROM OR ARISING OUT OF ANY USE OF THIS SOFTWARE, INCLUDING
+ * WITHOUT LIMITATION, ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+ * PUNITIVE, OR CONSEQUENTIAL DAMAGES, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES, LOSS OF USE, DATA OR PROFITS, HOWEVER CAUSED AND UNDER ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THIS SOFTWARE, EVEN IF WHISTLE COMMUNICATIONS IS ADVISED OF THE POSSIBILITY
+ * OF SUCH DAMAGE.
+ *
+ * Author: Julian Elischer <julian@freebsd.org>
+ *
+ * $FreeBSD: head/sys/netgraph/ng_frame_relay.c 298813 2016-04-29 21:25:05Z pfg $
+ * $Whistle: ng_frame_relay.c,v 1.20 1999/11/01 09:24:51 julian Exp $
+ */
 #include "opt_inet.h" 
 
 #include "opt_isdn.h"
@@ -71,7 +108,8 @@
 /*
  * XXX ...
  */
- 
+
+static  int 	isdn_dlci_len(char *);
 static void 	isdn_rxd_ack(struct isdn_softc *, int);
 static void 	isdn_input(struct mbuf *);
 
@@ -80,6 +118,17 @@ static void 	isdn_input(struct mbuf *);
  */
 
 extern struct protosw isdnsw[];
+
+/* 
+ * Used to do FRMR headers 
+ */
+const struct isdn_frmr_seg makeup[] = {
+	{ 0xfc, 2, 6 },
+	{ 0xf0, 4, 4 },
+	{ 0xfe, 1, 7 },
+	{ 0xfc, 2, 6 }
+};
+
 
 /*
  * Default mtx(9) on global scope.
@@ -126,34 +175,75 @@ isdn_input(struct mbuf *m)
 {	
 	struct ifnet *ifp;
 	struct isdn_ifaddr *ii;
-	struct isdn_rd rd;
-
-	uint8_t *ptr;
 	
+	char *ptr;
+	
+	int dlci_len;
+	int dlci;
+
 	int nr;
 	int ns;
 	int p;
 	
 	M_ASSERTPKTHDR(m);
-		
-	if (m->m_pkthdr.len < ISDN_HDRLEN) 
+/*
+ * XXX: Well, I've decided to encapsulate int by using FMRL semantics.
+ */	
+	if (m->m_pkthdr.len < ISDN_FRMRLEN) 
 		goto out;
 
-	if (m->m_len < ISDN_HDRLEN) {
-		if ((m = m_pullup(m, ISDN_HDRLEN)) == NULL)
+	if (m->m_len < ISDN_FRMRLEN) {
+		if ((m = m_pullup(m, ISDN_FRMRLEN)) == NULL)
 			return;
 	}
 	
 	if ((ifp = m->m_pkthdr.rcvif) == NULL) 
 		goto out;
 			
-	rd = *mtod(m, struct isdn_rd *);	
+	ptr = mtod(m, char *);
+	
+	dlci_len = isdn_dlci_len(ptr);
+
+	switch (dlci_len) {
+	case 2:
+		SHIFTIN(makeup + 0, ptr[0], dlci);
+		SHIFTIN(makeup + 1, ptr[1], dlci);
+		break;
+	case 3:
+		SHIFTIN(makeup + 0, ptr[0], dlci);
+		SHIFTIN(makeup + 1, ptr[1], dlci);
+		SHIFTIN(makeup + 3, ptr[2], dlci);	/* 3 and 2 is correct */
+		break;
+	case 4:
+		SHIFTIN(makeup + 0, ptr[0], dlci);
+		SHIFTIN(makeup + 1, ptr[1], dlci);
+		SHIFTIN(makeup + 2, ptr[2], dlci);
+		SHIFTIN(makeup + 3, ptr[3], dlci);
+		break;
+	default:
+		goto out;
+	}
+
+/*
+ * XXX ... 
+ */		
+
+
+	if (dcli != ISDN_D_CHAN) {
+/*
+ * XXX: Well, any ethernet port aggregates n B-chans.
+ */		
+		goto out;
+	} 
+/*
+ * XXX Be patient, I'll reimplement this stuff completely ...
+ */		
 
 	ISDN_IDADDR_RLOCK();
 	
 	TAILQ_FOREACH(isdn, &isdn_ifaddrhead, isdn_link) {
 	if ((ii->ii_ifp == ifp) && 
-		(ii->ii_tei.sisdn_rd.rd_tei == rd.rd_tei)) {
+		(ii->ii_tei.sllc.rd_tei == rd.rd_tei)) {
 			break;
 		}
 	}
@@ -164,7 +254,7 @@ isdn_input(struct mbuf *m)
 	ISDN_IDADDR_RUNLOCK();
 
 
-	m_adj(m, ISDN_HDRLEN);
+	m_adj(m, ISDN_FRMRLEN);
 	
 	ptr = mtod(m, uint8_t *);
 	
@@ -172,12 +262,6 @@ isdn_input(struct mbuf *m)
 	(void)printf("%s: on=%s \n", __func__, ifp->if_xname);
 #endif /* ISDN_DEBUG */
 
-	if (rd.rd_chan == ISDN_B_CHAN) {
-/*
- * XXX: Well, any ethernet port aggregates n B-chans.
- */		
-		goto out;
-	} 
 /*
  * LAPD Frame received. 
  */	
@@ -559,4 +643,27 @@ isdn_rxd_ack(struct isdn_softc *sc, int nr)
 		m_freem(ii->ii_ua_frame);
 		ii->ii_ua_num = UA_EMPTY;
 	}
+}
+
+
+/*
+ * Count up the size of the address header if we don't already know.
+ */
+static int 	
+isdn_dlci_len(char *hdr)
+{
+	int len;
+	
+	if (hdr[0] & BYTEX_EA)
+		len = 0;
+	else if (hdr[1] & BYTEX_EA)
+		len = 2;
+	else if (hdr[2] & BYTEX_EA)
+		len = 3;
+	else if (hdr[3] & BYTEX_EA)
+		len = 4;
+	else
+		len = 0;
+	
+	return (len);
 }

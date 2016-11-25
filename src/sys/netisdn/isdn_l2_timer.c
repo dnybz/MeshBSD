@@ -66,42 +66,47 @@
 #include <netisdn/isdn_mbuf.h>
 #include <netisdn/isdn_dl_fsm.h>
 
-static void 	isdn_T200_timeout(struct isdn_softc *);
-static void 	isdn_T202_timeout(struct isdn_softc *);
-static void 	isdn_T203_timeout(struct isdn_softc *);
+/*
+ * XXX; MP sync. prmitives are not yet implemented ...
+ */
+
+
+static void 	isdn_T200_timeout(struct isdn_ifaddr *);
+static void 	isdn_T202_timeout(struct isdn_ifaddr *);
+static void 	isdn_T203_timeout(struct isdn_ifaddr *);
 
 /*---------------------------------------------------------------------------*
  *	Q.921 timer T200 timeout function
  *---------------------------------------------------------------------------*/
 static void
-isdn_T200_timeout(struct isdn_softc *sc)
+isdn_T200_timeout(struct isdn_ifaddr *ii)
 {
 	NDBGL2(L2_T_ERR, "isdnif %d, RC = %d", 
-		sc->sc_ifp->if_index, sc->sc_RC);
+		ii->ii_ifp->if_index, ii->ii_RC);
 	
 	isdn_dl_next_state(sc, EV_T200EXP);
 }
 
-/*---------------------------------------------------------------------------*
+/*---------------------------------------------------------------------------*	
  *	Q.921 timer T202 timeout function
  *---------------------------------------------------------------------------*/
 static void
-isdn_T202_timeout(struct isdn_softc *sc)
+isdn_T202_timeout(struct isdn_ifaddr *ii)
 {
 	NDBGL2(L2_T_ERR, "isdnif %d, N202 = %d", 
-		sc->sc_ifp->if_index, sc->sc_N202);
+		ii->ii_ifp->if_index, ii->ii_N202);
 
-	if (--(sc->sc_N202))
-		(*sc->sc_T202_fn)(sc);
+	if (--(ii->ii_N202))
+		(*ii->ii_T202_fn)(sc);
 }
 
 /*---------------------------------------------------------------------------*
  *	Q.921 timer T203 timeout function
  *---------------------------------------------------------------------------*/
 static void
-isdn_T203_timeout(struct isdn_softc *sc)
+isdn_T203_timeout(struct isdn_ifaddr *ii)
 {
-	NDBGL2(L2_T_ERR, "isdnif %d", sc->sc_ifp->if_index);
+	NDBGL2(L2_T_ERR, "isdnif %d", ii->ii_ifp->if_index);
 	
 	isdn_dl_next_state(sc, EV_T203EXP);
 }
@@ -110,15 +115,15 @@ isdn_T203_timeout(struct isdn_softc *sc)
  *	Q.921 timer T200 start
  *---------------------------------------------------------------------------*/
 void
-isdn_T200_start(struct isdn_softc *sc)
+isdn_T200_start(struct isdn_ifaddr *ii)
 {
-	if (sc->sc_T200 == TIMER_ACTIVE)
+	if (ii->ii_T200 == TIMER_ACTIVE)
 		return;
 
-	NDBGL2(L2_T_MSG, "isdnif %d", sc->sc_ifp->if_index);
-	sc->sc_T200 = TIMER_ACTIVE;
+	NDBGL2(L2_T_MSG, "isdnif %d", ii->ii_ifp->if_index);
+	ii->ii_T200 = TIMER_ACTIVE;
 
-	START_TIMER(sc->sc_T200_callout, 
+	START_TIMER(ii->ii_T200_callout, 
 		isdn_T200_timeout, sc, T200DEF);
 }
 
@@ -126,41 +131,34 @@ isdn_T200_start(struct isdn_softc *sc)
  *	Q.921 timer T200 stop
  *---------------------------------------------------------------------------*/
 void
-isdn_T200_stop(struct isdn_softc *sc)
+isdn_T200_stop(struct isdn_ifaddr *ii)
 {
-	SC_WLOCK(sc);
-	
-	if (sc->sc_T200 != TIMER_IDLE) {
-		STOP_TIMER(sc->sc_T200_callout, 
+	if (ii->ii_T200 != TIMER_IDLE) {
+		STOP_TIMER(ii->ii_T200_callout, 
 			isdn_T200_timeout, sc);
-		sc->sc_T200 = TIMER_IDLE;
+		ii->ii_T200 = TIMER_IDLE;
 	}
 	
-	SC_WUNLOCK(sc);
-	
-	NDBGL2(L2_T_MSG, "isdnif %d", sc->sc_ifp->if_index);
+	NDBGL2(L2_T_MSG, "isdnif %d", ii->ii_ifp->if_index);
 }
 
 /*---------------------------------------------------------------------------*
  *	Q.921 timer T200 restart
  *---------------------------------------------------------------------------*/
 void
-isdn_T200_restart(struct isdn_softc *sc)
+isdn_T200_restart(struct isdn_ifaddr *ii)
 {
-	SC_WLOCK(sc);
 	
-	if (sc->sc_T200 != TIMER_IDLE) {
-		STOP_TIMER(sc->sc_T200_callout, 
+	if (ii->ii_T200 != TIMER_IDLE) {
+		STOP_TIMER(ii->ii_T200_callout, 
 			isdn_T200_timeout, sc);
 	} else 
-		sc->sc_T200 = TIMER_ACTIVE;
+		ii->ii_T200 = TIMER_ACTIVE;
 	
-	START_TIMER(sc->sc_T200_callout, 
+	START_TIMER(ii->ii_T200_callout, 
 		isdn_T200_timeout, sc, T200DEF);
 	
-	SC_WUNLOCK(sc);
-	
-	NDBGL2(L2_T_MSG, "isdnif %d", sc->sc_ifp->if_index);
+	NDBGL2(L2_T_MSG, "isdnif %d", ii->ii_ifp->if_index);
 }
 
 
@@ -168,17 +166,17 @@ isdn_T200_restart(struct isdn_softc *sc)
  *	Q.921 timer T202 start
  *---------------------------------------------------------------------------*/
 void
-isdn_T202_start(struct isdn_softc *sc)
+isdn_T202_start(struct isdn_ifaddr *ii)
 {
-	if (sc->sc_N202 == TIMER_ACTIVE)
+	if (ii->ii_N202 == TIMER_ACTIVE)
 		return;
 
-	NDBGL2(L2_T_MSG, "isdnif %d", sc->sc_ifp->if_index);
+	NDBGL2(L2_T_MSG, "isdnif %d", ii->ii_ifp->if_index);
 	
-	sc->sc_N202 = N202DEF;
-	sc->sc_T202 = TIMER_ACTIVE;
+	ii->ii_N202 = N202DEF;
+	ii->ii_T202 = TIMER_ACTIVE;
 
-	START_TIMER(sc->sc_T202_callout, 
+	START_TIMER(ii->ii_T202_callout, 
 		isdn_T202_timeout, sc, T202DEF);
 }
 
@@ -186,33 +184,33 @@ isdn_T202_start(struct isdn_softc *sc)
  *	Q.921 timer T202 stop
  *---------------------------------------------------------------------------*/
 void
-isdn_T202_stop(struct isdn_softc *sc)
+isdn_T202_stop(struct isdn_ifaddr *ii)
 {
 	SC_WLOCK(sc);
 	
-	if (sc->sc_T202 != TIMER_IDLE) {
-		STOP_TIMER(sc->sc_T202_callout, 
+	if (ii->ii_T202 != TIMER_IDLE) {
+		STOP_TIMER(ii->ii_T202_callout, 
 			isdn_T202_timeout, sc);
-		sc->sc_T202 = TIMER_IDLE;
+		ii->ii_T202 = TIMER_IDLE;
 	}
 	SC_WUNLOCK(sc);
 	
-	NDBGL2(L2_T_MSG, "isdnif %d", sc->sc_ifp->if_index);
+	NDBGL2(L2_T_MSG, "isdnif %d", ii->ii_ifp->if_index);
 }
 
 /*---------------------------------------------------------------------------*
  *	Q.921 timer T203 start
  *---------------------------------------------------------------------------*/
 void
-isdn_T203_start(struct isdn_softc *sc)
+isdn_T203_start(struct isdn_ifaddr *ii)
 {
-	if (sc->sc_T203 == TIMER_ACTIVE)
+	if (ii->ii_T203 == TIMER_ACTIVE)
 		return;
 
-	NDBGL2(L2_T_MSG, "isdnif %d", sc->sc_ifp->if_index);
-	sc->sc_T203 = TIMER_ACTIVE;
+	NDBGL2(L2_T_MSG, "isdnif %d", ii->ii_ifp->if_index);
+	ii->ii_T203 = TIMER_ACTIVE;
 
-	START_TIMER(sc->sc_T203_callout, 
+	START_TIMER(ii->ii_T203_callout, 
 		isdn_T203_timeout, sc, T203DEF);
 }
 
@@ -220,38 +218,32 @@ isdn_T203_start(struct isdn_softc *sc)
  *	Q.921 timer T203 stop
  *---------------------------------------------------------------------------*/
 void
-isdn_T203_stop(struct isdn_softc *sc)
+isdn_T203_stop(struct isdn_ifaddr *ii)
 {
-	SC_WLOCK(sc);
 	
-	if (sc->sc_T203 != TIMER_IDLE) {
-		STOP_TIMER(sc->sc_T203_callout, 
+	if (ii->ii_T203 != TIMER_IDLE) {
+		STOP_TIMER(ii->ii_T203_callout, 
 			isdn_T203_timeout, sc);
-		sc->sc_T203 = TIMER_IDLE;
+		ii->ii_T203 = TIMER_IDLE;
 	}
-	SC_WUNLOCK(sc);
 	
-	NDBGL2(L2_T_MSG, "isdnif %d", sc->sc_ifp->if_index);
+	NDBGL2(L2_T_MSG, "isdnif %d", ii->ii_ifp->if_index);
 }
 
 /*---------------------------------------------------------------------------*
  *	Q.921 timer T203 restart
  *---------------------------------------------------------------------------*/
 void
-isdn_T203_restart(struct isdn_softc *sc)
+isdn_T203_restart(struct isdn_ifaddr *ii)
 {
-	SC_WLOCK(sc);
-
-	if (sc->sc_T203 != TIMER_IDLE) {
-		STOP_TIMER(sc->sc_T203_callout, 
+	if (ii->ii_T203 != TIMER_IDLE) {
+		STOP_TIMER(ii->ii_T203_callout, 
 			isdn_T203_timerout, sc);
 	} else 
-		sc->sc_T203 = TIMER_ACTIVE;
+		ii->ii_T203 = TIMER_ACTIVE;
 
-	START_TIMER(sc->sc_T203_callout, 
+	START_TIMER(ii->ii_T203_callout, 
 		isdn_T203_timerout, sc, T203DEF);
 
-	SC_WUNLOCK(sc);
-
-	NDBGL2(L2_T_MSG, "isdnif %d", sc->sc_ifp->if_index);
+	NDBGL2(L2_T_MSG, "isdnif %d", ii->ii_ifp->if_index);
 }

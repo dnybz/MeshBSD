@@ -474,5 +474,46 @@ extern struct isdn_ifaddrhead	isdn_ifaddrhead;
 #define	ISDN_IFADDR_WLOCK()	rw_wlock(&isdn_ifaddr_rw)
 #define	ISDN_IFADDR_WUNLOCK()	rw_wunlock(&isdn_ifaddr_rw)
 
+/* 
+ * Used to do headers. 
+ *
+ * Copyright holds Whisle Communications 
+ * Inc., see  netisdn/isdn_input.c for 
+ * further details.
+ */
+
+#define ISDN_FRMRLEN 4
+
+struct isdn_frmr_seg {
+	uint8_t  fs_mask;
+	uint8_t  fs_shift;
+	uint8_t  fs_width;
+};
+
+#define SHIFTIN(seg, byte, dlci) 					     \
+	{								     \
+		(dlci) <<= (seg)->fs_width;				     \
+		(dlci) |=						     \
+			(((byte) & (seg)->fs_mask) >> (seg)->fs_shift);    \
+	}
+
+#define SHIFTOUT(seg, byte, dlci)					     \
+	{								     \
+		(byte) |= (((dlci) << (seg)->fs_shift) & (seg)->fs_mask);  \
+		(dlci) >>= (seg)->fs_width;				     \
+	}
+extern const struct isdn_frmr_seg 	makeup[];
+
+#define BYTEX_EA	0x01	/* End Address. Always 0 on byte1 */
+#define BYTE1_C_R	0x02
+#define BYTE2_FECN	0x08	/* forwards congestion notification */
+#define BYTE2_BECN	0x04	/* Backward congestion notification */
+#define BYTE2_DE	0x02	/* Discard elligability */
+#define LASTBYTE_D_C	0x02	/* last byte is dl_core or dlci info */
+
+/*
+ * XXX ...
+ */
+ 
 #endif /* _KERNEL */
 #endif /* _NETISDN_ISDN_VAR_H_ */
