@@ -27,37 +27,25 @@
 #define _NETISDN_ISDN_H_
 
 /*
- * Routing distinguisher, < channel, cr ,sapi, tei > maps to < lla >
- *
- * XXX: Well, I know that this kind of RD is trash, I'll 
- * XXX: reimplement this by using FRMR like semantics. 	
- */
-struct isdn_rd {
-	uint8_t 	rd_chan;
-	uint8_t 	rd_cr; 		/* XXX: Q.931 dictates cr >= 2byte */
-	uint8_t 	rd_sapi; 	
-	uint8_t 	rd_tei;	 
-} __packed;
-#define ISDN_HDRLEN			(sizeof(struct isdn_rd))
-
-/*
  * Denotes ISDN Channel.
  */
 struct sockaddr_isdn {
 	uint8_t 	sisdn_len; 	/* length */
 	sa_family_t 	sisdn_family; 	/* AF_ISDN */
-	struct isdn_rd 	sisdn_rd;	/* < channel, cr ,sapi, tei > */		
+	uint32_t 	sisdn_dlci; 		/* dlci for bearer services */
+	uint16_t 	sisdn_tei; 		/* Q.921, TEI  */
+	uint16_t 	sisdn_cr; 		/* Q.931 dictates cr >= 2byte */
 };
 #define SISDN_LEN 	(sizeof(struct sockaddr_isdn))
 
 /*
- * Denotes tel-no.
+ * Denotes tel-no (for internal use).
  */
-struct sockaddr_e167 {
-	uint8_t 	se167_len; 	/* length */
-	sa_family_t 	se167_family; 	/* AF_E167 */
-	uint8_t 	se167_telno[ISDN_TELNO_MAX];
-	uint8_t 	se167_subaddr[ISDN_SUBADDR_MAX];
+struct sockaddr_isdn_sn {
+	uint8_t 	sisdn_sn_len; 	/* length */
+	sa_family_t 	sisdn_sn_family; 	/* AF_ISDN_SN */
+	uint8_t 	sisdn_sn_telno[ISDN_TELNO_MAX];
+	uint8_t 	sisdn_sn_subaddr[ISDN_SUBADDR_MAX];
 };
 
 #endif /* _NETISDN_ISDN_H_ */

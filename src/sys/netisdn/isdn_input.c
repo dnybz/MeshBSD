@@ -109,7 +109,7 @@
  * XXX ...
  */
 
-static  int 	isdn_dlci_len(char *);
+static  int 	isdn_dlci_len(u_char *);
 static void 	isdn_rxd_ack(struct isdn_softc *, int);
 static void 	isdn_input(struct mbuf *);
 
@@ -166,19 +166,17 @@ isdn_input(struct mbuf *m)
 	struct ifnet *ifp;
 	struct isdn_ifaddr *ii;
 	
-	char *data;
+	u_char *data;
 	
-	int dlci_len;
 	int dlci;
-
+	int fmt;
+	int tei;
 	int nr;
 	int ns;
 	int p;
 	
 	M_ASSERTPKTHDR(m);
-/*
- * XXX: Well, I've decided to encapsulate int by using FMRL semantics.
- */	
+
 	if (m->m_pkthdr.len < ISDN_DLCI_LEN) 
 		goto out;
 
@@ -189,11 +187,12 @@ isdn_input(struct mbuf *m)
 	
 	if ((ifp = m->m_pkthdr.rcvif) == NULL) 
 		goto out;
-			
-	data = mtod(m, char *);
 /*
  * Determine, if valid DLCI.
- */	
+ */				
+	data = mtod(m, u_char *);
+	dlci = 0;
+
 	if (data[3] & BYTEX_EA) {
 		SHIFTIN(makeup + 0, data[0], dlci);
 		SHIFTIN(makeup + 1, data[1], dlci);
@@ -201,42 +200,48 @@ isdn_input(struct mbuf *m)
 		SHIFTIN(makeup + 3, data[3], dlci);
 	} else
 		goto out;
-/*
- * Remove DLCI.
- */
-	m_adj(m, ISDN_DLCI_LEN);
-
-	data = mtod(m, char *);
 
 /*
  * XXX ... 
  */		
 
-
-	if (dcli != ISDN_D_CHAN) {
 /*
- * XXX: Well, any ethernet port aggregates n B-chans.
+ * Remove DLCI.
+ */
+	m_adj(m, ISDN_DLCI_LEN);
+	data = mtod(m, u_char *);
+
+/*
+ * XXX ...
+ */
+
+/*
+ * LAPD Frame received. 
  */		
+	if ((*(data + OFF_CNTL) & 0x01) == I_FRAME)
+		fmt = I_FRAME;
+	else if ((*(data + OFF_CNTL) & 0x03) == S_FRAME)
+		fmt = S_FRAME;
+	else if ((*(data + OFF_CNTL) & 0x03) == U_FRAME)
+		fmt = U_FRAME;
+	else {
+		ii->ii_stat.err_rx_badf++;
+		NDBGL2(L2_ERROR, 
+				"%s: bad frame rx'd - ", __func__);
+				
+		isdn_l2_print_frame(m->m_len, mtod(m, u_char *));
 		goto out;
-	} 
-	
-	
-	
-	
-	
+	}
+	tei = GET_TEI(*(data+OFF_TEI));
 /*
- * XXX Be patient, I'll reimplement this stuff completely ...
+ * XXX I'll reimplement this stuff completely ...
  */		
-
-
-
-
 
 	ISDN_IDADDR_RLOCK();
 	
 	TAILQ_FOREACH(isdn, &isdn_ifaddrhead, isdn_link) {
 	if ((ii->ii_ifp == ifp) && 
-		(ii->ii_tei.sllc.rd_tei == rd.rd_tei)) {
+		(ii->ii_tei.sisdn_tei == tei)) {
 			break;
 		}
 	}
@@ -252,10 +257,13 @@ isdn_input(struct mbuf *m)
 	(void)printf("%s: on=%s \n", __func__, ifp->if_xname);
 #endif /* ISDN_DEBUG */
 
+
 /*
- * LAPD Frame received. 
- */	
-	if ((*(data + OFF_CNTL) & 0x01) == 0) {	
+ * XXX I'll reimplement this stuff completely ...
+ */		
+
+
+	if (fmt == I_FRAME) {	
 /*
  *	Process I frame, "I COMMAND" Q.921 03/93 pp 68 and pp 77
  */
@@ -270,7 +278,7 @@ isdn_input(struct mbuf *m)
 		}
 
 		if (!((ii->ii_tei_valid == TEI_VALID) &&
-		     (ii->ii_tei == GETTEI(*(data+OFF_TEI))))) {
+		     (ii->ii_tei == tei))) {
 			goto out;
 		}
 
@@ -411,7 +419,7 @@ isdn_input(struct mbuf *m)
 			ii->ii_Q921_state = ST_AW_EST;
 		}
 			
-	} else if ((*(data + OFF_CNTL) & 0x03) == 0x01 ) {
+	} else if (fmt == S_FRAME) {
 /*
  * Process S frame.
  */	
@@ -426,7 +434,7 @@ isdn_input(struct mbuf *m)
 		}
 	
 		if (!((ii->ii_tei_valid == TEI_VALID) &&
-		     (ii->ii_tei == GETTEI(*(data+OFF_TEI))))) {
+		     (ii->ii_tei == tei))) {
 			goto out;
 		}
 
@@ -459,11 +467,11 @@ isdn_input(struct mbuf *m)
 			ii->ii_stat.err_rx_bads++; /* update statistics */
 			NDBGL2(L2_S_ERR, 
 				"%s: unknown code, frame = ");
-			isdn_l2_print_frame(m->m_len, mtod(m, uint8_t *));
+			isdn_l2_print_frame(m->m_len, mtod(m, u_char *));
 			break;
 		}	
 		
-	} else if ((*(data + OFF_CNTL) & 0x03) == 0x03 ) {
+	} else {
 /*
  * Process a received U frame.
  */
@@ -477,7 +485,7 @@ isdn_input(struct mbuf *m)
 			goto out;
 		}
 		sapi = GETSAPI(*(data + OFF_SAPI));
-		tei = GETTEI(*(data + OFF_TEI));
+		tei = GET_TEI(*(data + OFF_TEI));
 		p = GETUPF(*(data + OFF_CNTL));
 	
 		switch (*(data + OFF_CNTL) & ~UPFBIT) {
@@ -486,7 +494,7 @@ isdn_input(struct mbuf *m)
  */
 		case SABME:
 			if ((ii->ii_tei_valid == TEI_VALID) && 
-				(ii->ii_tei == GETTEI(*(data+OFF_TEI)))) {
+				(ii->ii_tei == tei)) {
 				ii->ii_stat.rx_sabme++;
 				NDBGL2(L2_U_MSG, 
 					"SABME, sapi = %d, tei = %d", sapi, tei);
@@ -526,7 +534,7 @@ isdn_input(struct mbuf *m)
 			break;
 		case DISC:
 			if ((ii->ii_tei_valid == TEI_VALID) && 
-				(ii->ii_tei == GETTEI(*(data+OFF_TEI)))) {
+				(ii->ii_tei == tei)) {
 				ii->ii_stat.rx_disc++;
 				NDBGL2(L2_U_MSG, 
 					"DISC, sapi = %d, tei = %d", sapi, tei);
@@ -537,7 +545,7 @@ isdn_input(struct mbuf *m)
 		case XID:
 		
 			if ((ii->ii_tei_valid == TEI_VALID) && 
-				(ii->ii_tei == GETTEI(*(data+OFF_TEI)))) {
+				(ii->ii_tei == tei)) {
 				ii->ii_stat.rx_xid++;
 				NDBGL2(L2_U_MSG, 
 					"XID, sapi = %d, tei = %d", sapi, tei);
@@ -548,18 +556,18 @@ isdn_input(struct mbuf *m)
  */
 		case DM:
 			if ((ii->ii_tei_valid == TEI_VALID) && 
-				(ii->ii_tei == GETTEI(*(data+OFF_TEI)))) {
+				(ii->ii_tei == tei)) {
 					ii->ii_stat.rx_dm++;
 				NDBGL2(L2_U_MSG, 
 					"DM, sapi = %d, tei = %d", sapi, tei);
-				isdn_l2_print_frame(m->m_len, mtod(m, uint8_t *));
+				isdn_l2_print_frame(m->m_len, mtod(m, u_char *));
 				ii->ii_rxd_PF = p;
 				isdn_l2_next_state(ii, EV_RXDM);
 			}
 			break;
 		case UA:
 			if ((ii->ii_tei_valid == TEI_VALID) && 
-				(ii->ii_tei == GETTEI(*(data+OFF_TEI)))) {
+				(ii->ii_tei == tei)) {
 				ii->ii_stat.rx_ua++;
 				NDBGL2(L2_U_MSG, 
 					"UA, sapi = %d, tei = %d", sapi, tei);
@@ -569,7 +577,7 @@ isdn_input(struct mbuf *m)
 			break;
 		case FRMR:
 			if ((ii->ii_tei_valid == TEI_VALID) && 
-				(ii->ii_tei == GETTEI(*(data+OFF_TEI)))) {
+				(ii->ii_tei == tei)) {
 				ii->ii_stat.rx_frmr++;
 				NDBGL2(L2_U_MSG, 
 					"FRMR, sapi = %d, tei = %d", sapi, tei);
@@ -579,7 +587,7 @@ isdn_input(struct mbuf *m)
 			break;
 		default:
 			if ((ii->ii_tei_valid == TEI_VALID) && 
-				(ii->ii_tei == GETTEI(*(data+OFF_TEI)))) {
+				(ii->ii_tei == tei)) {
 				NDBGL2(L2_U_ERR, 
 					"UNKNOWN TYPE ERROR, sapi = %d, "
 					"tei = %d, frame = ", sapi, tei);
@@ -588,18 +596,12 @@ isdn_input(struct mbuf *m)
 					"not mine -  UNKNOWN TYPE ERROR, "
 					"sapi = %d, tei = %d, frame = ", sapi, tei);
 			}
-			isdn_l2_print_frame(m->m_len, mtod(m, uint8_t *));
+			isdn_l2_print_frame(m->m_len, mtod(m, u_char *));
 			
 			ii->ii_stat.err_rx_badui++;
 			break;
 		}
 		
-	} else {
-		ii->ii_stat.err_rx_badf++;
-		NDBGL2(L2_ERROR, 
-				"%s: bad frame rx'd - ", __func__);
-				
-		isdn_l2_print_frame(m->m_len, mtod(m, uint8_t *));
 	}
 out:	
 	m_freem(m);	

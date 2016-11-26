@@ -120,16 +120,16 @@ typedef enum {
 
 /* extract and insert macros for SAPI octett */
 
-#define GETSAPI(octett)		(((octett) >> 2) & 0x3f)
-#define PUTSAPI(sapi,cr,octett)	\
+#define GET_SAPI(octett)		(((octett) >> 2) & 0x3f)
+#define PUT_SAPI(sapi,cr,octett)	\
 	((octett) = (((sapi << 2) & 0xfc) | ((cr & 0x01) << 1)))
-#define GETCR(octett)		(((octett) >> 1) & 0x01)
-#define GETEA(octett)		((octett) & 0x01)
+#define GET_CR(octett)		(((octett) >> 1) & 0x01)
+#define GET_EA(octett)		((octett) & 0x01)
 
 /* address field - octett 3 */
 
 #define OFF_TEI		1	/* TEI offset */
-#define GETTEI(octett) (((octett) >> 1) & 0x7f)
+#define GET_TEI(octett) (((octett) >> 1) & 0x7f)
 #define PUTTEI(tei, octett) \
 	((octett) = ((((tei) << 1) & 0xfe)) | 0x01)
 
@@ -139,7 +139,12 @@ typedef enum {
 
 #define OFF_CNTL	2	/* 1st byte of control field */
 
+#define 	I_FRAME 	0x00
+#define 	S_FRAME 	0x01
+#define 	U_FRAME 	0x03
+
 /* S frames */
+
 
 #define S_FRAME_LEN	4	/* length of a U-frame */
 #define OFF_SRCR	2	/* 1st byte of control field,	*/
@@ -266,8 +271,8 @@ struct isdn_bc {
 
 	int	bc_call_state;		/* from incoming SETUP	*/
 
-	struct sockaddr_e167 	bc_dst; 	
-	struct sockaddr_e167 	bc_src;
+	struct sockaddr_isdn_sn 	bc_dst; 	
+	struct sockaddr_isdn_sn 	bc_src;
 	
 	int	bc_scr_ind;		/* screening ind for incoming call */
 	int	bc_prs_ind;		/* presentation ind for incoming call */

@@ -43,75 +43,75 @@
 
 static struct pr_usrreqs nousrreqs;
 
-#include <neti4b/i4b.h>
+#include <netisdn/isdn.h>
 
-FEATURE(i4b, "ISDN over Ethernet");
+FEATURE(isdn, "ISDN over Ethernet");
 
-extern void	i4b_init(void);
+extern void	isdn_init(void);
 
 /*
  * ISDN protocol family.
  */
  
-struct protosw i4bsw[] = {
+struct protosw isdnsw[] = {
 { 
 	.pr_type =		0,			
-	.pr_domain =	&i4bdomain,		
-	.pr_init =		i4b_init,
+	.pr_domain =	&isdndomain,		
+	.pr_init =		isdn_init,
 	.pr_usrreqs	=	&nousrreqs,
 },
 { /* DGRAM socket for ISDN Telephony */
 	.pr_type =		SOCK_DGRAM,		
-	.pr_domain =	&i4bdomain,
-	.pr_protocol =	I4BPROTO_TEL,		
+	.pr_domain =	&isdndomain,
+	.pr_protocol =	ISDNPROTO_TEL,		
 	.pr_flags =		PR_ATOMIC|PR_ADDR,
   	
-  	.pr_input =		i4b_tel_input,
+  	.pr_input =		isdn_tel_input,
 /*	
-	.pr_ctlinput =		i4b_tel_ctlinput,
-	.pr_ctloutput =		i4b_tel_ctloutput,
+	.pr_ctlinput =		isdn_tel_ctlinput,
+	.pr_ctloutput =		isdn_tel_ctloutput,
  */	
-	.pr_init =		i4b_tel_init,
+	.pr_init =		isdn_tel_init,
 
 /*
 #ifdef VIMAGE
-	.pr_destroy =		i4b_tel_destroy,
+	.pr_destroy =		isdn_tel_destroy,
 #endif
  */
 
-	.pr_usrreqs =		&i4b_tel_usrreqs
+	.pr_usrreqs =		&isdn_tel_usrreqs
 },
 { /* control socket */
 	.pr_type =		SOCK_DGRAM,		
-	.pr_domain =	&i4bdomain,	
+	.pr_domain =	&isdndomain,	
 	.pr_flags =		PR_ATOMIC|PR_ADDR,	
-  	.pr_usrreqs = 	&i4b_raw_usrreqs,
+  	.pr_usrreqs = 	&isdn_raw_usrreqs,
 },
 { /* raw wildcard */
 	.pr_type =		SOCK_RAW,		
-	.pr_domain =	&i4bdomain,	
+	.pr_domain =	&isdndomain,	
 	.pr_flags =		PR_ATOMIC|PR_ADDR,
-  	.pr_usrreqs = 	&i4b_raw_usrreqs,
+  	.pr_usrreqs = 	&isdn_raw_usrreqs,
 },
 };
 
-extern void *	i4b_domifattach(struct ifnet *);
-extern void	i4b_domifdetach(struct ifnet *, void *);
+extern void *	isdn_domifattach(struct ifnet *);
+extern void	isdn_domifdetach(struct ifnet *, void *);
 
 /*
  * Defines ISDN domain.
  */
 
-struct domain i4bdomain = {
+struct domain isdndomain = {
 	.dom_family = 		AF_ISDN, 
 	.dom_name = 		"isdn", 
-	.dom_protosw =		i4bsw,
+	.dom_protosw =		isdnsw,
 	
 	.dom_protoswNPROTOSW =	
-		&i4bsw[sizeof(i4bsw)/sizeof(i4bsw[0])],
+		&isdnsw[sizeof(isdnsw)/sizeof(isdnsw[0])],
 	
-	.dom_ifattach =		i4b_domifattach,
-	.dom_ifdetach = 	i4b_domifdetach
+	.dom_ifattach =		isdn_domifattach,
+	.dom_ifdetach = 	isdn_domifdetach
 };
-DOMAIN_SET(i4b);
+DOMAIN_SET(isdn);
 
