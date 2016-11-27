@@ -33,7 +33,8 @@ struct sockaddr_isdn {
 	uint8_t 	sisdn_len; 	/* length */
 	sa_family_t 	sisdn_family; 	/* AF_ISDN */
 	uint32_t 	sisdn_dlci; 		/* dlci for bearer services */
-	uint16_t 	sisdn_tei; 		/* Q.921, TEI  */
+	uint8_t 	sisdn_sapi;
+	uint8_t 	sisdn_tei; 		/* Q.921, TEI  */
 	uint16_t 	sisdn_cr; 		/* Q.931 dictates cr >= 2byte */
 };
 #define SISDN_LEN 	(sizeof(struct sockaddr_isdn))

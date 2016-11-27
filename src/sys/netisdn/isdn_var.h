@@ -113,7 +113,6 @@ typedef enum {
 
 /* address field - octett 2 */
 
-#define OFF_SAPI	0	/* SAPI offset, HDLC flag is eaten by L1 */
 #define SAPI_CCP	0	/* SAPI = 0 - call control procedures */
 #define SAPI_X25	16	/* SAPI = 16 - X.25 packet procedures */
 #define SAPI_L2M	63	/* SAPI = 63 - Layer 2 management procedures */
@@ -479,35 +478,7 @@ extern struct isdn_ifaddrhead	isdn_ifaddrhead;
 #define	ISDN_IFADDR_WLOCK()	rw_wlock(&isdn_ifaddr_rw)
 #define	ISDN_IFADDR_WUNLOCK()	rw_wunlock(&isdn_ifaddr_rw)
 
-/* 
- * Used to do headers. 
- *
- * Copyright holds Whisle Communications 
- * Inc., see  netisdn/isdn_input.c for 
- * further details.
- */
 
-#define ISDN_DLCI_LEN 	4
-
-struct isdn_frmr_seg {
-	uint8_t  fs_mask;
-	uint8_t  fs_shift;
-	uint8_t  fs_width;
-};
-
-#define SHIFTIN(seg, byte, dlci) 					     \
-	{								     \
-		(dlci) <<= (seg)->fs_width;				     \
-		(dlci) |=						     \
-			(((byte) & (seg)->fs_mask) >> (seg)->fs_shift);    \
-	}
-
-#define SHIFTOUT(seg, byte, dlci)					     \
-	{								     \
-		(byte) |= (((dlci) << (seg)->fs_shift) & (seg)->fs_mask);  \
-		(dlci) >>= (seg)->fs_width;				     \
-	}
-extern const struct isdn_frmr_seg 	makeup[];
 
 #define BYTEX_EA	0x01	/* End Address. Always 0 on byte1 */
 #define BYTE1_C_R	0x02

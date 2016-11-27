@@ -46,44 +46,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-/*-
- * Copyright (c) 1996-1999 Whistle Communications, Inc.
- * All rights reserved.
- * 
- * Subject to the following obligations and disclaimer of warranty, use and
- * redistribution of this software, in source or object code forms, with or
- * without modifications are expressly permitted by Whistle Communications;
- * provided, however, that:
- * 1. Any and all reproductions of the source or object code must include the
- *    copyright notice above and the following disclaimer of warranties; and
- * 2. No rights are granted, in any manner or form, to use Whistle
- *    Communications, Inc. trademarks, including the mark "WHISTLE
- *    COMMUNICATIONS" on advertising, endorsements, or otherwise except as
- *    such appears in the above copyright notice or in the software.
- * 
- * THIS SOFTWARE IS BEING PROVIDED BY WHISTLE COMMUNICATIONS "AS IS", AND
- * TO THE MAXIMUM EXTENT PERMITTED BY LAW, WHISTLE COMMUNICATIONS MAKES NO
- * REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, REGARDING THIS SOFTWARE,
- * INCLUDING WITHOUT LIMITATION, ANY AND ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.
- * WHISTLE COMMUNICATIONS DOES NOT WARRANT, GUARANTEE, OR MAKE ANY
- * REPRESENTATIONS REGARDING THE USE OF, OR THE RESULTS OF THE USE OF THIS
- * SOFTWARE IN TERMS OF ITS CORRECTNESS, ACCURACY, RELIABILITY OR OTHERWISE.
- * IN NO EVENT SHALL WHISTLE COMMUNICATIONS BE LIABLE FOR ANY DAMAGES
- * RESULTING FROM OR ARISING OUT OF ANY USE OF THIS SOFTWARE, INCLUDING
- * WITHOUT LIMITATION, ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
- * PUNITIVE, OR CONSEQUENTIAL DAMAGES, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES, LOSS OF USE, DATA OR PROFITS, HOWEVER CAUSED AND UNDER ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THIS SOFTWARE, EVEN IF WHISTLE COMMUNICATIONS IS ADVISED OF THE POSSIBILITY
- * OF SUCH DAMAGE.
- *
- * Author: Julian Elischer <julian@freebsd.org>
- *
- * $FreeBSD: head/sys/netgraph/ng_frame_relay.c 298813 2016-04-29 21:25:05Z pfg $
- * $Whistle: ng_frame_relay.c,v 1.20 1999/11/01 09:24:51 julian Exp $
- */
+
 #include "opt_inet.h" 
 
 #include "opt_isdn.h"
@@ -109,7 +72,6 @@
  * XXX ...
  */
 
-static  int 	isdn_dlci_len(u_char *);
 static void 	isdn_rxd_ack(struct isdn_softc *, int);
 static void 	isdn_input(struct mbuf *);
 
@@ -118,16 +80,6 @@ static void 	isdn_input(struct mbuf *);
  */
 
 extern struct protosw isdnsw[];
-
-/* 
- * Used to do FRMR headers 
- */
-const struct isdn_frmr_seg makeup[] = {
-	{ 0xfc, 2, 6 },
-	{ 0xf0, 4, 4 },
-	{ 0xfe, 1, 7 },
-	{ 0xfc, 2, 6 }
-};
 
 /*
  * Set containing ISDN channel. 
@@ -169,8 +121,9 @@ isdn_input(struct mbuf *m)
 	u_char *data;
 	
 	int dlci;
-	int fmt;
+	int sapi;
 	int tei;
+	int fmt;
 	int nr;
 	int ns;
 	int p;
@@ -188,36 +141,54 @@ isdn_input(struct mbuf *m)
 	if ((ifp = m->m_pkthdr.rcvif) == NULL) 
 		goto out;
 /*
- * Determine, if valid DLCI.
+ * Fetch and remove DLCI.
+ *
+ * Well, 32bit number implements DLCI, 
+ * 0 denotes LMI / LME any other bearer.
  */				
+	dlci = *mtod(m, uint32_t *);
+	m_adj(m, ISDN_DLCI_LEN);	
+/*
+ * Determine if LAPD.
+ */ 	
 	data = mtod(m, u_char *);
-	dlci = 0;
+	
+	if (data[1] & BYTEX_EA) 
+		goto lapd;
+	
+/*
+ * XXX well, I've planned to implement LMI and FRMR derived op's here ...  
+ */		
 
-	if (data[3] & BYTEX_EA) {
-		SHIFTIN(makeup + 0, data[0], dlci);
-		SHIFTIN(makeup + 1, data[1], dlci);
-		SHIFTIN(makeup + 2, data[2], dlci);
-		SHIFTIN(makeup + 3, data[3], dlci);
-	} else
+bearer:
+
+/*
+ * XXX Yeah handoff on SAP for data (audio / video) on bearer channel ... 
+ */		
+
+lapd:
+/*
+ * We are ether on Provier Edge or Customer edge.
+ */
+ 	sapi = GET_SAPI(*data);
+ 	tei = GET_TEI(*(data + OFF_TEI));
+/*
+ * XXX I'll reimplement this stuff completely ...
+ */	
+	ISDN_IFADDR_RLOCK();
+	
+	TAILQ_FOREACH(isdn, &isdn_ifaddrhead, isdn_link) {
+	if ((ii->ii_ifp == ifp) && 
+		(ii->ii_tei.sisdn_tei == tei)) {
+			break;
+		}
+	}
+	if (ii == NULL) {
+		ISDN_IFADDR_RUNLOCK();
 		goto out;
-
-/*
- * XXX ... 
- */		
-
-/*
- * Remove DLCI.
- */
-	m_adj(m, ISDN_DLCI_LEN);
-	data = mtod(m, u_char *);
-
-/*
- * XXX ...
- */
-
-/*
- * LAPD Frame received. 
- */		
+	}
+	ISDN_IFADDR_RUNLOCK();
+ 
 	if ((*(data + OFF_CNTL) & 0x01) == I_FRAME)
 		fmt = I_FRAME;
 	else if ((*(data + OFF_CNTL) & 0x03) == S_FRAME)
@@ -232,24 +203,7 @@ isdn_input(struct mbuf *m)
 		isdn_l2_print_frame(m->m_len, mtod(m, u_char *));
 		goto out;
 	}
-	tei = GET_TEI(*(data+OFF_TEI));
-/*
- * XXX I'll reimplement this stuff completely ...
- */		
 
-	ISDN_IDADDR_RLOCK();
-	
-	TAILQ_FOREACH(isdn, &isdn_ifaddrhead, isdn_link) {
-	if ((ii->ii_ifp == ifp) && 
-		(ii->ii_tei.sisdn_tei == tei)) {
-			break;
-		}
-	}
-	if (ii == NULL) {
-		ISDN_IDADDR_RUNLOCK();
-		goto out;
-	}
-	ISDN_IDADDR_RUNLOCK();
 
 	
 	
@@ -288,9 +242,9 @@ isdn_input(struct mbuf *m)
 				"%s: state != (MF || TR)!", __func__);
 			goto out;
 		}
-		nr = GETINR(*(data + OFF_INR));
-		ns = GETINS(*(data + OFF_INS));
-		p = GETIP(*(data + OFF_INR));
+		nr = GET_I_NR(*(data + OFF_INR));
+		ns = GET_I_NS(*(data + OFF_INS));
+		p = GET_I_P(*(data + OFF_INR));
 /* 
  * update frame count 
  */
@@ -484,9 +438,9 @@ isdn_input(struct mbuf *m)
 				"%s: U-frame < 5 octetts!", __func__);
 			goto out;
 		}
-		sapi = GETSAPI(*(data + OFF_SAPI));
+		sapi = GET_SAPI(*(data + OFF_SAPI));
 		tei = GET_TEI(*(data + OFF_TEI));
-		p = GETUPF(*(data + OFF_CNTL));
+		p = GET_U_PF(*(data + OFF_CNTL));
 	
 		switch (*(data + OFF_CNTL) & ~UPFBIT) {
 /* 
