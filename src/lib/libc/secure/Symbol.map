@@ -1,5 +1,5 @@
 /*
- * $FreeBSD: head/lib/libc/secure/Symbol.map 286782 2015-08-14 14:58:04Z pfg $
+ * $FreeBSD: releng/11.0/lib/libc/secure/Symbol.map 286782 2015-08-14 14:58:04Z pfg $
  */
 
 FBSD_1.0 {

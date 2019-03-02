@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/riscv/include/intr.h 298636 2016-04-26 12:56:44Z br $
+ * $FreeBSD: releng/11.0/sys/riscv/include/intr.h 298636 2016-04-26 12:56:44Z br $
  */
 
 #ifndef	_MACHINE_INTR_MACHDEP_H_

@@ -1,4 +1,4 @@
-/* $FreeBSD: head/lib/libedit/config.h 296435 2016-03-06 21:32:54Z pfg $ */
+/* $FreeBSD: releng/11.0/lib/libedit/config.h 296435 2016-03-06 21:32:54Z pfg $ */
 /* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 

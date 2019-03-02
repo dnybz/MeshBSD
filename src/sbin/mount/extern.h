@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sbin/mount/extern.h 152738 2005-11-23 23:22:56Z rodrigc $
+ * $FreeBSD: releng/11.0/sbin/mount/extern.h 152738 2005-11-23 23:22:56Z rodrigc $
  */
 
 /* vfslist.c */

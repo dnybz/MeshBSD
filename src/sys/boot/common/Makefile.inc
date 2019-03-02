@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/boot/common/Makefile.inc 296378 2016-03-04 05:36:53Z sgalabov $
+# $FreeBSD: releng/11.0/sys/boot/common/Makefile.inc 296378 2016-03-04 05:36:53Z sgalabov $
 
 SRCS+=	boot.c commands.c console.c devopen.c interp.c 
 SRCS+=	interp_backslash.c interp_parse.c ls.c misc.c 

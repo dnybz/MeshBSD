@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/geom/cache/g_cache.c 269691 2014-08-07 21:56:37Z imp $");
+__FBSDID("$FreeBSD: releng/11.0/sys/geom/cache/g_cache.c 269691 2014-08-07 21:56:37Z imp $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

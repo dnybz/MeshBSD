@@ -1,4 +1,4 @@
-/* $FreeBSD: head/sys/boot/arm/uboot/ldscript.arm 297758 2016-04-09 19:09:06Z ian $ */
+/* $FreeBSD: releng/11.0/sys/boot/arm/uboot/ldscript.arm 297758 2016-04-09 19:09:06Z ian $ */
 
 OUTPUT_ARCH(arm)
 ENTRY(_start)

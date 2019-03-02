@@ -11,7 +11,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/e_lgammal.c 271651 2014-09-15 23:21:57Z kargl $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/src/e_lgammal.c 271651 2014-09-15 23:21:57Z kargl $");
 
 #include "math.h"
 #include "math_private.h"

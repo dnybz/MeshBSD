@@ -1,45 +1,31 @@
 #
-# Network toolbox.
+# This builds network tools.
+#
+# $FreeBSD: releng/11.0/tools/bsdbox/Makefile.net 291479 2015-11-30 09:02:28Z adrian $
 #
 
-#
-# It is still assumed that IPv6 Doman was enables.
-#
+CRUNCH_PROGS_sbin+=	route ping
+CRUNCH_PROGS_usr.sbin+=	arp
 
-###################################################################
-# Programs from stock /bin
-#
+# inetd
+CRUNCH_PROGS_usr.sbin+=	inetd
+CRUNCH_LIBS+=	-lwrap
 
-###################################################################
-# Programs from standard /sbin
-#
-CRUNCH_PROGS_sbin+=	ifconfig ping ping6 route
+#.if ${MK_INET6_SUPPORT} != "no"
+#CRUNCH_PROGS_sbin+= ping6
+#.endif
 
-##################################################################
-# Programs from stock /usr/bin
-#
+# netstat
 CRUNCH_PROGS_usr.bin+=	netstat
+CRUNCH_LIBS+=	-lmemstat -lnetgraph
 
-##################################################################
-# Programs from stock /usr/sbin
-#
-CRUNCH_PROGS_usr.sbin+=	arp inetd wlandebug
+# ifconfig
+CRUNCH_PROGS_sbin+=	ifconfig
+CRUNCH_SHLIBS+=	-l80211
 
-##################################################################
-# Library dependencies
-#
-CRUNCH_LIBS+= -lbsdxml
-CRUNCH_LIBS+= -lcrypto
-CRUNCH_LIBS+= -lipsec
-# CRUNCH_LIBS+= -lipx
-CRUNCH_LIBS+= -ljail
-CRUNCH_LIBS+= -lkvm
-CRUNCH_LIBS+= -lm
-CRUNCH_LIBS+= -lmd
-CRUNCH_LIBS+= -lmemstat
-CRUNCH_LIBS+= -lnetgraph
-CRUNCH_LIBS+= -lpcap
-CRUNCH_LIBS+= -lsbuf
-CRUNCH_LIBS+= -lutil
-CRUNCH_LIBS+= -lwrap
+# wlan stuff
+CRUNCH_PROGS_usr.sbin+=	wlandebug
 
+# tcpdump
+CRUNCH_PROGS_usr.sbin+=	tcpdump
+# CRUNCH_LIBS+=	-lpcap -lcrypto

@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/subr_power.c 152248 2005-11-09 16:22:56Z imp $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/subr_power.c 152248 2005-11-09 16:22:56Z imp $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

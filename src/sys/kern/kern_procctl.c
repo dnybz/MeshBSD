@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_procctl.c 286975 2015-08-20 22:44:26Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_procctl.c 286975 2015-08-20 22:44:26Z kib $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

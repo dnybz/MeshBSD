@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/nlm/dev/net/xlpge.c 295881 2016-02-22 09:04:36Z skra $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/nlm/dev/net/xlpge.c 295881 2016-02-22 09:04:36Z skra $");
 #include <sys/endian.h>
 #include <sys/systm.h>
 #include <sys/sockio.h>

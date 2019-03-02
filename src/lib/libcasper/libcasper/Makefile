@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/libcasper/libcasper/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/libcasper/libcasper/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 PACKAGE=${LIB}
 LIB=	casper
@@ -18,20 +18,5 @@ INCS+=	libcasper_service.h
 LIBADD=	nv
 
 CFLAGS+=-I${.CURDIR}
-
-MAN+=	libcasper.3
-
-MLINKS+=libcasper.3 cap_init.3
-MLINKS+=libcasper.3 cap_wrap.3
-MLINKS+=libcasper.3 cap_unwrap.3
-MLINKS+=libcasper.3 cap_sock.3
-MLINKS+=libcasper.3 cap_clone.3
-MLINKS+=libcasper.3 cap_close.3
-MLINKS+=libcasper.3 cap_limit_get.3
-MLINKS+=libcasper.3 cap_limit_set.3
-MLINKS+=libcasper.3 cap_send_nvlist.3
-MLINKS+=libcasper.3 cap_recv_nvlist.3
-MLINKS+=libcasper.3 cap_xfer_nvlist.3
-MLINKS+=libcasper.3 cap_service_open.3
 
 .include <bsd.lib.mk>

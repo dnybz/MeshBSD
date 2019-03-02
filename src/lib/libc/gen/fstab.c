@@ -31,7 +31,7 @@
 static char sccsid[] = "@(#)fstab.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/gen/fstab.c 278815 2015-02-15 21:11:07Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/gen/fstab.c 278815 2015-02-15 21:11:07Z pfg $");
 
 #include "namespace.h"
 #include <sys/param.h>

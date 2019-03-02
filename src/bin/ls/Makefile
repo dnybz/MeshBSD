@@ -1,5 +1,5 @@
 #	@(#)Makefile	8.1 (Berkeley) 6/2/93
-# $FreeBSD: head/bin/ls/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/bin/ls/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 .include <src.opts.mk>
 
@@ -12,6 +12,10 @@ LIBADD=	xo util
 	${MK_LS_COLORS} != no
 CFLAGS+= -DCOLORLS
 LIBADD+=	termcapw
+.endif
+
+.if ${MK_TESTS} != "no"
+SUBDIR+=	tests
 .endif
 
 .include <bsd.prog.mk>

@@ -34,7 +34,7 @@
 
 #include <machine/asm.h>
 #include <machine/param.h>
-__FBSDID("$FreeBSD: head/sys/riscv/riscv/cpufunc_asm.S 295972 2016-02-24 16:50:34Z br $");
+__FBSDID("$FreeBSD: releng/11.0/sys/riscv/riscv/cpufunc_asm.S 295972 2016-02-24 16:50:34Z br $");
 
 	.text
 	.align	2

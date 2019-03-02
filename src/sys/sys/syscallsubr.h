@@ -22,7 +22,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/sys/syscallsubr.h 296060 2016-02-25 19:58:23Z markj $
+ * $FreeBSD: releng/11.0/sys/sys/syscallsubr.h 296060 2016-02-25 19:58:23Z markj $
  */
 
 #ifndef _SYS_SYSCALLSUBR_H_

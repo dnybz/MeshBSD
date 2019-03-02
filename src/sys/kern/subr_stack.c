@@ -27,7 +27,7 @@
 #include "opt_ddb.h"
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/subr_stack.c 291059 2015-11-19 05:56:59Z markj $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/subr_stack.c 291059 2015-11-19 05:56:59Z markj $");
 
 #include <sys/param.h>
 #include <sys/kernel.h>

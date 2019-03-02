@@ -35,7 +35,7 @@
  * this approach means that we need a method for each and every encoding.
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/localedef/wide.c 298746 2016-04-28 15:20:08Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/localedef/wide.c 298746 2016-04-28 15:20:08Z pfg $");
 
 #include <ctype.h>
 #include <stdlib.h>

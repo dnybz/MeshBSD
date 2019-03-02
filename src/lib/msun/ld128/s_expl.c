@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/ld128/s_expl.c 262613 2014-02-28 18:06:00Z dim $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/ld128/s_expl.c 262613 2014-02-28 18:06:00Z dim $");
 
 /*
  * ld128 version of s_expl.c.  See ../ld80/s_expl.c for most comments.

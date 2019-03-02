@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)file.h	8.3 (Berkeley) 1/9/95
- * $FreeBSD: head/sys/sys/file.h 297400 2016-03-29 19:57:11Z glebius $
+ * $FreeBSD: releng/11.0/sys/sys/file.h 297400 2016-03-29 19:57:11Z glebius $
  */
 
 #ifndef _SYS_FILE_H_

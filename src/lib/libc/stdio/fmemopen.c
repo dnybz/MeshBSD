@@ -24,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/stdio/fmemopen.c 289931 2015-10-25 12:09:28Z ache $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/stdio/fmemopen.c 289931 2015-10-25 12:09:28Z ache $");
 
 #include <fcntl.h>
 #include <stdbool.h>

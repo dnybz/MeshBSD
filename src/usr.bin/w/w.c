@@ -29,7 +29,7 @@
 
 #include <sys/cdefs.h>
 
-__FBSDID("$FreeBSD: head/usr.bin/w/w.c 287590 2015-09-09 05:17:04Z delphij $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/w/w.c 287590 2015-09-09 05:17:04Z delphij $");
 
 #ifndef lint
 static const char copyright[] =

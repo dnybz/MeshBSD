@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/ld128/s_exp2l.c 251024 2013-05-27 08:50:10Z das $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/ld128/s_exp2l.c 251024 2013-05-27 08:50:10Z das $");
 
 #include <float.h>
 #include <stdint.h>

@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/rt305x/rt305x_machdep.c 296569 2016-03-09 18:38:03Z sobomax $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/rt305x/rt305x_machdep.c 296569 2016-03-09 18:38:03Z sobomax $");
 
 #include "opt_ddb.h"
 

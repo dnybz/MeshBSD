@@ -76,7 +76,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/adm5120/if_admsw.c 276750 2015-01-06 12:59:37Z rwatson $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/adm5120/if_admsw.c 276750 2015-01-06 12:59:37Z rwatson $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

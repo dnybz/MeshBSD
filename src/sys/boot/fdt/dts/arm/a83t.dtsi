@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/fdt/dts/arm/a83t.dtsi 299871 2016-05-15 22:36:55Z jmcneill $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/arm/a83t.dtsi 299871 2016-05-15 22:36:55Z jmcneill $
  */
 
 / {

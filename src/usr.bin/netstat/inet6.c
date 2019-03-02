@@ -35,7 +35,7 @@ static char sccsid[] = "@(#)inet6.c	8.4 (Berkeley) 4/20/94";
 #endif
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/netstat/inet6.c 287649 2015-09-11 04:37:01Z markj $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/netstat/inet6.c 304522 2016-08-20 11:42:08Z tuexen $");
 
 #ifdef INET6
 #include <sys/param.h>
@@ -207,11 +207,11 @@ static	const char *ip6nh[] = {
 	"#129",
 	"#130",
 	"#131",
-	"#132",
+	"SCTP",
 	"#133",
 	"#134",
 	"#135",
-	"#136",
+	"UDPLite",
 	"#137",
 	"#138",
 	"#139",
@@ -488,8 +488,8 @@ ip6_stats(u_long off, const char *name, int af1 __unused, int proto __unused)
 			  "{N:/global%s}\n");\
 			break;\
 		default:\
-			xo_emit("\t\t{qke:name/%x}{:count/%ju} " \
-				"addresses scope=%x\n",\
+			xo_emit("\t\t{qke:name/%#x}{:count/%ju} " \
+				"{N:/addresses scope=%#x}\n",\
 				i, (uintmax_t)ip6stat.s, i);	   \
 		}\
 	} while (0);

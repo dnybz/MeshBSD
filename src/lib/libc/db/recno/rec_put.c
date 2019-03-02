@@ -31,7 +31,7 @@
 static char sccsid[] = "@(#)rec_put.c	8.7 (Berkeley) 8/18/94";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/db/recno/rec_put.c 295975 2016-02-24 17:14:11Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/db/recno/rec_put.c 295975 2016-02-24 17:14:11Z pfg $");
 
 #include <sys/types.h>
 

@@ -34,7 +34,7 @@
 
 /*
  * #ident	"@(#)warmstart.c	1.7	93/07/05 SMI"
- * $FreeBSD: head/usr.sbin/rpcbind/warmstart.c 258564 2013-11-25 16:44:02Z hrs $/
+ * $FreeBSD: releng/11.0/usr.sbin/rpcbind/warmstart.c 258564 2013-11-25 16:44:02Z hrs $/
  */
 #include <sys/types.h>
 #include <sys/stat.h>

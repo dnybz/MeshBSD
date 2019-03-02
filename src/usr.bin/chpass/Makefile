@@ -1,5 +1,5 @@
 #	@(#)Makefile	8.2 (Berkeley) 4/2/94
-# $FreeBSD: head/usr.bin/chpass/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/usr.bin/chpass/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 .include <src.opts.mk>
 
@@ -10,30 +10,17 @@ SRCS=	chpass.c edit.c field.c pw_scan.c table.c util.c
 BINOWN=	root
 BINMODE=4555
 PRECIOUSPROG=
-.if ${MK_NIS} != "no"
-CFLAGS+= -DYP
-.endif
+
 #Some people need this, uncomment to activate
 #CFLAGS+=-DRESTRICT_FULLNAME_CHANGE
 CFLAGS+=-I${.CURDIR}/../../usr.sbin/pwd_mkdb -I${.CURDIR}/../../lib/libc/gen -I.
 
 LIBADD=	crypt util
-.if ${MK_NIS} != "no"
-LIBADD+=	ypclnt
-.endif 
 
 SYMLINKS=	${BINDIR}/chpass ${BINDIR}/chfn
 SYMLINKS+=	${BINDIR}/chpass ${BINDIR}/chsh
-.if ${MK_NIS} != "no"
-SYMLINKS+=	${BINDIR}/chpass ${BINDIR}/ypchpass
-SYMLINKS+=	${BINDIR}/chpass ${BINDIR}/ypchfn
-SYMLINKS+=	${BINDIR}/chpass ${BINDIR}/ypchsh
-.endif
 
 MLINKS=	chpass.1 chfn.1 chpass.1 chsh.1
-.if ${MK_NIS} != "no"
-MLINKS+= chpass.1 ypchpass.1 chpass.1 ypchfn.1 chpass.1 ypchsh.1
-.endif
 
 beforeinstall:
 .for i in chpass chfn chsh ypchpass ypchfn ypchsh

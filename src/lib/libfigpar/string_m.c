@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libfigpar/string_m.c 274116 2014-11-04 23:46:01Z dteske $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libfigpar/string_m.c 274116 2014-11-04 23:46:01Z dteske $");
 
 #include <sys/types.h>
 

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.bin/systat/devs.h 87715 2001-12-12 00:13:37Z markm $
+ * $FreeBSD: releng/11.0/usr.bin/systat/devs.h 87715 2001-12-12 00:13:37Z markm $
  */
 
 int dsinit(int, struct statinfo *, struct statinfo *, struct statinfo *);

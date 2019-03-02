@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libkvm/kvm_minidump_mips.c 298485 2016-04-22 18:05:34Z ngie $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libkvm/kvm_minidump_mips.c 298485 2016-04-22 18:05:34Z ngie $");
 
 /*
  * MIPS machine dependent routines for kvm and minidumps.

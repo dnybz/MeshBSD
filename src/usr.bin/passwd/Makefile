@@ -1,5 +1,5 @@
 # From:	@(#)Makefile	8.3 (Berkeley) 4/2/94
-# $FreeBSD: head/usr.bin/passwd/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/usr.bin/passwd/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 .include <src.opts.mk>
 
@@ -8,10 +8,6 @@ BINOWN	 = root
 BINMODE	 = 4555
 PRECIOUSPROG=
 LIBADD   = pam
-.if ${MK_NIS} != "no"
-SYMLINKS = ${BINDIR}/passwd ${BINDIR}/yppasswd
-MLINKS	 = passwd.1 yppasswd.1
-.endif
 
 beforeinstall:
 .for i in passwd yppasswd

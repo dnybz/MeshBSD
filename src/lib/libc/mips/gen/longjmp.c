@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/mips/gen/longjmp.c 251091 2013-05-29 01:54:10Z emaste $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/mips/gen/longjmp.c 251091 2013-05-29 01:54:10Z emaste $");
 #include "namespace.h"
 #include <sys/types.h>
 #include <ucontext.h>

@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/bin/uuidgen/uuidgen.c 112252 2003-03-15 02:27:10Z marcel $");
+__FBSDID("$FreeBSD: releng/11.0/bin/uuidgen/uuidgen.c 112252 2003-03-15 02:27:10Z marcel $");
 
 #include <err.h>
 #include <stdio.h>

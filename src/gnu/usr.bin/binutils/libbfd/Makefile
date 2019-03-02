@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/usr.bin/binutils/libbfd/Makefile 284373 2015-06-14 03:33:27Z sjg $
+# $FreeBSD: releng/11.0/gnu/usr.bin/binutils/libbfd/Makefile 284373 2015-06-14 03:33:27Z sjg $
 
 .include "../Makefile.inc0"
 

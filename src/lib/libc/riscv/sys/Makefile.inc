@@ -1,12 +1,9 @@
-# $FreeBSD: head/lib/libc/riscv/sys/Makefile.inc 294227 2016-01-17 15:21:23Z br $
+# $FreeBSD: releng/11.0/lib/libc/riscv/sys/Makefile.inc 302092 2016-06-22 21:11:27Z brooks $
 
 SRCS+=	trivial-vdso_tc.c
 
 #MDASM= ptrace.S
-MDASM=	brk.S \
-	cerror.S \
-	pipe.S \
-	sbrk.S \
+MDASM=	cerror.S \
 	shmat.S \
 	sigreturn.S \
 	syscall.S \
@@ -17,6 +14,7 @@ NOASM=	break.o \
 	exit.o \
 	getlogin.o \
 	openbsd_poll.o \
+	sbrk.o \
 	sstk.o \
 	vfork.o \
 	yield.o

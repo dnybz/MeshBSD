@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sbin/geom/misc/subr.c 226718 2011-10-25 07:34:35Z pjd $");
+__FBSDID("$FreeBSD: releng/11.0/sbin/geom/misc/subr.c 226718 2011-10-25 07:34:35Z pjd $");
 
 #include <sys/param.h>
 #include <sys/disk.h>

@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sbin/geom/class/multipath/geom_multipath.c 292048 2015-12-10 07:04:36Z ngie $");
+__FBSDID("$FreeBSD: releng/11.0/sbin/geom/class/multipath/geom_multipath.c 292048 2015-12-10 07:04:36Z ngie $");
 #include <sys/param.h>
 #include <errno.h>
 #include <paths.h>

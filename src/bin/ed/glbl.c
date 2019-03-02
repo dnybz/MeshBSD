@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/bin/ed/glbl.c 281758 2015-04-20 02:07:57Z eadler $");
+__FBSDID("$FreeBSD: releng/11.0/bin/ed/glbl.c 281758 2015-04-20 02:07:57Z eadler $");
 
 #include <sys/types.h>
 #include <sys/ioctl.h>

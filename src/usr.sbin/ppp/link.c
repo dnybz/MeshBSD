@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/ppp/link.c 299991 2016-05-16 23:47:08Z truckman $
+ * $FreeBSD: releng/11.0/usr.sbin/ppp/link.c 299991 2016-05-16 23:47:08Z truckman $
  *
  */
 

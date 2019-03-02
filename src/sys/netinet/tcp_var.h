@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)tcp_var.h	8.4 (Berkeley) 5/24/95
- * $FreeBSD: head/sys/netinet/tcp_var.h 300096 2016-05-17 23:14:17Z glebius $
+ * $FreeBSD: releng/11.0/sys/netinet/tcp_var.h 301114 2016-06-01 10:14:04Z bz $
  */
 
 #ifndef _NETINET_TCP_VAR_H_
@@ -755,9 +755,6 @@ struct tcpcb *
 	 tcp_drop(struct tcpcb *, int);
 void	 tcp_drain(void);
 void	 tcp_init(void);
-#ifdef VIMAGE
-void	 tcp_destroy(void);
-#endif
 void	 tcp_fini(void *);
 char	*tcp_log_addrs(struct in_conninfo *, struct tcphdr *, void *,
 	    const void *);

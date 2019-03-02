@@ -22,7 +22,7 @@
 \ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 \ SUCH DAMAGE.
 \
-\ $FreeBSD: head/sys/boot/forth/pcibios.4th 280924 2015-03-31 22:32:35Z dteske $
+\ $FreeBSD: releng/11.0/sys/boot/forth/pcibios.4th 280924 2015-03-31 22:32:35Z dteske $
 
 only forth also support-functions also builtins definitions
 

@@ -27,10 +27,10 @@
  * SUCH DAMAGE.
  *
  *	@(#)if_ethersubr.c	8.1 (Berkeley) 6/10/93
- * $FreeBSD: head/sys/net/if_ethersubr.c 298985 2016-05-03 16:01:53Z bz $
+ * $FreeBSD: releng/11.0/sys/net/if_ethersubr.c 301498 2016-06-06 10:13:48Z bz $
  */
 /*-
- * Copyright (c) 2016 Henning Matyschok
+ * Copyright (c) 2017 Henning Matyschok
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -59,9 +59,6 @@
 #include "opt_mbuf_profiling.h"
 #include "opt_rss.h"
 
-#include "opt_isdn.h"
-#include "opt_isdn_debug.h"
-
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/kernel.h>
@@ -77,7 +74,6 @@
 
 #include <net/if.h>
 #include <net/if_var.h>
-#include <net/if_arp.h>
 #include <net/netisr.h>
 #include <net/route.h>
 #include <net/if_llc.h>
@@ -87,17 +83,19 @@
 #include <net/ethernet.h>
 #include <net/if_bridgevar.h>
 #include <net/if_vlan_var.h>
-#include <net/if_llatbl.h>
 #include <net/pfil.h>
 #include <net/rss_config.h>
 #include <net/vnet.h>
 
 #include <netpfil/pf/pf_mtag.h>
 
+#include <netarp/if_arp.h>
+#include <netarp/if_llatbl.h>
+#include <netarp/if_ether.h>
+
 #if defined(INET) || defined(INET6)
 #include <netinet/in.h>
 #include <netinet/in_var.h>
-#include <netinet/if_ether.h>
 #include <netinet/ip_carp.h>
 #include <netinet/ip_var.h>
 #endif
@@ -189,11 +187,6 @@ ether_requestencap(struct ifnet *ifp, struct if_encap_req *req)
 	case AF_INET6:
 		etype = htons(ETHERTYPE_IPV6);
 		break;
-#ifdef ISDN
-	case AF_ISDN:
-		etype = htons(ETHERTYPE_ISDN);
-		break;
-#endif /* ISDN */
 	case AF_ARP:
 		ah = (struct arphdr *)req->hdata;
 		ah->ar_hrd = htons(ARPHRD_ETHER);
@@ -229,7 +222,7 @@ ether_requestencap(struct ifnet *ifp, struct if_encap_req *req)
 static int
 ether_resolve_addr(struct ifnet *ifp, struct mbuf *m,
 	const struct sockaddr *dst, struct route *ro, u_char *phdr,
-	uint32_t *pflags)
+	uint32_t *pflags, struct llentry **plle)
 {
 	struct ether_header *eh;
 	uint32_t lleflags = 0;
@@ -238,13 +231,16 @@ ether_resolve_addr(struct ifnet *ifp, struct mbuf *m,
 	uint16_t etype;
 #endif
 
+	if (plle)
+		*plle = NULL;
 	eh = (struct ether_header *)phdr;
 
 	switch (dst->sa_family) {
 #ifdef INET
 	case AF_INET:
 		if ((m->m_flags & (M_BCAST | M_MCAST)) == 0)
-			error = arpresolve(ifp, 0, m, dst, phdr, &lleflags);
+			error = arpresolve(ifp, 0, m, dst, phdr, &lleflags,
+			    plle);
 		else {
 			if (m->m_flags & M_BCAST)
 				memcpy(eh->ether_dhost, ifp->if_broadcastaddr,
@@ -263,7 +259,8 @@ ether_resolve_addr(struct ifnet *ifp, struct mbuf *m,
 #ifdef INET6
 	case AF_INET6:
 		if ((m->m_flags & M_MCAST) == 0)
-			error = nd6_resolve(ifp, 0, m, dst, phdr, &lleflags);
+			error = nd6_resolve(ifp, 0, m, dst, phdr, &lleflags,
+			    plle);
 		else {
 			const struct in6_addr *a6;
 			a6 = &(((const struct sockaddr_in6 *)dst)->sin6_addr);
@@ -274,18 +271,6 @@ ether_resolve_addr(struct ifnet *ifp, struct mbuf *m,
 		}
 		break;
 #endif
-#ifdef ISDN
-	case AF_ISDN:
-		if ((m->m_flags & (M_BCAST | M_MCAST)) == 0)
-			error = isdn_arpresolve(ifp, 0, m, dst, phdr, &lleflags);
-		else {
-			etype = htons(ETHERTYPE_ISDN);
-			memcpy(&eh->ether_type, &etype, sizeof(etype));
-			memcpy(eh->ether_dhost, ifp->if_broadcastaddr, 
-				ETHER_ADDR_LEN);
-			memcpy(eh->ether_shost, IF_LLADDR(ifp), ETHER_ADDR_LEN);
-		}
-#endif /* ISDN */
 	default:
 		if_printf(ifp, "can't handle af%d\n", dst->sa_family);
 		if (m != NULL)
@@ -325,14 +310,40 @@ ether_output(struct ifnet *ifp, struct mbuf *m,
 	int loop_copy = 1;
 	int hlen;	/* link layer header length */
 	uint32_t pflags;
+	struct llentry *lle = NULL;
+	struct rtentry *rt0 = NULL;
+	int addref = 0;
 
 	phdr = NULL;
 	pflags = 0;
 	if (ro != NULL) {
-		phdr = ro->ro_prepend;
-		hlen = ro->ro_plen;
-		pflags = ro->ro_flags;
+		/* XXX BPF uses ro_prepend */
+		if (ro->ro_prepend != NULL) {
+			phdr = ro->ro_prepend;
+			hlen = ro->ro_plen;
+		} else if (!(m->m_flags & (M_BCAST | M_MCAST))) {
+			if ((ro->ro_flags & RT_LLE_CACHE) != 0) {
+				lle = ro->ro_lle;
+				if (lle != NULL &&
+				    (lle->la_flags & LLE_VALID) == 0) {
+					LLE_FREE(lle);
+					lle = NULL;	/* redundant */
+					ro->ro_lle = NULL;
+				}
+				if (lle == NULL) {
+					/* if we lookup, keep cache */
+					addref = 1;
+				}
+			}
+			if (lle != NULL) {
+				phdr = lle->r_linkdata;
+				hlen = lle->r_hdrlen;
+				pflags = lle->r_flags;
+			}
+		}
+		rt0 = ro->ro_rt;
 	}
+
 #ifdef MAC
 	error = mac_ifnet_check_transmit(ifp, m);
 	if (error)
@@ -350,7 +361,10 @@ ether_output(struct ifnet *ifp, struct mbuf *m,
 		/* No prepend data supplied. Try to calculate ourselves. */
 		phdr = linkhdr;
 		hlen = ETHER_HDR_LEN;
-		error = ether_resolve_addr(ifp, m, dst, ro, phdr, &pflags);
+		error = ether_resolve_addr(ifp, m, dst, ro, phdr, &pflags,
+		    addref ? &lle : NULL);
+		if (addref && lle != NULL)
+			ro->ro_lle = lle;
 		if (error != 0)
 			return (error == EWOULDBLOCK ? 0 : error);
 	}
@@ -437,7 +451,7 @@ bad:			if (m != NULL)
 	}
 
 	/* Continue with link-layer output */
-	return (ether_output_frame(ifp, m));
+	return ether_output_frame(ifp, m);
 }
 
 /*
@@ -711,12 +725,16 @@ vnet_ether_init(__unused void *arg)
 	if ((i = pfil_head_register(&V_link_pfil_hook)) != 0)
 		printf("%s: WARNING: unable to register pfil link hook, "
 			"error %d\n", __func__, i);
+#ifdef VIMAGE
+	netisr_register_vnet(&ether_nh);
+#endif
 }
 VNET_SYSINIT(vnet_ether_init, SI_SUB_PROTO_IF, SI_ORDER_ANY,
     vnet_ether_init, NULL);
  
+#ifdef VIMAGE
 static void
-vnet_ether_destroy(__unused void *arg)
+vnet_ether_pfil_destroy(__unused void *arg)
 {
 	int i;
 
@@ -724,8 +742,18 @@ vnet_ether_destroy(__unused void *arg)
 		printf("%s: WARNING: unable to unregister pfil link hook, "
 			"error %d\n", __func__, i);
 }
+VNET_SYSUNINIT(vnet_ether_pfil_uninit, SI_SUB_PROTO_PFIL, SI_ORDER_ANY,
+    vnet_ether_pfil_destroy, NULL);
+
+static void
+vnet_ether_destroy(__unused void *arg)
+{
+
+	netisr_unregister_vnet(&ether_nh);
+}
 VNET_SYSUNINIT(vnet_ether_uninit, SI_SUB_PROTO_IF, SI_ORDER_ANY,
     vnet_ether_destroy, NULL);
+#endif
 
 
 
@@ -748,8 +776,11 @@ ether_input(struct ifnet *ifp, struct mbuf *m)
 		 * We will rely on rcvif being set properly in the deferred context,
 		 * so assert it is correct here.
 		 */
-		KASSERT(m->m_pkthdr.rcvif == ifp, ("%s: ifnet mismatch", __func__));
+		KASSERT(m->m_pkthdr.rcvif == ifp, ("%s: ifnet mismatch m %p "
+		    "rcvif %p ifp %p", __func__, m, m->m_pkthdr.rcvif, ifp));
+		CURVNET_SET_QUIET(ifp->if_vnet);
 		netisr_dispatch(NETISR_ETHER, m);
+		CURVNET_RESTORE();
 		m = mn;
 	}
 }
@@ -836,11 +867,6 @@ ether_demux(struct ifnet *ifp, struct mbuf *m)
 		isr = NETISR_IPV6;
 		break;
 #endif
-#ifdef ISDN
-	case ETHERTYPE_ISDN:
-		isr = NETISR_ISDN;
-		break;
-#endif /* ISDN */
 	default:
 		goto discard;
 	}
@@ -1061,14 +1087,9 @@ ether_ioctl(struct ifnet *ifp, u_long command, caddr_t data)
 #ifdef INET
 		case AF_INET:
 			ifp->if_init(ifp->if_softc);	/* before arpwhohas */
-			arp_ifinit(ifp, ifa);
+			in_arp_ifinit(ifp, ifa);
 			break;
 #endif
-#ifdef ISDN
-		case AF_ISDN:
-			isdn_ifinit(ifp, ifa);
-			break;
-#endif /* ISDN */		
 		default:
 			ifp->if_init(ifp->if_softc);
 			break;

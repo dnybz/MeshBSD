@@ -40,7 +40,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/ufs/ffs/ffs_softdep.c 298804 2016-04-29 20:43:51Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/ufs/ffs/ffs_softdep.c 298804 2016-04-29 20:43:51Z pfg $");
 
 #include "opt_ffs.h"
 #include "opt_quota.h"

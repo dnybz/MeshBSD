@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/usr.bin/groff/Makefile.inc 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/gnu/usr.bin/groff/Makefile.inc 298107 2016-04-16 07:45:30Z gjb $
 
 BINDIR?=	/usr/bin
 SHELL=		/bin/sh
@@ -55,7 +55,7 @@ legacyfontdir=$(fontdir)
 tmacdir=/usr/share/tmac
 systemtmacdir=/usr/share/tmac
 localtmacdir=/usr/share/tmac
-docdir=/usr/src/tools/groff/doc
+docdir=/usr/src/contrib/groff/doc
 exampledir=XXX
 htmldocdir=XXX
 pdfdocdir=XXX
@@ -138,7 +138,7 @@ revision=`sed -e 's/^0$$//' -e 's/^[1-9].*$$/.&/' $(GROFF_DIST)/REVISION`
 	     ${.IMPSRC} >${.TARGET}
 
 TOPREL?=	..
-GROFF_DIST=	${.CURDIR}/${TOPREL}/../../../tools/groff
+GROFF_DIST=	${.CURDIR}/${TOPREL}/../../../contrib/groff
 DIST_SUBDIR?=	${.CURDIR:T}
 DIST_DIR=	${GROFF_DIST}/${DIST_SUBDIR}
 .PATH: ${DIST_DIR}

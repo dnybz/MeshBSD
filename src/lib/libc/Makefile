@@ -1,5 +1,5 @@
 #	@(#)Makefile	8.2 (Berkeley) 2/3/94
-# $FreeBSD: head/lib/libc/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/libc/Makefile 300119 2016-05-18 06:01:18Z imp $
 
 PACKAGE=	clibs
 SHLIBDIR?= /lib
@@ -17,10 +17,8 @@ LIBC_SRCTOP?= ${.CURDIR}
 
 .if exists(${LIBC_SRCTOP}/${MACHINE_ARCH})
 LIBC_ARCH=${MACHINE_ARCH}
-.elif exists(${LIBC_SRCTOP}/${MACHINE_CPUARCH})
-LIBC_ARCH=${MACHINE_CPUARCH}
 .else
-LIBC_ARCH=${TARGET_ARCH}
+LIBC_ARCH=${MACHINE_CPUARCH}
 .endif
 
 # All library objects contain FreeBSD revision strings by default; they may be
@@ -68,6 +66,7 @@ MISRCS=
 MDASM=
 MIASM=
 NOASM=
+
 .include "${LIBC_SRCTOP}/${LIBC_ARCH}/Makefile.inc"
 .include "${LIBC_SRCTOP}/db/Makefile.inc"
 .include "${LIBC_SRCTOP}/compat-43/Makefile.inc"
@@ -86,7 +85,7 @@ NOASM=
 .include "${LIBC_SRCTOP}/nls/Makefile.inc"
 .include "${LIBC_SRCTOP}/posix1e/Makefile.inc"
 .if ${LIBC_ARCH} != "riscv" && \
-    ${MACHINE_ARCH:Mmipsn32*} == "" && \
+	${MACHINE_ARCH:Mmipsn32*} == "" && \
     ${MACHINE_ARCH:Mmips64*} == ""
 .include "${LIBC_SRCTOP}/quad/Makefile.inc"
 .endif
@@ -102,13 +101,8 @@ NOASM=
 .include "${LIBC_SRCTOP}/rpc/Makefile.inc"
 .include "${LIBC_SRCTOP}/uuid/Makefile.inc"
 .include "${LIBC_SRCTOP}/xdr/Makefile.inc"
-.if (${LIBC_ARCH} == "arm" && ${MACHINE_ARCH} != "armv6hf") ||\
-     ${LIBC_ARCH} == "mips"
+.if ${LIBC_ARCH} == "mips"
 .include "${LIBC_SRCTOP}/softfloat/Makefile.inc"
-.endif
-.if ${MK_NIS} != "no"
-CFLAGS+= -DYP
-.include "${LIBC_SRCTOP}/yp/Makefile.inc"
 .endif
 .include "${LIBC_SRCTOP}/capability/Makefile.inc"
 .if ${MK_HESIOD} != "no"
@@ -159,6 +153,10 @@ libkern.gen: ${KQSRCS} ${KSRCS}
 libkern.${LIBC_ARCH}:: ${KMSRCS}
 .if defined(KMSRCS) && !empty(KMSRCS)
 	${CP} ${.ALLSRC} ${DESTDIR}/sys/libkern/${LIBC_ARCH}
+.endif
+
+.if ${MK_TESTS} != "no"
+SUBDIR+=	tests
 .endif
 
 .include <bsd.lib.mk>

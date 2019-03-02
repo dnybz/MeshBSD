@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/string/wcsnlen.c 189136 2009-02-28 06:00:58Z das $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/string/wcsnlen.c 189136 2009-02-28 06:00:58Z das $");
 
 #include <wchar.h>
 

@@ -28,7 +28,7 @@
  * POSSIBILITY OF SUCH DAMAGES.
  *
  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl.h#5 $
- * $FreeBSD: head/sys/cam/ctl/ctl.h 289881 2015-10-24 17:24:19Z mav $
+ * $FreeBSD: releng/11.0/sys/cam/ctl/ctl.h 289881 2015-10-24 17:24:19Z mav $
  */
 /*
  * Function definitions used both within CTL and potentially in various CTL

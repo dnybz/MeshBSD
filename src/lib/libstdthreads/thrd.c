@@ -23,11 +23,11 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libstdthreads/thrd.c 279318 2015-02-26 09:42:03Z kib $
+ * $FreeBSD: releng/11.0/lib/libstdthreads/thrd.c 279318 2015-02-26 09:42:03Z kib $
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libstdthreads/thrd.c 279318 2015-02-26 09:42:03Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libstdthreads/thrd.c 279318 2015-02-26 09:42:03Z kib $");
 
 #include <pthread.h>
 #include <stdint.h>

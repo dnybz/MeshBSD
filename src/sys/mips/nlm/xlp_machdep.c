@@ -28,7 +28,7 @@
  * NETLOGIC_BSD */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/nlm/xlp_machdep.c 298411 2016-04-21 15:38:28Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/nlm/xlp_machdep.c 298411 2016-04-21 15:38:28Z pfg $");
 
 #include "opt_ddb.h"
 #include "opt_platform.h"

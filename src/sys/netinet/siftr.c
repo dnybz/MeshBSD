@@ -59,7 +59,7 @@
  ******************************************************/
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/siftr.c 296688 2016-03-11 23:18:06Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/siftr.c 296688 2016-03-11 23:18:06Z jhb $");
 
 #include <sys/param.h>
 #include <sys/alq.h>

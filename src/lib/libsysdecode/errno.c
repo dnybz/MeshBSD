@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libsysdecode/errno.c 297247 2016-03-24 21:47:15Z ed $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libsysdecode/errno.c 297247 2016-03-24 21:47:15Z ed $");
 
 #include <sys/param.h>
 #include <errno.h>

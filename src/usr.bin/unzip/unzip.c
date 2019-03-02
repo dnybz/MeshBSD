@@ -25,7 +25,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.bin/unzip/unzip.c 294108 2016-01-15 23:04:36Z ak $
+ * $FreeBSD: releng/11.0/usr.bin/unzip/unzip.c 294108 2016-01-15 23:04:36Z ak $
  *
  * This file would be much shorter if we didn't care about command-line
  * compatibility with Info-ZIP's UnZip, which requires us to duplicate

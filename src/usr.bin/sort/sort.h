@@ -1,4 +1,4 @@
-/*	$FreeBSD: head/usr.bin/sort/sort.h 264744 2014-04-21 22:52:18Z pfg $	*/
+/*	$FreeBSD: releng/11.0/usr.bin/sort/sort.h 264744 2014-04-21 22:52:18Z pfg $	*/
 
 /*-
  * Copyright (C) 2009 Gabor Kovesdan <gabor@FreeBSD.org>

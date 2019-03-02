@@ -33,7 +33,7 @@
 
 #ifndef lint
 static const char rcsid[] =
-  "$FreeBSD: head/usr.sbin/vidcontrol/vidcontrol.c 294321 2016-01-19 13:09:20Z trasz $";
+  "$FreeBSD: releng/11.0/usr.sbin/vidcontrol/vidcontrol.c 294321 2016-01-19 13:09:20Z trasz $";
 #endif /* not lint */
 
 #include <ctype.h>

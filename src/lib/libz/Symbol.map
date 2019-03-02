@@ -1,5 +1,5 @@
 /*
- * $FreeBSD: head/lib/libz/Symbol.map 257462 2013-10-31 18:44:40Z emaste $
+ * $FreeBSD: releng/11.0/lib/libz/Symbol.map 257462 2013-10-31 18:44:40Z emaste $
  */
 
 ZLIB_1.2.7.1 {

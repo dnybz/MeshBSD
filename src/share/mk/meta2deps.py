@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/meta2deps.py 298227 2016-04-18 21:05:19Z bdrewery $
+# $FreeBSD: releng/11.0/share/mk/meta2deps.py 298227 2016-04-18 21:05:19Z bdrewery $
 #!/usr/bin/env python
 
 from __future__ import print_function

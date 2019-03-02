@@ -32,7 +32,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/riscv/SYS.h 294227 2016-01-17 15:21:23Z br $
+ * $FreeBSD: releng/11.0/lib/libc/riscv/SYS.h 294227 2016-01-17 15:21:23Z br $
  */
 
 #include <sys/syscall.h>

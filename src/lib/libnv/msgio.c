@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libnv/msgio.c 271578 2014-09-14 09:27:12Z pjd $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libnv/msgio.c 271578 2014-09-14 09:27:12Z pjd $");
 
 #include <sys/param.h>
 #include <sys/socket.h>

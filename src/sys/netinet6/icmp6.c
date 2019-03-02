@@ -61,7 +61,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet6/icmp6.c 299829 2016-05-15 03:22:13Z markj $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet6/icmp6.c 299829 2016-05-15 03:22:13Z markj $");
 
 #define	MBUF_PRIVATE	/* XXXRW: Optimisation tries to avoid M_EXT mbufs */
 

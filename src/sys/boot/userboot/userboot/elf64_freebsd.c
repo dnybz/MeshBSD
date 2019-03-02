@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/userboot/userboot/elf64_freebsd.c 297793 2016-04-10 23:07:00Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/userboot/userboot/elf64_freebsd.c 297793 2016-04-10 23:07:00Z pfg $");
 
 #define __ELF_WORD_SIZE 64
 #include <sys/param.h>

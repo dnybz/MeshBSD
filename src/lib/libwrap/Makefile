@@ -1,5 +1,5 @@
 #
-# $FreeBSD: head/lib/libwrap/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/libwrap/Makefile 298107 2016-04-16 07:45:30Z gjb $
 #
 
 .include <src.opts.mk>
@@ -15,16 +15,14 @@ MLINKS=	hosts_access.3 hosts_ctl.3 \
 	hosts_access.3 request_set.3 \
 	hosts_options.5 hosts.allow.5
 
-.PATH:	${.CURDIR}/../../external/tcp_wrappers
+.PATH:	${.CURDIR}/../../contrib/tcp_wrappers
 
 CFLAGS+=-DFACILITY=LOG_AUTH -DHOSTS_ACCESS -DNETGROUP -DDAEMON_UMASK=022 \
 	-DREAL_DAEMON_DIR=\"${LIBEXECDIR}\" -DPROCESS_OPTIONS \
 	-DSEVERITY=LOG_INFO -DRFC931_TIMEOUT=10 \
 	-DHOSTS_DENY=\"/etc/hosts.deny\" -DHOSTS_ALLOW=\"/etc/hosts.allow\" \
 	-DSYS_ERRLIST_DEFINED -DALWAYS_HOSTNAME -DUSE_STRSEP -DPROCESS_OPTIONS
-.if ${MK_NIS} == "no"
-CFLAGS+= -DUSE_GETDOMAIN
-.endif
+
 .if ${MK_INET6_SUPPORT} != "no"
 CFLAGS+=-DINET6
 .endif

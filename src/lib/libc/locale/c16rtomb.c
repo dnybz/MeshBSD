@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/locale/c16rtomb.c 250883 2013-05-21 19:59:37Z ed $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/locale/c16rtomb.c 250883 2013-05-21 19:59:37Z ed $");
 
 #include <errno.h>
 #include <uchar.h>

@@ -17,7 +17,7 @@
  * only.
  * END_BLOCK
  *
- * $FreeBSD: head/sys/boot/arm/at91/bootspi/env_vars.c 298826 2016-04-30 00:26:38Z pfg $
+ * $FreeBSD: releng/11.0/sys/boot/arm/at91/bootspi/env_vars.c 298826 2016-04-30 00:26:38Z pfg $
  *****************************************************************************/
 
 #include "env_vars.h"

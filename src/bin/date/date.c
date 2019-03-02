@@ -40,7 +40,7 @@ static char sccsid[] = "@(#)date.c	8.2 (Berkeley) 4/28/95";
 #endif
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/bin/date/date.c 282608 2015-05-07 20:54:38Z delphij $");
+__FBSDID("$FreeBSD: releng/11.0/bin/date/date.c 282608 2015-05-07 20:54:38Z delphij $");
 
 #include <sys/param.h>
 #include <sys/time.h>

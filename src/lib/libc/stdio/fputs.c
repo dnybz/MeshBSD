@@ -34,7 +34,7 @@
 static char sccsid[] = "@(#)fputs.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/stdio/fputs.c 295638 2016-02-15 21:18:52Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/stdio/fputs.c 295638 2016-02-15 21:18:52Z pfg $");
 
 #include "namespace.h"
 #include <limits.h>

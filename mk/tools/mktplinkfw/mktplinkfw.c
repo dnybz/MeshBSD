@@ -471,7 +471,7 @@ find_board_by_hwid(uint32_t hw_id)
 			return board;
 	};
 
-	return NULL;
+	return (NULL);
 }
 
 static struct flash_layout *

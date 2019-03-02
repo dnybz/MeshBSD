@@ -22,7 +22,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/netinet/in_kdtrace.h 292384 2015-12-16 23:39:27Z markj $
+ * $FreeBSD: releng/11.0/sys/netinet/in_kdtrace.h 292384 2015-12-16 23:39:27Z markj $
  */
 
 #ifndef _SYS_IN_KDTRACE_H_

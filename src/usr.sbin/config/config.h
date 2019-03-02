@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)config.h	8.1 (Berkeley) 6/6/93
- * $FreeBSD: head/usr.sbin/config/config.h 289677 2015-10-21 05:37:09Z eadler $
+ * $FreeBSD: releng/11.0/usr.sbin/config/config.h 289677 2015-10-21 05:37:09Z eadler $
  */
 
 /*

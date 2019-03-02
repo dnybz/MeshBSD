@@ -24,7 +24,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/include/compat.h 298830 2016-04-30 01:24:24Z pfg $
+ * $FreeBSD: releng/11.0/lib/libc/include/compat.h 298830 2016-04-30 01:24:24Z pfg $
  */
 
 /*

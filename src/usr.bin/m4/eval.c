@@ -34,7 +34,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/m4/eval.c 298879 2016-05-01 16:13:05Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/m4/eval.c 298879 2016-05-01 16:13:05Z pfg $");
 
 
 /*

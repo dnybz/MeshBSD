@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/boot/userboot/ficl/Makefile 296706 2016-03-11 23:45:51Z bdrewery $
+# $FreeBSD: releng/11.0/sys/boot/userboot/ficl/Makefile 296706 2016-03-11 23:45:51Z bdrewery $
 #
 .include <bsd.own.mk>
 MK_SSP=		no
@@ -32,6 +32,14 @@ SOFTWORDS=	softcore.fr jhlocal.fr marker.fr freebsd.fr ficllocal.fr \
 # Optional OO extension softwords
 #SOFTWORDS+=	oo.fr classes.fr
 
+#.if ${MACHINE_CPUARCH} == "amd64"
+#CFLAGS+=	-m32 -I.
+#.endif
+
+.if ${MACHINE_ARCH} == "powerpc64"
+CFLAGS+=	-m32 -mcpu=powerpc -I.
+.endif
+
 CFLAGS+=	-I${.CURDIR}/../../ficl
 CFLAGS+=	-I${.CURDIR}/../../ficl/${MACHINE_CPUARCH}
 CFLAGS+=	-I${.CURDIR}/../../common
@@ -40,3 +48,13 @@ softcore.c: ${SOFTWORDS} softcore.awk
 	(cd ${.CURDIR}/../../ficl/softwords; cat ${SOFTWORDS} \
 	    | awk -f softcore.awk -v datestamp="`LC_ALL=C date`") > ${.TARGET}
 
+#.if ${MACHINE_CPUARCH} == "amd64"
+#${SRCS:M*.c:R:S/$/.o/g}: machine
+#
+#beforedepend ${OBJS}: machine
+#
+#machine: .NOMETA
+#	ln -sf ${.CURDIR}/../../i386/include machine
+#
+#CLEANFILES+=	machine
+#.endif

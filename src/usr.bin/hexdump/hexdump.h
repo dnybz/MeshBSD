@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)hexdump.h	8.1 (Berkeley) 6/6/93
- * $FreeBSD: head/usr.bin/hexdump/hexdump.h 264910 2014-04-25 04:01:25Z delphij $
+ * $FreeBSD: releng/11.0/usr.bin/hexdump/hexdump.h 264910 2014-04-25 04:01:25Z delphij $
  */
 
 #include <wchar.h>

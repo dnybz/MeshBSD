@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/imgact_binmisc.c 298819 2016-04-29 22:15:33Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/imgact_binmisc.c 298819 2016-04-29 22:15:33Z pfg $");
 
 #include <sys/param.h>
 #include <sys/ctype.h>

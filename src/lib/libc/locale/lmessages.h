@@ -28,7 +28,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/locale/lmessages.h 227753 2011-11-20 14:45:42Z theraven $
+ * $FreeBSD: releng/11.0/lib/libc/locale/lmessages.h 227753 2011-11-20 14:45:42Z theraven $
  */
 
 #ifndef _LMESSAGES_H_

@@ -24,7 +24,7 @@
  * SUCH DAMAGE.
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/gxemul/gxemul_machdep.c 247297 2013-02-26 01:00:11Z attilio $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/gxemul/gxemul_machdep.c 247297 2013-02-26 01:00:11Z attilio $");
 
 #include "opt_ddb.h"
 

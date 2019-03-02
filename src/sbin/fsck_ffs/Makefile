@@ -1,4 +1,4 @@
-# $FreeBSD: head/sbin/fsck_ffs/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/sbin/fsck_ffs/Makefile 298107 2016-04-16 07:45:30Z gjb $
 #	@(#)Makefile	8.2 (Berkeley) 4/27/95
 
 PACKAGE=runtime

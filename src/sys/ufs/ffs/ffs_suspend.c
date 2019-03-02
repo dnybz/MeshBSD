@@ -26,11 +26,11 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/ufs/ffs/ffs_suspend.c 283735 2015-05-29 13:24:17Z kib $
+ * $FreeBSD: releng/11.0/sys/ufs/ffs/ffs_suspend.c 283735 2015-05-29 13:24:17Z kib $
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/ufs/ffs/ffs_suspend.c 283735 2015-05-29 13:24:17Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/sys/ufs/ffs/ffs_suspend.c 283735 2015-05-29 13:24:17Z kib $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	$FreeBSD: head/lib/libradius/radlib_private.h 243956 2012-12-06 19:00:37Z sem $
+ *	$FreeBSD: releng/11.0/lib/libradius/radlib_private.h 243956 2012-12-06 19:00:37Z sem $
  */
 
 #ifndef RADLIB_PRIVATE_H

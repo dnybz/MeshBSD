@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/lib/libreadline/readline/Makefile 294608 2016-01-22 21:33:27Z emaste $
+# $FreeBSD: releng/11.0/gnu/lib/libreadline/readline/Makefile 294608 2016-01-22 21:33:27Z emaste $
 
 LIB=    readline
 INTERNALLIB=	yes
@@ -14,7 +14,7 @@ INSTALLED_HEADERS= readline.h chardefs.h keymaps.h history.h tilde.h \
 		   rlstdc.h rlconf.h rltypedefs.h
 
 CFLAGS+=	-I${.OBJDIR}/..
-SRCDIR=	${.CURDIR}/../../../../tools/libreadline
+SRCDIR=	${.CURDIR}/../../../../contrib/libreadline
 
 CLEANFILES+= ${INSTALLED_HEADERS}
 SRCS+= ${INSTALLED_HEADERS}

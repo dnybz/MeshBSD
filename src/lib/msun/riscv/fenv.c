@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/msun/riscv/fenv.c 294833 2016-01-26 14:40:41Z br $
+ * $FreeBSD: releng/11.0/lib/msun/riscv/fenv.c 294833 2016-01-26 14:40:41Z br $
  */
 
 #define	__fenv_static

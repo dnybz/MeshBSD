@@ -1,4 +1,4 @@
-# $FreeBSD: head/sbin/newfs_nandfs/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/sbin/newfs_nandfs/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 PACKAGE=nandfs
 PROG=	newfs_nandfs

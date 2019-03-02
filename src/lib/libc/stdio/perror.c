@@ -31,7 +31,7 @@
 static char sccsid[] = "@(#)perror.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/stdio/perror.c 249810 2013-04-23 14:36:44Z emaste $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/stdio/perror.c 249810 2013-04-23 14:36:44Z emaste $");
 
 #include "namespace.h"
 #include <sys/types.h>

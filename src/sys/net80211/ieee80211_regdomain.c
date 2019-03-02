@@ -24,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/net80211/ieee80211_regdomain.c 298995 2016-05-03 18:05:43Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/net80211/ieee80211_regdomain.c 300738 2016-05-26 13:14:08Z avos $");
 
 /*
  * IEEE 802.11 regdomain support.
@@ -69,10 +69,7 @@ ieee80211_regdomain_attach(struct ieee80211com *ic)
 {
 	if (ic->ic_regdomain.regdomain == 0 &&
 	    ic->ic_regdomain.country == CTRY_DEFAULT) {
-		ic->ic_regdomain.country = CTRY_UNITED_STATES;	/* XXX */
 		ic->ic_regdomain.location = ' ';		/* both */
-		ic->ic_regdomain.isocc[0] = 'U';		/* XXX */
-		ic->ic_regdomain.isocc[1] = 'S';		/* XXX */
 		/* NB: driver calls ieee80211_init_channels or similar */
 	}
 	ic->ic_getradiocaps = null_getradiocaps;

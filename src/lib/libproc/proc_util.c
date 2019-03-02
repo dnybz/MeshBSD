@@ -27,7 +27,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libproc/proc_util.c 265308 2014-05-04 03:34:32Z markj $
+ * $FreeBSD: releng/11.0/lib/libproc/proc_util.c 265308 2014-05-04 03:34:32Z markj $
  */
 
 #include <sys/types.h>

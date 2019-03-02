@@ -41,7 +41,7 @@ __RCSID("$NetBSD: tokenizer.c,v 1.22 2016/01/30 04:02:51 christos Exp $");
 #endif
 #endif /* not lint && not SCCSID */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libedit/tokenizer.c 296435 2016-03-06 21:32:54Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libedit/tokenizer.c 296435 2016-03-06 21:32:54Z pfg $");
 
 /* We build this file twice, once as NARROW, once as WIDE. */
 /*

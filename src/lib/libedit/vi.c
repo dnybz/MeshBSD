@@ -46,7 +46,7 @@ __RCSID("$NetBSD: vi.c,v 1.47 2015/10/21 21:45:30 christos Exp $");
 #endif
 #endif /* not lint && not SCCSID */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libedit/vi.c 297757 2016-04-09 18:52:09Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libedit/vi.c 297757 2016-04-09 18:52:09Z pfg $");
 
 /*
  * vi.c: Vi mode commands.

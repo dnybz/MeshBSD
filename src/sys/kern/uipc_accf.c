@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/uipc_accf.c 269142 2014-07-26 19:27:34Z marcel $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/uipc_accf.c 269142 2014-07-26 19:27:34Z marcel $");
 
 #define ACCEPT_FILTER_MOD
 

@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/ncurses/menu/Makefile 275024 2014-11-25 11:07:26Z bapt $
+# $FreeBSD: releng/11.0/lib/ncurses/menu/Makefile 275024 2014-11-25 11:07:26Z bapt $
 
 .include "${.CURDIR}/../config.mk"
 

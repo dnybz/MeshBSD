@@ -1,5 +1,5 @@
 /*
- * $FreeBSD: head/lib/libsbuf/Symbol.map 284192 2015-06-09 21:39:38Z ken $
+ * $FreeBSD: releng/11.0/lib/libsbuf/Symbol.map 284192 2015-06-09 21:39:38Z ken $
  */
 
 FBSD_1.2 {

@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/uipc_domain.c 298796 2016-04-29 20:11:09Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/uipc_domain.c 301114 2016-06-01 10:14:04Z bz $");
 
 #include <sys/param.h>
 #include <sys/socket.h>
@@ -196,11 +196,7 @@ void
 vnet_domain_uninit(void *arg)
 {
 	struct domain *dp = arg;
-	struct protosw *pr;
 
-	for (pr = dp->dom_protosw; pr < dp->dom_protoswNPROTOSW; pr++)
-		if (pr->pr_destroy)
-			(*pr->pr_destroy)();
 	if (dp->dom_destroy)
 		(*dp->dom_destroy)();
 }

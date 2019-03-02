@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/fdt/fdt_overlay.c 298821 2016-04-29 22:42:59Z gonzo $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/fdt/fdt_overlay.c 298821 2016-04-29 22:42:59Z gonzo $");
 
 #include <stand.h>
 #include <libfdt.h>

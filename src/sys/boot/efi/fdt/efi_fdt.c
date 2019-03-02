@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/efi/fdt/efi_fdt.c 293724 2016-01-12 02:17:39Z smh $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/efi/fdt/efi_fdt.c 293724 2016-01-12 02:17:39Z smh $");
 
 #include <sys/param.h>
 #include <stand.h>

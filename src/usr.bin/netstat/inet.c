@@ -34,7 +34,7 @@ static char sccsid[] = "@(#)inet.c	8.5 (Berkeley) 5/24/95";
 #endif
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/netstat/inet.c 298182 2016-04-18 05:46:18Z araujo $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/netstat/inet.c 303267 2016-07-24 14:50:16Z tuexen $");
 
 #include <sys/param.h>
 #include <sys/queue.h>
@@ -418,10 +418,10 @@ protopr(u_long off, const char *name, int af1, int proto)
 				    "Tcpcb");
 			if (Lflag)
 				xo_emit((Aflag && !Wflag) ?
-				    "{T:/%-5.5s} {T:/%-14.14s} {T:/%-18.18s}" :
+				    "{T:/%-5.5s} {T:/%-32.32s} {T:/%-18.18s}" :
 				    ((!Wflag || af1 == AF_INET) ?
-				    "{T:/%-5.5s} {T:/%-14.14s} {T:/%-22.22s}" :
-				    "{T:/%-5.5s} {T:/%-14.14s} {T:/%-45.45s}"),
+				    "{T:/%-5.5s} {T:/%-32.32s} {T:/%-22.22s}" :
+				    "{T:/%-5.5s} {T:/%-32.32s} {T:/%-45.45s}"),
 				    "Proto", "Listen", "Local Address");
 			else if (Tflag)
 				xo_emit((Aflag && !Wflag) ?

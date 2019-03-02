@@ -1,4 +1,4 @@
-#  $FreeBSD: head/sys/boot/arm/at91/boot0iic/Makefile 264400 2014-04-13 05:21:56Z imp $
+#  $FreeBSD: releng/11.0/sys/boot/arm/at91/boot0iic/Makefile 264400 2014-04-13 05:21:56Z imp $
 
 .PATH:	${.CURDIR}/../libat91
 

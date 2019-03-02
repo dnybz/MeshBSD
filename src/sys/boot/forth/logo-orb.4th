@@ -22,7 +22,7 @@
 \ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 \ SUCH DAMAGE.
 \ 
-\ $FreeBSD: head/sys/boot/forth/logo-orb.4th 281275 2015-04-08 20:10:42Z dteske $
+\ $FreeBSD: releng/11.0/sys/boot/forth/logo-orb.4th 281275 2015-04-08 20:10:42Z dteske $
 
 46 logoX ! 7 logoY ! \ Initialize logo placement defaults
 

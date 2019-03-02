@@ -28,7 +28,7 @@
  */ 
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libproc/proc_rtld.c 265255 2014-05-03 04:44:03Z markj $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libproc/proc_rtld.c 265255 2014-05-03 04:44:03Z markj $");
 
 #include <stdio.h>
 #include <string.h>

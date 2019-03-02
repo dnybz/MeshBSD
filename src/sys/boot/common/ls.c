@@ -38,7 +38,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/common/ls.c 119483 2003-08-25 23:30:41Z obrien $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/common/ls.c 119483 2003-08-25 23:30:41Z obrien $");
 
 #include <sys/param.h>
 #include <ufs/ufs/dinode.h>

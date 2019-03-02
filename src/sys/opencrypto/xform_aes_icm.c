@@ -48,7 +48,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/opencrypto/xform_aes_icm.c 292963 2015-12-30 22:43:07Z allanjude $");
+__FBSDID("$FreeBSD: releng/11.0/sys/opencrypto/xform_aes_icm.c 303849 2016-08-08 19:43:07Z bdrewery $");
 
 #include <opencrypto/xform_enc.h>
 
@@ -65,7 +65,7 @@ struct enc_xform enc_xform_aes_icm = {
 	aes_icm_crypt,
 	aes_icm_crypt,
 	aes_icm_setkey,
-	rijndael128_zerokey,
+	aes_icm_zerokey,
 	aes_icm_reinit,
 };
 

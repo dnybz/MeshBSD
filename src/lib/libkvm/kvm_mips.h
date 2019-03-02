@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libkvm/kvm_mips.h 291406 2015-11-27 18:58:26Z jhb $
+ * $FreeBSD: releng/11.0/lib/libkvm/kvm_mips.h 291406 2015-11-27 18:58:26Z jhb $
  */
 
 #ifndef __KVM_MIPS_H__

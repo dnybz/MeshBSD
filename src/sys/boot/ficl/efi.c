@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	$FreeBSD: head/sys/boot/ficl/efi.c 300081 2016-05-17 21:25:20Z imp $
+ *	$FreeBSD: releng/11.0/sys/boot/ficl/efi.c 300081 2016-05-17 21:25:20Z imp $
  */
 
 /*******************************************************************

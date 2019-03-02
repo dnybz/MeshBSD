@@ -29,7 +29,7 @@
 #include "opt_platform.h"
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mediatek/mtk_intr_gic.c 299117 2016-05-05 13:31:19Z skra $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mediatek/mtk_intr_gic.c 300149 2016-05-18 15:05:44Z andrew $");
 
 #include <sys/param.h>
 #include <sys/systm.h>
@@ -213,7 +213,7 @@ mtk_gic_attach(device_t dev)
 	 * Now, when everything is initialized, it's right time to
 	 * register interrupt controller to interrupt framefork.
 	 */
-	if (intr_pic_register(dev, xref) != 0) {
+	if (intr_pic_register(dev, xref) == NULL) {
 		device_printf(dev, "could not register PIC\n");
 		goto cleanup;
 	}

@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/fdt/dts/riscv/rocket.dts 298638 2016-04-26 13:22:08Z br $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/riscv/rocket.dts 298638 2016-04-26 13:22:08Z br $
  */
 
 /dts-v1/;

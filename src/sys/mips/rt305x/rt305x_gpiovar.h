@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/rt305x/rt305x_gpiovar.h 277996 2015-01-31 19:32:14Z loos $
+ * $FreeBSD: releng/11.0/sys/mips/rt305x/rt305x_gpiovar.h 277996 2015-01-31 19:32:14Z loos $
  */
 #ifndef _RT305X_GPIOVAR_H_
 #define _RT305X_GPIOVAR_H_

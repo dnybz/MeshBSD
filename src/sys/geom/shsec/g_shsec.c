@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/geom/shsec/g_shsec.c 267992 2014-06-28 03:56:17Z hselasky $");
+__FBSDID("$FreeBSD: releng/11.0/sys/geom/shsec/g_shsec.c 267992 2014-06-28 03:56:17Z hselasky $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

@@ -30,9 +30,35 @@
  * SUCH DAMAGE.
  *
  *	@(#)sysctl.h	8.1 (Berkeley) 6/2/93
- * $FreeBSD: head/sys/sys/sysctl.h 298981 2016-05-03 15:14:17Z pfg $
+ * $FreeBSD: releng/11.0/sys/sys/sysctl.h 300718 2016-05-26 08:41:55Z hselasky $
  */
-
+/*-
+ * Copyright (c) 2015 Craig Rodrigues
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *
+ * $FreeBSD: releng/11.0/lib/libopenbsd/sys/sysctl.h 290838 2015-11-14 23:43:59Z rodrigc $
+ */
 #ifndef _SYS_SYSCTL_H_
 #define	_SYS_SYSCTL_H_
 
@@ -194,6 +220,7 @@ struct sysctl_oid {
 #define	SYSCTL_OUT(r, p, l)	(r->oldfunc)(r, p, l)
 #define	SYSCTL_OUT_STR(r, p)	(r->oldfunc)(r, p, strlen(p) + 1)
 
+int sysctl_handle_bool(SYSCTL_HANDLER_ARGS);
 int sysctl_handle_8(SYSCTL_HANDLER_ARGS);
 int sysctl_handle_16(SYSCTL_HANDLER_ARGS);
 int sysctl_handle_32(SYSCTL_HANDLER_ARGS);
@@ -327,6 +354,24 @@ TAILQ_HEAD(sysctl_ctx_list, sysctl_ctx_entry);
 	    ((access) & SYSCTL_CT_ASSERT_MASK) == CTLTYPE_STRING);	\
 	sysctl_add_oid(ctx, parent, nbr, name, CTLTYPE_STRING|(access),	\
 	    __arg, len, sysctl_handle_string, "A", __DESCR(descr));	\
+})
+
+/* Oid for a bool.  If ptr is NULL, val is returned. */
+#define	SYSCTL_NULL_BOOL_PTR ((bool *)NULL)
+#define	SYSCTL_BOOL(parent, nbr, name, access, ptr, val, descr)	\
+	SYSCTL_OID(parent, nbr, name,				\
+	    CTLTYPE_U8 | CTLFLAG_MPSAFE | (access),		\
+	    ptr, val, sysctl_handle_bool, "CU", descr);		\
+	CTASSERT(((access) & CTLTYPE) == 0 &&			\
+	    sizeof(bool) == sizeof(*(ptr)))
+
+#define	SYSCTL_ADD_BOOL(ctx, parent, nbr, name, access, ptr, val, descr) \
+({									\
+	bool *__ptr = (ptr);						\
+	CTASSERT(((access) & CTLTYPE) == 0);				\
+	sysctl_add_oid(ctx, parent, nbr, name,				\
+	    CTLTYPE_U8 | CTLFLAG_MPSAFE | (access),			\
+	    __ptr, val, sysctl_handle_bool, "CU", __DESCR(descr));	\
 })
 
 /* Oid for a signed 8-bit int.  If ptr is NULL, val is returned. */
@@ -1016,5 +1061,35 @@ int	sysctlbyname(const char *, void *, size_t *, const void *, size_t);
 int	sysctlnametomib(const char *, int *, size_t *);
 __END_DECLS
 #endif	/* _KERNEL */
+
+/*-
+ * Copyright (c) 2015 Craig Rodrigues
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *
+ * $FreeBSD: releng/11.0/lib/libopenbsd/sys/sysctl.h 290838 2015-11-14 23:43:59Z rodrigc $
+ */
+
+#define	KERN_PROC_NFDS		43	/* number of open file descriptors */
 
 #endif	/* !_SYS_SYSCTL_H_ */

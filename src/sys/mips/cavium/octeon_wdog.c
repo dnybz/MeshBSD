@@ -31,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/cavium/octeon_wdog.c 232812 2012-03-11 06:17:49Z jmallett $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/cavium/octeon_wdog.c 232812 2012-03-11 06:17:49Z jmallett $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

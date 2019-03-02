@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/usr.bin/Makefile 298823 2016-04-29 23:27:15Z bapt $
+# $FreeBSD: releng/11.0/gnu/usr.bin/Makefile 298823 2016-04-29 23:27:15Z bapt $
 
 .include <src.opts.mk>
 
@@ -32,6 +32,10 @@ _dtc=		dtc
 
 .if ${MK_RCS} != "no"
 _rcs=		rcs
+.endif
+
+.if ${MK_TESTS} != "no"
+_tests=		tests
 .endif
 
 .if ${MK_BINUTILS} != "no"

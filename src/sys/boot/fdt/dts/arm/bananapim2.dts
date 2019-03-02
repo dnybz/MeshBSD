@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $FreeBSD: head/sys/boot/fdt/dts/arm/bananapim2.dts 298422 2016-04-21 16:49:04Z jmcneill $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/arm/bananapim2.dts 298422 2016-04-21 16:49:04Z jmcneill $
  */
 
 #include "sun6i-a31s-sinovoip-bpi-m2.dts"

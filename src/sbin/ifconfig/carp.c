@@ -1,4 +1,4 @@
-/*	$FreeBSD: head/sbin/ifconfig/carp.c 288305 2015-09-27 07:51:18Z ngie $ */
+/*	$FreeBSD: releng/11.0/sbin/ifconfig/carp.c 288305 2015-09-27 07:51:18Z ngie $ */
 /*	from $OpenBSD: ifconfig.c,v 1.82 2003/10/19 05:43:35 mcbride Exp $ */
 
 /*

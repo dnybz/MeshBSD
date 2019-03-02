@@ -26,7 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libgeom/geom_getxml.c 271085 2014-09-04 03:31:48Z benno $
+ * $FreeBSD: releng/11.0/lib/libgeom/geom_getxml.c 271085 2014-09-04 03:31:48Z benno $
  */
 
 #include <sys/types.h>

@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet6/ip6_ipsec.c 288418 2015-09-30 08:16:33Z ae $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet6/ip6_ipsec.c 288418 2015-09-30 08:16:33Z ae $");
 
 #include "opt_inet.h"
 #include "opt_sctp.h"

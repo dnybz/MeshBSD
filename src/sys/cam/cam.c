@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/cam/cam.c 298411 2016-04-21 15:38:28Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/cam/cam.c 298411 2016-04-21 15:38:28Z pfg $");
 
 #include <sys/param.h>
 #ifdef _KERNEL

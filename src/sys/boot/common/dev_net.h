@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/common/dev_net.h 283062 2015-05-18 15:46:43Z ian $
+ * $FreeBSD: releng/11.0/sys/boot/common/dev_net.h 283062 2015-05-18 15:46:43Z ian $
  */
 
 #ifndef _BOOT_DEV_NET_H_

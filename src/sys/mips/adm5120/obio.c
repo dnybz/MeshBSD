@@ -36,7 +36,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/adm5120/obio.c 299418 2016-05-11 09:42:24Z trasz $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/adm5120/obio.c 299418 2016-05-11 09:42:24Z trasz $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

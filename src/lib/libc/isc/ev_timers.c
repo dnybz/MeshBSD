@@ -23,7 +23,7 @@
 static const char rcsid[] = "$Id: ev_timers.c,v 1.6 2005/04/27 04:56:36 sra Exp $";
 #endif
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/isc/ev_timers.c 288147 2015-09-23 16:16:16Z rodrigc $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/isc/ev_timers.c 288147 2015-09-23 16:16:16Z rodrigc $");
 
 /* Import. */
 

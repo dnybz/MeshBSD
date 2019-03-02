@@ -31,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/makefs/ffs/ffs_bswap.c 299461 2016-05-11 16:42:13Z cem $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/makefs/ffs/ffs_bswap.c 299461 2016-05-11 16:42:13Z cem $");
 
 #include <sys/param.h>
 #if defined(_KERNEL)

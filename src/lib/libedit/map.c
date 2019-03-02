@@ -41,7 +41,7 @@ __RCSID("$NetBSD: map.c,v 1.35 2015/05/14 10:44:15 christos Exp $");
 #endif
 #endif /* not lint && not SCCSID */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libedit/map.c 296435 2016-03-06 21:32:54Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libedit/map.c 296435 2016-03-06 21:32:54Z pfg $");
 
 /*
  * map.c: Editor function definitions

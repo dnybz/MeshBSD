@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/gen/getpagesizes.c 211416 2010-08-17 09:13:26Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/gen/getpagesizes.c 211416 2010-08-17 09:13:26Z kib $");
 
 #include <sys/param.h>
 #include <sys/mman.h>

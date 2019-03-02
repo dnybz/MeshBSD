@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/riscv/include/asm.h 295258 2016-02-04 14:30:46Z br $
+ * $FreeBSD: releng/11.0/sys/riscv/include/asm.h 295258 2016-02-04 14:30:46Z br $
  */
 
 #ifndef _MACHINE_ASM_H_

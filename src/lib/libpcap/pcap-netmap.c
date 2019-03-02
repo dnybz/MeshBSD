@@ -43,7 +43,7 @@
 #include "pcap-int.h"
 
 /*
- * $FreeBSD: head/lib/libpcap/pcap-netmap.c 272659 2014-10-06 15:48:28Z luigi $
+ * $FreeBSD: releng/11.0/lib/libpcap/pcap-netmap.c 272659 2014-10-06 15:48:28Z luigi $
  *
  * This code is meant to build also on other versions of libpcap.
  *

@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/ufs/ufs/ufs_vnops.c 291936 2015-12-07 12:09:04Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/sys/ufs/ufs/ufs_vnops.c 303375 2016-07-27 08:47:24Z kib $");
 
 #include "opt_quota.h"
 #include "opt_suiddir.h"
@@ -625,7 +625,8 @@ ufs_setattr(ap)
 			 */
 			return (0);
 		}
-		if ((error = UFS_TRUNCATE(vp, vap->va_size, IO_NORMAL,
+		if ((error = UFS_TRUNCATE(vp, vap->va_size, IO_NORMAL |
+		    ((vap->va_vaflags & VA_SYNC) != 0 ? IO_SYNC : 0),
 		    cred)) != 0)
 			return (error);
 	}
@@ -1912,13 +1913,13 @@ ufs_mkdir(ap)
 	dirtemplate = *dtp;
 	dirtemplate.dot_ino = ip->i_number;
 	dirtemplate.dotdot_ino = dp->i_number;
+	vnode_pager_setsize(tvp, DIRBLKSIZ);
 	if ((error = UFS_BALLOC(tvp, (off_t)0, DIRBLKSIZ, cnp->cn_cred,
 	    BA_CLRBUF, &bp)) != 0)
 		goto bad;
 	ip->i_size = DIRBLKSIZ;
 	DIP_SET(ip, i_size, DIRBLKSIZ);
 	ip->i_flag |= IN_CHANGE | IN_UPDATE;
-	vnode_pager_setsize(tvp, (u_long)ip->i_size);
 	bcopy((caddr_t)&dirtemplate, (caddr_t)bp->b_data, sizeof dirtemplate);
 	if (DOINGSOFTDEP(tvp)) {
 		/*

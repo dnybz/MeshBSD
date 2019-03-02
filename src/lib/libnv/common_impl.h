@@ -26,7 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libnv/common_impl.h 258065 2013-11-12 19:39:14Z pjd $
+ * $FreeBSD: releng/11.0/lib/libnv/common_impl.h 258065 2013-11-12 19:39:14Z pjd $
  */
 
 #ifndef	_COMMON_IMPL_H_

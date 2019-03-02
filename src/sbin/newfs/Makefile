@@ -1,5 +1,5 @@
 #	@(#)Makefile	8.2 (Berkeley) 3/27/94
-# $FreeBSD: head/sbin/newfs/Makefile 275030 2014-11-25 11:23:12Z bapt $
+# $FreeBSD: releng/11.0/sbin/newfs/Makefile 275030 2014-11-25 11:23:12Z bapt $
 
 .PATH: ${.CURDIR}/../../sys/geom
 

@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/csu/mips/Makefile 288076 2015-09-21 21:44:02Z bdrewery $
+# $FreeBSD: releng/11.0/lib/csu/mips/Makefile 288076 2015-09-21 21:44:02Z bdrewery $
 
 .PATH: ${.CURDIR}/../common
 

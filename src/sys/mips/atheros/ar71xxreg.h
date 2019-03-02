@@ -24,7 +24,7 @@
  * SUCH DAMAGE.
  */
 
-/* $FreeBSD: head/sys/mips/atheros/ar71xxreg.h 279509 2015-03-02 01:23:59Z adrian $ */
+/* $FreeBSD: releng/11.0/sys/mips/atheros/ar71xxreg.h 279509 2015-03-02 01:23:59Z adrian $ */
 
 #ifndef _AR71XX_REG_H_
 #define _AR71XX_REG_H_

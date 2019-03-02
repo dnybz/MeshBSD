@@ -1,5 +1,5 @@
-# $FreeBSD: head/share/mk/meta.stage.mk 297040 2016-03-18 20:03:09Z sjg $
-# $Id: meta.stage.mk,v 1.44 2016/03/16 18:21:23 sjg Exp $
+# $FreeBSD: releng/11.0/share/mk/meta.stage.mk 301464 2016-06-05 21:21:41Z bdrewery $
+# $Id: meta.stage.mk,v 1.45 2016/05/26 03:59:09 sjg Exp $
 #
 #	@(#) Copyright (c) 2011, Simon J. Gerraty
 #
@@ -271,6 +271,8 @@ beforeinstall: .dirdep
 .NOPATH: ${STAGE_FILES}
 
 .if !empty(STAGE_TARGETS)
+.NOPATH: ${CLEANFILES}
+
 MK_STALE_STAGED?= no
 .if ${MK_STALE_STAGED} == "yes"
 all: stale_staged

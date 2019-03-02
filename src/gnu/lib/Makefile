@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/lib/Makefile 289393 2015-10-15 22:55:08Z bdrewery $
+# $FreeBSD: releng/11.0/gnu/lib/Makefile 289393 2015-10-15 22:55:08Z bdrewery $
 
 .include <src.opts.mk>
 
@@ -10,6 +10,10 @@ SUBDIR+= libgcov libgomp
 
 .if ${MK_SSP} != "no"
 SUBDIR+= libssp
+.endif
+
+.if ${MK_TESTS} != "no"
+SUBDIR+= tests
 .endif
 
 .if ${MK_BINUTILS} != "no" && ${MK_GDB} != "no"

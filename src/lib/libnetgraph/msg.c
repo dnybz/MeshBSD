@@ -39,7 +39,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libnetgraph/msg.c 248159 2013-03-11 13:05:11Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libnetgraph/msg.c 248159 2013-03-11 13:05:11Z glebius $");
 
 #include <sys/types.h>
 #include <sys/socket.h>

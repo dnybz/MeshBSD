@@ -20,7 +20,7 @@
  *          Wolfram Schneider <wosch@FreeBSD.org>
  *          Thomas Moestl <tmoestl@gmx.net>
  *
- * $FreeBSD: head/usr.bin/top/machine.c 298686 2016-04-27 02:44:10Z araujo $
+ * $FreeBSD: releng/11.0/usr.bin/top/machine.c 298686 2016-04-27 02:44:10Z araujo $
  */
 
 #include <sys/param.h>

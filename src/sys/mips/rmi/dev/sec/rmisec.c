@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/rmi/dev/sec/rmisec.c 275732 2014-12-12 19:56:36Z jmg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/rmi/dev/sec/rmisec.c 275732 2014-12-12 19:56:36Z jmg $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

@@ -1,4 +1,4 @@
-/* $FreeBSD: head/sys/boot/efi/include/efidef.h 292625 2015-12-22 20:40:34Z emaste $ */
+/* $FreeBSD: releng/11.0/sys/boot/efi/include/efidef.h 292625 2015-12-22 20:40:34Z emaste $ */
 #ifndef _EFI_DEF_H
 #define _EFI_DEF_H
 

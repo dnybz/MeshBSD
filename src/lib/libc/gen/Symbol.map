@@ -1,5 +1,5 @@
 /*
- * $FreeBSD: head/lib/libc/gen/Symbol.map 300043 2016-05-17 09:56:22Z kib $
+ * $FreeBSD: releng/11.0/lib/libc/gen/Symbol.map 301711 2016-06-09 01:28:44Z markj $
  */
 
 FBSD_1.0 {
@@ -410,6 +410,15 @@ FBSD_1.3 {
 };
 
 FBSD_1.4 {
+	getnetgrent_r;
+	pthread_mutex_consistent;
+	pthread_mutexattr_getrobust;
+	pthread_mutexattr_setrobust;
+	scandir_b;
+	stravis;
+};
+
+FBSD_1.5 {
 	bcrypt;
 	bcrypt_checkpass;
 	bcrypt_gensalt;
@@ -430,11 +439,6 @@ FBSD_1.4 {
 	crypt_checkpass;
 	crypt_newhash;
 	getdtablecount;
-	pthread_mutex_consistent;
-	pthread_mutexattr_getrobust;
-	pthread_mutexattr_setrobust;
-	scandir_b;
-	stravis;
 };
 
 FBSDprivate_1.0 {

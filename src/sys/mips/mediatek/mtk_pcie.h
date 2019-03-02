@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/mediatek/mtk_pcie.h 297850 2016-04-12 07:21:22Z sgalabov $
+ * $FreeBSD: releng/11.0/sys/mips/mediatek/mtk_pcie.h 297850 2016-04-12 07:21:22Z sgalabov $
  */
 #ifndef __MTK_PCIE_H__
 #define __MTK_PCIE_H__

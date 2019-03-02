@@ -24,7 +24,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/riscv/_fpmath.h 294227 2016-01-17 15:21:23Z br $
+ * $FreeBSD: releng/11.0/lib/libc/riscv/_fpmath.h 294227 2016-01-17 15:21:23Z br $
  */
 
 union IEEEl2bits {

@@ -24,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/net80211/ieee80211_power.c 297405 2016-03-30 00:44:10Z adrian $");
+__FBSDID("$FreeBSD: releng/11.0/sys/net80211/ieee80211_power.c 297405 2016-03-30 00:44:10Z adrian $");
 
 /*
  * IEEE 802.11 power save support.

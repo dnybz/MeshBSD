@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/stdio/_flock_stub.c 288031 2015-09-20 20:26:46Z rodrigc $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/stdio/_flock_stub.c 288031 2015-09-20 20:26:46Z rodrigc $");
 
 #include "namespace.h"
 #include <stdio.h>

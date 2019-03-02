@@ -22,7 +22,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/include/elf.h 276539 2015-01-02 15:36:29Z emaste $
+ * $FreeBSD: releng/11.0/sys/mips/include/elf.h 276539 2015-01-02 15:36:29Z emaste $
  */
 
 /*-

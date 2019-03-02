@@ -30,7 +30,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)nodes.c.pat	8.2 (Berkeley) 5/4/95
- * $FreeBSD: head/bin/sh/nodes.c.pat 291267 2015-11-24 22:47:19Z jilles $
+ * $FreeBSD: releng/11.0/bin/sh/nodes.c.pat 291267 2015-11-24 22:47:19Z jilles $
  */
 
 #include <sys/param.h>

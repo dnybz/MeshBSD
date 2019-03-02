@@ -37,7 +37,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libkvm/kvm_pcpu.c 298896 2016-05-01 19:37:33Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libkvm/kvm_pcpu.c 298896 2016-05-01 19:37:33Z pfg $");
 
 #include <sys/param.h>
 #include <sys/pcpu.h>

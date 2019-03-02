@@ -32,7 +32,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/geli/pwgets.c 296963 2016-03-16 23:12:19Z allanjude $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/geli/pwgets.c 296963 2016-03-16 23:12:19Z allanjude $");
 
 #include "stand.h"
 

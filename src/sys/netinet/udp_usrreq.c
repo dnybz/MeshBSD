@@ -37,9 +37,8 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/udp_usrreq.c 298747 2016-04-28 15:53:10Z rrs $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/udp_usrreq.c 301717 2016-06-09 05:48:34Z ae $");
 
-#include "opt_ipfw.h"
 #include "opt_inet.h"
 #include "opt_inet6.h"
 #include "opt_ipsec.h"
@@ -269,20 +268,23 @@ udp_discardcb(struct udpcb *up)
 }
 
 #ifdef VIMAGE
-void
-udp_destroy(void)
+static void
+udp_destroy(void *unused __unused)
 {
 
 	in_pcbinfo_destroy(&V_udbinfo);
 	uma_zdestroy(V_udpcb_zone);
 }
+VNET_SYSUNINIT(udp, SI_SUB_PROTO_DOMAIN, SI_ORDER_FOURTH, udp_destroy, NULL);
 
-void
-udplite_destroy(void)
+static void
+udplite_destroy(void *unused __unused)
 {
 
 	in_pcbinfo_destroy(&V_ulitecbinfo);
 }
+VNET_SYSUNINIT(udplite, SI_SUB_PROTO_DOMAIN, SI_ORDER_FOURTH, udplite_destroy,
+    NULL);
 #endif
 
 #ifdef INET

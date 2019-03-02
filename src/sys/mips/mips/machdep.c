@@ -40,7 +40,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mips/machdep.c 298053 2016-04-15 14:26:24Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mips/machdep.c 298053 2016-04-15 14:26:24Z pfg $");
 
 #include "opt_ddb.h"
 #include "opt_md.h"

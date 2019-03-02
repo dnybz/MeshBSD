@@ -30,7 +30,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)pathnames.h	8.1 (Berkeley) 6/5/93
- * $FreeBSD: head/sbin/init/pathnames.h 290548 2015-11-08 17:33:48Z trasz $
+ * $FreeBSD: releng/11.0/sbin/init/pathnames.h 290548 2015-11-08 17:33:48Z trasz $
  */
 
 #include <paths.h>

@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/bsd.endian.mk 292124 2015-12-11 22:55:23Z br $
+# $FreeBSD: releng/11.0/share/mk/bsd.endian.mk 292124 2015-12-11 22:55:23Z br $
 
 .if ${MACHINE_ARCH} == "aarch64" || \
     ${MACHINE_ARCH} == "amd64" || \

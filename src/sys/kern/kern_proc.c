@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_proc.c 298173 2016-04-17 23:22:32Z markj $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_proc.c 301456 2016-06-05 17:04:03Z kib $");
 
 #include "opt_compat.h"
 #include "opt_ddb.h"
@@ -168,7 +168,7 @@ CTASSERT(sizeof(struct kinfo_proc32) == KINFO_PROC32_SIZE);
  * Initialize global process hashing structures.
  */
 void
-procinit()
+procinit(void)
 {
 
 	sx_init(&allproc_lock, "allproc");
@@ -237,7 +237,6 @@ proc_init(void *mem, int size, int flags)
 
 	p = (struct proc *)mem;
 	SDT_PROBE3(proc, , init, entry, p, size, flags);
-	p->p_sched = (struct p_sched *)&p[1];
 	mtx_init(&p->p_mtx, "process lock", NULL, MTX_DEF | MTX_DUPOK | MTX_NEW);
 	mtx_init(&p->p_slock, "process slock", NULL, MTX_SPIN | MTX_NEW);
 	mtx_init(&p->p_statmtx, "pstatl", NULL, MTX_SPIN | MTX_NEW);

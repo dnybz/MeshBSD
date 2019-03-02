@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/net/if_me.c 288575 2015-10-03 09:15:23Z hrs $");
+__FBSDID("$FreeBSD: releng/11.0/sys/net/if_me.c 288575 2015-10-03 09:15:23Z hrs $");
 
 #include <sys/param.h>
 #include <sys/jail.h>

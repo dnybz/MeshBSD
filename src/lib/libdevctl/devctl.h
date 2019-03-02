@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libdevctl/devctl.h 298709 2016-04-27 16:33:17Z jhb $
+ * $FreeBSD: releng/11.0/lib/libdevctl/devctl.h 298709 2016-04-27 16:33:17Z jhb $
  */
 
 #ifndef __DEVCTL_H__

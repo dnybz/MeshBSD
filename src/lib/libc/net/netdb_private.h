@@ -22,7 +22,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/net/netdb_private.h 292719 2015-12-25 10:49:40Z ume $
+ * $FreeBSD: releng/11.0/lib/libc/net/netdb_private.h 292719 2015-12-25 10:49:40Z ume $
  */
 
 #ifndef _NETDB_PRIVATE_H_

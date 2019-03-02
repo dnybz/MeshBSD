@@ -17,7 +17,7 @@
 
 /* cron.h - header for vixie's cron
  *
- * $FreeBSD: head/usr.sbin/cron/cron/cron.h 242101 2012-10-25 22:54:29Z sobomax $
+ * $FreeBSD: releng/11.0/usr.sbin/cron/cron/cron.h 305427 2016-09-05 16:43:57Z emaste $
  *
  * vix 14nov88 [rest of log is in RCS]
  * vix 14jan87 [0 or 7 can be sunday; thanks, mwm@berkeley]
@@ -73,7 +73,6 @@
 #define	MAX_COMMAND	1000	/* max length of internally generated cmd */
 #define	MAX_ENVSTR	1000	/* max length of envvar=value\0 strings */
 #define	MAX_TEMPSTR	100	/* obvious */
-#define	MAX_UNAME	20	/* max length of username, should be overkill */
 #define	ROOT_UID	0	/* don't change this, it really must be root */
 #define	ROOT_USER	"root"	/* ditto */
 #define	SYS_NAME	"*system*" /* magic owner name for system crontab */

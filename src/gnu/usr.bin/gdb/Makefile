@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/usr.bin/gdb/Makefile 276551 2015-01-02 18:45:03Z bapt $
+# $FreeBSD: releng/11.0/gnu/usr.bin/gdb/Makefile 276551 2015-01-02 18:45:03Z bapt $
 
 SUBDIR=	libgdb gdb gdbtui kgdb
 

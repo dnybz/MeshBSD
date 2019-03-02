@@ -1,169 +1,140 @@
 #	From: @(#)Makefile	5.20 (Berkeley) 6/12/93
-# $FreeBSD: head/usr.sbin/Makefile 292553 2015-12-21 17:41:08Z ian $
+# $FreeBSD: releng/11.0/usr.sbin/Makefile 303675 2016-08-02 20:18:43Z bdrewery $
 
 .include <src.opts.mk>
 
-#
-# XXX: powerd(8) will be replaced by powerd++(8)
-#
+SUBDIR=	adduser \
+	arp \
+	chkgrp \
+	chown \
+	chroot \
+	ckdist \
+	crashinfo \
+	cron \
+	daemon \
+	devctl \
+	devinfo \
+	dhcpd \
+	diskinfo \
+	extattr \
+	extattrctl \
+	fifolog \
+	fstyp \
+	ftp-proxy \
+	getfmac \
+	getpmac \
+	httpd \
+	i2c \
+	ifmcstat \
+	iostat \
+	kldxref \
+	makefs \
+	memcontrol \
+	mtest \
+	newsyslog \
+	nmtree \
+	nologin \
+	ntpd \
+	pciconf \
+	periodic \
+	phttpget \
+	procctl \
+	pstat \
+	pw \
+	pwd_mkdb \
+	rarpd \
+	rpcbind \
+	rtprio \
+	service \
+	services_mkdb \
+	setfib \
+	setfmac \
+	setpmac \
+	smbmsg \
+	syslogd \
+	tcpdrop \
+	tcpdump \
+	traceroute \
+	trpt \
+	tzsetup \
+	ugidfw \
+	vigr \
+	vipw \
+	wake \
+	watch \
+	watchdogd \
+	zic
 
-SUBDIR= 	ac
-SUBDIR+= 	adduser
-SUBDIR+= 	chkgrp
-SUBDIR+= 	chown
-SUBDIR+= 	chroot
-SUBDIR+= 	config
-SUBDIR+= 	cron
-SUBDIR+= 	crunch
-SUBDIR+= 	daemon
-SUBDIR+= 	devctl
-SUBDIR+= 	devinfo
-SUBDIR+= 	eeprom
-SUBDIR+= 	gpioctl
-SUBDIR+= 	i2c
-SUBDIR+= 	kbdcontrol
-SUBDIR+= 	lastlogin
-SUBDIR+= 	lpr
-SUBDIR+= 	makefs
-SUBDIR+= 	mixer
-SUBDIR+= 	mtest
-SUBDIR+= 	newsyslog
-SUBDIR+= 	nmtree
-SUBDIR+= 	nologin
-SUBDIR+= 	pciconf
-SUBDIR+= 	periodic
-SUBDIR+= 	powerd
-SUBDIR+= 	pstat
-SUBDIR+= 	pw
-SUBDIR+= 	pwd_mkdb
-SUBDIR+= 	setfmac
-SUBDIR+= 	setpmac
-SUBDIR+= 	snapinfo
-SUBDIR+= 	syslogd
-SUBDIR+= 	timed
-SUBDIR+= 	tzsetup
-SUBDIR+= 	uathload
-SUBDIR+= 	ugidfw
-SUBDIR+= 	uhsoctl
-SUBDIR+= 	usbconfig
-SUBDIR+= 	usbdump
-SUBDIR+= 	utx
-SUBDIR+= 	vidcontrol
-SUBDIR+= 	vipw
-SUBDIR+= 	watch
-SUBDIR+= 	watchdogd
-SUBDIR+= 	wlandebug
-SUBDIR+= 	wpa
-SUBDIR+= 	zic
-SUBDIR+= 	zzz
+# NB: keep these sorted by MK_* knobs
 
-.if ${MK_AMD} != "no"
-SUBDIR+= 	amd
-SUBDIR+= 	autofs
+SUBDIR.${MK_AUTHPF}+=	authpf
+.if ${MK_BLACKLIST} != "no"
+SUBDIR.${MK_BLACKLIST}+=	blacklistctl
+SUBDIR.${MK_BLACKLIST}+=	blacklistd
+.endif
+SUBDIR.${MK_FMTREE}+=	fmtree
+SUBDIR.${MK_GPIO}+=	gpioctl
+SUBDIR.${MK_INET6}+=	ip6addrctl
+SUBDIR.${MK_INET6}+=	mld6query
+SUBDIR.${MK_INET6}+=	ndp
+SUBDIR.${MK_INET6}+=	rip6query
+SUBDIR.${MK_INET6}+=	route6d
+SUBDIR.${MK_INET6}+=	rrenumd
+SUBDIR.${MK_INET6}+=	rtadvctl
+SUBDIR.${MK_INET6}+=	rtadvd
+SUBDIR.${MK_INET6}+=	rtsold
+SUBDIR.${MK_INET6}+=	traceroute6
+SUBDIR.${MK_INETD}+=	inetd
+
+
+SUBDIR.${MK_JAIL}+=	jail
+SUBDIR.${MK_JAIL}+=	jexec
+SUBDIR.${MK_JAIL}+=	jls
+
+.if ${MK_LIBTHR} != "no" || ${MK_LIBPTHREAD} != "no"
+SUBDIR.${MK_PPP}+=	pppctl
+SUBDIR.${MK_NS_CACHING}+=	nscd
 .endif
 
-.if ${MK_AUDIT} != "no" 
-SUBDIR+= 	audit
-SUBDIR+= 	auditd
-SUBDIR+= 	auditdistd
-SUBDIR+= 	auditreduce
-.endif
+SUBDIR.${MK_NAND}+=	nandsim
+SUBDIR.${MK_NAND}+=	nandtool
 
-.if ${MK_BLUETOOTH} != "no"
-SUBDIR+= 	bluetooth
-.endif
+SUBDIR.${MK_NETGRAPH}+=	ngctl
+SUBDIR.${MK_NETGRAPH}+=	nghook
 
-.if ${MK_BSNMP} != "no"
-SUBDIR+= 	bsnmpd
-.endif
+SUBDIR.${MK_LIBRESSL}+=	keyserv
 
-.if ${MK_FTP} != "no"
-SUBDIR+= 	ftp-proxy
-.endif
+# SUBDIR.${MK_PF}+=	ftp-proxy
+SUBDIR.${MK_PMC}+=	pmcannotate
+SUBDIR.${MK_PMC}+=	pmccontrol
+SUBDIR.${MK_PMC}+=	pmcstat
+SUBDIR.${MK_PMC}+=	pmcstudy
+SUBDIR.${MK_PPP}+=	ppp
 
-.if ${MK_INET_SUPPORT} != "no"
-SUBDIR+= 	arp
-SUBDIR+= 	rarpd
-SUBDIR+= 	traceroute
-.endif
+SUBDIR.${MK_RCMDS}+=	rwhod
 
-.if ${MK_INET6_SUPPORT} != "no"
-SUBDIR+= 	ip6addrctl
-SUBDIR+= 	mld6query
-SUBDIR+= 	ndp
-SUBDIR+= 	rip6query
-SUBDIR+= 	route6d
-SUBDIR+= 	traceroute6
-.endif
 
-.if ${MK_INET_SUPPORT} != "no" || \
-    ${MK_INET6_SUPPORT} != "no"
-SUBDIR+= 	dhcpd
-SUBDIR+= 	flowctl
-SUBDIR+= 	fwcontrol
-SUBDIR+= 	httpd
-SUBDIR+= 	nscd
-SUBDIR+= 	ntp
-SUBDIR+= 	phttpget
-SUBDIR+= 	ppp
-SUBDIR+= 	pppctl
-SUBDIR+= 	rpc.lockd
-SUBDIR+= 	rpc.statd
-SUBDIR+= 	rpc.umntall
-SUBDIR+= 	rpc.umntall
-SUBDIR+= 	rpcbind
-SUBDIR+= 	rrenumd
-SUBDIR+= 	rtadvctl
-SUBDIR+= 	rtadvd
-SUBDIR+= 	rtprio
-SUBDIR+= 	rtsold
-SUBDIR+= 	setfib
-SUBDIR+= 	services_mkdb
-SUBDIR+= 	tcpdrop
-.endif
+SUBDIR.${MK_TCP_WRAPPERS}+=	tcpdchk
+SUBDIR.${MK_TCP_WRAPPERS}+=	tcpdmatch
 
-.if ${MK_INETD} != "no" 
-SUBDIR+= 	inetd
-.endif
+SUBDIR.${MK_TOOLCHAIN}+=	config
+SUBDIR.${MK_TOOLCHAIN}+=	crunch
 
-.if ${MK_NIS} != "no"
-SUBDIR+= 	rpc.yppasswdd
-SUBDIR+= 	rpc.ypupdated
-SUBDIR+= 	rpc.ypxfrd
-SUBDIR+= 	yp_mkdb
-SUBDIR+= 	ypbind
-SUBDIR+= 	ypldap
-SUBDIR+= 	yppoll
-SUBDIR+= 	yppush
-SUBDIR+= 	ypserv
-SUBDIR+= 	ypset
-.endif
+SUBDIR.${MK_UNBOUND}+=	unbound
 
-.if ${MK_OPENSSH} != "no"
-SUBDIR+=sshd
-.endif
+SUBDIR.${MK_USB}+=	uathload
+SUBDIR.${MK_USB}+=	uhsoctl
+SUBDIR.${MK_USB}+=	usbconfig
+SUBDIR.${MK_USB}+=	usbdump
 
-#
-# XXX: stalled op. until asr is subset of libc(3).
-#
-#.if ${MK_MAIL} != "no"
-#SUBDIR+= 	smtpd
-#.endif
-#
+SUBDIR.${MK_UTMPX}+=	ac
+SUBDIR.${MK_UTMPX}+=	lastlogin
+SUBDIR.${MK_UTMPX}+=	utx
 
-.if ${MK_NAND} != "no"
-SUBDIR+= 	nandsim
-SUBDIR+= 	nandtool
-.endif
+SUBDIR.${MK_WIRELESS}+=	wlandebug
+SUBDIR.${MK_WIRELESS}+=	wpa
 
-.if ${MK_NETGRAPH} != "no"
-SUBDIR+= 	ngctl
-SUBDIR+= 	nghook
-.endif
-
-.if ${MK_PF} != "no"
-SUBDIR+= 	authpf
-.endif
+SUBDIR.${MK_TESTS}+=	tests
 
 .include <bsd.arch.inc.mk>
 

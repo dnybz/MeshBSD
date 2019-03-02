@@ -27,7 +27,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.bin/dtc/string.hh 289935 2015-10-25 14:52:16Z theraven $
+ * $FreeBSD: releng/11.0/usr.bin/dtc/string.hh 289935 2015-10-25 14:52:16Z theraven $
  */
 
 #ifndef _STRING_HH_

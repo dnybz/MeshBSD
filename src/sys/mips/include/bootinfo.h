@@ -30,7 +30,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/include/bootinfo.h 262217 2014-02-19 09:19:09Z rwatson $
+ * $FreeBSD: releng/11.0/sys/mips/include/bootinfo.h 262217 2014-02-19 09:19:09Z rwatson $
  */
 
 #ifndef	_MACHINE_BOOTINFO_H_

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/sys/slicer.h 287013 2015-08-22 05:50:18Z jhibbits $
+ * $FreeBSD: releng/11.0/sys/sys/slicer.h 287013 2015-08-22 05:50:18Z jhibbits $
  */
 
 #ifndef _FLASH_SLICER_H_

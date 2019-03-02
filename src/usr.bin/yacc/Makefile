@@ -1,9 +1,9 @@
 #	@(#)Makefile	5.3 (Berkeley) 5/12/90
-# $FreeBSD: head/usr.bin/yacc/Makefile 274460 2014-11-13 00:46:53Z jkim $
+# $FreeBSD: releng/11.0/usr.bin/yacc/Makefile 274460 2014-11-13 00:46:53Z jkim $
 
 .include <src.opts.mk>
 
-BYACC_SRC=	${.CURDIR}/../../tools/byacc
+BYACC_SRC=	${.CURDIR}/../../contrib/byacc
 .PATH: ${BYACC_SRC}
 
 PROG=	yacc
@@ -20,5 +20,9 @@ CFLAGS+=	-DYYPATCH=${YYPATCH}
 
 LINKS=	${BINDIR}/yacc ${BINDIR}/byacc
 MLINKS=	yacc.1 byacc.1
+
+.if ${MK_TESTS} != "no"
+SUBDIR+= tests
+.endif
 
 .include <bsd.prog.mk>

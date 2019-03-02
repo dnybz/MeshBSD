@@ -21,7 +21,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/arm/at91/libat91/lib.h 172991 2007-10-25 22:50:25Z cognet $
+ * $FreeBSD: releng/11.0/sys/boot/arm/at91/libat91/lib.h 172991 2007-10-25 22:50:25Z cognet $
  */
 
 #ifndef ARM_BOOT_LIB_H

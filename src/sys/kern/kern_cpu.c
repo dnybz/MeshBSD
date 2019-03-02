@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_cpu.c 299746 2016-05-14 18:22:52Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_cpu.c 299746 2016-05-14 18:22:52Z jhb $");
 
 #include <sys/param.h>
 #include <sys/bus.h>

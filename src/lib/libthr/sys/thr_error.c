@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libthr/sys/thr_error.c 276630 2015-01-03 18:38:46Z kib $
+ * $FreeBSD: releng/11.0/lib/libthr/sys/thr_error.c 276630 2015-01-03 18:38:46Z kib $
  */
 
 #include <pthread.h>

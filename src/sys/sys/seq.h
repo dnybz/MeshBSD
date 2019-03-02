@@ -22,7 +22,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/sys/seq.h 285294 2015-07-08 22:21:25Z mjg $
+ * $FreeBSD: releng/11.0/sys/sys/seq.h 285294 2015-07-08 22:21:25Z mjg $
  */
 
 #ifndef _SYS_SEQ_H_

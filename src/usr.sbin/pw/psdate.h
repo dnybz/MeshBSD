@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/pw/psdate.h 99806 2002-07-11 19:07:35Z alfred $
+ * $FreeBSD: releng/11.0/usr.sbin/pw/psdate.h 99806 2002-07-11 19:07:35Z alfred $
  */
 
 #ifndef _PSDATE_H_

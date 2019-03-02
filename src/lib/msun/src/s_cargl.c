@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_cargl.c 183714 2008-10-09 02:25:18Z peter $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/src/s_cargl.c 183714 2008-10-09 02:25:18Z peter $");
 
 #include <complex.h>
 #include <math.h>

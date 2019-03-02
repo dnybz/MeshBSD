@@ -17,8 +17,8 @@ cpu		CPU_MIPS74K
 makeoptions	KERNLOADADDR=0x80050000
 options 	HZ=1000
 
-options		BREAK_TO_DEBUGGER
-options		ALT_BREAK_TO_DEBUGGER
+#options		BREAK_TO_DEBUGGER
+#options		ALT_BREAK_TO_DEBUGGER
 
 # options		BOOTVERBOSE=10
 
@@ -27,11 +27,11 @@ hints		"QCA955X_BASE.hints"
 
 # makeoptions	DEBUG=-g		#Build kernel with gdb(1) debug symbols
 
-makeoptions	MODULES_OVERRIDE="if_vlan ipfw if_gre if_gif if_bridge bridgestp"
+makeoptions	MODULES_OVERRIDE="if_vlan if_gre if_gif if_bridge bridgestp"
 
 # options 	DDB
 # options 	KDB
-# options 	ALQ
+options 	ALQ
 
 options 	SCHED_4BSD		#4BSD scheduler
 options 	INET			#InterNETworking
@@ -51,7 +51,7 @@ options 	NO_SYSCTL_DESCR
 options 	NBUF=128
 
 # Limit UMTX hash size
-# options 	UMTX_NUM_CHAINS=64
+#options 	UMTX_NUM_CHAINS=64
 
 # PMC - fow now there's no hwpmc module for mips74k
 #options 	HWPMC_HOOKS

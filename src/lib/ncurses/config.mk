@@ -1,8 +1,8 @@
-# $FreeBSD: head/lib/ncurses/config.mk 171527 2007-07-21 00:27:17Z rafan $
+# $FreeBSD: releng/11.0/lib/ncurses/config.mk 171527 2007-07-21 00:27:17Z rafan $
 
 # This Makefile is shared by libncurses, libform, libmenu, libpanel.
 
-NCURSES_DIR=	${.CURDIR}/../../../tools/ncurses
+NCURSES_DIR=	${.CURDIR}/../../../contrib/ncurses
 
 .if defined(ENABLE_WIDEC)
 LIB_SUFFIX=	w

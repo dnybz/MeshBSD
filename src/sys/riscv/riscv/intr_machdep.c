@@ -33,7 +33,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/riscv/riscv/intr_machdep.c 298636 2016-04-26 12:56:44Z br $");
+__FBSDID("$FreeBSD: releng/11.0/sys/riscv/riscv/intr_machdep.c 298636 2016-04-26 12:56:44Z br $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

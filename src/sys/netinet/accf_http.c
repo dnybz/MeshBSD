@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/accf_http.c 274421 2014-11-12 09:57:15Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/accf_http.c 274421 2014-11-12 09:57:15Z glebius $");
 
 #define ACCEPT_FILTER_MOD
 

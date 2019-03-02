@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/gen/auxv.c 239193 2012-08-11 12:07:24Z ed $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/gen/auxv.c 239193 2012-08-11 12:07:24Z ed $");
 
 #include "namespace.h"
 #include <elf.h>

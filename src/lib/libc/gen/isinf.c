@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/gen/isinf.c 283693 2015-05-29 09:23:20Z andrew $
+ * $FreeBSD: releng/11.0/lib/libc/gen/isinf.c 283693 2015-05-29 09:23:20Z andrew $
  */
 
 #include <machine/float.h>

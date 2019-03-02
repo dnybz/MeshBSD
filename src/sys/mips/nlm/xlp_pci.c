@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/nlm/xlp_pci.c 298712 2016-04-27 17:49:42Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/nlm/xlp_pci.c 298712 2016-04-27 17:49:42Z jhb $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

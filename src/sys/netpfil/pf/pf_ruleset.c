@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netpfil/pf/pf_ruleset.c 257179 2013-10-26 18:18:50Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netpfil/pf/pf_ruleset.c 257179 2013-10-26 18:18:50Z glebius $");
 
 #include <sys/param.h>
 #include <sys/socket.h>

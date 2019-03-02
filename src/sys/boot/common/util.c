@@ -15,7 +15,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/common/util.c 300056 2016-05-17 14:10:45Z imp $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/common/util.c 300056 2016-05-17 14:10:45Z imp $");
 
 #include <sys/param.h>
 

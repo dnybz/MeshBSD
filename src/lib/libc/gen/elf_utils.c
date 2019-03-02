@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/gen/elf_utils.c 295407 2016-02-08 19:24:13Z kib $
+ * $FreeBSD: releng/11.0/lib/libc/gen/elf_utils.c 295407 2016-02-08 19:24:13Z kib $
  */
 
 #include <sys/types.h>

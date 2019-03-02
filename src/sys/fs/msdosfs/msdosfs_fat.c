@@ -1,4 +1,4 @@
-/* $FreeBSD: head/sys/fs/msdosfs/msdosfs_fat.c 298806 2016-04-29 20:51:24Z pfg $ */
+/* $FreeBSD: releng/11.0/sys/fs/msdosfs/msdosfs_fat.c 298806 2016-04-29 20:51:24Z pfg $ */
 /*	$NetBSD: msdosfs_fat.c,v 1.28 1997/11/17 15:36:49 ws Exp $	*/
 
 /*-

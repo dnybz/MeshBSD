@@ -1,5 +1,5 @@
 /*
- * $FreeBSD: head/lib/libc/riscv/Symbol.map 297238 2016-03-24 18:47:19Z emaste $
+ * $FreeBSD: releng/11.0/lib/libc/riscv/Symbol.map 300680 2016-05-25 14:08:21Z br $
  */
 
 /*
@@ -28,8 +28,6 @@ FBSD_1.0 {
 	ntohl;
 	ntohs;
 	vfork;
-	brk;
-	sbrk;
 	makecontext;
 };
 

@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/usr.bin/groff/src/devices/grodvi/Makefile 291738 2015-12-04 03:17:47Z bdrewery $
+# $FreeBSD: releng/11.0/gnu/usr.bin/groff/src/devices/grodvi/Makefile 291738 2015-12-04 03:17:47Z bdrewery $
 
 PROG_CXX=	grodvi
 SRCS=		dvi.cpp

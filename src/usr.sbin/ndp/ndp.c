@@ -1,4 +1,4 @@
-/*	$FreeBSD: head/usr.sbin/ndp/ndp.c 292465 2015-12-19 09:18:01Z ume $	*/
+/*	$FreeBSD: releng/11.0/usr.sbin/ndp/ndp.c 292465 2015-12-19 09:18:01Z ume $	*/
 /*	$KAME: ndp.c,v 1.104 2003/06/27 07:48:39 itojun Exp $	*/
 
 /*

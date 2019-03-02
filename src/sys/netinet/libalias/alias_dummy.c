@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/libalias/alias_dummy.c 259858 2013-12-25 02:06:57Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/libalias/alias_dummy.c 259858 2013-12-25 02:06:57Z glebius $");
 
 /*
  * Alias_dummy is just an empty skeleton used to demostrate how to write

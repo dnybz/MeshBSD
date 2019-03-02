@@ -1,19 +1,9 @@
-# $FreeBSD: head/lib/csu/Makefile 283125 2015-05-19 21:00:53Z emaste $
+# $FreeBSD: releng/11.0/lib/csu/Makefile 283125 2015-05-19 21:00:53Z emaste $
 
-LIBCSU_SRCTOP?= ${.CURDIR}
-
-.if exists(${LIBCSU_SRCTOP}/${MACHINE_ARCH})
+.if exists(${.CURDIR}/${MACHINE_ARCH})
 SUBDIR+= ${MACHINE_ARCH}
-.elif exists(${LIBCSU_SRCTOP}/${MACHINE_CPUARCH})
-SUBDIR+= ${MACHINE_CPUARCH}
 .else
-SUBDIR+= ${TARGET_ARCH}
+SUBDIR+= ${MACHINE_CPUARCH}
 .endif
 
 .include <bsd.subdir.mk>
-
-
-
-
-
-

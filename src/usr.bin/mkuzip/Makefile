@@ -1,4 +1,4 @@
-# $FreeBSD: head/usr.bin/mkuzip/Makefile 298504 2016-04-23 07:23:43Z sobomax $
+# $FreeBSD: releng/11.0/usr.bin/mkuzip/Makefile 298504 2016-04-23 07:23:43Z sobomax $
 
 PROG=	mkuzip
 MAN=	mkuzip.8

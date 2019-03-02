@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/sys/__error.c 288003 2015-09-20 03:49:08Z rodrigc $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/sys/__error.c 288003 2015-09-20 03:49:08Z rodrigc $");
 
 #include "libc_private.h"
 

@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_intr.c 285751 2015-07-21 14:39:34Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_intr.c 285751 2015-07-21 14:39:34Z kib $");
 
 #include "opt_ddb.h"
 #include "opt_kstack_usage_prof.h"

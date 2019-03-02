@@ -40,7 +40,7 @@ static char sccsid[] = "@(#)route.c	8.6 (Berkeley) 4/28/95";
 #endif /* not lint */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sbin/route/route.c 287920 2015-09-17 16:56:49Z rstone $");
+__FBSDID("$FreeBSD: releng/11.0/sbin/route/route.c 287920 2015-09-17 16:56:49Z rstone $");
 
 #include <sys/param.h>
 #include <sys/file.h>

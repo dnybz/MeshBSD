@@ -28,7 +28,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sbin/fsck/preen.c 298194 2016-04-18 07:44:53Z araujo $
+ * $FreeBSD: releng/11.0/sbin/fsck/preen.c 298194 2016-04-18 07:44:53Z araujo $
  */
 
 #include <sys/cdefs.h>

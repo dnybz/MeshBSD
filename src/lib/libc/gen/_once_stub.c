@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/gen/_once_stub.c 281887 2015-04-23 14:22:20Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/gen/_once_stub.c 281887 2015-04-23 14:22:20Z jhb $");
 
 #include "namespace.h"
 #include <pthread.h>

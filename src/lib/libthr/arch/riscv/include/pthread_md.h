@@ -32,7 +32,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libthr/arch/riscv/include/pthread_md.h 297971 2016-04-14 15:31:05Z br $
+ * $FreeBSD: releng/11.0/lib/libthr/arch/riscv/include/pthread_md.h 297971 2016-04-14 15:31:05Z br $
  */
 
 /*

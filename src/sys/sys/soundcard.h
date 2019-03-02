@@ -29,7 +29,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/sys/soundcard.h 298981 2016-05-03 15:14:17Z pfg $
+ * $FreeBSD: releng/11.0/sys/sys/soundcard.h 301406 2016-06-04 18:57:00Z ed $
  */
 
 /*
@@ -1261,7 +1261,7 @@ typedef struct mixer_info {
  */
 #define LOCL_STARTAUDIO		1
 
-#if (!defined(_KERNEL) && !defined(INKERNEL)) || defined(USE_SEQ_MACROS)
+#if !defined(_KERNEL) || defined(USE_SEQ_MACROS)
 /*
  *	Some convenience macros to simplify programming of the
  *	/dev/sequencer interface

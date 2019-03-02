@@ -28,7 +28,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * $NetBSD: if_gre.h,v 1.13 2003/11/10 08:51:52 wiz Exp $
- * $FreeBSD: head/sys/net/if_gre.h 276215 2014-12-25 21:32:37Z ae $
+ * $FreeBSD: releng/11.0/sys/net/if_gre.h 276215 2014-12-25 21:32:37Z ae $
  */
 
 #ifndef _NET_IF_GRE_H_

@@ -54,7 +54,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/ddb/db_script.c 283248 2015-05-21 15:16:18Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/ddb/db_script.c 283248 2015-05-21 15:16:18Z pfg $");
 
 #include <sys/param.h>
 #include <sys/kdb.h>

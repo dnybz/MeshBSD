@@ -25,7 +25,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/ppp/command.c 298032 2016-04-15 03:50:33Z araujo $
+ * $FreeBSD: releng/11.0/usr.sbin/ppp/command.c 298032 2016-04-15 03:50:33Z araujo $
  */
 
 #include <sys/param.h>

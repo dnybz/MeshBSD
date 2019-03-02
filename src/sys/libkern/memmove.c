@@ -25,7 +25,7 @@
 */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/libkern/memmove.c 189170 2009-02-28 16:21:25Z ed $");
+__FBSDID("$FreeBSD: releng/11.0/sys/libkern/memmove.c 189170 2009-02-28 16:21:25Z ed $");
 
 #include <sys/libkern.h>
 

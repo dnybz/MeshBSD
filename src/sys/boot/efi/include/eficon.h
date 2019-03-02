@@ -1,4 +1,4 @@
-/* $FreeBSD: head/sys/boot/efi/include/eficon.h 293724 2016-01-12 02:17:39Z smh $ */
+/* $FreeBSD: releng/11.0/sys/boot/efi/include/eficon.h 293724 2016-01-12 02:17:39Z smh $ */
 #ifndef _EFI_CON_H
 #define _EFI_CON_H
 

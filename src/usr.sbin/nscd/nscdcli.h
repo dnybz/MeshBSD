@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/nscd/nscdcli.h 194112 2009-06-13 14:12:55Z des $
+ * $FreeBSD: releng/11.0/usr.sbin/nscd/nscdcli.h 194112 2009-06-13 14:12:55Z des $
  */
 
 #ifndef __NSCD_NSCDCLI_H__

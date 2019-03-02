@@ -84,7 +84,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/net/name6.c 299922 2016-05-16 08:13:30Z truckman $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/net/name6.c 299922 2016-05-16 08:13:30Z truckman $");
 
 #include "namespace.h"
 #include <sys/param.h>

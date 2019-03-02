@@ -1,4 +1,4 @@
-/*	$FreeBSD: head/sys/netipsec/xform_ah.c 288418 2015-09-30 08:16:33Z ae $	*/
+/*	$FreeBSD: releng/11.0/sys/netipsec/xform_ah.c 288418 2015-09-30 08:16:33Z ae $	*/
 /*	$OpenBSD: ip_ah.c,v 1.63 2001/06/26 06:18:58 angelos Exp $ */
 /*-
  * The authors of this code are John Ioannidis (ji@tla.org),

@@ -32,7 +32,7 @@
  * SUCH DAMAGE.
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/m4/look.c 283089 2015-05-18 22:40:12Z bapt $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/m4/look.c 283089 2015-05-18 22:40:12Z bapt $");
 
 /*
  * look.c

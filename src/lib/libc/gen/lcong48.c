@@ -12,7 +12,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/gen/lcong48.c 92986 2002-03-22 21:53:29Z obrien $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/gen/lcong48.c 92986 2002-03-22 21:53:29Z obrien $");
 
 #include "rand48.h"
 

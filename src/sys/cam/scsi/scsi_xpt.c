@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/cam/scsi/scsi_xpt.c 299186 2016-05-06 16:51:56Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/cam/scsi/scsi_xpt.c 300880 2016-05-27 22:26:43Z asomers $");
 
 #include <sys/param.h>
 #include <sys/bus.h>
@@ -1559,13 +1559,22 @@ probe_device_check:
 				(u_int8_t *)malloc((serial_buf->length + 1),
 						   M_CAMXPT, M_NOWAIT);
 			if (path->device->serial_num != NULL) {
+				int start, slen;
+
+				start = strspn(serial_buf->serial_num, " ");
+				slen = serial_buf->length - start;
+				if (slen <= 0) {
+					/* 
+					 * SPC5r05 says that an all-space serial
+					 * number means no product serial number
+					 * is available
+					 */
+					slen = 0;
+				}
 				memcpy(path->device->serial_num,
-				       serial_buf->serial_num,
-				       serial_buf->length);
-				path->device->serial_num_len =
-				    serial_buf->length;
-				path->device->serial_num[serial_buf->length]
-				    = '\0';
+				       &serial_buf->serial_num[start], slen);
+				path->device->serial_num_len = slen;
+				path->device->serial_num[slen] = '\0';
 			}
 		} else if (cam_periph_error(done_ccb, 0,
 					    SF_RETRY_UA|SF_NO_PRINT,

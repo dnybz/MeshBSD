@@ -50,7 +50,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/geom/geom_ccd.c 298808 2016-04-29 20:56:58Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/geom/geom_ccd.c 298808 2016-04-29 20:56:58Z pfg $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

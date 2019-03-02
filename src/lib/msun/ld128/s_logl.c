@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/ld128/s_logl.c 251292 2013-06-03 09:14:31Z das $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/ld128/s_logl.c 251292 2013-06-03 09:14:31Z das $");
 
 /**
  * Implementation of the natural logarithm of x for 128-bit format.

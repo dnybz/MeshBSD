@@ -29,7 +29,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/fs/tmpfs/tmpfs_fifoops.h 268605 2014-07-14 08:17:11Z kib $
+ * $FreeBSD: releng/11.0/sys/fs/tmpfs/tmpfs_fifoops.h 268605 2014-07-14 08:17:11Z kib $
  */
 
 #ifndef _FS_TMPFS_TMPFS_FIFOOPS_H_

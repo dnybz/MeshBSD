@@ -1,7 +1,7 @@
-# $FreeBSD: head/lib/libcxxrt/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/libcxxrt/Makefile 300943 2016-05-29 06:20:15Z bdrewery $
 
 PACKAGE=	clibs
-SRCDIR=		${.CURDIR}/../../tools/libcxxrt
+SRCDIR=		${.CURDIR}/../../contrib/libcxxrt
 
 SHLIB_MAJOR=	1
 SHLIBDIR?=	/lib
@@ -21,7 +21,7 @@ SRCS+=		libelftc_dem_gnu3.c\
 		guard.cc
 
 WARNS=		0
-CFLAGS+=	-I${SRCDIR} -nostdinc++
+CFLAGS+=	-isystem ${SRCDIR} -nostdinc++
 .if empty(CXXFLAGS:M-std=*)
 CXXFLAGS+=	-std=c++11
 .endif

@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/local.dirdeps.mk 299041 2016-05-04 03:13:48Z bdrewery $
+# $FreeBSD: releng/11.0/share/mk/local.dirdeps.mk 299041 2016-05-04 03:13:48Z bdrewery $
 .if !target(_DIRDEP_USE)
 # we are the 1st makefile
 

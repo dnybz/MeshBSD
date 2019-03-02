@@ -33,7 +33,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/ip_gre.c 280971 2015-04-01 22:26:39Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/ip_gre.c 280971 2015-04-01 22:26:39Z glebius $");
 
 #include "opt_inet.h"
 #include "opt_inet6.h"

@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_sendfile.c 297400 2016-03-29 19:57:11Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_sendfile.c 297400 2016-03-29 19:57:11Z glebius $");
 
 #include "opt_compat.h"
 

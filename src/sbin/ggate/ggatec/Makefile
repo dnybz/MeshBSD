@@ -1,4 +1,4 @@
-# $FreeBSD: head/sbin/ggate/ggatec/Makefile 275030 2014-11-25 11:23:12Z bapt $
+# $FreeBSD: releng/11.0/sbin/ggate/ggatec/Makefile 275030 2014-11-25 11:23:12Z bapt $
 
 .PATH: ${.CURDIR}/../shared
 

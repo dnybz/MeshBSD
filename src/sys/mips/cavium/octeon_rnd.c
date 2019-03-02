@@ -23,11 +23,11 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/cavium/octeon_rnd.c 284959 2015-06-30 17:00:45Z markm $
+ * $FreeBSD: releng/11.0/sys/mips/cavium/octeon_rnd.c 284959 2015-06-30 17:00:45Z markm $
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/cavium/octeon_rnd.c 284959 2015-06-30 17:00:45Z markm $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/cavium/octeon_rnd.c 284959 2015-06-30 17:00:45Z markm $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

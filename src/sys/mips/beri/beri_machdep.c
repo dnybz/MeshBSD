@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/beri/beri_machdep.c 296265 2016-03-01 11:39:07Z andrew $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/beri/beri_machdep.c 296265 2016-03-01 11:39:07Z andrew $");
 
 #include "opt_ddb.h"
 #include "opt_platform.h"

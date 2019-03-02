@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/ipcs/ipc.c 281517 2015-04-14 04:52:52Z eadler $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/ipcs/ipc.c 281517 2015-04-14 04:52:52Z eadler $");
 
 #include <sys/types.h>
 #include <sys/sysctl.h>

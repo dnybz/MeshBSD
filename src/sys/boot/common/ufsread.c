@@ -44,7 +44,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/common/ufsread.c 294493 2016-01-21 08:58:39Z smh $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/common/ufsread.c 294493 2016-01-21 08:58:39Z smh $");
 
 #include <ufs/ufs/dinode.h>
 #include <ufs/ufs/dir.h>

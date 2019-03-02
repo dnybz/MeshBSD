@@ -24,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/tty_tty.c 285214 2015-07-06 18:53:56Z mjg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/tty_tty.c 285214 2015-07-06 18:53:56Z mjg $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

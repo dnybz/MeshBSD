@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libpam/modules/pam_radius/pam_radius.c 277237 2015-01-16 09:07:31Z des $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libpam/modules/pam_radius/pam_radius.c 277237 2015-01-16 09:07:31Z des $");
 
 #include <sys/param.h>
 #include <sys/socket.h>

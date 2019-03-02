@@ -41,7 +41,7 @@ __RCSID("$NetBSD: tty.c,v 1.49 2015/12/08 16:53:27 gson Exp $");
 #endif
 #endif /* not lint && not SCCSID */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libedit/tty.c 296435 2016-03-06 21:32:54Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libedit/tty.c 296435 2016-03-06 21:32:54Z pfg $");
 
 /*
  * tty.c: tty interface stuff

@@ -17,7 +17,7 @@
  * only.
  * END_BLOCK
  *
- * $FreeBSD: head/sys/boot/arm/at91/libat91/emac.h 171426 2007-07-13 14:27:05Z imp $
+ * $FreeBSD: releng/11.0/sys/boot/arm/at91/libat91/emac.h 171426 2007-07-13 14:27:05Z imp $
  *****************************************************************************/
 
 

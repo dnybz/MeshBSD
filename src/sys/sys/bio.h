@@ -32,23 +32,25 @@
  * SUCH DAMAGE.
  *
  *	@(#)buf.h	8.9 (Berkeley) 3/30/95
- * $FreeBSD: head/sys/sys/bio.h 297955 2016-04-14 05:10:41Z imp $
+ * $FreeBSD: releng/11.0/sys/sys/bio.h 300207 2016-05-19 14:08:36Z ken $
  */
 
 #ifndef _SYS_BIO_H_
 #define	_SYS_BIO_H_
 
 #include <sys/queue.h>
+#include <sys/disk_zone.h>
 
 /* bio_cmd */
 #define BIO_READ	0x01	/* Read I/O data */
 #define BIO_WRITE	0x02	/* Write I/O data */
-#define BIO_DELETE	0x04	/* TRIM or free blocks, i.e. mark as unused */
-#define BIO_GETATTR	0x08	/* Get GEOM attributes of object */
-#define BIO_FLUSH	0x10	/* Commit outstanding I/O now */
-#define BIO_CMD0	0x20	/* Available for local hacks */
-#define BIO_CMD1	0x40	/* Available for local hacks */
-#define BIO_CMD2	0x80	/* Available for local hacks */
+#define BIO_DELETE	0x03	/* TRIM or free blocks, i.e. mark as unused */
+#define BIO_GETATTR	0x04	/* Get GEOM attributes of object */
+#define BIO_FLUSH	0x05	/* Commit outstanding I/O now */
+#define BIO_CMD0	0x06	/* Available for local hacks */
+#define BIO_CMD1	0x07	/* Available for local hacks */
+#define BIO_CMD2	0x08	/* Available for local hacks */
+#define BIO_ZONE	0x09	/* Zone command */
 
 /* bio_flags */
 #define BIO_ERROR	0x01	/* An error occurred processing this bio. */
@@ -98,6 +100,7 @@ struct bio {
 	void	*bio_caller2;		/* Private use by the consumer. */
 	TAILQ_ENTRY(bio) bio_queue;	/* Disksort queue. */
 	const char *bio_attribute;	/* Attribute for BIO_[GS]ETATTR */
+	struct  disk_zone_args bio_zone;/* Used for BIO_ZONE */
 	struct g_consumer *bio_from;	/* GEOM linkage */
 	struct g_provider *bio_to;	/* GEOM linkage */
 	off_t	bio_length;		/* Like bio_bcount */

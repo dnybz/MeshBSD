@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libcasper/libcasper/libcasper.c 296047 2016-02-25 18:23:40Z oshogbo $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libcasper/libcasper/libcasper.c 296047 2016-02-25 18:23:40Z oshogbo $");
 
 #include <sys/types.h>
 #include <sys/socket.h>

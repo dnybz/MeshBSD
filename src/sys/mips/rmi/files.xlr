@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/mips/rmi/files.xlr 287471 2015-09-04 19:57:28Z sbruno $
+# $FreeBSD: releng/11.0/sys/mips/rmi/files.xlr 287471 2015-09-04 19:57:28Z sbruno $
 #mips/rmi/xlr_boot1_console.c			standard
 mips/rmi/xlr_machdep.c				standard
 #mips/rmi/clock.c				standard

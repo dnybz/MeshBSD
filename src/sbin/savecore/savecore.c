@@ -61,7 +61,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sbin/savecore/savecore.c 298315 2016-04-20 00:49:49Z ngie $");
+__FBSDID("$FreeBSD: releng/11.0/sbin/savecore/savecore.c 298315 2016-04-20 00:49:49Z ngie $");
 
 #include <sys/param.h>
 #include <sys/disk.h>

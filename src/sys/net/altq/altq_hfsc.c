@@ -28,7 +28,7 @@
  * changes without encumbrance.
  *
  * $KAME: altq_hfsc.c,v 1.24 2003/12/05 05:40:46 kjc Exp $
- * $FreeBSD: head/sys/net/altq/altq_hfsc.c 287009 2015-08-21 22:02:22Z loos $
+ * $FreeBSD: releng/11.0/sys/net/altq/altq_hfsc.c 287009 2015-08-21 22:02:22Z loos $
  */
 /*
  * H-FSC is described in Proceedings of SIGCOMM'97,

@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/rpc/rpc_com.h 264196 2014-04-06 17:06:27Z theraven $
+ * $FreeBSD: releng/11.0/lib/libc/rpc/rpc_com.h 264196 2014-04-06 17:06:27Z theraven $
  */
 /*
  * Copyright (c) 1986 - 1991 by Sun Microsystems, Inc.

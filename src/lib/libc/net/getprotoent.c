@@ -31,7 +31,7 @@
 static char sccsid[] = "@(#)getprotoent.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/net/getprotoent.c 298226 2016-04-18 21:05:15Z avos $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/net/getprotoent.c 298226 2016-04-18 21:05:15Z avos $");
 
 #include <sys/param.h>
 #include <sys/socket.h>

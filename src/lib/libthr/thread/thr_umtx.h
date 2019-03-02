@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libthr/thread/thr_umtx.h 300043 2016-05-17 09:56:22Z kib $
+ * $FreeBSD: releng/11.0/lib/libthr/thread/thr_umtx.h 300043 2016-05-17 09:56:22Z kib $
  */
 
 #ifndef _THR_FBSD_UMTX_H_

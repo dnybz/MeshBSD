@@ -1,11 +1,11 @@
-# $FreeBSD: head/gnu/lib/libstdc++/Makefile 291320 2015-11-25 19:44:43Z bdrewery $
+# $FreeBSD: releng/11.0/gnu/lib/libstdc++/Makefile 291320 2015-11-25 19:44:43Z bdrewery $
 
 .include <src.opts.mk>
 
 GCCVER=	4.2
-GCCDIR=	${.CURDIR}/../../../tools/gcc
-GCCLIB=	${.CURDIR}/../../../tools/gcclibs
-SRCDIR=	${.CURDIR}/../../../tools/libstdc++
+GCCDIR=	${.CURDIR}/../../../contrib/gcc
+GCCLIB=	${.CURDIR}/../../../contrib/gcclibs
+SRCDIR=	${.CURDIR}/../../../contrib/libstdc++
 SUPDIR=	${SRCDIR}/libsupc++
 
 .PATH: ${SRCDIR}/src ${SRCDIR}/libmath ${SRCDIR}/config/io \

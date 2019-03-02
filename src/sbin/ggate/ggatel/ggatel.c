@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sbin/ggate/ggatel/ggatel.c 285531 2015-07-14 10:49:36Z brueffer $
+ * $FreeBSD: releng/11.0/sbin/ggate/ggatel/ggatel.c 285531 2015-07-14 10:49:36Z brueffer $
  */
 
 #include <stdio.h>

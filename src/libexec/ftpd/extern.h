@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)extern.h	8.2 (Berkeley) 4/4/94
- * $FreeBSD: head/libexec/ftpd/extern.h 299356 2016-05-10 11:12:31Z bapt $
+ * $FreeBSD: releng/11.0/libexec/ftpd/extern.h 299356 2016-05-10 11:12:31Z bapt $
  */
 
 #include <sys/types.h>

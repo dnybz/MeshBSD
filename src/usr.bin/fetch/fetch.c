@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/fetch/fetch.c 280630 2015-03-25 18:56:36Z jkim $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/fetch/fetch.c 280630 2015-03-25 18:56:36Z jkim $");
 
 #include <sys/param.h>
 #include <sys/socket.h>

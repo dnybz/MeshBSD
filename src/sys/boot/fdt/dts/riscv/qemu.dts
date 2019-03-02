@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/fdt/dts/riscv/qemu.dts 295921 2016-02-23 14:21:46Z br $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/riscv/qemu.dts 295921 2016-02-23 14:21:46Z br $
  */
 
 /dts-v1/;

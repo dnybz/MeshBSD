@@ -36,7 +36,7 @@ static char sccsid[] = "@(#)parser.c	8.7 (Berkeley) 5/16/95";
 #endif
 #endif /* not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/bin/sh/parser.c 299035 2016-05-04 02:06:46Z vangyzen $");
+__FBSDID("$FreeBSD: releng/11.0/bin/sh/parser.c 301139 2016-06-01 16:56:29Z truckman $");
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -1998,7 +1998,7 @@ getprompt(void *unused __unused)
 	/*
 	 * Format prompt string.
 	 */
-	for (i = 0; (i < 127) && (*fmt != '\0'); i++, fmt++)
+	for (i = 0; (i < PROMPTLEN - 1) && (*fmt != '\0'); i++, fmt++)
 		if (*fmt == '\\')
 			switch (*++fmt) {
 
@@ -2011,7 +2011,8 @@ getprompt(void *unused __unused)
 			case 'h':
 			case 'H':
 				ps[i] = '\0';
-				gethostname(&ps[i], PROMPTLEN - i);
+				gethostname(&ps[i], PROMPTLEN - i - 1);
+				ps[PROMPTLEN - 1] = '\0';
 				/* Skip to end of hostname. */
 				trim = (*fmt == 'h') ? '.' : '\0';
 				while ((ps[i] != '\0') && (ps[i] != trim))
@@ -2061,8 +2062,9 @@ getprompt(void *unused __unused)
 				 * Emit unrecognized formats verbatim.
 				 */
 			default:
-				ps[i++] = '\\';
-				ps[i] = *fmt;
+				ps[i] = '\\';
+				if (i < PROMPTLEN - 2)
+					ps[++i] = *fmt;
 				break;
 			}
 		else

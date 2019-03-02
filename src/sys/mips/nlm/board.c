@@ -28,7 +28,7 @@
  * NETLOGIC_BSD */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/nlm/board.c 298431 2016-04-21 19:40:10Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/nlm/board.c 298431 2016-04-21 19:40:10Z pfg $");
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/bus.h>

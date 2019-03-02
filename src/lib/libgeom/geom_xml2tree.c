@@ -26,7 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libgeom/geom_xml2tree.c 287247 2015-08-28 06:41:40Z delphij $
+ * $FreeBSD: releng/11.0/lib/libgeom/geom_xml2tree.c 287247 2015-08-28 06:41:40Z delphij $
  */
 
 #include <stdio.h>

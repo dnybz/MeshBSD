@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/subr_module.c 287000 2015-08-21 15:57:57Z royger $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/subr_module.c 287000 2015-08-21 15:57:57Z royger $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

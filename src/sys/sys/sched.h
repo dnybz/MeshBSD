@@ -56,7 +56,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/sys/sched.h 298145 2016-04-17 11:04:27Z kib $
+ * $FreeBSD: releng/11.0/sys/sys/sched.h 301026 2016-05-31 08:07:40Z ed $
  */
 
 #ifndef _SCHED_H_
@@ -222,14 +222,13 @@ struct sched_param {
  */
 #ifndef _KERNEL
 #include <sys/cdefs.h>
+#include <sys/_timespec.h>
 #include <sys/_types.h>
 
 #ifndef _PID_T_DECLARED
 typedef __pid_t         pid_t;
 #define _PID_T_DECLARED
 #endif
-
-struct timespec;
 
 __BEGIN_DECLS
 int     sched_get_priority_max(int);

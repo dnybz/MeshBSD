@@ -44,7 +44,7 @@ static const char sccsid[] = "from: @(#)quota.c	8.1 (Berkeley) 6/6/93";
  * Disk quota reporting program.
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/quota/quota.c 298682 2016-04-27 02:13:57Z araujo $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/quota/quota.c 298682 2016-04-27 02:13:57Z araujo $");
 
 #include <sys/param.h>
 #include <sys/types.h>

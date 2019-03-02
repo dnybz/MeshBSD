@@ -14,7 +14,7 @@ static char sccsid[] = "%Z% %M% %I% %E% %U%";
 #endif
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libpam/modules/pam_login_access/login_access.c 297755 2016-04-09 18:09:10Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libpam/modules/pam_login_access/login_access.c 297755 2016-04-09 18:09:10Z pfg $");
 
 #include <sys/types.h>
 #include <ctype.h>

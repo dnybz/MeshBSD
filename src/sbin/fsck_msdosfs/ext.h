@@ -22,7 +22,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *	$NetBSD: ext.h,v 1.6 2000/04/25 23:02:51 jdolecek Exp $
- * $FreeBSD: head/sbin/fsck_msdosfs/ext.h 268635 2014-07-14 21:32:40Z pfg $
+ * $FreeBSD: releng/11.0/sbin/fsck_msdosfs/ext.h 268635 2014-07-14 21:32:40Z pfg $
  */
 
 #ifndef EXT_H

@@ -1,4 +1,4 @@
-# $FreeBSD: head/usr.bin/lex/Makefile 277273 2015-01-16 21:39:08Z will $
+# $FreeBSD: releng/11.0/usr.bin/lex/Makefile 277273 2015-01-16 21:39:08Z will $
 #
 # By default, flex will be configured to generate 8-bit scanners only if the
 # -8 flag is given.  If you want it to always generate 8-bit scanners, add
@@ -14,7 +14,7 @@ LINKS+=	${BINDIR}/lex ${BINDIR}/lex++
 LINKS+=	${BINDIR}/lex ${BINDIR}/flex
 LINKS+=	${BINDIR}/lex ${BINDIR}/flex++
 
-FLEXDIR=	${.CURDIR}/../../external/flex
+FLEXDIR=	${.CURDIR}/../../contrib/flex
 
 .PATH:		${FLEXDIR}
 

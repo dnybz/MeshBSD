@@ -25,7 +25,7 @@
 
 #ifndef lint
 static const char rcsid[] =
-  "$FreeBSD: head/libexec/atrun/gloadavg.c 170768 2007-06-15 10:12:37Z yar $";
+  "$FreeBSD: releng/11.0/libexec/atrun/gloadavg.c 170768 2007-06-15 10:12:37Z yar $";
 #endif /* not lint */
 
 #ifndef __FreeBSD__

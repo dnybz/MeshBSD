@@ -11,13 +11,15 @@
 # AND WITHOUT ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, WITHOUT
 # LIMITATION, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
 # A PARTICULAR PURPOSE.
-# $FreeBSD: head/usr.sbin/ndp/Makefile 201390 2010-01-02 11:07:44Z ed $
+# $FreeBSD: releng/11.0/usr.sbin/ndp/Makefile 201390 2010-01-02 11:07:44Z ed $
+
+.PATH: ${.CURDIR}/../../contrib/tcpdump
 
 PROG=	ndp
 MAN=	ndp.8
 SRCS=	ndp.c gmt2local.c
 
-CFLAGS+= -I. -I${.CURDIR} 
+CFLAGS+= -I. -I${.CURDIR} -I${.CURDIR}/../../contrib/tcpdump
 CFLAGS+= -D_U_=""
 
 WARNS?=	1

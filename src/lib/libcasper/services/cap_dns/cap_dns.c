@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libcasper/services/cap_dns/cap_dns.c 297982 2016-04-14 18:27:10Z oshogbo $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libcasper/services/cap_dns/cap_dns.c 301572 2016-06-08 02:03:53Z oshogbo $");
 
 #include <sys/dnv.h>
 #include <sys/nv.h>
@@ -759,4 +759,4 @@ dns_command(const char *cmd, const nvlist_t *limits, nvlist_t *nvlin,
 	return (error);
 }
 
-CREATE_SERVICE("system.dns", dns_limit, dns_command);
+CREATE_SERVICE("system.dns", dns_limit, dns_command, 0);

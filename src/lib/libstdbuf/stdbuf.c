@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libstdbuf/stdbuf.c 234772 2012-04-28 20:52:20Z jlh $
+ * $FreeBSD: releng/11.0/lib/libstdbuf/stdbuf.c 234772 2012-04-28 20:52:20Z jlh $
  */
 
 #include <err.h>

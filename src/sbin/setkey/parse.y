@@ -1,4 +1,4 @@
-/*	$FreeBSD: head/sbin/setkey/parse.y 286143 2015-07-31 23:40:18Z gnn $	*/
+/*	$FreeBSD: releng/11.0/sbin/setkey/parse.y 286143 2015-07-31 23:40:18Z gnn $	*/
 /*	$KAME: parse.y,v 1.83 2004/05/18 08:48:23 sakane Exp $	*/
 
 /*

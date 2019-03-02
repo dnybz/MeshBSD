@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libdpv/dialogrc.h 290275 2015-11-02 20:03:59Z dteske $
+ * $FreeBSD: releng/11.0/lib/libdpv/dialogrc.h 290275 2015-11-02 20:03:59Z dteske $
  */
 
 #ifndef _DIALOGRC_H_

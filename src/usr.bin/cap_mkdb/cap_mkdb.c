@@ -40,7 +40,7 @@ static char sccsid[] = "@(#)cap_mkdb.c	8.2 (Berkeley) 4/27/95";
 #endif
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/cap_mkdb/cap_mkdb.c 295800 2016-02-19 08:42:13Z se $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/cap_mkdb/cap_mkdb.c 295800 2016-02-19 08:42:13Z se $");
 
 #include <sys/param.h>
 #include <sys/stat.h>

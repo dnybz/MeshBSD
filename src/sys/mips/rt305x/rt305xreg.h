@@ -24,7 +24,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/rt305x/rt305xreg.h 292699 2015-12-24 18:31:55Z adrian $
+ * $FreeBSD: releng/11.0/sys/mips/rt305x/rt305xreg.h 292699 2015-12-24 18:31:55Z adrian $
  */
 
 #ifndef _RT305XREG_H_

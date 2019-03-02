@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/cam/scsi/scsi_pass.c 299864 2016-05-15 20:04:43Z markj $");
+__FBSDID("$FreeBSD: releng/11.0/sys/cam/scsi/scsi_pass.c 299864 2016-05-15 20:04:43Z markj $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

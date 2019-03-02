@@ -45,7 +45,7 @@
  *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  *     OTHER DEALINGS IN THE SOFTWARE.
  *
- * $FreeBSD: head/sys/boot/fdt/dts/arm/armada-385.dtsi 294432 2016-01-20 14:14:30Z zbb $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/arm/armada-385.dtsi 294432 2016-01-20 14:14:30Z zbb $
  */
 
 #include "armada-38x.dtsi"

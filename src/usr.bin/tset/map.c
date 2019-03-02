@@ -29,7 +29,7 @@
 
 #include <sys/cdefs.h>
 
-__FBSDID("$FreeBSD: head/usr.bin/tset/map.c 241737 2012-10-19 14:49:42Z ed $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/tset/map.c 241737 2012-10-19 14:49:42Z ed $");
 
 #ifndef lint
 static const char sccsid[] = "@(#)map.c	8.1 (Berkeley) 6/9/93";

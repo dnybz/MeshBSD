@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/atf.test.mk 291896 2015-12-06 07:30:18Z ngie $
+# $FreeBSD: releng/11.0/share/mk/atf.test.mk 291896 2015-12-06 07:30:18Z ngie $
 #
 # You must include bsd.test.mk instead of this file from your Makefile.
 #

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/sys/counter.h 256514 2013-10-15 10:05:37Z glebius $
+ * $FreeBSD: releng/11.0/sys/sys/counter.h 256514 2013-10-15 10:05:37Z glebius $
  */
 
 #ifndef __SYS_COUNTER_H__

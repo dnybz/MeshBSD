@@ -28,7 +28,7 @@
  *
  *	@(#)socketvar.h	8.3 (Berkeley) 2/19/95
  *
- * $FreeBSD: head/sys/sys/socketvar.h 298797 2016-04-29 20:12:45Z jhb $
+ * $FreeBSD: releng/11.0/sys/sys/socketvar.h 302153 2016-06-23 21:07:15Z np $
  */
 
 #ifndef _SYS_SOCKETVAR_H_
@@ -126,6 +126,9 @@ struct socket {
 	 */
 	int so_fibnum;		/* routing domain for this socket */
 	uint32_t so_user_cookie;
+
+	void *so_pspare[2];	/* packet pacing / general use */
+	int so_ispare[2];	/* packet pacing / general use */
 };
 
 /*
@@ -335,7 +338,6 @@ struct uio;
 /*
  * From uipc_socket and friends
  */
-int	sockargs(struct mbuf **mp, caddr_t buf, int buflen, int type);
 int	getsockaddr(struct sockaddr **namp, caddr_t uaddr, size_t len);
 int	getsock_cap(struct thread *td, int fd, cap_rights_t *rightsp,
 	    struct file **fpp, u_int *fflagp);

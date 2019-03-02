@@ -1,4 +1,4 @@
-$ $FreeBSD: head/lib/libc/nls/de_DE.ISO8859-1.msg 190410 2009-03-25 12:36:37Z netchild $
+$ $FreeBSD: releng/11.0/lib/libc/nls/de_DE.ISO8859-1.msg 190410 2009-03-25 12:36:37Z netchild $
 $
 $ Message catalog for de_DE.ISO8859-1 locale
 $

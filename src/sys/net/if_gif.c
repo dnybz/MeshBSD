@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/net/if_gif.c 297793 2016-04-10 23:07:00Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/net/if_gif.c 297793 2016-04-10 23:07:00Z pfg $");
 
 #include "opt_inet.h"
 #include "opt_inet6.h"

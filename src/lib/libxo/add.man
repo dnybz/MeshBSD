@@ -1,12 +1,12 @@
-.\" $FreeBSD: head/lib/libxo/add.man 298083 2016-04-15 18:46:15Z phil $
+.\" $FreeBSD: releng/11.0/lib/libxo/add.man 300925 2016-05-29 01:43:28Z phil $
 .Sh ADDITIONAL DOCUMENTATION
 .Fx
 uses
 .Nm libxo
-version 0.6.1.
+version 0.6.2.
 Complete documentation can be found on github:
 .Bd -literal -offset indent
-http://juniper.github.io/libxo/0.6.1/libxo\-manual.html
+http://juniper.github.io/libxo/0.6.2/libxo\-manual.html
 .Ed
 .Pp
 .Nm libxo

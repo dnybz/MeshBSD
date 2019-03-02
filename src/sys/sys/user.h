@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)user.h	8.2 (Berkeley) 9/23/93
- * $FreeBSD: head/sys/sys/user.h 298981 2016-05-03 15:14:17Z pfg $
+ * $FreeBSD: releng/11.0/sys/sys/user.h 298981 2016-05-03 15:14:17Z pfg $
  */
 
 #ifndef _SYS_USER_H_

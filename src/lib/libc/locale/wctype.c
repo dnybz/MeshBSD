@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/locale/wctype.c 290494 2015-11-07 12:43:35Z bapt $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/locale/wctype.c 290494 2015-11-07 12:43:35Z bapt $");
 
 #include <ctype.h>
 #include <string.h>

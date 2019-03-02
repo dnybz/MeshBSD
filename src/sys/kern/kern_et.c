@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_et.c 280152 2015-03-16 19:29:19Z ian $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_et.c 280152 2015-03-16 19:29:19Z ian $");
 
 #include <sys/param.h>
 #include <sys/kernel.h>

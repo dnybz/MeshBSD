@@ -30,7 +30,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)btree.h	8.11 (Berkeley) 8/17/94
- * $FreeBSD: head/lib/libc/db/btree/btree.h 189327 2009-03-04 00:58:04Z delphij $
+ * $FreeBSD: releng/11.0/lib/libc/db/btree/btree.h 189327 2009-03-04 00:58:04Z delphij $
  */
 
 /* Macros to set/clear/test flags. */

@@ -33,7 +33,7 @@
  */
 
 #include <machine/asm.h>
-__FBSDID("$FreeBSD: head/lib/libc/mips/sys/brk.S 209521 2010-06-25 05:36:36Z jchandra $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/mips/sys/brk.S 209521 2010-06-25 05:36:36Z jchandra $");
 #include "SYS.h"
 
 #if defined(LIBC_SCCS) && !defined(lint)

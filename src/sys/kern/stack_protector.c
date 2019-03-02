@@ -1,5 +1,5 @@
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/stack_protector.c 284462 2015-06-16 20:19:00Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/stack_protector.c 284462 2015-06-16 20:19:00Z pfg $");
 
 #include <sys/types.h>
 #include <sys/param.h>

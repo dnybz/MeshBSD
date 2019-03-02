@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/csu/Makefile.inc 288074 2015-09-21 18:39:13Z bdrewery $
+# $FreeBSD: releng/11.0/lib/csu/Makefile.inc 288074 2015-09-21 18:39:13Z bdrewery $
 
 SSP_CFLAGS=
 

@@ -22,16 +22,10 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.bin/login/login.h 169342 2007-05-07 11:01:36Z dwmalone $
+ * $FreeBSD: releng/11.0/usr.bin/login/login.h 169342 2007-05-07 11:01:36Z dwmalone $
  */
 
 void	login_fbtab(char *, uid_t, gid_t);
-
-#ifdef USE_BSM_AUDIT
-void	au_login_success(void);
-void	au_login_fail(const char *errmsg, int na);
-void	audit_logout(void);
-#endif
 
 extern char		**environ;
 extern struct passwd	*pwd;

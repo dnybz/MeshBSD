@@ -1,5 +1,5 @@
 /* $NetBSD: arith.h,v 1.1 2006/01/25 15:33:28 kleink Exp $ */
-/* $FreeBSD: head/lib/libc/mips/gdtoa/arith.h 178580 2008-04-26 12:08:02Z imp $ */
+/* $FreeBSD: releng/11.0/lib/libc/mips/gdtoa/arith.h 178580 2008-04-26 12:08:02Z imp $ */
 
 #include <machine/endian.h>
 

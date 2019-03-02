@@ -33,7 +33,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libthread_db/arch/riscv/libpthread_md.c 294908 2016-01-27 10:34:07Z br $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libthread_db/arch/riscv/libpthread_md.c 294908 2016-01-27 10:34:07Z br $");
 
 #include <sys/types.h>
 #include <string.h>

@@ -26,7 +26,7 @@
  * and/or fitness for purpose.
  * ---------------------------------------------------------------------------
  *
- * $FreeBSD: head/sys/mips/cavium/cryptocteon/cryptocteonvar.h 210312 2010-07-20 19:32:25Z jmallett $
+ * $FreeBSD: releng/11.0/sys/mips/cavium/cryptocteon/cryptocteonvar.h 210312 2010-07-20 19:32:25Z jmallett $
  */
 
 #ifndef	_MIPS_CAVIUM_CRYPTOCTEON_CRYPTOCTEONVAR_H_

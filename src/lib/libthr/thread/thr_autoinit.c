@@ -32,7 +32,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libthr/thread/thr_autoinit.c 297706 2016-04-08 11:15:26Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libthr/thread/thr_autoinit.c 297706 2016-04-08 11:15:26Z kib $");
 
 #include <pthread.h>
 

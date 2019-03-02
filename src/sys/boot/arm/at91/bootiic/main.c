@@ -19,7 +19,7 @@
  * only.
  * END_BLOCK
  *
- * $FreeBSD: head/sys/boot/arm/at91/bootiic/main.c 269111 2014-07-26 03:33:19Z ian $
+ * $FreeBSD: releng/11.0/sys/boot/arm/at91/bootiic/main.c 269111 2014-07-26 03:33:19Z ian $
  ******************************************************************************/
 
 #include "env_vars.h"

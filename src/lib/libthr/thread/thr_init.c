@@ -32,7 +32,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libthr/thread/thr_init.c 300043 2016-05-17 09:56:22Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libthr/thread/thr_init.c 303708 2016-08-03 10:18:52Z kib $");
 
 #include "namespace.h"
 #include <sys/types.h>
@@ -447,7 +447,6 @@ init_private(void)
 	_thr_urwlock_init(&_thr_atfork_lock);
 	_thr_umutex_init(&_thr_event_lock);
 	_thr_umutex_init(&_suspend_all_lock);
-	_thr_once_init();
 	_thr_spinlock_init();
 	_thr_list_init();
 	_thr_wake_addr_init();

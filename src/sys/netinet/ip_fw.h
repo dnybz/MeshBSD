@@ -22,7 +22,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/netinet/ip_fw.h 300021 2016-05-17 07:47:23Z ae $
+ * $FreeBSD: releng/11.0/sys/netinet/ip_fw.h 304084 2016-08-14 16:32:23Z ae $
  */
 
 #ifndef _IPFW2_H
@@ -60,6 +60,7 @@
 #define	IPFW_ARG_MAX		65534
 #define IP_FW_TABLEARG		65535	/* Compat value for old clients */
 #define	IP_FW_TARG		0	/* Current tablearg value */
+#define	IP_FW_NAT44_GLOBAL	65535	/* arg1 value for "nat global" */
 
 /*
  * Number of entries in the call stack of the call/return commands.

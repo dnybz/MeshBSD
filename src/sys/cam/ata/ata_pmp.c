@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/cam/ata/ata_pmp.c 290462 2015-11-06 18:50:01Z mav $");
+__FBSDID("$FreeBSD: releng/11.0/sys/cam/ata/ata_pmp.c 290462 2015-11-06 18:50:01Z mav $");
 
 #include <sys/param.h>
 

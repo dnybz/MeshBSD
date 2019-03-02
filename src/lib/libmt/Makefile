@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/libmt/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/libmt/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 PACKAGE=lib${LIB}
 LIB=		mt

@@ -26,7 +26,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  *
  * NETLOGIC_BSD
- * $FreeBSD: head/sys/mips/nlm/hal/uart.h 227722 2011-11-19 14:06:15Z jchandra $
+ * $FreeBSD: releng/11.0/sys/mips/nlm/hal/uart.h 227722 2011-11-19 14:06:15Z jchandra $
  */
 
 #ifndef __XLP_HAL_UART_H__

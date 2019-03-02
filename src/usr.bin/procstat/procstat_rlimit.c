@@ -24,7 +24,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.bin/procstat/procstat_rlimit.c 296162 2016-02-28 17:52:33Z kib $
+ * $FreeBSD: releng/11.0/usr.bin/procstat/procstat_rlimit.c 296162 2016-02-28 17:52:33Z kib $
  */
 
 #include <sys/param.h>

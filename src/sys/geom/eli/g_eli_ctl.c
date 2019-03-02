@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/geom/eli/g_eli_ctl.c 297691 2016-04-08 01:25:25Z allanjude $");
+__FBSDID("$FreeBSD: releng/11.0/sys/geom/eli/g_eli_ctl.c 297691 2016-04-08 01:25:25Z allanjude $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

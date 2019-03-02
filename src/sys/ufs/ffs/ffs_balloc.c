@@ -60,7 +60,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/ufs/ffs/ffs_balloc.c 290047 2015-10-27 13:44:13Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/sys/ufs/ffs/ffs_balloc.c 304675 2016-08-23 12:22:35Z kib $");
 
 #include <sys/param.h>
 #include <sys/systm.h>
@@ -480,8 +480,8 @@ fail:
 		 */
 		bp = getblk(vp, *lbns_remfree, fs->fs_bsize, 0, 0, GB_NOCREAT);
 		if (bp != NULL) {
-			bp->b_flags |= (B_INVAL | B_RELBUF);
-			bp->b_flags &= ~B_ASYNC;
+			bp->b_flags |= B_INVAL | B_RELBUF | B_NOCACHE;
+			bp->b_flags &= ~(B_ASYNC | B_CACHE);
 			brelse(bp);
 		}
 		deallocated += fs->fs_bsize;
@@ -1051,8 +1051,8 @@ fail:
 		 */
 		bp = getblk(vp, *lbns_remfree, fs->fs_bsize, 0, 0, GB_NOCREAT);
 		if (bp != NULL) {
-			bp->b_flags |= (B_INVAL | B_RELBUF);
-			bp->b_flags &= ~B_ASYNC;
+			bp->b_flags |= B_INVAL | B_RELBUF | B_NOCACHE;
+			bp->b_flags &= ~(B_ASYNC | B_CACHE);
 			brelse(bp);
 		}
 		deallocated += fs->fs_bsize;

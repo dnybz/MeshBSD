@@ -1,18 +1,21 @@
 #	@(#)Makefile	8.1 (Berkeley) 6/6/93
-# $FreeBSD: head/usr.bin/xinstall/Makefile 299244 2016-05-08 21:11:24Z jilles $
+# $FreeBSD: releng/11.0/usr.bin/xinstall/Makefile 299244 2016-05-08 21:11:24Z jilles $
 
 .include <src.opts.mk>
 
 PROG=		xinstall
 PROGNAME=	install
+SRCS=		xinstall.c getid.c
 MAN=		install.1
 
-SRCS=		xinstall.c getid.c
-
-CFLAGS+=	-I${.CURDIR}/../../usr.sbin/nmtree
-.PATH:		${.CURDIR}/../../usr.sbin/nmtree
+.PATH:		${.CURDIR}/../../contrib/mtree
+CFLAGS+=	-I${.CURDIR}/../../contrib/mtree
 CFLAGS+=	-I${.CURDIR}/../../lib/libutil
 
-LIBADD=	md 
+LIBADD=	md
+
+.if ${MK_TESTS} != "no"
+SUBDIR+=	tests
+.endif
 
 .include <bsd.prog.mk>

@@ -1,4 +1,4 @@
-$FreeBSD: head/sys/boot/fdt/dts/bindings-gpio.txt 261516 2014-02-05 17:08:55Z loos $
+$FreeBSD: releng/11.0/sys/boot/fdt/dts/bindings-gpio.txt 261516 2014-02-05 17:08:55Z loos $
 
 GPIO configuration.
 ===================

@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)string.h	8.1 (Berkeley) 6/2/93
- * $FreeBSD: head/include/string.h 265878 2014-05-11 13:48:21Z jilles $
+ * $FreeBSD: releng/11.0/include/string.h 265878 2014-05-11 13:48:21Z jilles $
  */
 
 #ifndef _STRING_H_
@@ -51,9 +51,6 @@ typedef	__size_t	size_t;
 #endif
 
 __BEGIN_DECLS
-#if __BSD_VISIBLE
-void	 explicit_bzero(void *, size_t);
-#endif
 #if __XSI_VISIBLE >= 600
 void	*memccpy(void * __restrict, const void * __restrict, int, size_t);
 #endif
@@ -136,10 +133,11 @@ typedef	__ssize_t	ssize_t;
 
 void	 swab(const void * __restrict, void * __restrict, ssize_t);
 #endif /* _SWAB_DECLARED */
-#endif /* __BSD_VISIBLE */
 
 int	 timingsafe_bcmp(const void *, const void *, size_t);
 int	 timingsafe_memcmp(const void *, const void *, size_t);
+
+#endif /* __BSD_VISIBLE */
 
 #if __POSIX_VISIBLE >= 200809 || defined(_XLOCALE_H_)
 #include <xlocale/_string.h>

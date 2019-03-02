@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/ppp/server.c 277857 2015-01-28 21:33:49Z dim $
+ * $FreeBSD: releng/11.0/usr.sbin/ppp/server.c 277857 2015-01-28 21:33:49Z dim $
  */
 
 #include <sys/param.h>

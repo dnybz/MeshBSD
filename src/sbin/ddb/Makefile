@@ -1,4 +1,4 @@
-# $FreeBSD: head/sbin/ddb/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/sbin/ddb/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 PACKAGE=runtime
 PROG=	ddb

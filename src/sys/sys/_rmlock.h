@@ -26,7 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/sys/_rmlock.h 252209 2013-06-25 18:44:15Z jhb $
+ * $FreeBSD: releng/11.0/sys/sys/_rmlock.h 252209 2013-06-25 18:44:15Z jhb $
  */
 
 #ifndef _SYS__RMLOCK_H_

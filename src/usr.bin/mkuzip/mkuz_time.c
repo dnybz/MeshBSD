@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/mkuzip/mkuz_time.c 298504 2016-04-23 07:23:43Z sobomax $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/mkuzip/mkuz_time.c 298504 2016-04-23 07:23:43Z sobomax $");
 
 #include <math.h>
 #include <stdint.h>

@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/ip_carp.c 292402 2015-12-17 14:41:30Z smh $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/ip_carp.c 292402 2015-12-17 14:41:30Z smh $");
 
 #include "opt_bpf.h"
 #include "opt_inet.h"
@@ -72,7 +72,7 @@ __FBSDID("$FreeBSD: head/sys/netinet/ip_carp.c 292402 2015-12-17 14:41:30Z smh $
 #endif
 #ifdef INET
 #include <netinet/ip_var.h>
-#include <netinet/if_ether.h>
+#include <netarp/if_ether.h>
 #endif
 
 #ifdef INET6
@@ -1015,7 +1015,7 @@ carp_send_arp(struct carp_softc *sc)
 		if (ifa->ifa_addr->sa_family != AF_INET)
 			continue;
 		addr = ((struct sockaddr_in *)ifa->ifa_addr)->sin_addr;
-		arp_announce_ifaddr(sc->sc_carpdev, addr, LLADDR(&sc->sc_addr));
+		in_arp_announce_ifaddr(sc->sc_carpdev, addr, LLADDR(&sc->sc_addr));
 	}
 }
 

@@ -28,7 +28,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/rtsold/probe.c 286566 2015-08-10 07:45:13Z ed $
+ * $FreeBSD: releng/11.0/usr.sbin/rtsold/probe.c 286566 2015-08-10 07:45:13Z ed $
  */
 
 #include <sys/param.h>

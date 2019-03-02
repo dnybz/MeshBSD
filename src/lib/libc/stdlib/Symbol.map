@@ -1,5 +1,5 @@
 /*
- * $FreeBSD: head/lib/libc/stdlib/Symbol.map 282314 2015-05-01 18:32:16Z bapt $
+ * $FreeBSD: releng/11.0/lib/libc/stdlib/Symbol.map 304592 2016-08-22 07:38:44Z kib $
  */
 
 FBSD_1.0 {
@@ -114,6 +114,10 @@ FBSD_1.4 {
 	hdestroy_r;
 	hsearch_r;
 	reallocarray;
+};
+
+FBSD_1.5 {
+	__cxa_thread_atexit;
 	strsuftoll;
 	strsuftollx;
 };
@@ -122,4 +126,5 @@ FBSDprivate_1.0 {
 	__system;
 	_system;
 	__libc_system;
+	__cxa_thread_call_dtors;
 };

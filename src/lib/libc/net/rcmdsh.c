@@ -34,7 +34,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/net/rcmdsh.c 292521 2015-12-20 23:05:20Z jilles $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/net/rcmdsh.c 292521 2015-12-20 23:05:20Z jilles $");
 
 #include "namespace.h"
 #include <sys/types.h>

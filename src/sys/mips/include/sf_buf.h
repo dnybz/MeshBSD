@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/include/sf_buf.h 271217 2014-09-07 05:47:48Z glebius $
+ * $FreeBSD: releng/11.0/sys/mips/include/sf_buf.h 271217 2014-09-07 05:47:48Z glebius $
  */
 
 #ifndef _MACHINE_SF_BUF_H_

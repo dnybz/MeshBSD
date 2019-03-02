@@ -1,4 +1,4 @@
-/* $FreeBSD: head/usr.bin/grep/regex/tre-fastmatch.c 272127 2014-09-25 19:22:26Z pfg $ */
+/* $FreeBSD: releng/11.0/usr.bin/grep/regex/tre-fastmatch.c 303888 2016-08-09 19:20:53Z dim $ */
 
 /*-
  * Copyright (c) 1999 James Howard and Dag-Erling Coïdan Smørgrav
@@ -621,7 +621,7 @@ tre_compile_fast(fastmatch_t *fg, const tre_char_t *pat, size_t n,
 	  case TRE_CHAR('+'):
 	  case TRE_CHAR('?'):
 	    if ((cflags & REG_EXTENDED) && (i == 0))
-	      continue;
+	      goto badpat;
 	    else if ((cflags & REG_EXTENDED) ^ !escaped)
 	      STORE_CHAR;
 	    else

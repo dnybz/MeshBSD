@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/bin/setfacl/remove.c 204819 2010-03-07 07:59:05Z joel $");
+__FBSDID("$FreeBSD: releng/11.0/bin/setfacl/remove.c 204819 2010-03-07 07:59:05Z joel $");
 
 #include <sys/types.h>
 #include <sys/acl.h>

@@ -1,4 +1,4 @@
-$FreeBSD: head/usr.bin/dtc/HACKING 289996 2015-10-26 11:02:57Z theraven $
+$FreeBSD: releng/11.0/usr.bin/dtc/HACKING 289996 2015-10-26 11:02:57Z theraven $
 
 Notes for people hacking on dtc
 ===============================

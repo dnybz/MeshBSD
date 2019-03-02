@@ -7,7 +7,7 @@
 //  fitness for any particular purpose, or against the infringements of
 //  intellectual property rights of others.
 // ----------------------------------------------------------------------------
-// $FreeBSD: head/sys/boot/arm/at91/libat91/at91rm9200.h 298826 2016-04-30 00:26:38Z pfg $
+// $FreeBSD: releng/11.0/sys/boot/arm/at91/libat91/at91rm9200.h 298826 2016-04-30 00:26:38Z pfg $
 //
 // File Name           : AT91RM9200.h
 // Object              : AT91RM9200 definitions

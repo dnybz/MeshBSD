@@ -25,7 +25,7 @@
  */
 
 /*
- * $FreeBSD: head/sys/sys/busdma_bufalloc.h 280957 2015-04-01 12:42:26Z rstone $
+ * $FreeBSD: releng/11.0/sys/sys/busdma_bufalloc.h 280957 2015-04-01 12:42:26Z rstone $
  */
 
 /*

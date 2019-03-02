@@ -1,4 +1,4 @@
-/* $FreeBSD: head/sys/boot/fdt/dts/mips/fbsd-mt7621.dtsi 300013 2016-05-17 06:42:24Z sgalabov $ */
+/* $FreeBSD: releng/11.0/sys/boot/fdt/dts/mips/fbsd-mt7621.dtsi 300013 2016-05-17 06:42:24Z sgalabov $ */
 
 &palmbus {
 	gpio@600 {

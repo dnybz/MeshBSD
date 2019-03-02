@@ -25,7 +25,7 @@
  *
  * Wandboard Quad.
  *
- * $FreeBSD: head/sys/boot/fdt/dts/arm/wandboard-quad.dts 271124 2014-09-04 19:52:17Z ian $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/arm/wandboard-quad.dts 271124 2014-09-04 19:52:17Z ian $
  */
 
 /dts-v1/;

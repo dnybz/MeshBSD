@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mips/genassym.c 232587 2012-03-06 08:40:21Z jmallett $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mips/genassym.c 232587 2012-03-06 08:40:21Z jmallett $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

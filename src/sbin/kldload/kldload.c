@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sbin/kldload/kldload.c 298249 2016-04-19 04:52:51Z araujo $");
+__FBSDID("$FreeBSD: releng/11.0/sbin/kldload/kldload.c 298249 2016-04-19 04:52:51Z araujo $");
 
 #include <sys/types.h>
 #include <sys/param.h>

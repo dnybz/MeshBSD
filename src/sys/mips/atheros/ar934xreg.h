@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/atheros/ar934xreg.h 276609 2015-01-03 06:35:53Z adrian $
+ * $FreeBSD: releng/11.0/sys/mips/atheros/ar934xreg.h 276609 2015-01-03 06:35:53Z adrian $
  */
 
 #ifndef	__AR934X_REG_H__

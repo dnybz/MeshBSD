@@ -48,7 +48,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/opencrypto/xform_gmac.c 292963 2015-12-30 22:43:07Z allanjude $");
+__FBSDID("$FreeBSD: releng/11.0/sys/opencrypto/xform_gmac.c 292963 2015-12-30 22:43:07Z allanjude $");
 
 #include <opencrypto/gmac.h>
 #include <opencrypto/xform_auth.h>

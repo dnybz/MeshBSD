@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/ar/read.c 281313 2015-04-09 15:08:39Z emaste $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/ar/read.c 281313 2015-04-09 15:08:39Z emaste $");
 
 #include <sys/queue.h>
 #include <sys/stat.h>

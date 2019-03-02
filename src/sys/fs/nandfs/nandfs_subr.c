@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/fs/nandfs/nandfs_subr.c 269420 2014-08-02 05:05:05Z imp $");
+__FBSDID("$FreeBSD: releng/11.0/sys/fs/nandfs/nandfs_subr.c 269420 2014-08-02 05:05:05Z imp $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

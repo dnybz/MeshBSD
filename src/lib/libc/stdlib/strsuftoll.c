@@ -1,4 +1,4 @@
-/*	$NetBSD: strsuftoll.c,v 1.9 2011/10/22 22:08:47 christos Exp $	*/
+/*	$NetBSD: strsuftoll.c,v 1.6 2004/03/05 05:58:29 lukem Exp $	*/
 /*-
  * Copyright (c) 2001-2002,2004 The NetBSD Foundation, Inc.
  * All rights reserved.
@@ -60,21 +60,8 @@
  * SUCH DAMAGE.
  */
 
-#if HAVE_NBTOOL_CONFIG_H
-#include "nbtool_config.h"
-#endif
-
 #include <sys/cdefs.h>
-
-#if defined(LIBC_SCCS) && !defined(lint)
-__RCSID("$NetBSD: strsuftoll.c,v 1.9 2011/10/22 22:08:47 christos Exp $");
-#endif /* LIBC_SCCS and not lint */
-
-#ifdef _LIBC
-#include "namespace.h"
-#endif
-
-#if !HAVE_STRSUFTOLL
+__FBSDID("$FreeBSD: releng/11.0/lib/libnetbsd/strsuftoll.c 244557 2012-12-21 20:37:38Z brooks $");
 
 #include <sys/types.h>
 #include <sys/time.h>
@@ -111,45 +98,25 @@ __weak_alias(strsuftollx, _strsuftollx)
  * appropriate error.
  * 
  */
-/* LONGLONG */
-long long
-strsuftoll(const char *desc, const char *val,
-    long long min, long long max)
-{
-	long long result;
-	char	errbuf[100];
-
-	result = strsuftollx(desc, val, min, max, errbuf, sizeof(errbuf));
-	if (*errbuf != '\0')
-		errx(EXIT_FAILURE, "%s", errbuf);
-	return result;
-}
 
 /*
  * As strsuftoll(), but returns the error message into the provided buffer
  * rather than exiting with it.
  */
 /* LONGLONG */
-static long long
-__strsuftollx(const char *desc, const char *val,
-    long long min, long long max, char *ebuf, size_t ebuflen, size_t depth)
+long long
+strsuftollx(const char *desc, const char *val,
+    long long min, long long max, char *ebuf, size_t ebuflen)
 {
 	long long num, t;
 	char	*expr;
 
-	assert(desc != NULL);
-	assert(val != NULL);
-	assert(ebuf != NULL);
-
-	if (depth > 16) {
-		snprintf(ebuf, ebuflen, "%s: Recursion limit exceeded", desc);
-		return 0;
-	}
+	errno = 0;
+	ebuf[0] = '\0';
 
 	while (isspace((unsigned char)*val))	/* Skip leading space */
 		val++;
 
-	errno = 0;
 	num = strtoll(val, &expr, 10);
 	if (errno == ERANGE)
 		goto erange;			/* Overflow */
@@ -167,28 +134,28 @@ __strsuftollx(const char *desc, const char *val,
 		break;
 	case 'k':
 		t = num;
-		num *= 1024;			/* 1 kibibyte */
+		num *= 1024;			/* 1 kilobyte */
 		if (t > num)
 			goto erange;
 		++expr;
 		break;
 	case 'm':
 		t = num;
-		num *= 1048576;			/* 1 mebibyte */
+		num *= 1048576;			/* 1 megabyte */
 		if (t > num)
 			goto erange;
 		++expr;
 		break;
 	case 'g':
 		t = num;
-		num *= 1073741824;		/* 1 gibibyte */
+		num *= 1073741824;		/* 1 gigabyte */
 		if (t > num)
 			goto erange;
 		++expr;
 		break;
 	case 't':
 		t = num;
-		num *= 1099511627776LL;		/* 1 tebibyte */
+		num *= 1099511627776LL;		/* 1 terabyte */
 		if (t > num)
 			goto erange;
 		++expr;
@@ -208,42 +175,48 @@ __strsuftollx(const char *desc, const char *val,
 	case '*':				/* Backward compatible */
 	case 'x':
 		t = num;
-		num *= __strsuftollx(desc, expr + 1, min, max, ebuf, ebuflen,
-			depth + 1);
+		num *= strsuftollx(desc, expr + 1, min, max, ebuf, ebuflen);
 		if (*ebuf != '\0')
-			return 0;
+			return (0);
 		if (t > num) {
  erange:	 	
-			errno = ERANGE;
-			snprintf(ebuf, ebuflen, "%s: %s", desc, strerror(errno));
-			return 0;
+			snprintf(ebuf, ebuflen,
+			    "%s: %s", desc, strerror(ERANGE));
+			return (0);
 		}
 		break;
 	default:
- badnum:
-		snprintf(ebuf, ebuflen, "%s `%s': illegal number", desc, val);
-		return 0;
+ badnum:	snprintf(ebuf, ebuflen,
+		    "%s `%s': illegal number", desc, val);
+		return (0);
 	}
 	if (num < min) {
-		/* LONGLONG */
+			/* LONGLONG */
 		snprintf(ebuf, ebuflen, "%s %lld is less than %lld.",
 		    desc, (long long)num, (long long)min);
-		return 0;
+		return (0);
 	}
 	if (num > max) {
-		/* LONGLONG */
-		snprintf(ebuf, ebuflen, "%s %lld is greater than %lld.",
+			/* LONGLONG */
+		snprintf(ebuf, ebuflen,
+		    "%s %lld is greater than %lld.",
 		    desc, (long long)num, (long long)max);
-		return 0;
+		return (0);
 	}
 	*ebuf = '\0';
-	return num;
+	return (num);
 }
 
+/* LONGLONG */
 long long
-strsuftollx(const char *desc, const char *val,
-    long long min, long long max, char *ebuf, size_t ebuflen)
+strsuftoll(const char *desc, const char *val,
+    long long min, long long max)
 {
-	return __strsuftollx(desc, val, min, max, ebuf, ebuflen, 0);
+	long long result;
+	char	errbuf[100];
+
+	result = strsuftollx(desc, val, min, max, errbuf, sizeof(errbuf));
+	if (*errbuf != '\0')
+		errx(1, "%s", errbuf);
+	return (result);
 }
-#endif /* !HAVE_STRSUFTOLL */

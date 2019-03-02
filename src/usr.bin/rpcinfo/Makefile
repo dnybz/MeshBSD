@@ -1,5 +1,5 @@
 #	from: @(#)Makefile	5.2 (Berkeley) 5/11/90
-# $FreeBSD: head/usr.bin/rpcinfo/Makefile 201386 2010-01-02 10:27:05Z ed $
+# $FreeBSD: releng/11.0/usr.bin/rpcinfo/Makefile 201386 2010-01-02 10:27:05Z ed $
 
 PROG=	rpcinfo
 SRCS=	rpcinfo.c

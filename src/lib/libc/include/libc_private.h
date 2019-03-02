@@ -26,7 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/include/libc_private.h 300043 2016-05-17 09:56:22Z kib $
+ * $FreeBSD: releng/11.0/lib/libc/include/libc_private.h 304592 2016-08-22 07:38:44Z kib $
  *
  * Private definitions for libc, libc_r and libpthread.
  *
@@ -265,6 +265,12 @@ extern const char *__progname;
  * thread is exiting.
  */
 void _malloc_thread_cleanup(void);
+
+/*
+ * This function is used by the threading libraries to notify libc that a
+ * thread is exiting, so its thread-local dtors should be called.
+ */
+void __cxa_thread_call_dtors(void);
 
 /*
  * These functions are used by the threading libraries in order to protect

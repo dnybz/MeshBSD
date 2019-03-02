@@ -27,10 +27,10 @@
  * SUCH DAMAGE.
  *
  *	@(#)if.h	8.1 (Berkeley) 6/10/93
- * $FreeBSD: head/sys/net/if.h 270822 2014-08-29 18:02:58Z melifaro $
+ * $FreeBSD: releng/11.0/sys/net/if.h 301496 2016-06-06 09:51:58Z araujo $
  */
 /*
- * Copyright (c) 2014, 2015, 2016 Henning Matyschok
+ * Copyright (c) 2014, 2015, 2016, 2017 Henning Matyschok
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -186,7 +186,7 @@ struct if_data {
 #define	IFF_RENAMING	0x400000	/* (n) interface is being renamed */
 
 /*
- * Indicates instance of if_vether(4).
+ * Extension, indicates instance of if_vether(4).
  */
 #define	IFF_VETHER	0x800000		/* (i) instance of if_vether(4) */
 
@@ -423,6 +423,7 @@ struct	ifreq {
 		caddr_t	ifru_data;
 		int	ifru_cap[2];
 		u_int	ifru_fib;
+		u_char	ifru_vlan_pcp;
 	} ifr_ifru;
 #define	ifr_addr	ifr_ifru.ifru_addr	/* address */
 #define	ifr_dstaddr	ifr_ifru.ifru_dstaddr	/* other end of p-to-p link */
@@ -440,6 +441,7 @@ struct	ifreq {
 #define	ifr_curcap	ifr_ifru.ifru_cap[1]	/* current capabilities */
 #define	ifr_index	ifr_ifru.ifru_index	/* interface index */
 #define	ifr_fib		ifr_ifru.ifru_fib	/* interface fib */
+#define	ifr_vlan_pcp	ifr_ifru.ifru_vlan_pcp	/* VLAN priority */
 };
 
 #define	_SIZEOF_ADDR_IFREQ(ifr) \

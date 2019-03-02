@@ -30,7 +30,7 @@
 
 #ifndef lint
 static const char rcsid[] =
-  "$FreeBSD: head/usr.sbin/pciconf/cap.c 297501 2016-04-02 01:59:53Z jhb $";
+  "$FreeBSD: releng/11.0/usr.sbin/pciconf/cap.c 303835 2016-08-08 15:07:38Z vangyzen $";
 #endif /* not lint */
 
 #include <sys/types.h>
@@ -38,8 +38,10 @@ static const char rcsid[] =
 #include <err.h>
 #include <stdio.h>
 #include <strings.h>
+#include <sys/agpio.h>
 #include <sys/pciio.h>
 
+#include <dev/agp/agpreg.h>
 #include <dev/pci/pcireg.h>
 
 #include "pciconf.h"
@@ -58,6 +60,60 @@ cap_power(int fd, struct pci_conf *p, uint8_t ptr)
 	    cap & PCIM_PCAP_D1SUPP ? " D1" : "",
 	    cap & PCIM_PCAP_D2SUPP ? " D2" : "",
 	    status & PCIM_PSTAT_DMASK);
+}
+
+static void
+cap_agp(int fd, struct pci_conf *p, uint8_t ptr)
+{
+	uint32_t status, command;
+
+	status = read_config(fd, &p->pc_sel, ptr + AGP_STATUS, 4);
+	command = read_config(fd, &p->pc_sel, ptr + AGP_CAPID, 4);
+	printf("AGP ");
+	if (AGP_MODE_GET_MODE_3(status)) {
+		printf("v3 ");
+		if (AGP_MODE_GET_RATE(status) & AGP_MODE_V3_RATE_8x)
+			printf("8x ");
+		if (AGP_MODE_GET_RATE(status) & AGP_MODE_V3_RATE_4x)
+			printf("4x ");
+	} else {
+		if (AGP_MODE_GET_RATE(status) & AGP_MODE_V2_RATE_4x)
+			printf("4x ");
+		if (AGP_MODE_GET_RATE(status) & AGP_MODE_V2_RATE_2x)
+			printf("2x ");
+		if (AGP_MODE_GET_RATE(status) & AGP_MODE_V2_RATE_1x)
+			printf("1x ");
+	}
+	if (AGP_MODE_GET_SBA(status))
+		printf("SBA ");
+	if (AGP_MODE_GET_AGP(command)) {
+		printf("enabled at ");
+		if (AGP_MODE_GET_MODE_3(command)) {
+			printf("v3 ");
+			switch (AGP_MODE_GET_RATE(command)) {
+			case AGP_MODE_V3_RATE_8x:
+				printf("8x ");
+				break;
+			case AGP_MODE_V3_RATE_4x:
+				printf("4x ");
+				break;
+			}
+		} else
+			switch (AGP_MODE_GET_RATE(command)) {
+			case AGP_MODE_V2_RATE_4x:
+				printf("4x ");
+				break;
+			case AGP_MODE_V2_RATE_2x:
+				printf("2x ");
+				break;
+			case AGP_MODE_V2_RATE_1x:
+				printf("1x ");
+				break;
+			}
+		if (AGP_MODE_GET_SBA(command))
+			printf("SBA ");
+	} else
+		printf("disabled");
 }
 
 static void
@@ -473,10 +529,13 @@ cap_express(int fd, struct pci_conf *p, uint8_t ptr)
 	if (cap & PCIEM_SLOT_CAP_APB)
 		printf(" Attn Button");
 	if (cap & PCIEM_SLOT_CAP_PCP)
-		printf(" PC(%s)", ctl & PCIEM_SLOT_CTL_PCC ? "on" : "off");
+		printf(" PC(%s)", ctl & PCIEM_SLOT_CTL_PCC ? "off" : "on");
 	if (cap & PCIEM_SLOT_CAP_MRLSP)
 		printf(" MRL(%s)", sta & PCIEM_SLOT_STA_MRLSS ? "open" :
 		    "closed");
+	if (cap & PCIEM_SLOT_CAP_EIP)
+		printf(" EI(%s)", sta & PCIEM_SLOT_STA_EIS ? "engaged" :
+		    "disengaged");
 }
 
 static void
@@ -692,6 +751,9 @@ list_caps(int fd, struct pci_conf *p)
 		switch (cap) {
 		case PCIY_PMG:
 			cap_power(fd, p, ptr);
+			break;
+		case PCIY_AGP:
+			cap_agp(fd, p, ptr);
 			break;
 		case PCIY_VPD:
 			cap_vpd(fd, p, ptr);

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/cavium/octe/octebus.c 219695 2011-03-16 08:56:22Z jmallett $
+ * $FreeBSD: releng/11.0/sys/mips/cavium/octe/octebus.c 219695 2011-03-16 08:56:22Z jmallett $
  */
 
 /*

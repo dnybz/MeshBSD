@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/users/users.cc 268500 2014-07-10 16:10:39Z ed $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/users/users.cc 268500 2014-07-10 16:10:39Z ed $");
 
 #include <utmpx.h>
 

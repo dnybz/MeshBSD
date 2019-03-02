@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)radix.c	8.5 (Berkeley) 5/19/95
- * $FreeBSD: head/sys/net/radix.c 298329 2016-04-20 02:01:45Z cem $
+ * $FreeBSD: releng/11.0/sys/net/radix.c 298329 2016-04-20 02:01:45Z cem $
  */
 
 /*

@@ -22,7 +22,7 @@
 \ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 \ SUCH DAMAGE.
 \ 
-\ $FreeBSD: head/sys/boot/forth/brand.4th 280933 2015-04-01 01:14:19Z dteske $
+\ $FreeBSD: releng/11.0/sys/boot/forth/brand.4th 280933 2015-04-01 01:14:19Z dteske $
 
 marker task-brand.4th
 

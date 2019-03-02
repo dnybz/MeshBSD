@@ -1,5 +1,5 @@
 #	From: @(#)Makefile	8.1 (Berkeley) 6/6/93
-# $FreeBSD: head/usr.bin/mesg/Makefile 90415 2002-02-08 22:31:43Z markm $
+# $FreeBSD: releng/11.0/usr.bin/mesg/Makefile 90415 2002-02-08 22:31:43Z markm $
 
 PROG=	mesg
 

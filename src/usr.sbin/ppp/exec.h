@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/ppp/exec.h 196514 2009-08-24 17:19:45Z brian $
+ * $FreeBSD: releng/11.0/usr.sbin/ppp/exec.h 196514 2009-08-24 17:19:45Z brian $
  */
 
 struct physical;

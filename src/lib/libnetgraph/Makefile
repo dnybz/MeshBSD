@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/libnetgraph/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/libnetgraph/Makefile 298107 2016-04-16 07:45:30Z gjb $
 # $Whistle: Makefile,v 1.4 1999/01/17 03:41:02 julian Exp $
 
 PACKAGE=lib${LIB}

@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/utx/utx.c 257579 2013-11-03 16:43:52Z ed $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/utx/utx.c 257579 2013-11-03 16:43:52Z ed $");
 
 #include <sys/time.h>
 #include <errno.h>

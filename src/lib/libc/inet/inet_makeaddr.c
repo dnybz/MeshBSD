@@ -31,7 +31,7 @@
 static const char sccsid[] = "@(#)inet_makeaddr.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/inet/inet_makeaddr.c 288038 2015-09-20 20:50:56Z rodrigc $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/inet/inet_makeaddr.c 288038 2015-09-20 20:50:56Z rodrigc $");
 
 #include "port_before.h"
 

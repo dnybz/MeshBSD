@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/ufs/ufs/ufs_bmap.c 297633 2016-04-07 04:23:25Z trasz $");
+__FBSDID("$FreeBSD: releng/11.0/sys/ufs/ufs/ufs_bmap.c 297633 2016-04-07 04:23:25Z trasz $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

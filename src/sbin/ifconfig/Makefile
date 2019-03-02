@@ -1,5 +1,5 @@
 #	From: @(#)Makefile	8.1 (Berkeley) 6/5/93
-# $FreeBSD: head/sbin/ifconfig/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/sbin/ifconfig/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 .include <src.opts.mk>
 
@@ -21,6 +21,8 @@ SRCS+=	af_inet.c		# IPv4 support
 .endif
 .if ${MK_INET6_SUPPORT} != "no"
 SRCS+=	af_inet6.c		# IPv6 support
+.endif
+.if ${MK_INET6_SUPPORT} != "no"
 SRCS+=	af_nd6.c		# ND6 support
 .endif
 
@@ -63,5 +65,9 @@ MAN=	ifconfig.8
 
 CFLAGS+= -Wall -Wmissing-prototypes -Wcast-qual -Wwrite-strings -Wnested-externs
 WARNS?=	2
+
+.if ${MK_TESTS} != "no"
+SUBDIR+=	tests
+.endif
 
 .include <bsd.prog.mk>

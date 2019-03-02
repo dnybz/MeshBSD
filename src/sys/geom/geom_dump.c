@@ -34,7 +34,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/geom/geom_dump.c 280686 2015-03-26 11:19:24Z mav $");
+__FBSDID("$FreeBSD: releng/11.0/sys/geom/geom_dump.c 280686 2015-03-26 11:19:24Z mav $");
 
 #include <sys/param.h>
 #include <sys/sbuf.h>

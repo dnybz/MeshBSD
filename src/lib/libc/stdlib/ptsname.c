@@ -29,7 +29,7 @@
 
 #include <sys/cdefs.h>
 #ifndef lint
-__FBSDID("$FreeBSD: head/lib/libc/stdlib/ptsname.c 240412 2012-09-12 17:54:09Z emaste $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/stdlib/ptsname.c 240412 2012-09-12 17:54:09Z emaste $");
 #endif /* not lint */
 
 #include "namespace.h"

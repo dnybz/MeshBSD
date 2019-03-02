@@ -30,7 +30,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)stdio.h	8.5 (Berkeley) 4/29/95
- * $FreeBSD: head/include/stdio.h 299574 2016-05-12 22:13:12Z cem $
+ * $FreeBSD: releng/11.0/include/stdio.h 299574 2016-05-12 22:13:12Z cem $
  */
 
 #ifndef	_STDIO_H_

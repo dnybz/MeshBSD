@@ -7,7 +7,7 @@
 **
 *******************************************************************/
 
-/* $FreeBSD: head/sys/boot/ficl/riscv/sysdep.c 295041 2016-01-29 15:12:31Z br $ */
+/* $FreeBSD: releng/11.0/sys/boot/ficl/riscv/sysdep.c 295041 2016-01-29 15:12:31Z br $ */
 
 #ifdef TESTMAIN
 #include <stdio.h>

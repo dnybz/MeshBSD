@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/cavium/octeon_gpio.c 277996 2015-01-31 19:32:14Z loos $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/cavium/octeon_gpio.c 277996 2015-01-31 19:32:14Z loos $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

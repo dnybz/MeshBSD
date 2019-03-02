@@ -33,10 +33,10 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $FreeBSD: head/lib/libpam/libpam/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/libpam/libpam/Makefile 301602 2016-06-08 11:47:19Z des $
 
 PACKAGE=lib${LIB}
-OPENPAM=	${.CURDIR}/../../../external/openpam
+OPENPAM=	${.CURDIR}/../../../contrib/openpam
 .PATH: ${OPENPAM}/include ${OPENPAM}/lib/libpam ${OPENPAM}/doc/man
 
 # static_libpam will build libpam.a
@@ -100,8 +100,6 @@ SRCS=	openpam_asprintf.c \
 	pam_verror.c \
 	pam_vinfo.c \
 	pam_vprompt.c
-# Local additions
-SRCS+=	pam_debug_log.c
 
 MAN?=	openpam.3 \
 	openpam_borrow_cred.3 \
@@ -181,4 +179,9 @@ INCS?=		${HEADERS} ${ADD_HEADERS}
 INCSDIR=	${INCLUDEDIR}/security
 
 .include <src.opts.mk>
+
+.if ${MK_TESTS} != "no"
+SUBDIR+=        tests
+.endif
+
 .include <bsd.lib.mk>

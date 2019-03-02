@@ -1,4 +1,4 @@
-/* $FreeBSD: head/lib/libc/iconv/bsd_iconv.c 299704 2016-05-14 00:35:35Z vangyzen $ */
+/* $FreeBSD: releng/11.0/lib/libc/iconv/bsd_iconv.c 299704 2016-05-14 00:35:35Z vangyzen $ */
 /* $NetBSD: iconv.c,v 1.11 2009/03/03 16:22:33 explorer Exp $ */
 
 /*-

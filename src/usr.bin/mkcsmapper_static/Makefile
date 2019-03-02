@@ -1,4 +1,4 @@
-# $FreeBSD: head/usr.bin/mkcsmapper_static/Makefile 297997 2016-04-14 21:06:10Z bdrewery $
+# $FreeBSD: releng/11.0/usr.bin/mkcsmapper_static/Makefile 297997 2016-04-14 21:06:10Z bdrewery $
 
 .PATH: ${.CURDIR}/../../lib/libc/iconv ${.CURDIR}/../mkcsmapper
 

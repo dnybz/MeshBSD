@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/lib/libssp/Makefile 284421 2015-06-15 19:28:07Z bapt $
+# $FreeBSD: releng/11.0/gnu/lib/libssp/Makefile 284421 2015-06-15 19:28:07Z bapt $
 
 SHLIBDIR?=	/lib
 
@@ -7,8 +7,8 @@ MK_SSP=		no
 
 .include <bsd.own.mk>
 
-GCCDIR=	${.CURDIR}/../../../tools/gcc
-GCCLIB=	${.CURDIR}/../../../tools/gcclibs
+GCCDIR=	${.CURDIR}/../../../contrib/gcc
+GCCLIB=	${.CURDIR}/../../../contrib/gcclibs
 SRCDIR=	${GCCLIB}/libssp
 
 .PATH: ${SRCDIR} ${SRCDIR}/ssp

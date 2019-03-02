@@ -1,5 +1,5 @@
 #	@(#)bsd.README	8.2 (Berkeley) 4/2/94
-# $FreeBSD: head/share/mk/bsd.README 298084 2016-04-15 18:49:26Z bdrewery $
+# $FreeBSD: releng/11.0/share/mk/bsd.README 304489 2016-08-19 18:08:59Z bdrewery $
 
 This is the README file for the "include" files for the FreeBSD
 source tree.  The files are installed in /usr/share/mk, and are by
@@ -120,6 +120,8 @@ object.
 
 The following variables are common:
 
+AFLAGS.${SRC}
+		Flags dependent on source file name.
 ACFLAGS.${SRC}
 		Flags dependent on source file name.
 CFLAGS.${SRC}
@@ -255,6 +257,11 @@ It has seven targets:
 
 It sets/uses the following variables:
 
+AFLAGS		Flags to the assembler when assembling .s files.
+
+ACFLAGS		Flags to the compiler when preprocessing and
+		assembling .S files.
+
 BINGRP		Binary group.
 
 BINOWN		Binary owner.
@@ -324,6 +331,7 @@ PROGS_CXX	PROG and PROGS_CXX in one Makefile.  To define
 		- DEBUG_FLAGS
 		- DPADD
 		- DPSRCS
+		- INTERNALPROG (no installation)
 		- LDADD
 		- LDFLAGS
 		- LIBADD

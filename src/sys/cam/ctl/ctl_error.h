@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGES.
  *
  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_error.h#1 $
- * $FreeBSD: head/sys/cam/ctl/ctl_error.h 288348 2015-09-28 20:54:18Z mav $
+ * $FreeBSD: releng/11.0/sys/cam/ctl/ctl_error.h 288348 2015-09-28 20:54:18Z mav $
  */
 /*
  * Function definitions for various error reporting routines used both

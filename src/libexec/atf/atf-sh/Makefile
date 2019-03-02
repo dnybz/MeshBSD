@@ -23,12 +23,12 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $FreeBSD: head/libexec/atf/atf-sh/Makefile 275077 2014-11-25 21:18:18Z bapt $
+# $FreeBSD: releng/11.0/libexec/atf/atf-sh/Makefile 275077 2014-11-25 21:18:18Z bapt $
 
 .include <src.opts.mk>
 .include <bsd.init.mk>
 
-ATF=		${.CURDIR:H:H:H}/external/atf
+ATF=		${.CURDIR:H:H:H}/contrib/atf
 .PATH:		${ATF}/atf-sh
 
 PROG_CXX=	atf-sh
@@ -48,6 +48,10 @@ FILESGROUPS=	SUBR
 
 SUBRDIR=	${SHAREDIR}/atf
 SUBR=		libatf-sh.subr
+
+.if ${MK_TESTS} != "no"
+SUBDIR+=	tests
+.endif
 
 .include "../../../lib/atf/common.mk"
 .include <bsd.prog.mk>

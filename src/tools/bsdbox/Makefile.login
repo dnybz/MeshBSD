@@ -1,32 +1,9 @@
 #
-# Login(8).
+# This builds login and friends.
+#
+# $FreeBSD: releng/11.0/tools/bsdbox/Makefile.login 229675 2012-01-06 00:56:31Z adrian $
 #
 
-###################################################################
-# Programs from stock /bin
-#
-
-###################################################################
-# Programs from standard /sbin
-#
-
-##################################################################
-# Programs from stock /usr/bin
-#
-CRUNCH_PROGS_usr.bin+=	cap_mkdb
-
-##################################################################
-# Programs from stock /usr/sbin
-#
-CRUNCH_PROGS_usr.sbin+=	pwd_mkdb
-
-##################################################################
 CRUNCH_PROGS_libexec+=	getty
-
-##################################################################
-# Library dependencies
-#
-
-
-
-
+CRUNCH_PROGS_usr.bin+=	cap_mkdb
+CRUNCH_PROGS_usr.sbin+=	pwd_mkdb

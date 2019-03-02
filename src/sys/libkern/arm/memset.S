@@ -26,7 +26,7 @@
  */
 
 #include <machine/asm.h>
-__FBSDID("$FreeBSD: head/sys/libkern/arm/memset.S 285338 2015-07-09 21:02:40Z andrew $");
+__FBSDID("$FreeBSD: releng/11.0/sys/libkern/arm/memset.S 285338 2015-07-09 21:02:40Z andrew $");
 
 /*
  * This implements

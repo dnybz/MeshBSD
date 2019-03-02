@@ -45,7 +45,7 @@ static char sccsid[] = "@(#)test.c	8.1 (Berkeley) 6/4/93";
 __RCSID("$NetBSD: tc1.c,v 1.6 2014/06/18 20:12:15 christos Exp $");
 #endif
 #endif /* not lint && not SCCSID */
-__FBSDID("$FreeBSD: head/lib/libedit/TEST/tc1.c 296435 2016-03-06 21:32:54Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libedit/TEST/tc1.c 296435 2016-03-06 21:32:54Z pfg $");
 
 /*
  * test.c: A little test program

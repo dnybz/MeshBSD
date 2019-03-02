@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/ppp/chat.c 261900 2014-02-14 20:34:24Z brueffer $
+ * $FreeBSD: releng/11.0/usr.sbin/ppp/chat.c 261900 2014-02-14 20:34:24Z brueffer $
  */
 
 #include <sys/param.h>

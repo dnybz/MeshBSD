@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/netstat/bpf.c 281143 2015-04-06 09:42:23Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/netstat/bpf.c 281143 2015-04-06 09:42:23Z glebius $");
 
 #include <sys/types.h>
 #include <sys/protosw.h>

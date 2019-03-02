@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/nscd/protocol.c 194093 2009-06-13 00:43:56Z des $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/nscd/protocol.c 194093 2009-06-13 00:43:56Z des $");
 
 #include <assert.h>
 #include <stdlib.h>

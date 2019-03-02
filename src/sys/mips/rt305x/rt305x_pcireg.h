@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/rt305x/rt305x_pcireg.h 292700 2015-12-24 18:33:08Z adrian $
+ * $FreeBSD: releng/11.0/sys/mips/rt305x/rt305x_pcireg.h 292700 2015-12-24 18:33:08Z adrian $
  */
 #ifndef __RT305X_PCIREG_H__
 #define __RT305X_PCIREG_H__

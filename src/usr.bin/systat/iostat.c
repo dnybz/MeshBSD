@@ -56,7 +56,7 @@
 
 #include <sys/cdefs.h>
 
-__FBSDID("$FreeBSD: head/usr.bin/systat/iostat.c 287633 2015-09-10 22:07:52Z delphij $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/systat/iostat.c 287633 2015-09-10 22:07:52Z delphij $");
 
 #ifdef lint
 static const char sccsid[] = "@(#)iostat.c	8.1 (Berkeley) 6/6/93";

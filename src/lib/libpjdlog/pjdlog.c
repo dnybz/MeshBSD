@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libpjdlog/pjdlog.c 258791 2013-12-01 09:41:06Z pjd $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libpjdlog/pjdlog.c 258791 2013-12-01 09:41:06Z pjd $");
 
 #include <sys/types.h>
 #include <sys/socket.h>

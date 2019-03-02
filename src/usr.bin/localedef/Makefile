@@ -1,4 +1,4 @@
-# $FreeBSD: head/usr.bin/localedef/Makefile 290562 2015-11-08 22:23:21Z bapt $
+# $FreeBSD: releng/11.0/usr.bin/localedef/Makefile 290562 2015-11-08 22:23:21Z bapt $
 
 PROG=	localedef
 SRCS=	charmap.c \

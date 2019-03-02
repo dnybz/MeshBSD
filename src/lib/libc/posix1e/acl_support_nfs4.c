@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/posix1e/acl_support_nfs4.c 297790 2016-04-10 19:33:58Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/posix1e/acl_support_nfs4.c 297790 2016-04-10 19:33:58Z pfg $");
 
 #include <stdio.h>
 #include <stdlib.h>

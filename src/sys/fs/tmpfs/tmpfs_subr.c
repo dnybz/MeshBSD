@@ -34,7 +34,7 @@
  * Efficient memory file system supporting functions.
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/fs/tmpfs/tmpfs_subr.c 297793 2016-04-10 23:07:00Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/fs/tmpfs/tmpfs_subr.c 297793 2016-04-10 23:07:00Z pfg $");
 
 #include <sys/param.h>
 #include <sys/fnv_hash.h>

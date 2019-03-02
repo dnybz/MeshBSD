@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/libalias/alias_irc.c 298995 2016-05-03 18:05:43Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/libalias/alias_irc.c 298995 2016-05-03 18:05:43Z pfg $");
 
 /* Alias_irc.c intercepts packages contain IRC CTCP commands, and
 	changes DCC commands to export a port on the aliasing host instead

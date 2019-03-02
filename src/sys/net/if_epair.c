@@ -48,7 +48,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/net/if_epair.c 298995 2016-05-03 18:05:43Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/net/if_epair.c 302054 2016-06-21 13:48:49Z bz $");
 
 #include <sys/param.h>
 #include <sys/kernel.h>
@@ -959,17 +959,23 @@ vnet_epair_init(const void *unused __unused)
 
 	V_epair_cloner = if_clone_advanced(epairname, 0,
 	    epair_clone_match, epair_clone_create, epair_clone_destroy);
+#ifdef VIMAGE
+	netisr_register_vnet(&epair_nh);
+#endif
 }
-VNET_SYSINIT(vnet_epair_init, SI_SUB_PROTO_IFATTACHDOMAIN, SI_ORDER_ANY,
+VNET_SYSINIT(vnet_epair_init, SI_SUB_PSEUDO, SI_ORDER_ANY,
     vnet_epair_init, NULL);
 
 static void
 vnet_epair_uninit(const void *unused __unused)
 {
 
+#ifdef VIMAGE
+	netisr_unregister_vnet(&epair_nh);
+#endif
 	if_clone_detach(V_epair_cloner);
 }
-VNET_SYSUNINIT(vnet_epair_uninit, SI_SUB_PROTO_IFATTACHDOMAIN, SI_ORDER_ANY,
+VNET_SYSUNINIT(vnet_epair_uninit, SI_SUB_INIT_IF, SI_ORDER_ANY,
     vnet_epair_uninit, NULL);
 
 static int
@@ -1006,5 +1012,5 @@ static moduledata_t epair_mod = {
 	0
 };
 
-DECLARE_MODULE(if_epair, epair_mod, SI_SUB_PSEUDO, SI_ORDER_ANY);
+DECLARE_MODULE(if_epair, epair_mod, SI_SUB_PSEUDO, SI_ORDER_MIDDLE);
 MODULE_VERSION(if_epair, 1);

@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/librt/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/librt/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 .include <src.opts.mk>
 
@@ -20,5 +20,9 @@ PRECIOUSLIB=
 
 VERSION_DEF=${.CURDIR}/../libc/Versions.def
 SYMBOL_MAPS=${.CURDIR}/Symbol.map
+
+.if ${MK_TESTS} != "no"
+SUBDIR+=	tests
+.endif
 
 .include <bsd.lib.mk>

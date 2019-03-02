@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/locale/lmonetary.c 271110 2014-09-04 17:36:21Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/locale/lmonetary.c 271110 2014-09-04 17:36:21Z pfg $");
 
 #include <limits.h>
 #include <stddef.h>

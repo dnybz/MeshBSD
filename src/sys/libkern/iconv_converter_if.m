@@ -23,7 +23,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $FreeBSD: head/sys/libkern/iconv_converter_if.m 206361 2010-04-07 16:50:38Z joel $
+# $FreeBSD: releng/11.0/sys/libkern/iconv_converter_if.m 206361 2010-04-07 16:50:38Z joel $
 #
 
 #include <sys/iconv.h>

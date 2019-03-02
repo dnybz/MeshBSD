@@ -1,31 +1,17 @@
 #
-# Toolbox on filesystem
+# Filesystem related tools
 #
+# $FreeBSD: releng/11.0/tools/bsdbox/Makefile.fs 239886 2012-08-29 22:54:39Z adrian $
 
-###################################################################
-# Programs from stock /bin
-#
-
-###################################################################
-# Programs from standard /sbin
-#
-CRUNCH_PROGS_sbin+=	fsck_ffs mdmfs mdconfig mount_msdosfs newfs
+# mfs
+CRUNCH_PROGS_sbin+=	mdmfs mdconfig newfs
 CRUNCH_ALIAS_mdmfs=	mount_mfs
 
-##################################################################
-# Programs from stock /usr/bin
-#
-
-##################################################################
-# Programs from stock /usr/sbin
-#
-
-##################################################################
-# Library dependencies
-#
-CRUNCH_LIBS+= -lbsdxml
+# UFS
+# CRUNCH_PROGS_sbin+=	fsck_ffs
 CRUNCH_LIBS+= -lgeom
-CRUNCH_LIBS+= -lkiconv
-CRUNCH_LIBS+= -lsbuf
 CRUNCH_LIBS+= -lufs
 
+# msdos
+# CRUNCH_PROGS_sbin+=	mount_msdosfs
+# CRUNCH_LIBS+= -lkiconv

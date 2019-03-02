@@ -1,6 +1,6 @@
-# $FreeBSD: head/usr.bin/awk/Makefile 299289 2016-05-09 22:21:09Z bdrewery $
+# $FreeBSD: releng/11.0/usr.bin/awk/Makefile 301884 2016-06-14 16:20:05Z bdrewery $
 
-AWKSRC=	${.CURDIR}/../../tools/one-true-awk
+AWKSRC=	${.CURDIR}/../../contrib/one-true-awk
 .PATH: ${AWKSRC}
 
 PROG=	awk
@@ -17,8 +17,10 @@ MLINKS=	awk.1 nawk.1
 
 CLEANFILES= maketab proctab.c ytab.h
 
-ytab.h: awkgram.h .NOMETA
-	ln -sf ${.ALLSRC} ${.TARGET}
+# XXX: awkgram.c isn't really needed here but it is added to keep
+# awkgram.h: .NOMETA respected.
+ytab.h: awkgram.c awkgram.h .NOMETA
+	ln -sf ${.ALLSRC:M*.h} ${.TARGET}
 
 proctab.c: maketab
 	${BTOOLSPATH:U.}/maketab > proctab.c

@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/ddb/db_ps.c 298043 2016-04-15 09:13:01Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/sys/ddb/db_ps.c 298043 2016-04-15 09:13:01Z kib $");
 
 #include "opt_kstack_pages.h"
 

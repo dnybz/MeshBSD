@@ -1,4 +1,4 @@
-/* $FreeBSD: head/sys/fs/msdosfs/msdosfs_denode.c 276887 2015-01-09 14:50:08Z emaste $ */
+/* $FreeBSD: releng/11.0/sys/fs/msdosfs/msdosfs_denode.c 276887 2015-01-09 14:50:08Z emaste $ */
 /*	$NetBSD: msdosfs_denode.c,v 1.28 1998/02/10 14:10:00 mrg Exp $	*/
 
 /*-

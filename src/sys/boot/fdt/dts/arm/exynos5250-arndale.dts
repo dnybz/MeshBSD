@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/fdt/dts/arm/exynos5250-arndale.dts 266943 2014-06-01 08:15:34Z br $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/arm/exynos5250-arndale.dts 266943 2014-06-01 08:15:34Z br $
  */
 
 /dts-v1/;

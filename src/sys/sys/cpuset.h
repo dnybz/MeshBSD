@@ -26,7 +26,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/sys/cpuset.h 299122 2016-05-05 15:43:26Z jhb $
+ * $FreeBSD: releng/11.0/sys/sys/cpuset.h 303228 2016-07-23 17:37:59Z jhb $
  */
 
 #ifndef _SYS_CPUSET_H_
@@ -35,7 +35,6 @@
 #include <sys/_cpuset.h>
 
 #include <sys/bitset.h>
-#include <sys/queue.h>
 
 #define	_NCPUBITS	_BITSET_BITS
 #define	_NCPUWORDS	__bitset_words(CPU_SETSIZE)
@@ -92,6 +91,8 @@
 #define	CPUSET_DEFAULT	0
 
 #ifdef _KERNEL
+#include <sys/queue.h>
+
 LIST_HEAD(setlist, cpuset);
 
 /*

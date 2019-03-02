@@ -1,4 +1,4 @@
-/* $FreeBSD: head/sys/boot/usb/storage/umass_loader.c 298230 2016-04-18 23:09:22Z allanjude $ */
+/* $FreeBSD: releng/11.0/sys/boot/usb/storage/umass_loader.c 298230 2016-04-18 23:09:22Z allanjude $ */
 /*-
  * Copyright (c) 2014 Hans Petter Selasky <hselasky@FreeBSD.org>
  * All rights reserved.

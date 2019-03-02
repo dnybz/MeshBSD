@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/tty_pts.c 298819 2016-04-29 22:15:33Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/tty_pts.c 298819 2016-04-29 22:15:33Z pfg $");
 
 /* Add compatibility bits for FreeBSD. */
 #define PTS_COMPAT

@@ -31,7 +31,7 @@
 static char sccsid[] = "@(#)err.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/gen/err.c 297790 2016-04-10 19:33:58Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/gen/err.c 297790 2016-04-10 19:33:58Z pfg $");
 
 #include "namespace.h"
 #include <err.h>

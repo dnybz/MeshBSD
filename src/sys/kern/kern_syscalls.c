@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_syscalls.c 284215 2015-06-10 10:48:12Z mjg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_syscalls.c 284215 2015-06-10 10:48:12Z mjg $");
 
 #include <sys/param.h>
 #include <sys/kernel.h>

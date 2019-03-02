@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/idt/if_kr.c 271858 2014-09-19 09:19:49Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/idt/if_kr.c 271858 2014-09-19 09:19:49Z glebius $");
 
 /*
  * RC32434 Ethernet interface driver
@@ -47,7 +47,6 @@ __FBSDID("$FreeBSD: head/sys/mips/idt/if_kr.c 271858 2014-09-19 09:19:49Z glebiu
 #include <sys/taskqueue.h>
 
 #include <net/if.h>
-#include <net/if_arp.h>
 #include <net/ethernet.h>
 #include <net/if_dl.h>
 #include <net/if_media.h>
@@ -55,6 +54,8 @@ __FBSDID("$FreeBSD: head/sys/mips/idt/if_kr.c 271858 2014-09-19 09:19:49Z glebiu
 #include <net/if_var.h>
 
 #include <net/bpf.h>
+
+#include <netarp/if_arp.h>
 
 #include <machine/bus.h>
 #include <machine/resource.h>

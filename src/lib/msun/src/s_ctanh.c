@@ -64,7 +64,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_ctanh.c 284427 2015-06-15 20:40:44Z tijl $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/src/s_ctanh.c 284427 2015-06-15 20:40:44Z tijl $");
 
 #include <complex.h>
 #include <math.h>

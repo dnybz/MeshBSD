@@ -24,7 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *	$NetBSD: dosfs.h,v 1.4 1997/01/03 14:32:48 ws Exp $
- * $FreeBSD: head/sbin/fsck_msdosfs/dosfs.h 273865 2014-10-30 15:52:01Z ambrisko $
+ * $FreeBSD: releng/11.0/sbin/fsck_msdosfs/dosfs.h 273865 2014-10-30 15:52:01Z ambrisko $
  */
 
 #ifndef DOSFS_H

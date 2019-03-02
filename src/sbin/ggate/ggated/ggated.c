@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sbin/ggate/ggated/ggated.c 294973 2016-01-28 03:24:06Z ngie $
+ * $FreeBSD: releng/11.0/sbin/ggate/ggated/ggated.c 294973 2016-01-28 03:24:06Z ngie $
  */
 
 #include <sys/param.h>

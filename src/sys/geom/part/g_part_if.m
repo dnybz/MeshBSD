@@ -23,7 +23,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $FreeBSD: head/sys/geom/part/g_part_if.m 298808 2016-04-29 20:56:58Z pfg $
+# $FreeBSD: releng/11.0/sys/geom/part/g_part_if.m 298808 2016-04-29 20:56:58Z pfg $
 
 #include <sys/param.h>
 #include <sys/lock.h>

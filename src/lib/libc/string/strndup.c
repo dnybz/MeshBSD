@@ -17,7 +17,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/string/strndup.c 287181 2015-08-26 23:28:10Z delphij $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/string/strndup.c 287181 2015-08-26 23:28:10Z delphij $");
 
 #include <stddef.h>
 #include <stdlib.h>

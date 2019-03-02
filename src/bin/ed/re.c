@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/bin/ed/re.c 252374 2013-06-29 15:49:26Z kientzle $");
+__FBSDID("$FreeBSD: releng/11.0/bin/ed/re.c 252374 2013-06-29 15:49:26Z kientzle $");
 
 #include "ed.h"
 

@@ -27,7 +27,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sbin/mdconfig/mdconfig.c 289113 2015-10-10 09:37:31Z trasz $
+ * $FreeBSD: releng/11.0/sbin/mdconfig/mdconfig.c 289113 2015-10-10 09:37:31Z trasz $
  */
 
 #include <sys/param.h>

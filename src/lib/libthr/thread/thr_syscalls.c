@@ -64,7 +64,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libthr/thread/thr_syscalls.c 295407 2016-02-08 19:24:13Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libthr/thread/thr_syscalls.c 295407 2016-02-08 19:24:13Z kib $");
 
 #include "namespace.h"
 #include <sys/types.h>

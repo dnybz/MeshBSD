@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/usr.bin/groff/Makefile 289393 2015-10-15 22:55:08Z bdrewery $
+# $FreeBSD: releng/11.0/gnu/usr.bin/groff/Makefile 289393 2015-10-15 22:55:08Z bdrewery $
 
 SUBDIR=		contrib font man src tmac
 

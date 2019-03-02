@@ -62,10 +62,10 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *	from: src/sys/alpha/include/bus.h,v 1.5 1999/08/28 00:38:40 peter
- * $FreeBSD: head/sys/mips/cavium/octopci_bus_space.c 263289 2014-03-18 01:40:25Z emaste $
+ * $FreeBSD: releng/11.0/sys/mips/cavium/octopci_bus_space.c 263289 2014-03-18 01:40:25Z emaste $
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/cavium/octopci_bus_space.c 263289 2014-03-18 01:40:25Z emaste $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/cavium/octopci_bus_space.c 263289 2014-03-18 01:40:25Z emaste $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

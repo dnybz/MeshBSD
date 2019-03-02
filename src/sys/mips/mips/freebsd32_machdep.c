@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/mips/freebsd32_machdep.c 294930 2016-01-27 17:55:01Z jhb $
+ * $FreeBSD: releng/11.0/sys/mips/mips/freebsd32_machdep.c 294930 2016-01-27 17:55:01Z jhb $
  */
 
 /*

@@ -36,7 +36,7 @@
 static char sccsid[] = "@(#)clnt_bcast.c 1.15 89/04/21 Copyr 1988 Sun Micro";
 #endif
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/rpc/clnt_bcast.c 297829 2016-04-11 18:09:38Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/rpc/clnt_bcast.c 300621 2016-05-24 18:53:06Z ngie $");
 
 
 /*
@@ -346,7 +346,8 @@ rpc_broadcast_exp(rpcprog_t prog, rpcvers_t vers, rpcproc_t proc,
 #ifdef PORTMAP
 		if (si.si_af == AF_INET && si.si_proto == IPPROTO_UDP) {
 			udpbufsz = fdlist[fdlistno].dsize;
-			if ((outbuf_pmap = malloc(udpbufsz)) == NULL) {
+			outbuf_pmap = reallocf(outbuf_pmap, udpbufsz);
+			if (outbuf_pmap == NULL) {
 				_close(fd);
 				stat = RPC_SYSTEMERROR;
 				goto done_broad;

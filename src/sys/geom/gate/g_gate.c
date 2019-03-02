@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/geom/gate/g_gate.c 298070 2016-04-15 16:18:07Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/geom/gate/g_gate.c 298070 2016-04-15 16:18:07Z pfg $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

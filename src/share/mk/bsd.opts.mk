@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/bsd.opts.mk 297434 2016-03-30 23:50:23Z bdrewery $
+# $FreeBSD: releng/11.0/share/mk/bsd.opts.mk 297434 2016-03-30 23:50:23Z bdrewery $
 #
 # Option file for src builds.
 #
@@ -54,10 +54,6 @@ __DEFAULT_YES_OPTIONS = \
     DOCCOMPRESS \
     INCLUDES \
     INSTALLLIB \
-    KERBEROS \
-    MAN \
-    MANCOMPRESS \
-    NIS \
     NLS \
     OPENSSH \
     PROFILE \
@@ -68,7 +64,6 @@ __DEFAULT_YES_OPTIONS = \
 
 __DEFAULT_NO_OPTIONS = \
     CCACHE_BUILD \
-    CTF \
     INSTALL_AS_USER \
     STALE_STAGED
 
@@ -87,10 +82,8 @@ __DEFAULT_DEPENDENT_OPTIONS = \
 # These are transitional and will disappaer in the FreeBSD 12.
 #
 .for var in \
-    CTF \
     DEBUG_FILES \
     INSTALLLIB \
-    MAN \
     PROFILE \
     WARNS
 .if defined(NO_${var})

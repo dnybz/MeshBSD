@@ -34,7 +34,7 @@
 static char sccsid[] = "@(#)getchar.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/stdio/getchar.c 288033 2015-09-20 20:28:49Z rodrigc $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/stdio/getchar.c 288033 2015-09-20 20:28:49Z rodrigc $");
 
 /*
  * A subroutine version of the macro getchar.

@@ -33,7 +33,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/vfs_acl.c 284446 2015-06-16 13:09:18Z mjg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/vfs_acl.c 284446 2015-06-16 13:09:18Z mjg $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

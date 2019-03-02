@@ -17,7 +17,7 @@
 
 #if !defined(lint) && !defined(LINT)
 static const char rcsid[] =
-  "$FreeBSD: head/usr.sbin/cron/cron/do_command.c 295671 2016-02-16 20:59:49Z pfg $";
+  "$FreeBSD: releng/11.0/usr.sbin/cron/cron/do_command.c 295671 2016-02-16 20:59:49Z pfg $";
 #endif
 
 

@@ -25,7 +25,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/geom/uzip/g_uzip_softc.h 295943 2016-02-23 23:59:08Z sobomax $
+ * $FreeBSD: releng/11.0/sys/geom/uzip/g_uzip_softc.h 295943 2016-02-23 23:59:08Z sobomax $
  */
 
 struct g_uzip_softc;

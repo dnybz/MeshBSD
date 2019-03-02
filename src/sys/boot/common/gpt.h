@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/common/gpt.h 296963 2016-03-16 23:12:19Z allanjude $
+ * $FreeBSD: releng/11.0/sys/boot/common/gpt.h 296963 2016-03-16 23:12:19Z allanjude $
  */
 
 #ifndef _GPT_H_

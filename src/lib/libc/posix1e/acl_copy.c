@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/posix1e/acl_copy.c 194955 2009-06-25 12:46:59Z trasz $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/posix1e/acl_copy.c 194955 2009-06-25 12:46:59Z trasz $");
 
 #include <sys/types.h>
 #include "namespace.h"

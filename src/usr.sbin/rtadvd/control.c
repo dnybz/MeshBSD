@@ -23,7 +23,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/rtadvd/control.c 299507 2016-05-12 03:37:17Z cem $
+ * $FreeBSD: releng/11.0/usr.sbin/rtadvd/control.c 299507 2016-05-12 03:37:17Z cem $
  *
  */
 

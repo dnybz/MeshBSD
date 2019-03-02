@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/sort/sort.c 289751 2015-10-22 10:57:15Z gabor $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/sort/sort.c 289751 2015-10-22 10:57:15Z gabor $");
 
 #include <sys/stat.h>
 #include <sys/sysctl.h>

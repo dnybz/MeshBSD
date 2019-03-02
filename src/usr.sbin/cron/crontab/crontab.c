@@ -18,7 +18,7 @@
 
 #if !defined(lint) && !defined(LINT)
 static const char rcsid[] =
-  "$FreeBSD: head/usr.sbin/cron/crontab/crontab.c 295672 2016-02-16 21:19:39Z pfg $";
+  "$FreeBSD: releng/11.0/usr.sbin/cron/crontab/crontab.c 305427 2016-09-05 16:43:57Z emaste $";
 #endif
 
 /* crontab - install and manage per-user crontab files
@@ -28,6 +28,7 @@ static const char rcsid[] =
 
 #define	MAIN_PROGRAM
 
+#include <sys/param.h>
 #include "cron.h"
 #include <errno.h>
 #include <fcntl.h>
@@ -57,7 +58,7 @@ static char	*Options[] = { "???", "list", "delete", "edit", "replace" };
 
 
 static	PID_T		Pid;
-static	char		User[MAX_UNAME], RealUser[MAX_UNAME];
+static	char		User[MAXLOGNAME], RealUser[MAXLOGNAME];
 static	char		Filename[MAX_FNAME];
 static	FILE		*NewCrontab;
 static	int		CheckErrorCount;

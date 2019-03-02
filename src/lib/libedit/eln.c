@@ -37,7 +37,7 @@
 __RCSID("$NetBSD: eln.c,v 1.19 2015/05/18 15:07:04 christos Exp $");
 #endif /* not lint && not SCCSID */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libedit/eln.c 296435 2016-03-06 21:32:54Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libedit/eln.c 296435 2016-03-06 21:32:54Z pfg $");
 
 #include "histedit.h"
 #include "el.h"

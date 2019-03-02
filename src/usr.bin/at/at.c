@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/at/at.c 298369 2016-04-20 20:54:47Z bapt $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/at/at.c 298369 2016-04-20 20:54:47Z bapt $");
 
 #define _USE_BSD 1
 

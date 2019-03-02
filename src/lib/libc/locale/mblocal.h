@@ -30,7 +30,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/locale/mblocal.h 290618 2015-11-09 22:06:22Z bapt $
+ * $FreeBSD: releng/11.0/lib/libc/locale/mblocal.h 303336 2016-07-26 14:12:11Z pfg $
  */
 
 #ifndef _MBLOCAL_H_
@@ -65,18 +65,18 @@ extern struct xlocale_ctype __xlocale_global_ctype;
 /*
  * Rune initialization function prototypes.
  */
-int	_none_init(struct xlocale_ctype *, _RuneLocale *);
-int	_UTF8_init(struct xlocale_ctype *, _RuneLocale *);
-int	_EUC_CN_init(struct xlocale_ctype *, _RuneLocale *);
-int	_EUC_JP_init(struct xlocale_ctype *, _RuneLocale *);
-int	_EUC_KR_init(struct xlocale_ctype *, _RuneLocale *);
-int	_EUC_TW_init(struct xlocale_ctype *, _RuneLocale *);
-int	_GB18030_init(struct xlocale_ctype *, _RuneLocale *);
-int	_GB2312_init(struct xlocale_ctype *, _RuneLocale *);
-int	_GBK_init(struct xlocale_ctype *, _RuneLocale *);
-int	_BIG5_init(struct xlocale_ctype *, _RuneLocale *);
-int	_MSKanji_init(struct xlocale_ctype *, _RuneLocale *);
-int	_ascii_init(struct xlocale_ctype *, _RuneLocale *);
+__hidden int	_none_init(struct xlocale_ctype *, _RuneLocale *);
+__hidden int	_ascii_init(struct xlocale_ctype *, _RuneLocale *);
+__hidden int	_UTF8_init(struct xlocale_ctype *, _RuneLocale *);
+__hidden int	_EUC_CN_init(struct xlocale_ctype *, _RuneLocale *);
+__hidden int	_EUC_JP_init(struct xlocale_ctype *, _RuneLocale *);
+__hidden int	_EUC_KR_init(struct xlocale_ctype *, _RuneLocale *);
+__hidden int	_EUC_TW_init(struct xlocale_ctype *, _RuneLocale *);
+__hidden int	_GB18030_init(struct xlocale_ctype *, _RuneLocale *);
+__hidden int	_GB2312_init(struct xlocale_ctype *, _RuneLocale *);
+__hidden int	_GBK_init(struct xlocale_ctype *, _RuneLocale *);
+__hidden int	_BIG5_init(struct xlocale_ctype *, _RuneLocale *);
+__hidden int	_MSKanji_init(struct xlocale_ctype *, _RuneLocale *);
 
 typedef size_t (*mbrtowc_pfn_t)(wchar_t * __restrict,
     const char * __restrict, size_t, mbstate_t * __restrict);

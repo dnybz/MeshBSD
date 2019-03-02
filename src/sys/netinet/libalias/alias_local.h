@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/netinet/libalias/alias_local.h 298995 2016-05-03 18:05:43Z pfg $
+ * $FreeBSD: releng/11.0/sys/netinet/libalias/alias_local.h 298995 2016-05-03 18:05:43Z pfg $
  */
 
 /*

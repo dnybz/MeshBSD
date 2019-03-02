@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mips/sys_machdep.c 263037 2014-03-11 17:20:50Z imp $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mips/sys_machdep.c 263037 2014-03-11 17:20:50Z imp $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

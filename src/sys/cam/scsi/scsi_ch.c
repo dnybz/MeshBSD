@@ -68,7 +68,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/cam/scsi/scsi_ch.c 297688 2016-04-07 21:33:14Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/cam/scsi/scsi_ch.c 297688 2016-04-07 21:33:14Z pfg $");
 
 #include <sys/param.h>
 #include <sys/queue.h>

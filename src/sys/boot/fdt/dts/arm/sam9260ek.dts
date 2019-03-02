@@ -1,7 +1,7 @@
 /*
  * SAM9260EK eval board - Warner Losh public domain
  *
- * $FreeBSD: head/sys/boot/fdt/dts/arm/sam9260ek.dts 270161 2014-08-19 03:51:05Z imp $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/arm/sam9260ek.dts 270161 2014-08-19 03:51:05Z imp $
  */
 /dts-v1/;
 #include "sam9260ek_common.dtsi"

@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/riscv/riscv/ofw_machdep.c 298633 2016-04-26 12:33:25Z br $");
+__FBSDID("$FreeBSD: releng/11.0/sys/riscv/riscv/ofw_machdep.c 298633 2016-04-26 12:33:25Z br $");
 
 #include <sys/param.h>
 #include <sys/bus.h>

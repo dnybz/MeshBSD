@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	$FreeBSD: head/lib/libgssapi/gss_get_mic.c 297942 2016-04-13 21:08:02Z pfg $
+ *	$FreeBSD: releng/11.0/lib/libgssapi/gss_get_mic.c 297942 2016-04-13 21:08:02Z pfg $
  */
 
 #include <gssapi/gssapi.h>

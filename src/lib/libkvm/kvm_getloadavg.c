@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libkvm/kvm_getloadavg.c 291406 2015-11-27 18:58:26Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libkvm/kvm_getloadavg.c 291406 2015-11-27 18:58:26Z jhb $");
 
 #if defined(LIBC_SCCS) && !defined(lint)
 #if 0

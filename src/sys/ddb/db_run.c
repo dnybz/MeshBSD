@@ -33,7 +33,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/ddb/db_run.c 291407 2015-11-27 19:03:59Z zbb $");
+__FBSDID("$FreeBSD: releng/11.0/sys/ddb/db_run.c 291407 2015-11-27 19:03:59Z zbb $");
 
 #include <sys/param.h>
 #include <sys/kdb.h>

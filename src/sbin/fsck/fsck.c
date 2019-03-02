@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sbin/fsck/fsck.c 298194 2016-04-18 07:44:53Z araujo $");
+__FBSDID("$FreeBSD: releng/11.0/sbin/fsck/fsck.c 298194 2016-04-18 07:44:53Z araujo $");
 
 #include <sys/param.h>
 #include <sys/mount.h>

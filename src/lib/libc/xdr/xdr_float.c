@@ -36,7 +36,7 @@ static char *sccsid2 = "@(#)xdr_float.c 1.12 87/08/11 Copyr 1984 Sun Micro";
 static char *sccsid = "@(#)xdr_float.c	2.1 88/07/29 4.0 RPCSRC";
 #endif
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/xdr/xdr_float.c 299183 2016-05-06 16:03:40Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/xdr/xdr_float.c 299183 2016-05-06 16:03:40Z pfg $");
 
 /*
  * xdr_float.c, Generic XDR routines implementation.

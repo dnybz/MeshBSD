@@ -22,7 +22,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libarchive/config_freebsd.h 299529 2016-05-12 10:16:16Z mm $
+ * $FreeBSD: releng/11.0/lib/libarchive/config_freebsd.h 306379 2016-09-27 19:36:12Z emaste $
  */
 
 #include <osreldate.h>
@@ -30,6 +30,7 @@
 /* FreeBSD 5.0 and later have ACL and extattr support. */
 #if __FreeBSD__ > 4
 #define HAVE_ACL_CREATE_ENTRY 1
+#define HAVE_ACL_GET_FD_NP 1
 #define HAVE_ACL_GET_LINK_NP 1
 #define HAVE_ACL_GET_PERM_NP 1
 #define HAVE_ACL_INIT 1
@@ -45,6 +46,7 @@
 #define HAVE_EXTATTR_LIST_FILE 1
 #define HAVE_EXTATTR_SET_FD 1
 #define HAVE_EXTATTR_SET_FILE 1
+#define HAVE_STRUCT_XVFSCONF 1
 #define HAVE_SYS_ACL_H 1
 #define HAVE_SYS_EXTATTR_H 1
 #endif

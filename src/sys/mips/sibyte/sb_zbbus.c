@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/sibyte/sb_zbbus.c 295832 2016-02-20 01:32:58Z jhibbits $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/sibyte/sb_zbbus.c 295832 2016-02-20 01:32:58Z jhibbits $");
 
 #include <sys/param.h>
 #include <sys/kernel.h>

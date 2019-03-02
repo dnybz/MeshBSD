@@ -46,7 +46,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/cam/scsi/scsi_cd.c 299180 2016-05-06 15:36:25Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/cam/scsi/scsi_cd.c 299180 2016-05-06 15:36:25Z pfg $");
 
 #include "opt_cd.h"
 

@@ -1,4 +1,4 @@
-/*	$OpenBSD: imsg.c,v 1.13 2015/12/09 11:54:12 tb Exp $	*/
+/*	$OpenBSD: imsg.c,v 1.6 2014/06/30 00:26:22 deraadt Exp $	*/
 
 /*
  * Copyright (c) 2003, 2004 Henning Brauer <henning@openbsd.org>
@@ -28,15 +28,15 @@
 
 #include "imsg.h"
 
-static int	 imsg_fd_overhead = 0;
+int	 imsg_fd_overhead = 0;
 
-static int	 imsg_get_fd(struct imsgbuf *);
+int	 imsg_get_fd(struct imsgbuf *);
 
 void
 imsg_init(struct imsgbuf *ibuf, int fd)
 {
 	msgbuf_init(&ibuf->w);
-	memset(&ibuf->r, 0, sizeof(ibuf->r));
+	bzero(&ibuf->r, sizeof(ibuf->r));
 	ibuf->fd = fd;
 	ibuf->w.fd = fd;
 	ibuf->pid = getpid();
@@ -57,8 +57,7 @@ imsg_read(struct imsgbuf *ibuf)
 	int			 fd;
 	struct imsg_fd		*ifd;
 
-	memset(&msg, 0, sizeof(msg));
-	memset(&cmsgbuf, 0, sizeof(cmsgbuf));
+	bzero(&msg, sizeof(msg));
 
 	iov.iov_base = ibuf->r.buf + ibuf->r.wpos;
 	iov.iov_len = sizeof(ibuf->r.buf) - ibuf->r.wpos;
@@ -72,17 +71,19 @@ imsg_read(struct imsgbuf *ibuf)
 
 again:
 	if (getdtablecount() + imsg_fd_overhead +
-	    (int)((CMSG_SPACE(sizeof(int))-CMSG_SPACE(0))/sizeof(int))
+	    (CMSG_SPACE(sizeof(int))-CMSG_SPACE(0))/sizeof(int)
 	    >= getdtablesize()) {
 		errno = EAGAIN;
 		free(ifd);
 		return (-1);
 	}
-
+	
 	if ((n = recvmsg(ibuf->fd, &msg, 0)) == -1) {
-		if (errno == EINTR)
-			goto again;
-		goto fail;
+		if (errno == EMSGSIZE)
+			goto fail;
+		if (errno != EINTR && errno != EAGAIN)
+			goto fail;
+		goto again;
 	}
 
 	ibuf->r.wpos += n;
@@ -116,7 +117,8 @@ again:
 	}
 
 fail:
-	free(ifd);
+	if (ifd)
+		free(ifd);
 	return (n);
 }
 
@@ -140,9 +142,7 @@ imsg_get(struct imsgbuf *ibuf, struct imsg *imsg)
 		return (0);
 	datalen = imsg->hdr.len - IMSG_HEADER_SIZE;
 	ibuf->r.rptr = ibuf->r.buf + IMSG_HEADER_SIZE;
-	if (datalen == 0)
-		imsg->data = NULL;
-	else if ((imsg->data = malloc(datalen)) == NULL)
+	if ((imsg->data = malloc(datalen)) == NULL)
 		return (-1);
 
 	if (imsg->hdr.flags & IMSGF_HASFD)
@@ -266,7 +266,7 @@ imsg_free(struct imsg *imsg)
 	free(imsg->data);
 }
 
-static int
+int
 imsg_get_fd(struct imsgbuf *ibuf)
 {
 	int		 fd;
@@ -286,7 +286,7 @@ int
 imsg_flush(struct imsgbuf *ibuf)
 {
 	while (ibuf->w.queued)
-		if (msgbuf_write(&ibuf->w) <= 0)
+		if (msgbuf_write(&ibuf->w) < 0)
 			return (-1);
 	return (0);
 }

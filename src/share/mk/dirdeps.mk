@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/dirdeps.mk 298229 2016-04-18 22:00:26Z sjg $
+# $FreeBSD: releng/11.0/share/mk/dirdeps.mk 298229 2016-04-18 22:00:26Z sjg $
 # $Id: dirdeps.mk,v 1.62 2016/03/16 00:11:53 sjg Exp $
 
 # Copyright (c) 2010-2013, Juniper Networks, Inc.

@@ -1,4 +1,4 @@
-/* $FreeBSD: head/usr.sbin/usbconfig/dump.c 274435 2014-11-12 14:52:44Z hselasky $ */
+/* $FreeBSD: releng/11.0/usr.sbin/usbconfig/dump.c 274435 2014-11-12 14:52:44Z hselasky $ */
 /*-
  * Copyright (c) 2008 Hans Petter Selasky. All rights reserved.
  *

@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/common/install.c 273940 2014-11-01 18:51:48Z marcel $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/common/install.c 273940 2014-11-01 18:51:48Z marcel $");
 
 #include <sys/param.h>
 #include <sys/socket.h>

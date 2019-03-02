@@ -30,7 +30,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)eval.h	8.2 (Berkeley) 5/4/95
- * $FreeBSD: head/bin/sh/eval.h 289159 2015-10-11 21:33:00Z jilles $
+ * $FreeBSD: releng/11.0/bin/sh/eval.h 289159 2015-10-11 21:33:00Z jilles $
  */
 
 extern char *commandname;	/* currently executing command */

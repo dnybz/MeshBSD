@@ -1,5 +1,5 @@
 /*
- * $FreeBSD: head/lib/msun/Symbol.map 271651 2014-09-15 23:21:57Z kargl $
+ * $FreeBSD: releng/11.0/lib/msun/Symbol.map 271651 2014-09-15 23:21:57Z kargl $
  */
 
 /* 7.0-CURRENT */

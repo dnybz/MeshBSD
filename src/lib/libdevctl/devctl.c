@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libdevctl/devctl.c 298709 2016-04-27 16:33:17Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libdevctl/devctl.c 298709 2016-04-27 16:33:17Z jhb $");
 
 #include <sys/types.h>
 #include <sys/bus.h>

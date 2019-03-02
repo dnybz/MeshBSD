@@ -1,4 +1,4 @@
-$FreeBSD: head/sys/boot/efi/loader/version 280950 2015-04-01 08:30:40Z andrew $
+$FreeBSD: releng/11.0/sys/boot/efi/loader/version 280950 2015-04-01 08:30:40Z andrew $
 
 NOTE ANY CHANGES YOU MAKE TO THE BOOTBLOCKS HERE.  The format of this
 file is important.  Make sure the current version number is on line 6.

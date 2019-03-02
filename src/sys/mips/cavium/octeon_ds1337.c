@@ -51,7 +51,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/cavium/octeon_ds1337.c 271562 2014-09-14 00:02:40Z kan $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/cavium/octeon_ds1337.c 271562 2014-09-14 00:02:40Z kan $");
 
 #include <sys/param.h>
 #include <sys/timespec.h>

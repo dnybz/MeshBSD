@@ -32,7 +32,7 @@
 
 #ifdef _KERNEL
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/subr_acl_nfs4.c 287445 2015-09-04 00:14:20Z delphij $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/subr_acl_nfs4.c 287445 2015-09-04 00:14:20Z delphij $");
 
 #include <sys/param.h>
 #include <sys/kernel.h>

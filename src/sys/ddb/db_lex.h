@@ -23,7 +23,7 @@
  * any improvements or extensions that they make and grant Carnegie the
  * rights to redistribute these changes.
  *
- * $FreeBSD: head/sys/ddb/db_lex.h 299970 2016-05-16 19:42:38Z pfg $
+ * $FreeBSD: releng/11.0/sys/ddb/db_lex.h 299970 2016-05-16 19:42:38Z pfg $
  */
 
 #ifndef _DDB_DB_LEX_H_

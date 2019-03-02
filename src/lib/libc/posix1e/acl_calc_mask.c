@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/posix1e/acl_calc_mask.c 279962 2015-03-13 18:42:43Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/posix1e/acl_calc_mask.c 279962 2015-03-13 18:42:43Z pfg $");
 
 #include <sys/types.h>
 #include "namespace.h"

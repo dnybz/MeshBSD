@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libmemstat/memstat.c 261726 2014-02-10 20:09:10Z glebius $
+ * $FreeBSD: releng/11.0/lib/libmemstat/memstat.c 261726 2014-02-10 20:09:10Z glebius $
  */
 
 #include <sys/param.h>

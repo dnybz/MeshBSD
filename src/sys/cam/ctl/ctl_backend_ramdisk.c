@@ -41,7 +41,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/cam/ctl/ctl_backend_ramdisk.c 288427 2015-09-30 20:38:35Z mav $");
+__FBSDID("$FreeBSD: releng/11.0/sys/cam/ctl/ctl_backend_ramdisk.c 288427 2015-09-30 20:38:35Z mav $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

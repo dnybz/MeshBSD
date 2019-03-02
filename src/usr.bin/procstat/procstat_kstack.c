@@ -24,7 +24,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.bin/procstat/procstat_kstack.c 287491 2015-09-05 19:28:41Z allanjude $
+ * $FreeBSD: releng/11.0/usr.bin/procstat/procstat_kstack.c 287491 2015-09-05 19:28:41Z allanjude $
  */
 
 #include <sys/param.h>

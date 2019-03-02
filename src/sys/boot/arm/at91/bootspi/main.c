@@ -31,7 +31,7 @@
  * owners.  This software is not copyrighted and is intended for reference
  * only.
  *
- * $FreeBSD: head/sys/boot/arm/at91/bootspi/main.c 269111 2014-07-26 03:33:19Z ian $
+ * $FreeBSD: releng/11.0/sys/boot/arm/at91/bootspi/main.c 269111 2014-07-26 03:33:19Z ian $
  */
 
 #include "env_vars.h"

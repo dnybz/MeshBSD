@@ -32,7 +32,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/libexec/rtld-elf/rtld_printf.c 267678 2014-06-20 17:08:32Z jonathan $
+ * $FreeBSD: releng/11.0/libexec/rtld-elf/rtld_printf.c 267678 2014-06-20 17:08:32Z jonathan $
  */
 
 #include <sys/param.h>

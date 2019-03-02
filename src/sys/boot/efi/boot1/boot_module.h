@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/efi/boot1/boot_module.h 295320 2016-02-05 15:35:33Z smh $
+ * $FreeBSD: releng/11.0/sys/boot/efi/boot1/boot_module.h 295320 2016-02-05 15:35:33Z smh $
  */
 
 #ifndef _BOOT_MODULE_H_

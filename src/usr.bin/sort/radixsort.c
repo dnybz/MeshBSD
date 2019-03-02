@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/sort/radixsort.c 281133 2015-04-06 03:02:20Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/sort/radixsort.c 281133 2015-04-06 03:02:20Z pfg $");
 
 #include <errno.h>
 #include <err.h>

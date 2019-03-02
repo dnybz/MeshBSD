@@ -32,7 +32,7 @@ static const char copyright[] =
 #endif /* not lint */
 #endif
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sbin/adjkerntz/adjkerntz.c 253750 2013-07-28 18:44:17Z avg $");
+__FBSDID("$FreeBSD: releng/11.0/sbin/adjkerntz/adjkerntz.c 253750 2013-07-28 18:44:17Z avg $");
 
 /*
  * Andrey A. Chernov   <ache@astral.msk.su>    Dec 20 1993

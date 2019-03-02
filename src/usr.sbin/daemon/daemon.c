@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/daemon/daemon.c 296339 2016-03-03 07:07:44Z maxim $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/daemon/daemon.c 296339 2016-03-03 07:07:44Z maxim $");
 
 #include <sys/param.h>
 #include <sys/mman.h>

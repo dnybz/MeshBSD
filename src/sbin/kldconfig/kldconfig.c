@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sbin/kldconfig/kldconfig.c 298248 2016-04-19 04:52:13Z araujo $");
+__FBSDID("$FreeBSD: releng/11.0/sbin/kldconfig/kldconfig.c 298248 2016-04-19 04:52:13Z araujo $");
 
 #include <sys/param.h>
 #include <sys/types.h>

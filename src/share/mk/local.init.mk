@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/local.init.mk 294349 2016-01-19 22:41:44Z bdrewery $
+# $FreeBSD: releng/11.0/share/mk/local.init.mk 294349 2016-01-19 22:41:44Z bdrewery $
 
 .if ${.MAKE.MODE:Mmeta*} != ""
 .if !empty(SUBDIR) && !defined(LIB) && !defined(PROG) && ${.MAKE.MAKEFILES:M*bsd.prog.mk} == ""

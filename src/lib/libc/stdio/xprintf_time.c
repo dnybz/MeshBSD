@@ -30,7 +30,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/stdio/xprintf_time.c 219346 2011-03-06 19:47:46Z pjd $
+ * $FreeBSD: releng/11.0/lib/libc/stdio/xprintf_time.c 219346 2011-03-06 19:47:46Z pjd $
  */
 #include <namespace.h>
 #include <stdio.h>

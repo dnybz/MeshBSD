@@ -23,7 +23,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $FreeBSD: head/sys/boot/fdt/dts/arm/olinuxino-lime.dts 297627 2016-04-06 23:11:03Z jmcneill $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/arm/olinuxino-lime.dts 300777 2016-05-26 21:09:07Z manu $
  */
 
 #include "sun4i-a10-olinuxino-lime.dts"
+#include "xpowers-axp209.dtsi"

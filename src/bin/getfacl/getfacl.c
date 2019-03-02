@@ -32,7 +32,7 @@
 
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/bin/getfacl/getfacl.c 241720 2012-10-19 05:43:38Z ed $");
+__FBSDID("$FreeBSD: releng/11.0/bin/getfacl/getfacl.c 241720 2012-10-19 05:43:38Z ed $");
 
 #include <sys/types.h>
 #include <sys/param.h>

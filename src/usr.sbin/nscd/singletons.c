@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/nscd/singletons.c 194089 2009-06-13 00:06:52Z des $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/nscd/singletons.c 194089 2009-06-13 00:06:52Z des $");
 
 #include <sys/time.h>
 

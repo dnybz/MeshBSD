@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libthr/thread/thr_umtx.c 300043 2016-05-17 09:56:22Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libthr/thread/thr_umtx.c 300043 2016-05-17 09:56:22Z kib $");
 
 #include "thr_private.h"
 #include "thr_umtx.h"

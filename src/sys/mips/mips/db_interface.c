@@ -34,7 +34,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mips/db_interface.c 298352 2016-04-20 15:45:55Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mips/db_interface.c 298352 2016-04-20 15:45:55Z pfg $");
 
 #include <sys/types.h>
 #include <sys/param.h>

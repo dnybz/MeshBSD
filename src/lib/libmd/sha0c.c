@@ -57,7 +57,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libmd/sha0c.c 154479 2006-01-17 15:35:57Z phk $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libmd/sha0c.c 154479 2006-01-17 15:35:57Z phk $");
 
 #include <sys/types.h>
 

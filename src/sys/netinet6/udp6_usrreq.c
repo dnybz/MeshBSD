@@ -68,11 +68,10 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet6/udp6_usrreq.c 298798 2016-04-29 20:13:35Z tuexen $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet6/udp6_usrreq.c 304642 2016-08-22 22:29:57Z karels $");
 
 #include "opt_inet.h"
 #include "opt_inet6.h"
-#include "opt_ipfw.h"
 #include "opt_ipsec.h"
 #include "opt_rss.h"
 
@@ -899,7 +898,7 @@ udp6_output(struct inpcb *inp, struct mbuf *m, struct sockaddr *addr6,
 
 		UDP_PROBE(send, NULL, inp, ip6, inp, udp6);
 		UDPSTAT_INC(udps_opackets);
-		error = ip6_output(m, optp, &inp->inp_route6, flags,
+		error = ip6_output(m, optp, NULL, flags,
 		    inp->in6p_moptions, NULL, inp);
 		break;
 	case AF_INET:

@@ -30,11 +30,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/csu/mips/crt1.c 292000 2015-12-08 19:32:58Z emaste $
+ * $FreeBSD: releng/11.0/lib/csu/mips/crt1.c 292000 2015-12-08 19:32:58Z emaste $
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/csu/mips/crt1.c 292000 2015-12-08 19:32:58Z emaste $");
+__FBSDID("$FreeBSD: releng/11.0/lib/csu/mips/crt1.c 292000 2015-12-08 19:32:58Z emaste $");
 
 #include <stdlib.h>
 #include "libc_private.h"

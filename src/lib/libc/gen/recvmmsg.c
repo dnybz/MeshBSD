@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/gen/recvmmsg.c 295039 2016-01-29 14:12:12Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/gen/recvmmsg.c 295039 2016-01-29 14:12:12Z kib $");
 
 #include <sys/types.h>
 #include <sys/socket.h>

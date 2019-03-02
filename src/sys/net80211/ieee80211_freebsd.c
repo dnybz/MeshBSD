@@ -24,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/net80211/ieee80211_freebsd.c 299171 2016-05-06 11:41:49Z avos $");
+__FBSDID("$FreeBSD: releng/11.0/sys/net80211/ieee80211_freebsd.c 300232 2016-05-19 21:08:33Z avos $");
 
 /*
  * IEEE 802.11 support (FreeBSD-specific code)
@@ -61,7 +61,7 @@ __FBSDID("$FreeBSD: head/sys/net80211/ieee80211_freebsd.c 299171 2016-05-06 11:4
 SYSCTL_NODE(_net, OID_AUTO, wlan, CTLFLAG_RD, 0, "IEEE 80211 parameters");
 
 #ifdef IEEE80211_DEBUG
-int	ieee80211_debug = 0;
+static int	ieee80211_debug = 0;
 SYSCTL_INT(_net_wlan, OID_AUTO, debug, CTLFLAG_RW, &ieee80211_debug,
 	    0, "debugging printfs");
 #endif

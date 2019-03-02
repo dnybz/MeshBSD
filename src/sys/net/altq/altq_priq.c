@@ -24,7 +24,7 @@
  * SUCH DAMAGE.
  *
  * $KAME: altq_priq.c,v 1.11 2003/09/17 14:23:25 kjc Exp $
- * $FreeBSD: head/sys/net/altq/altq_priq.c 287009 2015-08-21 22:02:22Z loos $
+ * $FreeBSD: releng/11.0/sys/net/altq/altq_priq.c 287009 2015-08-21 22:02:22Z loos $
  */
 /*
  * priority queue

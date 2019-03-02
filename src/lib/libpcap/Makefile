@@ -1,5 +1,5 @@
 # Makefile for libpcap
-# $FreeBSD: head/lib/libpcap/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/libpcap/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 SHLIBDIR?= /lib
 
@@ -112,9 +112,9 @@ WARNS?=	0
 SHLIB_MAJOR=	8
 
 #
-# Magic to grab sources out of src/external
+# Magic to grab sources out of src/contrib
 #
-PCAP_DISTDIR?=${.CURDIR}/../../external/libpcap
+PCAP_DISTDIR?=${.CURDIR}/../../contrib/libpcap
 CFLAGS+=-I${PCAP_DISTDIR}
 .PATH:	${PCAP_DISTDIR}
 .PATH:	${PCAP_DISTDIR}/bpf/net

@@ -1,5 +1,5 @@
 #	@(#)Makefile	8.2 (Berkeley) 1/4/94
-# $FreeBSD: head/include/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/include/Makefile 301778 2016-06-10 06:04:53Z imp $
 #
 # Doing a "make install" builds /usr/include.
 
@@ -10,9 +10,9 @@ TAGS+=	development
 CLEANFILES= osreldate.h version
 SUBDIR= arpa protocols rpcsvc rpc xlocale
 SUBDIR_PARALLEL=
-INCS=	a.out.h ar.h assert.h bitstring.h \
+INCS=	a.out.h ar.h assert.h \
 	blf.h \
-	complex.h cpio.h _ctype.h ctype.h \
+	bitstring.h complex.h cpio.h _ctype.h ctype.h \
 	db.h \
 	dirent.h dlfcn.h elf.h elf-hints.h err.h fmtmsg.h fnmatch.h fstab.h \
 	fts.h ftw.h getopt.h glob.h grp.h \
@@ -28,11 +28,10 @@ INCS=	a.out.h ar.h assert.h bitstring.h \
 	stdnoreturn.h stdio.h stdlib.h string.h stringlist.h \
 	strings.h sysexits.h tar.h termios.h tgmath.h \
 	time.h timeconv.h timers.h ttyent.h \
-	uchar.h ulimit.h unistd.h utime.h utmpx.h uuid.h \
-	varargs.h \
+	uchar.h ulimit.h unistd.h utime.h utmpx.h uuid.h varargs.h \
 	wchar.h wctype.h wordexp.h xlocale.h
 
-.PATH: ${.CURDIR}/../tools/libc-vis
+.PATH: ${.CURDIR}/../contrib/libc-vis
 INCS+=	vis.h
 
 MHDRS=	float.h floatingpoint.h stdarg.h
@@ -42,35 +41,27 @@ PHDRS=	sched.h _semaphore.h
 LHDRS=	aio.h errno.h fcntl.h linker_set.h poll.h stdatomic.h stdint.h \
 	syslog.h ucontext.h
 
-LDIRS=	bsm cam geom net net80211 netgraph netinet netinet6 \
-	netipsec nfs nfsclient nfsserver sys vm
+LDIRS=	bsm cam geom net net80211 netarp netgraph netinet netinet6 \
+	netipsec sys vm
 
-LSUBDIRS=	cam/ata cam/scsi \
-	dev/filemon dev/firewire \
+LSUBDIRS=	cam/ata cam/nvme cam/scsi \
+	dev/filemon \
 	dev/hwpmc \
-	dev/ic dev/iicbus dev/io \
-	dev/ofw dev/smbus \
-	dev/vkbd \
-	fs/devfs fs/fdescfs fs/msdosfs fs/nandfs fs/nfs fs/nullfs \
+	dev/ic dev/iicbus  \
+	dev/ofw dev/pci dev/smbus \
+	fs/devfs fs/fdescfs fs/msdosfs fs/nandfs fs/nullfs \
 	fs/procfs \
-	geom/cache geom/concat geom/eli geom/gate geom/journal geom/label \
-	geom/mirror geom/mountver geom/multipath geom/nop \
-	geom/raid geom/raid3 geom/shsec geom/stripe geom/virstor \
+	geom/cache geom/eli geom/gate geom/journal geom/label \
+	geom/mountver geom/nop \
+	geom/shsec \
 	net/altq \
-	netgraph/netflow \
 	netinet/cc \
 	security/audit \
 	security/mac_biba security/mac_bsdextended security/mac_lomac \
 	security/mac_mls security/mac_partition \
 	ufs/ffs ufs/ufs
 
-.if ${MK_BLUETOOTH} != "no"
-LSUBSUBDIRS+=	netgraph/bluetooth/include
-.endif
-
-.if ${MK_CUSE} != "no"
-LSUBDIRS+=	fs/cuse
-.endif
+LSUBSUBDIRS=	
 
 .if ${MK_GSSAPI} != "no"
 SUBDIR+=	gssapi
@@ -124,7 +115,7 @@ INCSLINKS+=	sys/$i ${INCLUDEDIR}/$i
 _MARCHS=	${MACHINE_CPUARCH}
 .endif
 
-META_TARGETS+=	compat copies symlinks
+META_TARGETS+=	compat
 stage_includes: ${SHARED}
 
 # Take care of stale directory-level symlinks.
@@ -138,7 +129,7 @@ compat:
 	    -f ${.CURDIR}/../etc/mtree/BSD.include.dist \
 	    -p ${DESTDIR}${INCLUDEDIR} > /dev/null
 
-copies:
+copies: .PHONY .META
 .for i in ${LDIRS} ${LSUBDIRS} ${LSUBSUBDIRS} crypto machine machine/pc \
 	${_MARCHS}
 	if [ -d ${DESTDIR}${INCLUDEDIR}/$i ]; then \
@@ -153,6 +144,7 @@ copies:
 	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 $i/*.h \
 	    ${DESTDIR}${INCLUDEDIR}/$i
 .endfor
+	
 .if ${MK_NAND} != "no"
 	cd ${.CURDIR}/../sys/dev/nand; \
 	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 nandsim.h \
@@ -163,6 +155,7 @@ copies:
 	cd ${.CURDIR}/../sys/dev/pci; \
 	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 pcireg.h \
 	    ${DESTDIR}${INCLUDEDIR}/dev/pci
+
 .if ${MK_PF} != "no"
 	cd ${.CURDIR}/../sys/netpfil/pf; \
 	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 *.h \
@@ -205,7 +198,7 @@ copies:
 	${INSTALL} -C ${TAG_ARGS} -o ${BINOWN} -g ${BINGRP} -m 444 teken.h \
 	    ${DESTDIR}${INCLUDEDIR}/teken
 
-symlinks:
+symlinks: .PHONY .META
 	@${ECHO} "Setting up symlinks to kernel source tree..."
 .for i in ${LDIRS}
 	cd ${.CURDIR}/../sys/$i; \
@@ -213,12 +206,13 @@ symlinks:
 		${INSTALL_SYMLINK} ${TAG_ARGS} ../../../sys/$i/$$h ${DESTDIR}${INCLUDEDIR}/$i; \
 	done
 .endfor
-.for i in ${LSUBDIRS:Ndev/agp:Ndev/acpica:Ndev/bktr:Ndev/nand:Ndev/pci}
+.for i in ${LSUBDIRS:Ndev/nand:Ndev/pci}
 	cd ${.CURDIR}/../sys/$i; \
 	for h in *.h; do \
 		${INSTALL_SYMLINK} ${TAG_ARGS} ../../../../sys/$i/$$h ${DESTDIR}${INCLUDEDIR}/$i; \
 	done
 .endfor
+	
 .if ${MK_NAND} != "no"
 	cd ${.CURDIR}/../sys/dev/nand; \
 	for h in nandsim.h nand_dev.h; do \
@@ -237,6 +231,7 @@ symlinks:
 		${INSTALL_SYMLINK} ${TAG_ARGS} ../../../../../sys/$i/$$h ${DESTDIR}${INCLUDEDIR}/$i; \
 	done
 .endfor
+
 .if ${MK_PF} != "no"
 	cd ${.CURDIR}/../sys/netpfil/pf; \
 	for h in *.h; do \

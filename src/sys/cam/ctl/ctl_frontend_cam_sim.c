@@ -37,7 +37,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/cam/ctl/ctl_frontend_cam_sim.c 298810 2016-04-29 21:05:48Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/cam/ctl/ctl_frontend_cam_sim.c 298810 2016-04-29 21:05:48Z pfg $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

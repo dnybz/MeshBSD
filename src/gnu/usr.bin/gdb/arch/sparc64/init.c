@@ -1,4 +1,4 @@
-/* $FreeBSD: head/gnu/usr.bin/gdb/arch/sparc64/init.c 224687 2011-08-06 17:53:45Z marius $ */
+/* $FreeBSD: releng/11.0/gnu/usr.bin/gdb/arch/sparc64/init.c 224687 2011-08-06 17:53:45Z marius $ */
 
 /* Do not modify this file.  */
 /* It is created automatically by the Makefile.  */

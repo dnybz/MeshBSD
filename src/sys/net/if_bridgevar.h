@@ -70,7 +70,7 @@
  * $FreeBSD: head/sys/net/if_bridgevar.h 173320 2007-11-04 08:32:27Z thompsa $
  */
 /*
- * Copyright (c) 2014, 2015, 2016 Henning Matyschok
+ * Copyright (c) 2014, 2015, 2016, 2017 Henning Matyschok
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -94,6 +94,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
+ 
 /*
  * Data structure and control definitions for bridge interfaces.
  */

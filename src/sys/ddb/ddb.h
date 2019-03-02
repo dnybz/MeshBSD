@@ -27,7 +27,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/ddb/ddb.h 283248 2015-05-21 15:16:18Z pfg $
+ * $FreeBSD: releng/11.0/sys/ddb/ddb.h 283248 2015-05-21 15:16:18Z pfg $
  */
 
 /*

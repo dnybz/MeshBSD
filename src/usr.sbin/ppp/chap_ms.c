@@ -26,7 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/ppp/chap_ms.c 134789 2004-09-05 01:46:52Z brian $
+ * $FreeBSD: releng/11.0/usr.sbin/ppp/chap_ms.c 134789 2004-09-05 01:46:52Z brian $
  */
 
 #include <ctype.h>
@@ -103,18 +103,18 @@ MakeKey(u_char *key, u_char *des_key)
     des_key[6] = Get7Bits(key, 42);
     des_key[7] = Get7Bits(key, 49);
 
-    DES_set_odd_parity((DES_cblock *)des_key);
+    des_set_odd_parity((des_cblock *)des_key);
 }
 
 static void /* IN 8 octets IN 7 octest OUT 8 octets */
 DesEncrypt(u_char *clear, u_char *key, u_char *cipher)
 {
-    DES_cblock		des_key;
- 	DES_key_schedule	key_schedule;
+    des_cblock		des_key;
+    des_key_schedule	key_schedule;
 
     MakeKey(key, des_key);
-    DES_set_key(&des_key, &key_schedule);
-    DES_ecb_encrypt((DES_cblock *)clear, (DES_cblock *)cipher, &key_schedule, 1);
+    des_set_key(&des_key, key_schedule);
+    des_ecb_encrypt((des_cblock *)clear, (des_cblock *)cipher, key_schedule, 1);
 }
 
 static void      /* IN 8 octets      IN 16 octets     OUT 24 octets */

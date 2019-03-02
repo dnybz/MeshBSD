@@ -32,7 +32,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/net/vnet.h 294867 2016-01-27 00:20:07Z glebius $
+ * $FreeBSD: releng/11.0/sys/net/vnet.h 302054 2016-06-21 13:48:49Z bz $
  */
 
 /*-
@@ -70,6 +70,7 @@ struct vnet {
 	u_int			 vnet_magic_n;
 	u_int			 vnet_ifcnt;
 	u_int			 vnet_sockcnt;
+	u_int			 vnet_state;	/* SI_SUB_* */
 	void			*vnet_data_mem;
 	uintptr_t		 vnet_data_base;
 };
@@ -110,8 +111,8 @@ vnet_##name##_init(const void *unused)	\
 {					\
 	VNET_PCPUSTAT_ALLOC(name, M_WAITOK);	\
 }					\
-VNET_SYSINIT(vnet_ ## name ## _init, SI_SUB_PROTO_IFATTACHDOMAIN,	\
-    SI_ORDER_ANY, vnet_ ## name ## _init, NULL)
+VNET_SYSINIT(vnet_ ## name ## _init, SI_SUB_INIT_IF,			\
+    SI_ORDER_FIRST, vnet_ ## name ## _init, NULL)
 
 #define	VNET_PCPUSTAT_SYSUNINIT(name)					\
 static void								\
@@ -119,8 +120,8 @@ vnet_##name##_uninit(const void *unused)				\
 {									\
 	VNET_PCPUSTAT_FREE(name);					\
 }									\
-VNET_SYSUNINIT(vnet_ ## name ## _uninit, SI_SUB_PROTO_IFATTACHDOMAIN,	\
-    SI_ORDER_ANY, vnet_ ## name ## _uninit, NULL)
+VNET_SYSUNINIT(vnet_ ## name ## _uninit, SI_SUB_INIT_IF,		\
+    SI_ORDER_FIRST, vnet_ ## name ## _uninit, NULL)
 
 #ifdef SYSCTL_OID
 #define	SYSCTL_VNET_PCPUSTAT(parent, nbr, name, type, array, desc)	\

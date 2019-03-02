@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mediatek/mtk_spi_v1.c 299155 2016-05-06 05:24:10Z sgalabov $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mediatek/mtk_spi_v1.c 299155 2016-05-06 05:24:10Z sgalabov $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

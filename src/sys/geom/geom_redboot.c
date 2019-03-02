@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/geom/geom_redboot.c 203411 2010-02-03 01:12:19Z gonzo $");
+__FBSDID("$FreeBSD: releng/11.0/sys/geom/geom_redboot.c 203411 2010-02-03 01:12:19Z gonzo $");
 
 #include <sys/param.h>
 #include <sys/errno.h>

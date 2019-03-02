@@ -1,6 +1,6 @@
-# $FreeBSD: head/lib/libpam/modules/pam_passwdqc/Makefile 275024 2014-11-25 11:07:26Z bapt $
+# $FreeBSD: releng/11.0/lib/libpam/modules/pam_passwdqc/Makefile 275024 2014-11-25 11:07:26Z bapt $
 
-SRCDIR=	${.CURDIR}/../../../../external/pam_modules/pam_passwdqc
+SRCDIR=	${.CURDIR}/../../../../contrib/pam_modules/pam_passwdqc
 .PATH: ${SRCDIR}
 
 LIB=	pam_passwdqc

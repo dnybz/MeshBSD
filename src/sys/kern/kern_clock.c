@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_clock.c 299746 2016-05-14 18:22:52Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_clock.c 300110 2016-05-18 03:55:54Z markj $");
 
 #include "opt_kdb.h"
 #include "opt_device_polling.h"
@@ -570,9 +570,11 @@ hardclock_cnt(int cnt, int usermode)
 			flags |= TDF_PROFPEND | TDF_ASTPENDING;
 		PROC_ITIMUNLOCK(p);
 	}
-	thread_lock(td);
-	td->td_flags |= flags;
-	thread_unlock(td);
+	if (flags != 0) {
+		thread_lock(td);
+		td->td_flags |= flags;
+		thread_unlock(td);
+	}
 
 #ifdef	HWPMC_HOOKS
 	if (PMC_CPU_HAS_SAMPLES(PCPU_GET(cpuid)))

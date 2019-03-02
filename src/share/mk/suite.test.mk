@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/suite.test.mk 299094 2016-05-04 23:20:53Z ngie $
+# $FreeBSD: releng/11.0/share/mk/suite.test.mk 299094 2016-05-04 23:20:53Z ngie $
 #
 # You must include bsd.test.mk instead of this file from your Makefile.
 #

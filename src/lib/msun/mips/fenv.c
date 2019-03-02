@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/msun/mips/fenv.c 226415 2011-10-16 05:37:56Z das $
+ * $FreeBSD: releng/11.0/lib/msun/mips/fenv.c 226415 2011-10-16 05:37:56Z das $
  */
 
 #define	__fenv_static

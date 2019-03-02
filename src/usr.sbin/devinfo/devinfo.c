@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/devinfo/devinfo.c 297000 2016-03-18 01:28:41Z jhibbits $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/devinfo/devinfo.c 297000 2016-03-18 01:28:41Z jhibbits $");
 
 #include <sys/types.h>
 #include <err.h>

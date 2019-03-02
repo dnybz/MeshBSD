@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/nscd/agents/passwd.c 194104 2009-06-13 13:07:56Z des $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/nscd/agents/passwd.c 194104 2009-06-13 13:07:56Z des $");
 
 #include <sys/types.h>
 

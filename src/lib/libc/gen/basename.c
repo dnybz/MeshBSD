@@ -17,7 +17,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/gen/basename.c 223216 2011-06-18 00:33:34Z delphij $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/gen/basename.c 223216 2011-06-18 00:33:34Z delphij $");
 
 #include <errno.h>
 #include <libgen.h>

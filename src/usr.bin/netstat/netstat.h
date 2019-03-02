@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)netstat.h	8.2 (Berkeley) 1/4/94
- * $FreeBSD: head/usr.bin/netstat/netstat.h 296882 2016-03-15 00:19:30Z glebius $
+ * $FreeBSD: releng/11.0/usr.bin/netstat/netstat.h 296882 2016-03-15 00:19:30Z glebius $
  */
 
 #include <sys/cdefs.h>

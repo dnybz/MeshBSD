@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mediatek/mtk_gpio_v2.c 299154 2016-05-06 05:22:25Z sgalabov $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mediatek/mtk_gpio_v2.c 300149 2016-05-18 15:05:44Z andrew $");
         
 #include "opt_platform.h"
 
@@ -299,7 +299,7 @@ mtk_gpio_attach(device_t dev)
 		goto fail;
 	}
 
-	if (intr_pic_register(dev, OF_xref_from_node(node)) != 0) {
+	if (intr_pic_register(dev, OF_xref_from_node(node)) == NULL) {
 		device_printf(dev, "could not register PIC\n");
 		goto fail;
 	}

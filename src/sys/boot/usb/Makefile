@@ -1,5 +1,5 @@
 #
-# $FreeBSD: head/sys/boot/usb/Makefile 269541 2014-08-04 23:00:13Z brooks $
+# $FreeBSD: releng/11.0/sys/boot/usb/Makefile 269541 2014-08-04 23:00:13Z brooks $
 #
 # Copyright (c) 2013 Hans Petter Selasky.
 # Copyright (c) 2014 SRI International
@@ -41,6 +41,13 @@ CFLAGS+=	-Wformat -Wall
 CFLAGS+=	-g
 CFLAGS+=	-fno-pic
 
+.if ${MACHINE_CPUARCH} == "i386" || ${MACHINE_CPUARCH} == "amd64"
+CFLAGS+=	-march=i386
+CFLAGS.gcc+=	-mpreferred-stack-boundary=2
+.endif
+.if ${MACHINE_CPUARCH} == "amd64"
+CFLAGS+=	-m32
+.endif
 .if ${MACHINE_CPUARCH} == "mips"
 CFLAGS+=	-mno-abicalls
 .endif

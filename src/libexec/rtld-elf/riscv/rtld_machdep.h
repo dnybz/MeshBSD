@@ -32,7 +32,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/libexec/rtld-elf/riscv/rtld_machdep.h 294623 2016-01-23 11:46:52Z br $
+ * $FreeBSD: releng/11.0/libexec/rtld-elf/riscv/rtld_machdep.h 294623 2016-01-23 11:46:52Z br $
  */
 
 #ifndef RTLD_MACHDEP_H

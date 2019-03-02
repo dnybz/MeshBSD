@@ -25,7 +25,7 @@
 
 #include <sys/cdefs.h>
 #ifdef __FreeBSD__
-__FBSDID("$FreeBSD: head/sys/net80211/ieee80211_sta.c 299575 2016-05-12 22:17:00Z avos $");
+__FBSDID("$FreeBSD: releng/11.0/sys/net80211/ieee80211_sta.c 300232 2016-05-19 21:08:33Z avos $");
 #endif
 
 /*
@@ -154,7 +154,6 @@ sta_beacon_miss(struct ieee80211vap *vap)
 	vap->iv_stats.is_beacon_miss++;
 	if (vap->iv_roaming == IEEE80211_ROAMING_AUTO) {
 #ifdef IEEE80211_SUPPORT_SUPERG
-		struct ieee80211com *ic = vap->iv_ic;
 
 		/*
 		 * If we receive a beacon miss interrupt when using

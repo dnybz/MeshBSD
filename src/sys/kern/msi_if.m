@@ -26,7 +26,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $FreeBSD: head/sys/kern/msi_if.m 299928 2016-05-16 09:11:40Z andrew $
+# $FreeBSD: releng/11.0/sys/kern/msi_if.m 299928 2016-05-16 09:11:40Z andrew $
 #
 
 INTERFACE msi;

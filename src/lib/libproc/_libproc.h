@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libproc/_libproc.h 265255 2014-05-03 04:44:03Z markj $
+ * $FreeBSD: releng/11.0/lib/libproc/_libproc.h 265255 2014-05-03 04:44:03Z markj $
  */
 
 #include <sys/cdefs.h>

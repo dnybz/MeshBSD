@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/uboot/common/main.c 296564 2016-03-09 11:45:48Z sgalabov $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/uboot/common/main.c 296564 2016-03-09 11:45:48Z sgalabov $");
 #include <sys/param.h>
 
 #include <stand.h>

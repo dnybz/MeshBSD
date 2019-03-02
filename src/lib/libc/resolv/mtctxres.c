@@ -1,5 +1,5 @@
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/resolv/mtctxres.c 297790 2016-04-10 19:33:58Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/resolv/mtctxres.c 297790 2016-04-10 19:33:58Z pfg $");
 
 #include <port_before.h>
 #ifdef DO_PTHREADS

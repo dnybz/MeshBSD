@@ -1,4 +1,4 @@
-/*	$FreeBSD: head/usr.sbin/rtadvd/advcap.c 272971 2014-10-11 23:08:00Z hrs $	*/
+/*	$FreeBSD: releng/11.0/usr.sbin/rtadvd/advcap.c 272971 2014-10-11 23:08:00Z hrs $	*/
 /*	$KAME: advcap.c,v 1.11 2003/05/19 09:46:50 keiichi Exp $	*/
 
 /*

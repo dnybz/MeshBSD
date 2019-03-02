@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mips/uma_machdep.c 295451 2016-02-09 20:22:35Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mips/uma_machdep.c 295451 2016-02-09 20:22:35Z glebius $");
 
 #include <sys/param.h>
 #include <sys/lock.h>

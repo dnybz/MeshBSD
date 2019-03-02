@@ -1,4 +1,6 @@
-# $FreeBSD: head/usr.bin/nc/Makefile 275042 2014-11-25 14:29:10Z bapt $
+# $FreeBSD: releng/11.0/usr.bin/nc/Makefile 275042 2014-11-25 14:29:10Z bapt $
+
+.PATH: ${.CURDIR}/../../contrib/netcat
 
 PROG=	nc
 SRCS=	netcat.c atomicio.c socks.c

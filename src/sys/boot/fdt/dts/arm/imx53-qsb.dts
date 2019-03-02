@@ -30,7 +30,7 @@
  * Freescale i.MX53 Quick Start Board
  * In u-boot, this board is known as "MX53LOCO" for some reason.
  *
- * $FreeBSD: head/sys/boot/fdt/dts/arm/imx53-qsb.dts 264251 2014-04-08 04:05:04Z rpaulo $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/arm/imx53-qsb.dts 264251 2014-04-08 04:05:04Z rpaulo $
  */
 
 /dts-v1/;

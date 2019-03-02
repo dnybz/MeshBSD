@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/mips/beri/std.beri 256935 2013-10-22 21:08:25Z brooks $
+# $FreeBSD: releng/11.0/sys/mips/beri/std.beri 256935 2013-10-22 21:08:25Z brooks $
 files	"../beri/files.beri"
 
 cpu		CPU_MIPS4KC

@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/boot/userboot/libstand/Makefile 293435 2016-01-08 19:12:26Z emaste $
+# $FreeBSD: releng/11.0/sys/boot/userboot/libstand/Makefile 293435 2016-01-08 19:12:26Z emaste $
 
 .include <src.opts.mk>
 

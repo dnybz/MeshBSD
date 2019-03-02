@@ -33,7 +33,7 @@ static char *sccsid2 = "@(#)rpc_dtablesize.c 1.2 87/08/11 Copyr 1987 Sun Micro";
 static char *sccsid = "@(#)rpc_dtablesize.c	2.1 88/07/29 4.0 RPCSRC";
 #endif
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/rpc/rpc_dtablesize.c 258578 2013-11-25 19:04:36Z hrs $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/rpc/rpc_dtablesize.c 258578 2013-11-25 19:04:36Z hrs $");
 
 #include "namespace.h"
 #include <unistd.h>

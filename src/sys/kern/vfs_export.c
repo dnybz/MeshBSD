@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/vfs_export.c 298069 2016-04-15 16:10:11Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/vfs_export.c 298069 2016-04-15 16:10:11Z pfg $");
 
 #include "opt_inet.h"
 #include "opt_inet6.h"

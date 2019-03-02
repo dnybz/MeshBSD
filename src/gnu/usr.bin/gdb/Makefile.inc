@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/usr.bin/gdb/Makefile.inc 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/gnu/usr.bin/gdb/Makefile.inc 300119 2016-05-18 06:01:18Z imp $
 
 VERSION= "6.1.1 [FreeBSD]"
 VENDOR= marcel
@@ -9,7 +9,7 @@ BMAKE_GDB= ${.CURDIR}/..
 BMAKE_ROOT= ${BMAKE_GDB}/..
 BMAKE_BU= ${BMAKE_ROOT}/binutils
 
-CNTRB_ROOT= ${BMAKE_ROOT}/../../tools
+CNTRB_ROOT= ${BMAKE_ROOT}/../../contrib
 CNTRB_BU= ${CNTRB_ROOT}/binutils
 CNTRB_GDB= ${CNTRB_ROOT}/gdb
 CNTRB_RL= ${CNTRB_ROOT}/libreadline
@@ -23,7 +23,7 @@ OBJ_RL= ${OBJ_ROOT}/../lib/libreadline/readline
 # MACHINE_CPUARCH, but there's no easy way to export make functions...
 
 .if defined(TARGET_ARCH)
-TARGET_CPUARCH=${TARGET_ARCH:C/mips(n32|64)?(el)?/mips/:C/arm(v6)?(eb|hf)?/arm/:C/powerpc64/powerpc/}
+TARGET_CPUARCH=${TARGET_ARCH:C/mips(n32|64)?(el)?/mips/:C/arm(v6)?(eb)?/arm/:C/powerpc64/powerpc/}
 .else
 TARGET_CPUARCH=${MACHINE_CPUARCH}
 .endif

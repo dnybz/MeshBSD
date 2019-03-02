@@ -28,7 +28,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)raw_cb.c	8.1 (Berkeley) 6/10/93
- * $FreeBSD: head/sys/net/raw_cb.c 257135 2013-10-25 19:49:03Z glebius $
+ * $FreeBSD: releng/11.0/sys/net/raw_cb.c 257135 2013-10-25 19:49:03Z glebius $
  */
 
 #include <sys/param.h>

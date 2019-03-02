@@ -1,4 +1,4 @@
-/*	$FreeBSD: head/sys/net/if_stf.c 292331 2015-12-16 09:18:20Z melifaro $	*/
+/*	$FreeBSD: releng/11.0/sys/net/if_stf.c 292331 2015-12-16 09:18:20Z melifaro $	*/
 /*	$KAME: if_stf.c,v 1.73 2001/12/03 11:08:30 keiichi Exp $	*/
 
 /*-

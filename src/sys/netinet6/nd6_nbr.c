@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet6/nd6_nbr.c 296991 2016-03-17 19:01:44Z markj $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet6/nd6_nbr.c 301213 2016-06-02 17:17:15Z markj $");
 
 #include "opt_inet.h"
 #include "opt_inet6.h"
@@ -1216,7 +1216,6 @@ nd6_dad_start(struct ifaddr *ifa, int delay)
 	struct in6_ifaddr *ia = (struct in6_ifaddr *)ifa;
 	struct dadq *dp;
 	char ip6buf[INET6_ADDRSTRLEN];
-	int send_ns;
 
 	/*
 	 * If we don't need DAD, don't do it.
@@ -1290,12 +1289,7 @@ nd6_dad_start(struct ifaddr *ifa, int delay)
 	dp->dad_ns_lcount = dp->dad_loopbackprobe = 0;
 	refcount_init(&dp->dad_refcnt, 1);
 	nd6_dad_add(dp);
-	send_ns = 0;
-	if (delay == 0) {
-		send_ns = 1;
-		delay = (long)ND_IFINFO(ifa->ifa_ifp)->retrans * hz / 1000;
-	}
-	nd6_dad_starttimer(dp, delay, send_ns);
+	nd6_dad_starttimer(dp, delay, 0);
 }
 
 /*

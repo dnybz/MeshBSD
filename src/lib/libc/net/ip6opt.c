@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/net/ip6opt.c 298353 2016-04-20 16:03:53Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/net/ip6opt.c 298353 2016-04-20 16:03:53Z pfg $");
 
 #include <sys/param.h>
 #include <sys/socket.h>

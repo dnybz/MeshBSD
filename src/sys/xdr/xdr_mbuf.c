@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/xdr/xdr_mbuf.c 248318 2013-03-15 10:21:18Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/xdr/xdr_mbuf.c 248318 2013-03-15 10:21:18Z glebius $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

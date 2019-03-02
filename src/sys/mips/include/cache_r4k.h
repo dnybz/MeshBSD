@@ -34,7 +34,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/include/cache_r4k.h 280691 2015-03-26 14:51:24Z br $
+ * $FreeBSD: releng/11.0/sys/mips/include/cache_r4k.h 280691 2015-03-26 14:51:24Z br $
  */
 
 /*

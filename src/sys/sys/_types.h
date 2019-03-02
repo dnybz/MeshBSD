@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/sys/_types.h 299571 2016-05-12 21:18:17Z cem $
+ * $FreeBSD: releng/11.0/sys/sys/_types.h 299571 2016-05-12 21:18:17Z cem $
  */
 
 #ifndef _SYS__TYPES_H_

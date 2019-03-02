@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/sys/swapcontext.c 276630 2015-01-03 18:38:46Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/sys/swapcontext.c 276630 2015-01-03 18:38:46Z kib $");
 
 #include <sys/param.h>
 #include <sys/signal.h>

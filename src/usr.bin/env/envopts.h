@@ -27,7 +27,7 @@
  * are those of the authors and should not be interpreted as representing
  * official policies, either expressed or implied, of the FreeBSD Project.
  *
- * $FreeBSD: head/usr.bin/env/envopts.h 147493 2005-06-20 03:43:25Z gad $
+ * $FreeBSD: releng/11.0/usr.bin/env/envopts.h 147493 2005-06-20 03:43:25Z gad $
  */
 
 void		 search_paths(char *path, char **argv);

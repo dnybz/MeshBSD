@@ -18,7 +18,7 @@
 .de Id
 .ND 1 June 1995
 ..
-.Id $FreeBSD: head/gnu/usr.bin/rcs/doc/rcs.ms 295702 2016-02-17 14:34:01Z emaste $
+.Id $FreeBSD: releng/11.0/gnu/usr.bin/rcs/doc/rcs.ms 295702 2016-02-17 14:34:01Z emaste $
 .RP
 .TL
 RCS\*-A System for Version Control

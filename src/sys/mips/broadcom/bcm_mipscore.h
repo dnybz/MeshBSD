@@ -26,7 +26,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGES.
  *
- *  $FreeBSD: head/sys/mips/broadcom/bcm_mipscore.h 299992 2016-05-16 23:54:28Z adrian $
+ *  $FreeBSD: releng/11.0/sys/mips/broadcom/bcm_mipscore.h 299992 2016-05-16 23:54:28Z adrian $
  */
 
 #ifndef _BHND_CORES_MIPS_MIPSCOREVAR_H_

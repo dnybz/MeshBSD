@@ -22,7 +22,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.bin/at/at.h 80294 2001-07-24 14:15:51Z obrien $
+ * $FreeBSD: releng/11.0/usr.bin/at/at.h 80294 2001-07-24 14:15:51Z obrien $
  */
 
 extern int fcreated;

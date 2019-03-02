@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/mips/mpboot.S 232630 2012-03-06 23:08:02Z jmallett $
+ * $FreeBSD: releng/11.0/sys/mips/mips/mpboot.S 232630 2012-03-06 23:08:02Z jmallett $
  */
 
 #include <machine/asm.h>

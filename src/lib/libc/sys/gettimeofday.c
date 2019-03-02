@@ -24,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/sys/gettimeofday.c 246117 2013-01-30 12:48:16Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/sys/gettimeofday.c 246117 2013-01-30 12:48:16Z kib $");
 
 #include <sys/syscall.h>
 #include <sys/time.h>

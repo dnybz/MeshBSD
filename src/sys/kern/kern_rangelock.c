@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_rangelock.c 254380 2013-08-15 20:19:17Z cperciva $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_rangelock.c 254380 2013-08-15 20:19:17Z cperciva $");
 
 #include <sys/param.h>
 #include <sys/kernel.h>

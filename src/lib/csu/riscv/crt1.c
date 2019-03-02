@@ -34,7 +34,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/csu/riscv/crt1.c 292124 2015-12-11 22:55:23Z br $");
+__FBSDID("$FreeBSD: releng/11.0/lib/csu/riscv/crt1.c 292124 2015-12-11 22:55:23Z br $");
 
 #include <stdlib.h>
 

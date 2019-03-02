@@ -24,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/fs/nandfs/bmap.c 279502 2015-03-01 21:41:37Z imp $");
+__FBSDID("$FreeBSD: releng/11.0/sys/fs/nandfs/bmap.c 279502 2015-03-01 21:41:37Z imp $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

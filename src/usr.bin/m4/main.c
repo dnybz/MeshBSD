@@ -39,7 +39,7 @@
  * by: oz
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/m4/main.c 291128 2015-11-21 11:05:38Z bapt $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/m4/main.c 291128 2015-11-21 11:05:38Z bapt $");
 
 #include <assert.h>
 #include <signal.h>

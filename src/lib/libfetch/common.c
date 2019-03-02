@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libfetch/common.c 298896 2016-05-01 19:37:33Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libfetch/common.c 300665 2016-05-25 07:39:48Z truckman $");
 
 #include <sys/param.h>
 #include <sys/socket.h>
@@ -256,8 +256,11 @@ fetch_bind(int sd, int af, const char *addr)
 	if ((err = getaddrinfo(addr, NULL, &hints, &res0)) != 0)
 		return (-1);
 	for (res = res0; res; res = res->ai_next)
-		if (bind(sd, res->ai_addr, res->ai_addrlen) == 0)
+		if (bind(sd, res->ai_addr, res->ai_addrlen) == 0) {
+			freeaddrinfo(res0);
 			return (0);
+		}
+	freeaddrinfo(res0);
 	return (-1);
 }
 

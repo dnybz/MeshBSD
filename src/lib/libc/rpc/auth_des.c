@@ -57,7 +57,7 @@
 static char sccsid[] = 	"@(#)auth_des.c	2.2 88/07/29 4.0 RPCSRC; from 1.9 88/02/08 SMI";
 #endif
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/rpc/auth_des.c 287350 2015-09-01 08:34:44Z rodrigc $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/rpc/auth_des.c 287350 2015-09-01 08:34:44Z rodrigc $");
 
 #define USEC_PER_SEC		1000000
 #define RTIME_TIMEOUT		5	/* seconds to wait for sync */

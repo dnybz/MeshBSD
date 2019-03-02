@@ -1,4 +1,4 @@
-# $FreeBSD: head/usr.sbin/wpa/wpa_supplicant/Makefile 289549 2015-10-18 21:38:25Z rpaulo $
+# $FreeBSD: releng/11.0/usr.sbin/wpa/wpa_supplicant/Makefile 289549 2015-10-18 21:38:25Z rpaulo $
 
 .include <src.opts.mk>
 
@@ -26,10 +26,6 @@ SRCS=	ap_drv_ops.c base64.c blacklist.c bss.c common.c config.c \
 	wps_upnp_ssdp.c wps_upnp_web.c Packet32.c
 
 MAN=	wpa_supplicant.8 wpa_supplicant.conf.5
-
-FILESDIR= /etc
-.PATH:	${WPA_SUPPLICANT_DISTDIR}
-FILES=	wpa_supplicant.conf
 
 CFLAGS+=-DCONFIG_BACKEND_FILE \
 	-DCONFIG_DEBUG_SYSLOG \

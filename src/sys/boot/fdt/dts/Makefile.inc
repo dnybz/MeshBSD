@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/boot/fdt/dts/Makefile.inc 267199 2014-06-07 02:38:13Z rpaulo $
+# $FreeBSD: releng/11.0/sys/boot/fdt/dts/Makefile.inc 267199 2014-06-07 02:38:13Z rpaulo $
 
 SYSDIR?=${.CURDIR}/../../../..
 

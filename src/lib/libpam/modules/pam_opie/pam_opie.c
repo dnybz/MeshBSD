@@ -36,7 +36,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libpam/modules/pam_opie/pam_opie.c 269875 2014-08-12 13:28:46Z ache $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libpam/modules/pam_opie/pam_opie.c 269875 2014-08-12 13:28:46Z ache $");
 
 #include <sys/types.h>
 #include <opie.h>

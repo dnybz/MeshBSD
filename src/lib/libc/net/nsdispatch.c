@@ -61,7 +61,7 @@
  *
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/net/nsdispatch.c 275020 2014-11-25 09:47:15Z des $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/net/nsdispatch.c 275020 2014-11-25 09:47:15Z des $");
 
 #include "namespace.h"
 #include <sys/param.h>

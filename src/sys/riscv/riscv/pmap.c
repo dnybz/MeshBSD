@@ -94,7 +94,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/riscv/riscv/pmap.c 299693 2016-05-13 20:14:41Z alc $");
+__FBSDID("$FreeBSD: releng/11.0/sys/riscv/riscv/pmap.c 299693 2016-05-13 20:14:41Z alc $");
 
 /*
  *	Manages physical address maps.

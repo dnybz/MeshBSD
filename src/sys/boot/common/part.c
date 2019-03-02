@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/common/part.c 298645 2016-04-26 14:51:58Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/common/part.c 300117 2016-05-18 05:59:05Z imp $");
 
 #include <stand.h>
 #include <sys/param.h>
@@ -829,7 +829,7 @@ ptable_getbestpart(const struct ptable *table, struct ptable_entry *part)
 	return (ENOENT);
 }
 
-void
+int
 ptable_iterate(const struct ptable *table, void *arg, ptable_iterate_t *iter)
 {
 	struct pentry *entry;
@@ -856,7 +856,9 @@ ptable_iterate(const struct ptable *table, void *arg, ptable_iterate_t *iter)
 		if (table->type == PTABLE_BSD)
 			sprintf(name, "%c", (u_char) 'a' +
 			    entry->part.index);
-		iter(arg, name, &entry->part);
+		if (iter(arg, name, &entry->part))
+			return 1;
 	}
+	return 0;
 }
 

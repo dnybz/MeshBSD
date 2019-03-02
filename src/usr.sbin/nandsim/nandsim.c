@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/nandsim/nandsim.c 289677 2015-10-21 05:37:09Z eadler $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/nandsim/nandsim.c 289677 2015-10-21 05:37:09Z eadler $");
 
 #include <sys/errno.h>
 #include <sys/ioctl.h>

@@ -1,9 +1,9 @@
-# $FreeBSD: head/gnu/usr.bin/gdb/gdbserver/Makefile 211725 2010-08-23 22:24:11Z imp $
+# $FreeBSD: releng/11.0/gnu/usr.bin/gdb/gdbserver/Makefile 211725 2010-08-23 22:24:11Z imp $
 
 # Not elf specific so don't install in /usr/libexec/elf
 BINDIR=/usr/bin
 
-GDBDIR=	${.CURDIR}/../../../../tools/gdb
+GDBDIR=	${.CURDIR}/../../../../contrib/gdb
 .PATH:	${GDBDIR}/gdb/signals
 .PATH:	${GDBDIR}/gdb/gdbserver
 .PATH:	${GDBDIR}/gdb

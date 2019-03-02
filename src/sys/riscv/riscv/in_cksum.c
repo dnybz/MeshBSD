@@ -38,7 +38,7 @@
  */
 
 #include <sys/cdefs.h>			/* RCS ID & Copyright macro defns */
-__FBSDID("$FreeBSD: head/sys/riscv/riscv/in_cksum.c 295041 2016-01-29 15:12:31Z br $");
+__FBSDID("$FreeBSD: releng/11.0/sys/riscv/riscv/in_cksum.c 295041 2016-01-29 15:12:31Z br $");
 
 #include <sys/param.h>
 #include <sys/mbuf.h>

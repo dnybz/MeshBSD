@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libcam/scsi_cmdparse.c 298753 2016-04-28 18:41:55Z ngie $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libcam/scsi_cmdparse.c 298753 2016-04-28 18:41:55Z ngie $");
 
 #include <sys/types.h>
 

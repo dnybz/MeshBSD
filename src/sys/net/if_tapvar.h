@@ -34,7 +34,7 @@
  */
 
 /*
- * $FreeBSD: head/sys/net/if_tapvar.h 240942 2012-09-25 23:41:45Z emaste $
+ * $FreeBSD: releng/11.0/sys/net/if_tapvar.h 240942 2012-09-25 23:41:45Z emaste $
  * $Id: if_tapvar.h,v 0.6 2000/07/11 02:16:08 max Exp $
  */
 

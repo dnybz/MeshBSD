@@ -29,7 +29,7 @@
 
 #if defined(LIBC_SCCS) && !defined(lint)
 /*static char *sccsid = "from: @(#)malloc.c	5.11 (Berkeley) 2/23/91";*/
-static char *rcsid = "$FreeBSD: head/libexec/rtld-elf/malloc.c 298897 2016-05-01 19:39:23Z pfg $";
+static char *rcsid = "$FreeBSD: releng/11.0/libexec/rtld-elf/malloc.c 298897 2016-05-01 19:39:23Z pfg $";
 #endif /* LIBC_SCCS and not lint */
 
 /*

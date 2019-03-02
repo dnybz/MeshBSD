@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/net/if_nametoindex.c 287619 2015-09-10 10:23:23Z tuexen $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/net/if_nametoindex.c 287619 2015-09-10 10:23:23Z tuexen $");
 
 #include "namespace.h"
 #include <sys/types.h>

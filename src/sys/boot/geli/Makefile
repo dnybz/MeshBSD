@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/boot/geli/Makefile 296963 2016-03-16 23:12:19Z allanjude $
+# $FreeBSD: releng/11.0/sys/boot/geli/Makefile 296963 2016-03-16 23:12:19Z allanjude $
 # libgeliboot
 
 MAN=
@@ -10,6 +10,13 @@ LIB=		geliboot
 INTERNALLIB=
 MK_PROFILE=	no
 NO_PIC=
+
+.if ${MACHINE_CPUARCH} == "i386" || ${MACHINE_CPUARCH} == "amd64"
+CFLAGS+=        -march=i386
+.endif
+.if ${MACHINE_ARCH} == "amd64" || ${MACHINE_ARCH} == "powerpc64"
+CFLAGS+=        -m32
+.endif
 
 WARNS?=		0
 

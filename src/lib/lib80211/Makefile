@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/lib80211/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/lib80211/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 PACKAGE=lib${LIB}
 LIB=	80211
@@ -10,8 +10,6 @@ INCSDIR=	${INCLUDEDIR}/lib80211
 INCS=	lib80211_regdomain.h lib80211_ioctl.h
 
 LIBADD= sbuf bsdxml
-
-MAN=	lib80211.3
 
 CFLAGS+=-I${.CURDIR}
 

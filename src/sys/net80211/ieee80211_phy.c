@@ -24,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/net80211/ieee80211_phy.c 299575 2016-05-12 22:17:00Z avos $");
+__FBSDID("$FreeBSD: releng/11.0/sys/net80211/ieee80211_phy.c 300232 2016-05-19 21:08:33Z avos $");
 
 /*
  * IEEE 802.11 PHY-related support.
@@ -563,7 +563,6 @@ ieee80211_compute_duration(const struct ieee80211_rate_table *rt,
 	default:
 		panic("%s: unknown phy %u (rate %u)\n", __func__,
 		      rt->info[rix].phy, rate);
-		break;
 	}
 	return txTime;
 }

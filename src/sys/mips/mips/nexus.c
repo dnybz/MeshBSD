@@ -39,7 +39,7 @@
 #include "opt_platform.h"
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mips/nexus.c 298652 2016-04-26 16:40:04Z adrian $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mips/nexus.c 301453 2016-06-05 16:20:12Z skra $");
 
 #include <sys/param.h>
 #include <sys/systm.h>
@@ -524,7 +524,11 @@ nexus_ofw_map_intr(device_t dev, device_t child, phandle_t iparent, int icells,
     pcell_t *intr)
 {
 
+#ifdef INTRNG
+	return (INTR_IRQ_INVALID);
+#else
 	return (intr_fdt_map_irq(iparent, intr, icells));
+#endif
 }
 #endif
 #endif /* INTRNG */

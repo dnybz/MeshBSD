@@ -27,7 +27,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $FreeBSD: head/sys/boot/mips/beri/loader/Makefile 296079 2016-02-26 08:06:25Z sgalabov $
+# $FreeBSD: releng/11.0/sys/boot/mips/beri/loader/Makefile 296079 2016-02-26 08:06:25Z sgalabov $
 
 .include <src.opts.mk>
 MK_SSP=		no

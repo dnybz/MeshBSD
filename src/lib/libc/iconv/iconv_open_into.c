@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/iconv/iconv_open_into.c 258587 2013-11-25 20:17:55Z peter $
+ * $FreeBSD: releng/11.0/lib/libc/iconv/iconv_open_into.c 258587 2013-11-25 20:17:55Z peter $
  */
 
 #include <sys/types.h>

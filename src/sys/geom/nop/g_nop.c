@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/geom/nop/g_nop.c 289110 2015-10-10 09:03:31Z trasz $");
+__FBSDID("$FreeBSD: releng/11.0/sys/geom/nop/g_nop.c 289110 2015-10-10 09:03:31Z trasz $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

@@ -1,4 +1,4 @@
-/* $FreeBSD: head/lib/libiconv_modules/mapper_serial/citrus_mapper_serial.c 219019 2011-02-25 00:04:39Z gabor $ */
+/* $FreeBSD: releng/11.0/lib/libiconv_modules/mapper_serial/citrus_mapper_serial.c 219019 2011-02-25 00:04:39Z gabor $ */
 /*	$NetBSD: citrus_mapper_serial.c,v 1.2 2003/07/12 15:39:20 tshiozak Exp $	*/
 
 /*-

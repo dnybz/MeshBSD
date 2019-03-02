@@ -33,7 +33,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/riscv/riscv/dump_machdep.c 295041 2016-01-29 15:12:31Z br $");
+__FBSDID("$FreeBSD: releng/11.0/sys/riscv/riscv/dump_machdep.c 295041 2016-01-29 15:12:31Z br $");
 
 #include "opt_watchdog.h"
 

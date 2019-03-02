@@ -6,7 +6,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/w_cabs.c 177758 2008-03-30 20:03:06Z das $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/src/w_cabs.c 177758 2008-03-30 20:03:06Z das $");
 
 #include <complex.h>
 #include <float.h>

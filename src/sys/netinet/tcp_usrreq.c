@@ -36,7 +36,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/tcp_usrreq.c 298673 2016-04-26 23:02:18Z cem $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/tcp_usrreq.c 298673 2016-04-26 23:02:18Z cem $");
 
 #include "opt_ddb.h"
 #include "opt_inet.h"

@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/common/boot.c 235330 2012-05-12 09:07:41Z avg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/common/boot.c 235330 2012-05-12 09:07:41Z avg $");
 
 /*
  * Loading modules, booting the system

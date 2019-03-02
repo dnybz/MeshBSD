@@ -32,7 +32,7 @@
  *
  *	@(#)fbio.h	8.2 (Berkeley) 10/30/93
  *
- * $FreeBSD: head/sys/sys/fbio.h 279488 2015-03-01 12:54:22Z dumbbell $
+ * $FreeBSD: releng/11.0/sys/sys/fbio.h 279488 2015-03-01 12:54:22Z dumbbell $
  */
 
 #ifndef _SYS_FBIO_H_

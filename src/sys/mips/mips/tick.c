@@ -31,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mips/tick.c 298068 2016-04-15 16:05:41Z andrew $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mips/tick.c 298068 2016-04-15 16:05:41Z andrew $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

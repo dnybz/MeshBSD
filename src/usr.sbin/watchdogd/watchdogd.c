@@ -32,7 +32,7 @@
  */
 
 #include <sys/types.h>
-__FBSDID("$FreeBSD: head/usr.sbin/watchdogd/watchdogd.c 286947 2015-08-19 21:46:12Z ian $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/watchdogd/watchdogd.c 286947 2015-08-19 21:46:12Z ian $");
 
 #include <sys/mman.h>
 #include <sys/param.h>

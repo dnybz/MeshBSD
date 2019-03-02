@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mips/intr_machdep.c 233318 2012-03-22 17:47:52Z gonzo $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mips/intr_machdep.c 233318 2012-03-22 17:47:52Z gonzo $");
 
 #include "opt_hwpmc_hooks.h"
 

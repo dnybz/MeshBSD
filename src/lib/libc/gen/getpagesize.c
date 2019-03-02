@@ -31,7 +31,7 @@
 static char sccsid[] = "@(#)getpagesize.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/gen/getpagesize.c 298303 2016-04-19 22:59:21Z ngie $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/gen/getpagesize.c 298303 2016-04-19 22:59:21Z ngie $");
 
 #include <sys/param.h>
 #include <sys/sysctl.h>

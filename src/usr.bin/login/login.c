@@ -45,7 +45,7 @@ static char sccsid[] = "@(#)login.c	8.4 (Berkeley) 4/2/94";
 #endif
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/login/login.c 287634 2015-09-10 22:25:40Z delphij $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/login/login.c 287634 2015-09-10 22:25:40Z delphij $");
 
 /*
  * login [ name ]
@@ -175,9 +175,6 @@ main(int argc, char *argv[])
 	pid_t pid;
 	sigset_t mask, omask;
 	struct sigaction sa;
-#ifdef USE_BSM_AUDIT
-	char auditsuccess = 1;
-#endif
 
 	sa.sa_flags = SA_RESTART;
 	(void)sigfillset(&sa.sa_mask);
@@ -299,25 +296,16 @@ main(int argc, char *argv[])
 		pam_err = pam_start("login", username, &pamc, &pamh);
 		if (pam_err != PAM_SUCCESS) {
 			pam_syslog("pam_start()");
-#ifdef USE_BSM_AUDIT
-			au_login_fail("PAM Error", 1);
-#endif
 			bail(NO_SLEEP_EXIT, 1);
 		}
 		pam_err = pam_set_item(pamh, PAM_TTY, tty);
 		if (pam_err != PAM_SUCCESS) {
 			pam_syslog("pam_set_item(PAM_TTY)");
-#ifdef USE_BSM_AUDIT
-			au_login_fail("PAM Error", 1);
-#endif
 			bail(NO_SLEEP_EXIT, 1);
 		}
 		pam_err = pam_set_item(pamh, PAM_RHOST, hostname);
 		if (pam_err != PAM_SUCCESS) {
 			pam_syslog("pam_set_item(PAM_RHOST)");
-#ifdef USE_BSM_AUDIT
-			au_login_fail("PAM Error", 1);
-#endif
 			bail(NO_SLEEP_EXIT, 1);
 		}
 
@@ -334,9 +322,6 @@ main(int argc, char *argv[])
 		    (uid == (uid_t)0 || uid == (uid_t)pwd->pw_uid)) {
 			/* already authenticated */
 			rval = 0;
-#ifdef USE_BSM_AUDIT
-			auditsuccess = 0; /* opened a terminal window only */
-#endif
 		} else {
 			fflag = 0;
 			(void)setpriority(PRIO_PROCESS, 0, -4);
@@ -353,9 +338,6 @@ main(int argc, char *argv[])
 		 * We are not exiting here, but this corresponds to a failed
 		 * login event, so set exitstatus to 1.
 		 */
-#ifdef USE_BSM_AUDIT
-		au_login_fail("Login incorrect", 1);
-#endif
 
 		(void)printf("Login incorrect\n");
 		failures++;
@@ -387,12 +369,6 @@ main(int argc, char *argv[])
 	(void)sigaction(SIGTERM, &sa, NULL);
 
 	endpwent();
-
-#ifdef USE_BSM_AUDIT
-	/* Audit successful login. */
-	if (auditsuccess)
-		au_login_success();
-#endif
 
 	/*
 	 * This needs to happen before login_getpwclass to support
@@ -993,10 +969,7 @@ bail_internal(int sec, int eval, int signo)
 	struct sigaction sa;
 
 	pam_cleanup();
-#ifdef USE_BSM_AUDIT
-	if (pwd != NULL)
-		audit_logout();
-#endif
+
 	(void)sleep(sec);
 	if (signo == 0)
 		exit(eval);

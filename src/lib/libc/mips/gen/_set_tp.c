@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	$FreeBSD: head/lib/libc/mips/gen/_set_tp.c 288019 2015-09-20 04:59:01Z rodrigc $
+ *	$FreeBSD: releng/11.0/lib/libc/mips/gen/_set_tp.c 288019 2015-09-20 04:59:01Z rodrigc $
  */
 
 #include <string.h>

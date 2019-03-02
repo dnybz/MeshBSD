@@ -37,7 +37,7 @@ static const char sccsid[] = "@(#)function.c	8.10 (Berkeley) 5/4/95";
 #endif /* not lint */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/find/function.c 298189 2016-04-18 07:05:18Z araujo $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/find/function.c 298189 2016-04-18 07:05:18Z araujo $");
 
 #include <sys/param.h>
 #include <sys/ucred.h>

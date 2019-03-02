@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/bsd.nls.mk 295223 2016-02-03 23:37:14Z bdrewery $
+# $FreeBSD: releng/11.0/share/mk/bsd.nls.mk 301284 2016-06-03 19:25:36Z bdrewery $
 #
 # This include file <bsd.nls.mk> handles building and installing Native
 # Language Support (NLS) catalogs

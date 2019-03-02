@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libdpv/dpv.c 294862 2016-01-27 00:02:51Z dteske $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libdpv/dpv.c 294862 2016-01-27 00:02:51Z dteske $");
 
 #include <sys/stat.h>
 #include <sys/time.h>

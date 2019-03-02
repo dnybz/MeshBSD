@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libsysdecode/sysdecode.h 295931 2016-02-23 20:00:55Z jhb $
+ * $FreeBSD: releng/11.0/lib/libsysdecode/sysdecode.h 295931 2016-02-23 20:00:55Z jhb $
  */
 
 #ifndef __SYSDECODE_H__

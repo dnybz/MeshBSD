@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_csinhf.c 284426 2015-06-15 20:16:53Z tijl $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/src/s_csinhf.c 284426 2015-06-15 20:16:53Z tijl $");
 
 #include <complex.h>
 #include <math.h>

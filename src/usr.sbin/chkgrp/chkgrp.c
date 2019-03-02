@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/chkgrp/chkgrp.c 286153 2015-08-01 10:40:17Z bapt $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/chkgrp/chkgrp.c 286153 2015-08-01 10:40:17Z bapt $");
 
 #include <err.h>
 #include <errno.h>

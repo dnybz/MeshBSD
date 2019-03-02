@@ -39,7 +39,7 @@
 static char sccsid[] = "@(#)table.c	8.1 (Berkeley) 6/27/93";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/locale/table.c 290494 2015-11-07 12:43:35Z bapt $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/locale/table.c 290494 2015-11-07 12:43:35Z bapt $");
 
 #include <ctype.h>
 #include <runetype.h>

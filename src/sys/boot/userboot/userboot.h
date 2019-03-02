@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/userboot/userboot.h 296099 2016-02-26 16:00:16Z marcel $
+ * $FreeBSD: releng/11.0/sys/boot/userboot/userboot.h 296099 2016-02-26 16:00:16Z marcel $
  */
 
 /*

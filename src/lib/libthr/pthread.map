@@ -1,5 +1,5 @@
 /*
- * $FreeBSD: head/lib/libthr/pthread.map 300043 2016-05-17 09:56:22Z kib $
+ * $FreeBSD: releng/11.0/lib/libthr/pthread.map 300043 2016-05-17 09:56:22Z kib $
  */
 
 /*

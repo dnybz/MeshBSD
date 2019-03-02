@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/ddb/db_examine.c 299970 2016-05-16 19:42:38Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/ddb/db_examine.c 299970 2016-05-16 19:42:38Z pfg $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

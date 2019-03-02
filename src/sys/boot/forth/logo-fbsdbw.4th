@@ -23,7 +23,7 @@
 \ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 \ SUCH DAMAGE.
 \ 
-\ $FreeBSD: head/sys/boot/forth/logo-fbsdbw.4th 280975 2015-04-02 01:48:12Z dteske $
+\ $FreeBSD: releng/11.0/sys/boot/forth/logo-fbsdbw.4th 280975 2015-04-02 01:48:12Z dteske $
 
 52 logoX ! 9 logoY ! \ Initialize logo placement defaults
 

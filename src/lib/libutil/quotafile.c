@@ -25,7 +25,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libutil/quotafile.c 299581 2016-05-13 00:26:14Z truckman $
+ * $FreeBSD: releng/11.0/lib/libutil/quotafile.c 299581 2016-05-13 00:26:14Z truckman $
  */
 
 #include <sys/types.h>

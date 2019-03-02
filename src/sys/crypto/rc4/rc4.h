@@ -34,7 +34,7 @@
  * THIS SOFTWARE, EVEN IF WHISTLE COMMUNICATIONS IS ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/crypto/rc4/rc4.h 63249 2000-07-16 05:53:14Z peter $
+ * $FreeBSD: releng/11.0/sys/crypto/rc4/rc4.h 63249 2000-07-16 05:53:14Z peter $
  */
 
 #ifndef _SYS_CRYPTO_RC4_RC4_H_

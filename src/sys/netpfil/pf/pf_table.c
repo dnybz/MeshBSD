@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netpfil/pf/pf_table.c 294706 2016-01-25 06:33:15Z melifaro $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netpfil/pf/pf_table.c 294706 2016-01-25 06:33:15Z melifaro $");
 
 #include "opt_inet.h"
 #include "opt_inet6.h"

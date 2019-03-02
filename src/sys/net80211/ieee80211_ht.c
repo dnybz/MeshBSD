@@ -25,7 +25,7 @@
 
 #include <sys/cdefs.h>
 #ifdef __FreeBSD__
-__FBSDID("$FreeBSD: head/sys/net80211/ieee80211_ht.c 299074 2016-05-04 16:42:53Z adrian $");
+__FBSDID("$FreeBSD: releng/11.0/sys/net80211/ieee80211_ht.c 300232 2016-05-19 21:08:33Z avos $");
 #endif
 
 /*
@@ -1643,6 +1643,7 @@ ieee80211_setup_htrates(struct ieee80211_node *ni, const uint8_t *ie, int flags)
 	int i, maxequalmcs, maxunequalmcs;
 
 	maxequalmcs = ic->ic_txstream * 8 - 1;
+	maxunequalmcs = 0;
 	if (ic->ic_htcaps & IEEE80211_HTC_TXUNEQUAL) {
 		if (ic->ic_txstream >= 2)
 			maxunequalmcs = 38;
@@ -1650,8 +1651,7 @@ ieee80211_setup_htrates(struct ieee80211_node *ni, const uint8_t *ie, int flags)
 			maxunequalmcs = 52;
 		if (ic->ic_txstream >= 4)
 			maxunequalmcs = 76;
-	} else
-		maxunequalmcs = 0;
+	}
 
 	rs = &ni->ni_htrates;
 	memset(rs, 0, sizeof(*rs));

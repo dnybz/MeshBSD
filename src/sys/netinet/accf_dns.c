@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	$FreeBSD: head/sys/netinet/accf_dns.c 274421 2014-11-12 09:57:15Z glebius $
+ *	$FreeBSD: releng/11.0/sys/netinet/accf_dns.c 274421 2014-11-12 09:57:15Z glebius $
  */
 
 #define ACCEPT_FILTER_MOD

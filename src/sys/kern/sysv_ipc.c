@@ -34,7 +34,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/sysv_ipc.c 205322 2010-03-19 11:01:51Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/sysv_ipc.c 205322 2010-03-19 11:01:51Z kib $");
 
 #include "opt_compat.h"
 #include "opt_sysvipc.h"

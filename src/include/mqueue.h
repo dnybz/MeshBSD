@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/include/mqueue.h 240297 2012-09-10 05:12:45Z davidxu $
+ * $FreeBSD: releng/11.0/include/mqueue.h 240297 2012-09-10 05:12:45Z davidxu $
  */
 
 #ifndef _MQUEUE_H_

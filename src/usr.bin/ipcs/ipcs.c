@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/ipcs/ipcs.c 281501 2015-04-13 19:58:11Z eadler $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/ipcs/ipcs.c 281501 2015-04-13 19:58:11Z eadler $");
 
 #include <sys/param.h>
 #include <sys/proc.h>

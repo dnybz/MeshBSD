@@ -33,7 +33,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $FreeBSD: head/lib/libpam/static_libpam/Makefile 297946 2016-04-14 01:17:03Z bdrewery $
+# $FreeBSD: releng/11.0/lib/libpam/static_libpam/Makefile 297946 2016-04-14 01:17:03Z bdrewery $
 
 .PATH: ${.CURDIR}/../libpam
 

@@ -1,5 +1,5 @@
 #	from: @(#)Makefile    5.10 (Berkeley) 6/24/90
-# $FreeBSD: head/lib/librpcsvc/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/librpcsvc/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 .include <src.opts.mk>
 
@@ -14,10 +14,6 @@ RPCSRCS= klm_prot.x mount.x nfs_prot.x nlm_prot.x rex.x rnusers.x \
 
 OTHERSRCS=  rnusers.c rstat.c rwall.c
 SECRPCSRCS= secretkey.c xcrypt.c
-
-.if ${MK_NIS} != "no"
-OTHERSRCS+= yp_passwd.c yp_update.c
-.endif
 
 RPCCOM=	RPCGEN_CPP=${CPP:Q} rpcgen -C
 

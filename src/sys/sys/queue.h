@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)queue.h	8.5 (Berkeley) 8/20/94
- * $FreeBSD: head/sys/sys/queue.h 284915 2015-06-28 21:06:45Z hselasky $
+ * $FreeBSD: releng/11.0/sys/sys/queue.h 284915 2015-06-28 21:06:45Z hselasky $
  */
 
 #ifndef _SYS_QUEUE_H_

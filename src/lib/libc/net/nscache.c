@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/net/nscache.c 288013 2015-09-20 04:17:03Z rodrigc $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/net/nscache.c 288013 2015-09-20 04:17:03Z rodrigc $");
 
 #include "namespace.h"
 #define _NS_PRIVATE

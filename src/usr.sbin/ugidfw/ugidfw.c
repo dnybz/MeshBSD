@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/ugidfw/ugidfw.c 186480 2008-12-24 22:40:13Z rwatson $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/ugidfw/ugidfw.c 186480 2008-12-24 22:40:13Z rwatson $");
 
 #include <sys/param.h>
 #include <sys/errno.h>

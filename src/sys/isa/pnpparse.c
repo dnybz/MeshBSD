@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/isa/pnpparse.c 299006 2016-05-03 21:51:52Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/isa/pnpparse.c 299006 2016-05-03 21:51:52Z pfg $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

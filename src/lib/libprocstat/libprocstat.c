@@ -33,7 +33,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libprocstat/libprocstat.c 288944 2015-10-06 18:07:00Z cem $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libprocstat/libprocstat.c 288944 2015-10-06 18:07:00Z cem $");
 
 #include <sys/param.h>
 #include <sys/elf.h>
@@ -1225,8 +1225,11 @@ procstat_get_vnode_info_kvm(kvm_t *kd, struct filestat *fst,
 		    struct vnstat *vn);
 	} fstypes[] = {
 		FSTYPE(devfs),
+		FSTYPE(isofs),
 		FSTYPE(msdosfs),
 		FSTYPE(nfs),
+		FSTYPE(smbfs),
+		FSTYPE(udf), 
 		FSTYPE(ufs),
 #ifdef LIBPROCSTAT_ZFS
 		FSTYPE(zfs),

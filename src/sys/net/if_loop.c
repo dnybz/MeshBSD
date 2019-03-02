@@ -27,10 +27,10 @@
  * SUCH DAMAGE.
  *
  *	@(#)if_loop.c	8.2 (Berkeley) 1/9/95
- * $FreeBSD: head/sys/net/if_loop.c 298075 2016-04-15 17:30:33Z pfg $
+ * $FreeBSD: releng/11.0/sys/net/if_loop.c 302054 2016-06-21 13:48:49Z bz $
  */
 /*-
- * Copyright (c) 2016 Henning Matyschok
+ * Copyright (c) 2017 Henning Matyschok
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -53,16 +53,12 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
- 
 /*
  * Loopback interface driver for protocol testing and timing.
  */
 
 #include "opt_inet.h"
 #include "opt_inet6.h"
-
-#include "opt_isdn.h"
-#include "opt_isdn_debug.h"
 
 #include <sys/param.h>
 #include <sys/systm.h>
@@ -183,7 +179,7 @@ vnet_loif_init(const void *unused __unused)
 	    1);
 #endif
 }
-VNET_SYSINIT(vnet_loif_init, SI_SUB_PROTO_IFATTACHDOMAIN, SI_ORDER_ANY,
+VNET_SYSINIT(vnet_loif_init, SI_SUB_PSEUDO, SI_ORDER_ANY,
     vnet_loif_init, NULL);
 
 #ifdef VIMAGE
@@ -194,7 +190,7 @@ vnet_loif_uninit(const void *unused __unused)
 	if_clone_detach(V_lo_cloner);
 	V_loif = NULL;
 }
-VNET_SYSUNINIT(vnet_loif_uninit, SI_SUB_PROTO_IFATTACHDOMAIN, SI_ORDER_ANY,
+VNET_SYSUNINIT(vnet_loif_uninit, SI_SUB_INIT_IF, SI_ORDER_SECOND,
     vnet_loif_uninit, NULL);
 #endif
 
@@ -375,11 +371,6 @@ if_simloop(struct ifnet *ifp, struct mbuf *m, int af, int hlen)
 		isr = NETISR_IPV6;
 		break;
 #endif
-#ifdef ISDN
-	case AF_ISDN:
-		isr = NETISR_ISDN;
-		break;
-#endif /* ISDN */
 	default:
 		printf("if_simloop: can't handle af=%d\n", af);
 		m_freem(m);
@@ -426,10 +417,7 @@ loioctl(struct ifnet *ifp, u_long cmd, caddr_t data)
 		case AF_INET6:
 			break;
 #endif
-#ifdef ISDN
-		case AF_ISDN:
-			break;
-#endif /* ISDN */
+
 		default:
 			error = EAFNOSUPPORT;
 			break;

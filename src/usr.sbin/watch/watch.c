@@ -14,7 +14,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/watch/watch.c 288960 2015-10-06 22:49:25Z delphij $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/watch/watch.c 288960 2015-10-06 22:49:25Z delphij $");
 
 #include <sys/param.h>
 #include <sys/fcntl.h>

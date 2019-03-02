@@ -33,7 +33,7 @@
  */
 
 #include <machine/asm.h>
-__FBSDID("$FreeBSD: head/sys/riscv/riscv/exception.S 298636 2016-04-26 12:56:44Z br $");
+__FBSDID("$FreeBSD: releng/11.0/sys/riscv/riscv/exception.S 300614 2016-05-24 13:59:13Z br $");
 
 #include "assym.s"
 
@@ -93,7 +93,9 @@ __FBSDID("$FreeBSD: head/sys/riscv/riscv/exception.S 298636 2016-04-26 12:56:44Z
 
 .if \el == 1
 	/* Store kernel sp */
-	sd	sp, (TF_SP)(sp)
+	li	t1, TF_SIZE
+	add	t0, sp, t1
+	sd	t0, (TF_SP)(sp)
 .else
 	/* Store user sp */
 	csrr	t0, sscratch

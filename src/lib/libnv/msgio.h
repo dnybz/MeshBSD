@@ -28,7 +28,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libnv/msgio.h 259430 2013-12-15 22:58:09Z pjd $
+ * $FreeBSD: releng/11.0/lib/libnv/msgio.h 259430 2013-12-15 22:58:09Z pjd $
  */
 
 #ifndef	_MSGIO_H_

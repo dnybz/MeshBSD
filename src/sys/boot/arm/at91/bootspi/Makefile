@@ -1,4 +1,4 @@
-#  $FreeBSD: head/sys/boot/arm/at91/bootspi/Makefile 265420 2014-05-06 04:22:01Z imp $
+#  $FreeBSD: releng/11.0/sys/boot/arm/at91/bootspi/Makefile 265420 2014-05-06 04:22:01Z imp $
 
 .include <src.opts.mk>
 

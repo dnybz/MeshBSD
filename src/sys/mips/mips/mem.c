@@ -37,7 +37,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mips/mem.c 277643 2015-01-24 12:51:15Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mips/mem.c 277643 2015-01-24 12:51:15Z kib $");
 
 /*
  * Memory special file

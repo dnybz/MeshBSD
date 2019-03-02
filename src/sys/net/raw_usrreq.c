@@ -28,7 +28,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)raw_usrreq.c	8.1 (Berkeley) 6/10/93
- * $FreeBSD: head/sys/net/raw_usrreq.c 298075 2016-04-15 17:30:33Z pfg $
+ * $FreeBSD: releng/11.0/sys/net/raw_usrreq.c 298075 2016-04-15 17:30:33Z pfg $
  */
 
 #include <sys/param.h>

@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sbin/ifconfig/ifmac.c 299873 2016-05-16 00:25:24Z truckman $
+ * $FreeBSD: releng/11.0/sbin/ifconfig/ifmac.c 299873 2016-05-16 00:25:24Z truckman $
  */
 
 #include <sys/param.h>

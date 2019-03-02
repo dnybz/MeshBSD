@@ -25,7 +25,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  *
- * $FreeBSD: head/sys/sys/lockmgr.h 285632 2015-07-16 13:57:05Z mjg $
+ * $FreeBSD: releng/11.0/sys/sys/lockmgr.h 285632 2015-07-16 13:57:05Z mjg $
  */
 
 #ifndef	_SYS_LOCKMGR_H_

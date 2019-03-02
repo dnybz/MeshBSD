@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/ddb/db_main.c 285774 2015-07-21 23:07:55Z markj $");
+__FBSDID("$FreeBSD: releng/11.0/sys/ddb/db_main.c 285774 2015-07-21 23:07:55Z markj $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

@@ -30,7 +30,7 @@
  * POSSIBILITY OF SUCH DAMAGES.
  *
  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_ha.h#1 $
- * $FreeBSD: head/sys/cam/ctl/ctl_ha.h 288146 2015-09-23 15:49:27Z mav $
+ * $FreeBSD: releng/11.0/sys/cam/ctl/ctl_ha.h 288146 2015-09-23 15:49:27Z mav $
  */
 
 #ifndef _CTL_HA_H_

@@ -26,7 +26,7 @@
 
 #ifndef lint
 static const char rcsid[] =
-  "$FreeBSD: head/usr.sbin/pw/pw_conf.c 292849 2015-12-29 00:08:32Z bapt $";
+  "$FreeBSD: releng/11.0/usr.sbin/pw/pw_conf.c 292849 2015-12-29 00:08:32Z bapt $";
 #endif /* not lint */
 
 #include <sys/types.h>

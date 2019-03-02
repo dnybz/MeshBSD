@@ -24,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/sys/trivial-vdso_tc.c 281004 2015-04-02 21:18:11Z emaste $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/sys/trivial-vdso_tc.c 281004 2015-04-02 21:18:11Z emaste $");
 
 #include <sys/types.h>
 #include <sys/time.h>

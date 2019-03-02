@@ -1,5 +1,5 @@
 #	$NetBSD: Makefile,v 1.18 2013/11/13 11:12:24 pettai Exp $
-# $FreeBSD: head/usr.bin/gzip/Makefile 275042 2014-11-25 14:29:10Z bapt $
+# $FreeBSD: releng/11.0/usr.bin/gzip/Makefile 275042 2014-11-25 14:29:10Z bapt $
 
 .include <src.opts.mk>
 
@@ -26,5 +26,9 @@ LINKS+=		${BINDIR}/gzip ${BINDIR}/gunzip \
 		${BINDIR}/gzip ${BINDIR}/gzcat \
 		${BINDIR}/gzip ${BINDIR}/zcat \
 		${BINDIR}/zdiff ${BINDIR}/zcmp
+
+.if ${MK_TESTS} != "no"
+SUBDIR+=	tests
+.endif
 
 .include <bsd.prog.mk>

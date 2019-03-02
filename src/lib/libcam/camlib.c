@@ -24,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libcam/camlib.c 297999 2016-04-14 21:10:53Z ngie $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libcam/camlib.c 300547 2016-05-24 00:57:11Z truckman $");
 
 #include <sys/types.h>
 #include <sys/param.h>
@@ -619,7 +619,7 @@ cam_real_open_device(const char *path, int flags, struct cam_device *device,
 	/*
 	 * Zero the payload, the kernel does look at the flags.
 	 */
-	bzero(&(&ccb.ccb_h)[1], sizeof(struct ccb_trans_settings));
+	CCB_CLEAR_ALL_EXCEPT_HDR(&ccb.cts);
 
 	/*
 	 * Get transfer settings for this device.

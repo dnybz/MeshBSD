@@ -34,7 +34,7 @@
 static char sccsid[] = "@(#)ftell.c	8.2 (Berkeley) 5/4/95";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/stdio/ftell.c 290729 2015-11-12 22:24:39Z ache $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/stdio/ftell.c 290729 2015-11-12 22:24:39Z ache $");
 
 #include "namespace.h"
 #include <sys/types.h>

@@ -23,11 +23,11 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/cavium/octopci.c 298433 2016-04-21 19:57:40Z pfg $
+ * $FreeBSD: releng/11.0/sys/mips/cavium/octopci.c 298433 2016-04-21 19:57:40Z pfg $
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/cavium/octopci.c 298433 2016-04-21 19:57:40Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/cavium/octopci.c 298433 2016-04-21 19:57:40Z pfg $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

@@ -41,7 +41,7 @@ __RCSID("$NetBSD: refresh.c,v 1.37 2011/07/29 23:44:45 christos Exp $");
 #endif
 #endif /* not lint && not SCCSID */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libedit/refresh.c 298896 2016-05-01 19:37:33Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libedit/refresh.c 298896 2016-05-01 19:37:33Z pfg $");
 
 /*
  * refresh.c: Lower level screen refreshing functions

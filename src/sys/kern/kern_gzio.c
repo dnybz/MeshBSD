@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_gzio.c 281855 2015-04-22 14:38:58Z rodrigc $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_gzio.c 281855 2015-04-22 14:38:58Z rodrigc $");
 
 #include <sys/param.h>
 

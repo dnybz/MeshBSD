@@ -31,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/sctp_constants.h 298942 2016-05-02 20:56:11Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/sctp_constants.h 303267 2016-07-24 14:50:16Z tuexen $");
 
 #ifndef _NETINET_SCTP_CONSTANTS_H_
 #define _NETINET_SCTP_CONSTANTS_H_
@@ -345,6 +345,7 @@ __FBSDID("$FreeBSD: head/sys/netinet/sctp_constants.h 298942 2016-05-02 20:56:11
 #define SCTP_RTT_FROM_NON_DATA 0
 #define SCTP_RTT_FROM_DATA     1
 
+#define PR_SCTP_UNORDERED_FLAG 0x0001
 
 /* IP hdr (20/40) + 12+2+2 (enet) + sctp common 12 */
 #define SCTP_FIRST_MBUF_RESV 68

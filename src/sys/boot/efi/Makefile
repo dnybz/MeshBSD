@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/boot/efi/Makefile 296892 2016-03-15 05:17:31Z imp $
+# $FreeBSD: releng/11.0/sys/boot/efi/Makefile 296892 2016-03-15 05:17:31Z imp $
 
 .include <src.opts.mk>
 
@@ -6,13 +6,15 @@
 # than 4.5 supports it.
 .if ${COMPILER_TYPE} != "gcc" || ${COMPILER_VERSION} >= 404500
 
-.if ${MACHINE_CPUARCH} == "arm"
+.if ${MACHINE_CPUARCH} == "aarch64" || ${MACHINE_CPUARCH} == "arm"
 .if ${MK_FDT} != "no"
 SUBDIR+=	fdt
 .endif
 .endif
 
-.if ${MACHINE_CPUARCH} == "arm"
+.if ${MACHINE_CPUARCH} == "aarch64" || \
+    ${MACHINE_CPUARCH} == "amd64" || \
+    ${MACHINE_CPUARCH} == "arm"
 SUBDIR+=	libefi loader boot1
 .endif
 

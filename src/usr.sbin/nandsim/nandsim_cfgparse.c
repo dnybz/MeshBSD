@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/nandsim/nandsim_cfgparse.c 298886 2016-05-01 16:41:25Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/nandsim/nandsim_cfgparse.c 298886 2016-05-01 16:41:25Z pfg $");
 
 #include <sys/errno.h>
 #include <sys/ioctl.h>

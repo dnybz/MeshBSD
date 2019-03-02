@@ -28,7 +28,7 @@ AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR W
 *************************************************************************/
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/cavium/octe/ethernet-sgmii.c 257324 2013-10-29 11:17:49Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/cavium/octe/ethernet-sgmii.c 257324 2013-10-29 11:17:49Z glebius $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

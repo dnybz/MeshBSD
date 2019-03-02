@@ -12,7 +12,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/ld80/k_tanl.c 176387 2008-02-18 15:39:52Z bde $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/ld80/k_tanl.c 176387 2008-02-18 15:39:52Z bde $");
 
 /*
  * ld80 version of k_tan.c.  See ../src/k_tan.c for most comments.

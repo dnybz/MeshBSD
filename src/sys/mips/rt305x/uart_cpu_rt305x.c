@@ -36,7 +36,7 @@
 #include "opt_uart.h"
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/rt305x/uart_cpu_rt305x.c 292703 2015-12-24 18:40:10Z adrian $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/rt305x/uart_cpu_rt305x.c 292703 2015-12-24 18:40:10Z adrian $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

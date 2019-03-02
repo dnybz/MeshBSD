@@ -32,7 +32,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/locale/wcsnrtombs.c 290494 2015-11-07 12:43:35Z bapt $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/locale/wcsnrtombs.c 290494 2015-11-07 12:43:35Z bapt $");
 
 #include <limits.h>
 #include <stdlib.h>

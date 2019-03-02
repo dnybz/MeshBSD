@@ -1,7 +1,7 @@
 # This is a generated file, do NOT edit!
-# See external/bmake/bsd.after-import.mk
+# See contrib/bmake/bsd.after-import.mk
 #
-# $FreeBSD: head/usr.bin/bmake/Makefile 297040 2016-03-18 20:03:09Z sjg $
+# $FreeBSD: releng/11.0/usr.bin/bmake/Makefile 301665 2016-06-08 17:51:21Z sjg $
 
 .sinclude "Makefile.inc"
 
@@ -14,10 +14,10 @@ CFLAGS+= -I${.CURDIR}
 CLEANDIRS+= FreeBSD
 CLEANFILES+= bootstrap
 
-#	$Id: Makefile,v 1.58 2016/03/15 23:39:12 sjg Exp $
+#	$Id: Makefile,v 1.67 2016/06/07 00:46:12 sjg Exp $
 
 # Base version on src date
-_MAKE_VERSION= 20160315
+_MAKE_VERSION= 20160606
 
 PROG?=	${.CURDIR:T}
 
@@ -172,6 +172,6 @@ MANDIR= /usr/share/man/man
 # make sure we get this
 CFLAGS+= ${COPTS.${.IMPSRC:T}}
 
-after-import: ${SRCTOP}/external/bmake/bsd.after-import.mk
-	cd ${.CURDIR} && ${.MAKE} -f ${SRCTOP}/external/bmake/bsd.after-import.mk
+after-import: ${SRCTOP}/contrib/bmake/bsd.after-import.mk
+	cd ${.CURDIR} && ${.MAKE} -f ${SRCTOP}/contrib/bmake/bsd.after-import.mk
 

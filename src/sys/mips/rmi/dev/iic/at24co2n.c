@@ -29,7 +29,7 @@
  * RMI_BSD */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/rmi/dev/iic/at24co2n.c 280009 2015-03-14 21:40:51Z ian $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/rmi/dev/iic/at24co2n.c 280009 2015-03-14 21:40:51Z ian $");
 /*
  * reading eeprom for the mac address .
  */

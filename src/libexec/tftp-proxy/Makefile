@@ -1,4 +1,6 @@
-#	$FreeBSD: head/libexec/tftp-proxy/Makefile 201380 2010-01-02 09:50:19Z ed $
+#	$FreeBSD: releng/11.0/libexec/tftp-proxy/Makefile 201380 2010-01-02 09:50:19Z ed $
+
+.PATH:	${.CURDIR}/../../contrib/pf/tftp-proxy
 
 PROG=	tftp-proxy
 SRCS=	tftp-proxy.c filter.c

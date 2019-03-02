@@ -61,7 +61,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet6/in6_cksum.c 272404 2014-10-02 10:32:24Z tuexen $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet6/in6_cksum.c 272404 2014-10-02 10:32:24Z tuexen $");
 
 #include <sys/param.h>
 #include <sys/mbuf.h>

@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/bsd.cpu.mk 298882 2016-05-01 16:29:02Z pfg $
+# $FreeBSD: releng/11.0/share/mk/bsd.cpu.mk 300119 2016-05-18 06:01:18Z imp $
 
 # Set default CPU compile flags and baseline CPUTYPE for each arch.  The
 # compile flags must support the minimum CPU type for each architecture but
@@ -309,14 +309,18 @@ MACHINE_CPU += arm
 . if ${MACHINE_ARCH:Marmv6*} != ""
 MACHINE_CPU += armv6
 . endif
-# armv6 is a hybrid. It uses the softfp ABI, but doesn't emulate
+# armv6 is a hybrid. It can use the softfp ABI, but doesn't emulate
 # floating point in the general case, so don't define softfp for
 # it at this time. arm and armeb are pure softfp, so define it
 # for them.
 . if ${MACHINE_ARCH:Marmv6*} == ""
 MACHINE_CPU += softfp
 . endif
-.if ${MACHINE_ARCH} == "armv6"
+# Normally armv6 is hard float ABI from FreeBSD 11 onwards. However
+# when CPUTYPE has 'soft' in it, we use the soft-float ABI to allow
+# building of soft-float ABI libraries. In this case, we have to
+# add the -mfloat-abi=softfp to force that.
+.if ${MACHINE_ARCH:Marmv6*} && defined(CPUTYPE) && ${CPUTYPE:M*soft*} != ""
 # Needs to be CFLAGS not _CPUCFLAGS because it's needed for the ABI
 # not a nice optimization.
 CFLAGS += -mfloat-abi=softfp

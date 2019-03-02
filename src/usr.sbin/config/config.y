@@ -65,7 +65,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)config.y	8.1 (Berkeley) 6/6/93
- * $FreeBSD: head/usr.sbin/config/config.y 277567 2015-01-23 16:03:02Z will $
+ * $FreeBSD: releng/11.0/usr.sbin/config/config.y 277567 2015-01-23 16:03:02Z will $
  */
 
 #include <assert.h>

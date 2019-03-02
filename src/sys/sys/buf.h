@@ -32,7 +32,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)buf.h	8.9 (Berkeley) 3/30/95
- * $FreeBSD: head/sys/sys/buf.h 298981 2016-05-03 15:14:17Z pfg $
+ * $FreeBSD: releng/11.0/sys/sys/buf.h 298981 2016-05-03 15:14:17Z pfg $
  */
 
 #ifndef _SYS_BUF_H_

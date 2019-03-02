@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/nscd/protocol.h 228990 2011-12-30 10:58:14Z uqs $
+ * $FreeBSD: releng/11.0/usr.sbin/nscd/protocol.h 228990 2011-12-30 10:58:14Z uqs $
  */
 
 #ifndef __NSCD_PROTOCOL_H__

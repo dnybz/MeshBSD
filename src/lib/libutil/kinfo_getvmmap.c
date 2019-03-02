@@ -1,5 +1,5 @@
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libutil/kinfo_getvmmap.c 288944 2015-10-06 18:07:00Z cem $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libutil/kinfo_getvmmap.c 288944 2015-10-06 18:07:00Z cem $");
 
 #include <sys/param.h>
 #include <sys/user.h>

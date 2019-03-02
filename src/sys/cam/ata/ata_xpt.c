@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/cam/ata/ata_xpt.c 298411 2016-04-21 15:38:28Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/cam/ata/ata_xpt.c 298411 2016-04-21 15:38:28Z pfg $");
 
 #include <sys/param.h>
 #include <sys/bus.h>
@@ -40,6 +40,7 @@ __FBSDID("$FreeBSD: head/sys/cam/ata/ata_xpt.c 298411 2016-04-21 15:38:28Z pfg $
 #include <sys/interrupt.h>
 #include <sys/sbuf.h>
 
+#include <sys/eventhandler.h>
 #include <sys/lock.h>
 #include <sys/mutex.h>
 #include <sys/sysctl.h>
@@ -824,12 +825,24 @@ noerror:
 	{
 		struct ccb_pathinq cpi;
 		int16_t *ptr;
+		int veto = 0;
 
 		ident_buf = &softc->ident_data;
 		for (ptr = (int16_t *)ident_buf;
 		     ptr < (int16_t *)ident_buf + sizeof(struct ata_params)/2; ptr++) {
 			*ptr = le16toh(*ptr);
 		}
+
+		/*
+		 * Allow others to veto this ATA disk attachment.  This
+		 * is mainly used by VMs, whose disk controllers may
+		 * share the disks with the simulated ATA controllers.
+		 */
+		EVENTHANDLER_INVOKE(ada_probe_veto, path, ident_buf, &veto);
+		if (veto) {
+			goto device_fail;
+		}
+
 		if (strncmp(ident_buf->model, "FX", 2) &&
 		    strncmp(ident_buf->model, "NEC", 3) &&
 		    strncmp(ident_buf->model, "Pioneer", 7) &&

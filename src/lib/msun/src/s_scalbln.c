@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_scalbln.c 278339 2015-02-07 00:38:18Z kargl $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/src/s_scalbln.c 278339 2015-02-07 00:38:18Z kargl $");
 
 #include <math.h>
 

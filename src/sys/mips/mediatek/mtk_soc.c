@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mediatek/mtk_soc.c 298185 2016-04-18 06:15:58Z sgalabov $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mediatek/mtk_soc.c 300196 2016-05-19 06:29:43Z sgalabov $");
 
 #include <sys/param.h>
 #include <sys/systm.h>
@@ -61,9 +61,12 @@ static const struct ofw_compat_data compat_data[] = {
 	{ "ralink,rt3883-soc",		MTK_SOC_RT3883 },
 	{ "ralink,rt5350-soc",		MTK_SOC_RT5350 },
 	{ "ralink,mtk7620a-soc",	MTK_SOC_MT7620A },
+	{ "ralink,mt7620a-soc",		MTK_SOC_MT7620A },
 	{ "ralink,mtk7620n-soc",	MTK_SOC_MT7620N },
+	{ "ralink,mt7620n-soc",		MTK_SOC_MT7620N },
 	{ "mediatek,mtk7621-soc",	MTK_SOC_MT7621 },
 	{ "mediatek,mt7621-soc",	MTK_SOC_MT7621 },
+	{ "ralink,mt7621-soc",		MTK_SOC_MT7621 },
 	{ "ralink,mtk7621-soc",		MTK_SOC_MT7621 },
 	{ "ralink,mtk7628an-soc",	MTK_SOC_MT7628 },
 	{ "mediatek,mt7628an-soc",	MTK_SOC_MT7628 },

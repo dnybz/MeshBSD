@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/cam/scsi/smp_all.c 298431 2016-04-21 19:40:10Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/cam/scsi/smp_all.c 298431 2016-04-21 19:40:10Z pfg $");
 
 #include <sys/param.h>
 #include <sys/types.h>

@@ -27,7 +27,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.bin/localedef/localedef.h 290517 2015-11-07 22:57:00Z bapt $
+ * $FreeBSD: releng/11.0/usr.bin/localedef/localedef.h 290517 2015-11-07 22:57:00Z bapt $
  */
 
 /*

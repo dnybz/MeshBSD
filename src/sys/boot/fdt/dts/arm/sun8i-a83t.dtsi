@@ -41,7 +41,7 @@
  *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  *     OTHER DEALINGS IN THE SOFTWARE.
  *
- * $FreeBSD: head/sys/boot/fdt/dts/arm/sun8i-a83t.dtsi 299748 2016-05-14 18:47:36Z jmcneill $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/arm/sun8i-a83t.dtsi 299748 2016-05-14 18:47:36Z jmcneill $
  */
 
 #include "skeleton.dtsi"

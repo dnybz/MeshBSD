@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/cam/cam_periph.c 300050 2016-05-17 12:52:31Z eadler $");
+__FBSDID("$FreeBSD: releng/11.0/sys/cam/cam_periph.c 300050 2016-05-17 12:52:31Z eadler $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

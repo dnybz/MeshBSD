@@ -1,4 +1,4 @@
-/*	$FreeBSD: head/sbin/newfs_msdos/mkfs_msdos.h 291218 2015-11-23 18:56:10Z emaste $	*/
+/*	$FreeBSD: releng/11.0/sbin/newfs_msdos/mkfs_msdos.h 291218 2015-11-23 18:56:10Z emaste $	*/
 /*	$NetBSD: mkfs_msdos.h,v 1.3 2015/10/16 17:38:17 christos Exp $	*/
 
 /*-

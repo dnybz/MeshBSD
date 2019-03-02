@@ -24,7 +24,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $FreeBSD: head/sys/mips/mediatek/fdt_reset_if.m 297666 2016-04-07 11:02:49Z sgalabov $
+# $FreeBSD: releng/11.0/sys/mips/mediatek/fdt_reset_if.m 297666 2016-04-07 11:02:49Z sgalabov $
 #
 
 #include <sys/types.h>

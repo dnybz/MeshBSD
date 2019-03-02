@@ -57,7 +57,7 @@
 static char sccsid[] = 	"@(#)rtime.c	2.2 88/08/10 4.0 RPCSRC; from 1.8 88/02/08 SMI";
 #endif
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/rpc/rtime.c 296404 2016-03-05 01:17:23Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/rpc/rtime.c 296404 2016-03-05 01:17:23Z pfg $");
 
 extern int _rpc_dtablesize( void );
 

@@ -11,7 +11,7 @@ BIN_CFG_PARTITION="/dev/map/cfg"
 BIN_CFG_SIZE="65536"
 
 # Modules need to be included
-MFSROOT_INC_MODULES="YES"
+MFSROOT_INC_MODULES="NO"
 MFSROOT_INC_MODULE_LIST="if_vlan if_gre"
 
 # Make a ulzma image

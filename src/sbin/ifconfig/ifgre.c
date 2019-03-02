@@ -24,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sbin/ifconfig/ifgre.c 299873 2016-05-16 00:25:24Z truckman $");
+__FBSDID("$FreeBSD: releng/11.0/sbin/ifconfig/ifgre.c 299873 2016-05-16 00:25:24Z truckman $");
 
 #include <sys/param.h>
 #include <sys/ioctl.h>

@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/bsd.symver.mk 172755 2007-10-18 15:21:35Z yar $
+# $FreeBSD: releng/11.0/share/mk/bsd.symver.mk 172755 2007-10-18 15:21:35Z yar $
 
 .if !target(__<bsd.symver.mk>__)
 __<bsd.symver.mk>__:

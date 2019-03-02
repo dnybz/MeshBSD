@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/atheros/qca953xreg.h 290910 2015-11-16 04:28:00Z adrian $
+ * $FreeBSD: releng/11.0/sys/mips/atheros/qca953xreg.h 290910 2015-11-16 04:28:00Z adrian $
  */
 #ifndef	__QCA953XREG_H__
 #define	__QCA953XREG_H__

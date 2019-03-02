@@ -25,7 +25,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/ppp/ip.c 289677 2015-10-21 05:37:09Z eadler $
+ * $FreeBSD: releng/11.0/usr.sbin/ppp/ip.c 289677 2015-10-21 05:37:09Z eadler $
  */
 
 #include <sys/param.h>

@@ -32,7 +32,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)histedit.h	8.2 (Berkeley) 1/3/94
- * $FreeBSD: head/lib/libedit/histedit.h 296435 2016-03-06 21:32:54Z pfg $
+ * $FreeBSD: releng/11.0/lib/libedit/histedit.h 296435 2016-03-06 21:32:54Z pfg $
  */
 
 /*

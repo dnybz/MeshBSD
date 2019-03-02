@@ -34,7 +34,7 @@
  * THIS SOFTWARE, EVEN IF WHISTLE COMMUNICATIONS IS ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/ngctl/show.c 166529 2007-02-06 08:48:28Z kevlo $
+ * $FreeBSD: releng/11.0/usr.sbin/ngctl/show.c 166529 2007-02-06 08:48:28Z kevlo $
  */
 
 #include <err.h>

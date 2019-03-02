@@ -39,7 +39,7 @@
 #include "opt_platform.h"
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/riscv/riscv/timer.c 295892 2016-02-22 14:19:45Z br $");
+__FBSDID("$FreeBSD: releng/11.0/sys/riscv/riscv/timer.c 295892 2016-02-22 14:19:45Z br $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

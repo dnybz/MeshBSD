@@ -26,7 +26,7 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  *
  * NETLOGIC_BSD
- * $FreeBSD: head/sys/mips/nlm/board.h 279387 2015-02-28 00:17:29Z jchandra $
+ * $FreeBSD: releng/11.0/sys/mips/nlm/board.h 279387 2015-02-28 00:17:29Z jchandra $
  */
 
 #ifndef __NLM_BOARD_H__

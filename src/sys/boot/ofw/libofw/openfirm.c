@@ -56,7 +56,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/ofw/libofw/openfirm.c 279799 2015-03-09 02:57:34Z nwhitehorn $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/ofw/libofw/openfirm.c 279799 2015-03-09 02:57:34Z nwhitehorn $");
 
 #include <machine/stdarg.h>
 

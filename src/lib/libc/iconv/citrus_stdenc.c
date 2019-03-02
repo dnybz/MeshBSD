@@ -1,4 +1,4 @@
-/* $FreeBSD: head/lib/libc/iconv/citrus_stdenc.c 263986 2014-04-01 10:36:11Z tijl $ */
+/* $FreeBSD: releng/11.0/lib/libc/iconv/citrus_stdenc.c 263986 2014-04-01 10:36:11Z tijl $ */
 /*	$NetBSD: citrus_stdenc.c,v 1.4 2011/11/19 18:39:58 tnozaki Exp $	*/
 
 /*-

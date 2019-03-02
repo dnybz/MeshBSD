@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/boot/Makefile.inc 296417 2016-03-05 20:24:31Z dim $
+# $FreeBSD: releng/11.0/sys/boot/Makefile.inc 296417 2016-03-05 20:24:31Z dim $
 
 .include <bsd.own.mk>
 

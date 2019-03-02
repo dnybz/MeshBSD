@@ -1,9 +1,9 @@
-# $FreeBSD: head/gnu/usr.bin/dtc/Makefile 291620 2015-12-01 22:20:04Z bdrewery $
+# $FreeBSD: releng/11.0/gnu/usr.bin/dtc/Makefile 291620 2015-12-01 22:20:04Z bdrewery $
 
 .include <bsd.own.mk>
 
-DTCDIR=	${.CURDIR}/../../../tools/dtc
-_LIBFDTDIR= ${.CURDIR}/../../../sys/libfdt
+DTCDIR=	${.CURDIR}/../../../contrib/dtc
+_LIBFDTDIR= ${.CURDIR}/../../../sys/contrib/libfdt
 .PATH: ${DTCDIR} ${_LIBFDTDIR}
 
 PROG=	dtc

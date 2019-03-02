@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *      @(#)extern.h	8.1 (Berkeley) 6/6/93
- * $FreeBSD: head/usr.bin/systat/extern.h 289873 2015-10-24 09:34:40Z tuexen $
+ * $FreeBSD: releng/11.0/usr.bin/systat/extern.h 289873 2015-10-24 09:34:40Z tuexen $
  */
 
 #include <sys/cdefs.h>

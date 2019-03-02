@@ -7,10 +7,108 @@ FILESGROUPS=	FILES
 
 # No need as it is empty and just causes rebuilds since this file does so much.
 UPDATE_DEPENDFILE=	no
-SUBDIR=	\
-	c
+SUBDIR=	
 
-BIN1=	rc
+.if exists(${.CURDIR}/etc.${TARGET}/rc)
+BIN1=	etc.${TARGET}/rc
+.elif exists(${.CURDIR}/etc.${TARGET_ARCH}/rc)
+BIN1=	etc.${TARGET_ARCH}/rc
+.else
+.error etc.TARGET/rc missing
+.endif
+
+BIN1+= crontab
+BIN1+= ddb.conf
+BIN1+= devd.conf
+BIN1+= devfs.conf
+BIN1+= dhclient.conf
+BIN1+= dhcpd.conf
+BIN1+= fbtab
+BIN1+= gettytab
+BIN1+= group
+BIN1+= hosts
+BIN1+= hosts.allow
+BIN1+= hosts.equiv
+BIN1+= ipsec.conf
+BIN1+= libalias.conf
+BIN1+= login.access
+BIN1+= login.conf
+BIN1+= mac.conf
+BIN1+= master.passwd
+BIN1+= myname
+BIN1+= netconfig
+BIN1+= networks
+BIN1+= newsyslog.conf
+BIN1+= nsswitch.conf
+BIN1+= passwd
+BIN1+= pf.conf
+BIN1+= phones
+BIN1+= profile
+BIN1+= protocols
+BIN1+= rc.subr
+BIN1+= rc2
+BIN1+= remote
+BIN1+= rpc
+BIN1+= services
+BIN1+= shells
+BIN1+= sysctl.conf
+BIN1+= syslog.conf
+
+.if exists(${.CURDIR}/etc.${TARGET}/rc.conf)
+BIN1+=	etc.${TARGET}/rc.conf
+.elif exists(${.CURDIR}/etc.${TARGET_ARCH}/rc.conf)
+BIN1+=	etc.${TARGET}/rc.conf
+.else
+.error etc.TARGET/rc.conf missing
+.endif
+
+.if exists(${.CURDIR}/etc.${TARGET}/ttys)
+BIN1+=	etc.${TARGET}/ttys
+.elif exists(${.CURDIR}/etc.${TARGET_ARCH}/ttys)
+BIN1+=	etc.${TARGET_ARCH}/ttys
+.else
+.error etc.TARGET/ttys missing
+.endif
+
+OPENBSMDIR=			${.CURDIR}/../external/openbsm
+BSM_ETC_OPEN_FILES=		${OPENBSMDIR}/etc/audit_class \
+				${OPENBSMDIR}/etc/audit_event
+BSM_ETC_RESTRICTED_FILES=	${OPENBSMDIR}/etc/audit_control \
+				${OPENBSMDIR}/etc/audit_user
+BSM_ETC_EXEC_FILES=		${OPENBSMDIR}/etc/audit_warn
+BSM_ETC_DIR=			${DESTDIR}/etc/security
+
+.if ${MK_FTP} != "no"
+BIN1+= ftpusers
+.endif
+
+.if ${MK_INETD} != "no"
+BIN1+= inetd.conf
+.endif
+
+BIN1+=	ntpd.conf
+
+.if ${MK_OPENSSH} != "no"
+SSH=	${.CURDIR}/../external/openssh/ssh_config \
+	${.CURDIR}/../external/openssh/sshd_config \
+	${.CURDIR}/../external/openssh/moduli
+.endif
+.if ${MK_LIBRESSL} != "no"
+SSL=	${.CURDIR}/../external/libressl/apps/openssl/openssl.cnf
+.endif
+
+.if ${MK_PF} != "no"
+BIN1+= pf.os
+.endif
+
+.if ${MK_WIRELESS} != "no"
+BIN1+= hostapd.conf
+BIN1+= regdomain.xml
+BIN1+= wpa_supplicant.conf
+.endif
+
+# -rwxr-xr-x root:wheel, for the new cron root:wheel
+BIN2=	
 
 MTREE= 	BSD.include.dist
 MTREE+= 	BSD.root.dist 
@@ -23,6 +121,8 @@ MTREE+=	BSD.lib32.dist
 MTREE+=	BSD.libsoft.dist
 .endif
 
+PPPCNF=	
+
 # Special top level files for FreeBSD
 FREEBSD=COPYRIGHT
 
@@ -30,9 +130,6 @@ FREEBSD=COPYRIGHT
 DESTDIR:=	${DESTDIR:C://*:/:g}
 
 afterinstall:
-.if ${MK_MAN} != "no"
-	${_+_}cd ${.CURDIR}/../share/man; ${MAKE} makedb
-.endif
 
 distribute:
 	# Avoid installing tests here; "make distribution" will do this and
@@ -66,11 +163,6 @@ distribution:
 		${BIN2} ${DESTDIR}/etc; \
 	    ${INSTALL} -o ${BINOWN} -g ${BINGRP} -m 600 \
 		master.passwd nsmb.conf opieaccess ${DESTDIR}/etc;
-.if ${MK_BSNMP} != "no"
-	cd ${.CURDIR}; \
-	    ${INSTALL} -o ${BINOWN} -g ${BINGRP} -m 600 \
-		snmpd.config ${DESTDIR}/etc;
-.endif
 .if ${MK_AT} == "no"
 	sed -i "" -e 's;.*/usr/libexec/atrun;#&;' ${DESTDIR}/etc/crontab
 .endif
@@ -83,21 +175,12 @@ distribution:
 		echo "./etc/spwd.db type=file mode=0600 uname=root gname=wheel"; \
 	) | ${METALOG.add}
 .endif
-.if ${MK_AUTOFS} != "no"
-	${_+_}cd ${.CURDIR}/autofs; ${MAKE} install
-.endif
-.if ${MK_BLUETOOTH} != "no"
-	${_+_}cd ${.CURDIR}/bluetooth; ${MAKE} install
-.endif
 .if ${MK_CASPER} != "no"
 	${_+_}cd ${.CURDIR}/casper; ${MAKE} install
 .endif
 	${_+_}cd ${.CURDIR}/defaults; ${MAKE} install
 	${_+_}cd ${.CURDIR}/devd; ${MAKE} install
 	${_+_}cd ${.CURDIR}/gss; ${MAKE} install
-.if ${MK_NTP} != "no"
-	${_+_}cd ${.CURDIR}/ntp; ${MAKE} install
-.endif
 	${_+_}cd ${.CURDIR}/periodic; ${MAKE} install
 	${_+_}cd ${.CURDIR}/rc.d; ${MAKE} install
 	${_+_}cd ${.CURDIR}/../share/termcap; ${MAKE} etc-termcap
@@ -117,11 +200,6 @@ distribution:
 	cd ${.CURDIR}; ${INSTALL} -o ${BINOWN} -g ${BINGRP} -m 644 \
 	    ${SSL} ${DESTDIR}/etc/ssl
 .endif
-.if ${MK_KERBEROS} != "no"
-	cd ${.CURDIR}/root; \
-	    ${INSTALL} -o ${BINOWN} -g ${BINGRP} -m 644 \
-		dot.k5login ${DESTDIR}/root/.k5login;
-.endif
 	cd ${.CURDIR}/root; \
 	    ${INSTALL} -o ${BINOWN} -g ${BINGRP} -m 644 \
 		dot.profile ${DESTDIR}/root/.profile; \
@@ -129,14 +207,6 @@ distribution:
 	    ln ${DESTDIR}/root/.profile ${DESTDIR}/.profile
 	cd ${.CURDIR}/mtree; ${INSTALL} -o ${BINOWN} -g ${BINGRP} -m 444 \
 	    ${MTREE} ${DESTDIR}/etc/mtree
-.if ${MK_MAIL} != "no"
-	cd ${.CURDIR}/mail; ${INSTALL} -o ${BINOWN} -g ${BINGRP} -m 644 \
-	    ${ETCMAIL} ${DESTDIR}/etc/mail
-	if [ -d ${DESTDIR}/etc/mail -a -f ${DESTDIR}/etc/mail/aliases -a \
-	      ! -f ${DESTDIR}/etc/aliases ]; then \
-		ln -s mail/aliases ${DESTDIR}/etc/aliases; \
-	fi
-.endif
 	${INSTALL} -o ${BINOWN} -g operator -m 664 /dev/null \
 	    ${DESTDIR}/etc/dumpdates
 .if ${MK_LOCATE} != "no"
@@ -153,10 +223,6 @@ distribution:
 	    ${.CURDIR}/../sys/${MACHINE}/conf/GENERIC.hints \
 	    ${DESTDIR}/boot/device.hints
 .endif
-.endif
-.if ${MK_NIS} == "no"
-	sed -i "" -e 's/.*_compat:/# &/' -e 's/compat$$/files/' \
-		${DESTDIR}/etc/nsswitch.conf
 .endif
 
 MTREE_CMD?=	mtree
@@ -235,31 +301,6 @@ distrib-dirs: ${MTREES:N/*} distrib-cleanup .PHONY
 	done; true
 .endif
 	${INSTALL_SYMLINK} usr/src/sys ${DESTDIR}/sys
-.if ${MK_MAN} != "no"
-	cd ${DESTDIR}${SHAREDIR}/man; \
-	for mandir in man*; do \
-		${INSTALL_SYMLINK} ../$$mandir \
-		    ${DESTDIR}${SHAREDIR}/man/en.ISO8859-1/; \
-		${INSTALL_SYMLINK} ../$$mandir \
-		    ${DESTDIR}${SHAREDIR}/man/en.UTF-8/; \
-	done
-.if ${MK_LIBRESSL} != "no"
-	cd ${DESTDIR}${SHAREDIR}/openssl/man; \
-	for mandir in man*; do \
-		${INSTALL_SYMLINK} ../$$mandir \
-		    ${DESTDIR}${SHAREDIR}/openssl/man/en.ISO8859-1/; \
-	done
-.endif
-	set - `grep "^[a-zA-Z]" ${.CURDIR}/man.alias`; \
-	while [ $$# -gt 0 ] ; do \
-		${INSTALL_SYMLINK} "$$2" "${DESTDIR}${SHAREDIR}/man/$$1"; \
-		if [ "${MK_OPENSSL}" != "no" ]; then \
-			${INSTALL_SYMLINK} "$$2" \
-			    "${DESTDIR}${SHAREDIR}/openssl/man/$$1"; \
-		fi; \
-		shift; shift; \
-	done
-.endif
 .if ${MK_NLS} != "no"
 	set - `grep "^[a-zA-Z]" ${.CURDIR}/nls.alias`; \
 	while [ $$# -gt 0 ] ; do \

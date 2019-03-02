@@ -23,7 +23,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $FreeBSD: head/lib/atf/Makefile.inc 273929 2014-11-01 11:17:54Z jmmv $
+# $FreeBSD: releng/11.0/lib/atf/Makefile.inc 273929 2014-11-01 11:17:54Z jmmv $
 
 CFLAGS+=	-DHAVE_CONFIG_H
 

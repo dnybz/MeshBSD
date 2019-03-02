@@ -22,7 +22,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/libexec/rtld-elf/rtld_printf.h 267678 2014-06-20 17:08:32Z jonathan $
+ * $FreeBSD: releng/11.0/libexec/rtld-elf/rtld_printf.h 267678 2014-06-20 17:08:32Z jonathan $
  */
 
 #ifndef RTLD_PRINTF_H

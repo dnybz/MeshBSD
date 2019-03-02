@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sbin/ifconfig/ifvxlan.c 288305 2015-09-27 07:51:18Z ngie $");
+__FBSDID("$FreeBSD: releng/11.0/sbin/ifconfig/ifvxlan.c 288305 2015-09-27 07:51:18Z ngie $");
 
 #include <sys/param.h>
 #include <sys/ioctl.h>

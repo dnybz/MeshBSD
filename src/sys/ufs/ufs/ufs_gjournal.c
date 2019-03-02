@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/ufs/ufs/ufs_gjournal.c 274906 2014-11-23 01:01:14Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/ufs/ufs/ufs_gjournal.c 274906 2014-11-23 01:01:14Z glebius $");
 
 #include "opt_ufs.h"
 

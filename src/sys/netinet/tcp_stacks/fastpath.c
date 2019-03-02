@@ -52,9 +52,8 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/tcp_stacks/fastpath.c 300042 2016-05-17 09:53:22Z rrs $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/tcp_stacks/fastpath.c 301717 2016-06-09 05:48:34Z ae $");
 
-#include "opt_ipfw.h"		/* for ipfw_fwd	*/
 #include "opt_inet.h"
 #include "opt_inet6.h"
 #include "opt_ipsec.h"

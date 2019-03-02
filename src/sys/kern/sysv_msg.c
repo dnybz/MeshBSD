@@ -48,7 +48,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/sysv_msg.c 298661 2016-04-26 19:57:35Z cem $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/sysv_msg.c 301737 2016-06-09 15:34:33Z jamie $");
 
 #include "opt_compat.h"
 #include "opt_sysvipc.h"
@@ -320,12 +320,6 @@ msgunload()
 #endif
 
 	for (msqid = 0; msqid < msginfo.msgmni; msqid++) {
-		/*
-		 * Look for an unallocated and unlocked msqid_ds.
-		 * msqid_ds's can be locked by msgsnd or msgrcv while
-		 * they are copying the message in/out.  We can't
-		 * re-use the entry until they release it.
-		 */
 		msqkptr = &msqids[msqid];
 		if (msqkptr->u.msg_qbytes != 0 ||
 		    (msqkptr->u.msg_perm.mode & MSG_LOCKED) != 0)

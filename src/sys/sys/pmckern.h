@@ -27,7 +27,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/sys/pmckern.h 260393 2014-01-07 14:03:42Z attilio $
+ * $FreeBSD: releng/11.0/sys/sys/pmckern.h 260393 2014-01-07 14:03:42Z attilio $
  */
 
 /*

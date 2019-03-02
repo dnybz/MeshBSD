@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/mips/beri/loader/beri_disk_sdcard.c 298230 2016-04-18 23:09:22Z allanjude $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/mips/beri/loader/beri_disk_sdcard.c 298230 2016-04-18 23:09:22Z allanjude $");
 
 #include <sys/param.h>
 

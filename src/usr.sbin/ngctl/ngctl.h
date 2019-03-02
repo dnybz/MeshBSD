@@ -34,7 +34,7 @@
  * THIS SOFTWARE, EVEN IF WHISTLE COMMUNICATIONS IS ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/ngctl/ngctl.h 158882 2006-05-24 14:46:55Z glebius $
+ * $FreeBSD: releng/11.0/usr.sbin/ngctl/ngctl.h 158882 2006-05-24 14:46:55Z glebius $
  */
 
 #define MAX_CMD_ALIAS	8

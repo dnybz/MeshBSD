@@ -32,7 +32,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/userboot/userboot/conf.c 283939 2015-06-03 10:10:00Z avg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/userboot/userboot/conf.c 283939 2015-06-03 10:10:00Z avg $");
 
 #include <stand.h>
 

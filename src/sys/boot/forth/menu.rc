@@ -1,5 +1,5 @@
 \ Menu.rc
-\ $FreeBSD: head/sys/boot/forth/menu.rc 293001 2015-12-31 20:00:53Z allanjude $
+\ $FreeBSD: releng/11.0/sys/boot/forth/menu.rc 293001 2015-12-31 20:00:53Z allanjude $
 \
 \ You should not edit this file! Put any overrides in menu.rc.local
 \ instead as this file can be replaced during system updates.

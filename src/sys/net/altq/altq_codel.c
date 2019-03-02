@@ -37,7 +37,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  *
- * $FreeBSD: head/sys/net/altq/altq_codel.c 287120 2015-08-24 23:40:36Z loos $
+ * $FreeBSD: releng/11.0/sys/net/altq/altq_codel.c 287120 2015-08-24 23:40:36Z loos $
  */
 #include "opt_altq.h"
 #include "opt_inet.h"

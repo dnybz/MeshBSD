@@ -1,5 +1,5 @@
 #	from: @(#)bsd.doc.mk	5.3 (Berkeley) 1/2/91
-# $FreeBSD: head/share/mk/bsd.doc.mk 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/share/mk/bsd.doc.mk 298107 2016-04-16 07:45:30Z gjb $
 #
 # The include file <bsd.doc.mk> handles installing BSD troff documents.
 #

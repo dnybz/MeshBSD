@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/boot/ficl32/Makefile 264087 2014-04-03 21:18:03Z emaste $
+# $FreeBSD: releng/11.0/sys/boot/ficl32/Makefile 264087 2014-04-03 21:18:03Z emaste $
 
 FICL32=
 FICLDIR=	${.CURDIR}/../ficl

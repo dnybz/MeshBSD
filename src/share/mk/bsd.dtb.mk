@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/bsd.dtb.mk 276846 2015-01-08 18:28:06Z imp $
+# $FreeBSD: releng/11.0/share/mk/bsd.dtb.mk 276846 2015-01-08 18:28:06Z imp $
 
 # Search for kernel source tree in standard places.
 .for _dir in ${.CURDIR}/../.. ${.CURDIR}/../../.. ${.CURDIR}/../../../.. \

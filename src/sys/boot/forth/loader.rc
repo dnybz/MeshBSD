@@ -1,5 +1,5 @@
 \ Loader.rc
-\ $FreeBSD: head/sys/boot/forth/loader.rc 286368 2015-08-06 16:07:27Z allanjude $
+\ $FreeBSD: releng/11.0/sys/boot/forth/loader.rc 286368 2015-08-06 16:07:27Z allanjude $
 \
 \ You should not edit this file! Put any overrides in loader.rc.local
 \ instead as this file can be replaced during system updates.

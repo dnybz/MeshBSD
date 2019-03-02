@@ -22,7 +22,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/kern/subr_msgbuf.c 298819 2016-04-29 22:15:33Z pfg $
+ * $FreeBSD: releng/11.0/sys/kern/subr_msgbuf.c 298819 2016-04-29 22:15:33Z pfg $
  */
 
 /*

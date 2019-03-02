@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/subr_scanf.c 298819 2016-04-29 22:15:33Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/subr_scanf.c 298819 2016-04-29 22:15:33Z pfg $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

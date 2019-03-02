@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)time.h	8.5 (Berkeley) 5/4/95
- * $FreeBSD: head/sys/sys/time.h 275985 2014-12-21 05:07:11Z imp $
+ * $FreeBSD: releng/11.0/sys/sys/time.h 275985 2014-12-21 05:07:11Z imp $
  */
 
 #ifndef _SYS_TIME_H_
@@ -494,6 +494,5 @@ int	gettimeofday(struct timeval *, struct timezone *);
 __END_DECLS
 
 #endif /* !_KERNEL */
-
 
 #endif /* !_SYS_TIME_H_ */

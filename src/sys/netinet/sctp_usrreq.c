@@ -31,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/sctp_usrreq.c 298902 2016-05-01 21:48:55Z tuexen $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/sctp_usrreq.c 303956 2016-08-11 10:14:03Z tuexen $");
 
 #include <netinet/sctp_os.h>
 #include <sys/proc.h>
@@ -89,13 +89,15 @@ sctp_init(void)
 #endif
 }
 
-void
-sctp_finish(void)
+#ifdef VIMAGE
+static void
+sctp_finish(void *unused __unused)
 {
 	sctp_pcb_finish();
 }
 
-
+VNET_SYSUNINIT(sctp, SI_SUB_PROTO_DOMAIN, SI_ORDER_FOURTH, sctp_finish, NULL);
+#endif
 
 void
 sctp_pathmtu_adjustment(struct sctp_tcb *stcb, uint16_t nxtsz)
@@ -290,8 +292,7 @@ sctp_ctlinput(int cmd, struct sockaddr *sa, void *vip)
 		    SCTP_DEFAULT_VRFID);
 		if ((stcb != NULL) &&
 		    (net != NULL) &&
-		    (inp != NULL) &&
-		    (inp->sctp_socket != NULL)) {
+		    (inp != NULL)) {
 			/* Check the verification tag */
 			if (ntohl(sh->v_tag) != 0) {
 				/*
@@ -727,7 +728,7 @@ sctp_disconnect(struct socket *so)
 			    TAILQ_EMPTY(&asoc->sent_queue) &&
 			    (asoc->stream_queue_cnt == 0)) {
 				/* there is nothing queued to send, so done */
-				if (asoc->locked_on_sending) {
+				if ((*asoc->ss_functions.sctp_ss_is_user_msgs_incomplete) (stcb, asoc)) {
 					goto abort_anyway;
 				}
 				if ((SCTP_GET_STATE(asoc) != SCTP_STATE_SHUTDOWN_SENT) &&
@@ -776,18 +777,8 @@ sctp_disconnect(struct socket *so)
 				asoc->state |= SCTP_STATE_SHUTDOWN_PENDING;
 				sctp_timer_start(SCTP_TIMER_TYPE_SHUTDOWNGUARD, stcb->sctp_ep, stcb,
 				    netp);
-				if (asoc->locked_on_sending) {
-					/* Locked to send out the data */
-					struct sctp_stream_queue_pending *sp;
-
-					sp = TAILQ_LAST(&asoc->locked_on_sending->outqueue, sctp_streamhead);
-					if (sp == NULL) {
-						SCTP_PRINTF("Error, sp is NULL, locked on sending is non-null strm:%d\n",
-						    asoc->locked_on_sending->stream_no);
-					} else {
-						if ((sp->length == 0) && (sp->msg_is_complete == 0))
-							asoc->state |= SCTP_STATE_PARTIAL_MSG_LEFT;
-					}
+				if ((*asoc->ss_functions.sctp_ss_is_user_msgs_incomplete) (stcb, asoc)) {
+					asoc->state |= SCTP_STATE_PARTIAL_MSG_LEFT;
 				}
 				if (TAILQ_EMPTY(&asoc->send_queue) &&
 				    TAILQ_EMPTY(&asoc->sent_queue) &&
@@ -951,7 +942,7 @@ sctp_shutdown(struct socket *so)
 		    TAILQ_EMPTY(&asoc->send_queue) &&
 		    TAILQ_EMPTY(&asoc->sent_queue) &&
 		    (asoc->stream_queue_cnt == 0)) {
-			if (asoc->locked_on_sending) {
+			if ((*asoc->ss_functions.sctp_ss_is_user_msgs_incomplete) (stcb, asoc)) {
 				goto abort_anyway;
 			}
 			/* there is nothing queued to send, so I'm done... */
@@ -968,19 +959,8 @@ sctp_shutdown(struct socket *so)
 			 * SHUTDOWN_PENDING.
 			 */
 			SCTP_ADD_SUBSTATE(asoc, SCTP_STATE_SHUTDOWN_PENDING);
-			if (asoc->locked_on_sending) {
-				/* Locked to send out the data */
-				struct sctp_stream_queue_pending *sp;
-
-				sp = TAILQ_LAST(&asoc->locked_on_sending->outqueue, sctp_streamhead);
-				if (sp == NULL) {
-					SCTP_PRINTF("Error, sp is NULL, locked on sending is non-null strm:%d\n",
-					    asoc->locked_on_sending->stream_no);
-				} else {
-					if ((sp->length == 0) && (sp->msg_is_complete == 0)) {
-						SCTP_ADD_SUBSTATE(asoc, SCTP_STATE_PARTIAL_MSG_LEFT);
-					}
-				}
+			if ((*asoc->ss_functions.sctp_ss_is_user_msgs_incomplete) (stcb, asoc)) {
+				SCTP_ADD_SUBSTATE(asoc, SCTP_STATE_PARTIAL_MSG_LEFT);
 			}
 			if (TAILQ_EMPTY(&asoc->send_queue) &&
 			    TAILQ_EMPTY(&asoc->sent_queue) &&
@@ -3304,9 +3284,11 @@ flags_out:
 				if (net != NULL) {
 					thlds->spt_pathmaxrxt = net->failure_threshold;
 					thlds->spt_pathpfthld = net->pf_threshold;
+					thlds->spt_pathcpthld = 0xffff;
 				} else {
 					thlds->spt_pathmaxrxt = stcb->asoc.def_net_failure;
 					thlds->spt_pathpfthld = stcb->asoc.def_net_pf_threshold;
+					thlds->spt_pathcpthld = 0xffff;
 				}
 				thlds->spt_assoc_id = sctp_get_associd(stcb);
 				SCTP_TCB_UNLOCK(stcb);
@@ -3318,6 +3300,7 @@ flags_out:
 					SCTP_INP_RLOCK(inp);
 					thlds->spt_pathmaxrxt = inp->sctp_ep.def_net_failure;
 					thlds->spt_pathpfthld = inp->sctp_ep.def_net_pf_threshold;
+					thlds->spt_pathcpthld = 0xffff;
 					SCTP_INP_RUNLOCK(inp);
 				} else {
 					SCTP_LTRACE_ERR_RET(inp, NULL, NULL, SCTP_FROM_SCTP_USRREQ, EINVAL);
@@ -6344,6 +6327,11 @@ sctp_setopt(struct socket *so, int optname, void *optval, size_t optsize,
 					SCTP_LTRACE_ERR_RET(inp, NULL, NULL, SCTP_FROM_SCTP_USRREQ, error);
 					break;
 				}
+			}
+			if (thlds->spt_pathcpthld != 0xffff) {
+				error = EINVAL;
+				SCTP_LTRACE_ERR_RET(inp, NULL, NULL, SCTP_FROM_SCTP_USRREQ, error);
+				break;
 			}
 			if (stcb != NULL) {
 				if (net != NULL) {

@@ -65,7 +65,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet6/in6_pcb.c 297225 2016-03-24 07:54:56Z gnn $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet6/in6_pcb.c 301217 2016-06-02 17:51:29Z gnn $");
 
 #include "opt_inet.h"
 #include "opt_inet6.h"
@@ -92,6 +92,7 @@ __FBSDID("$FreeBSD: head/sys/netinet6/in6_pcb.c 297225 2016-03-24 07:54:56Z gnn 
 
 #include <net/if.h>
 #include <net/if_var.h>
+#include <net/if_llatbl.h>
 #include <net/if_types.h>
 #include <net/route.h>
 
@@ -831,6 +832,8 @@ in6_losing(struct inpcb *in6p)
 		RTFREE(in6p->inp_route6.ro_rt);
 		in6p->inp_route6.ro_rt = (struct rtentry *)NULL;
 	}
+	if (in6p->inp_route.ro_lle)
+		LLE_FREE(in6p->inp_route.ro_lle);	/* zeros ro_lle */
 	return;
 }
 
@@ -846,6 +849,8 @@ in6_rtchange(struct inpcb *inp, int errno)
 		RTFREE(inp->inp_route6.ro_rt);
 		inp->inp_route6.ro_rt = (struct rtentry *)NULL;
 	}
+	if (inp->inp_route.ro_lle)
+		LLE_FREE(inp->inp_route.ro_lle);	/* zeros ro_lle */
 	return inp;
 }
 

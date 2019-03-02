@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/boot/Makefile 284590 2015-06-19 05:42:24Z bapt $
+# $FreeBSD: releng/11.0/sys/boot/Makefile 284590 2015-06-19 05:42:24Z bapt $
 
 .include <src.opts.mk>
 
@@ -13,7 +13,7 @@ SUBDIR+=		common
 .include <bsd.arch.inc.mk>
 
 # Pick the machine-dependent subdir based on the target architecture.
-ADIR=			${MACHINE}
+ADIR=			${MACHINE:S/powerpc64/powerpc/}
 .if exists(${.CURDIR}/${ADIR}/.)
 SUBDIR+=		${ADIR}
 .endif

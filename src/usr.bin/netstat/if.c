@@ -35,7 +35,7 @@ static char sccsid[] = "@(#)if.c	8.3 (Berkeley) 4/28/95";
 #endif
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/netstat/if.c 291096 2015-11-20 12:15:58Z ume $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/netstat/if.c 291096 2015-11-20 12:15:58Z ume $");
 
 #include <sys/param.h>
 #include <sys/protosw.h>

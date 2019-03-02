@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/gnu/usr.bin/gdb/kgdb/trgt_powerpc.c 298363 2016-04-20 20:22:48Z wma $");
+__FBSDID("$FreeBSD: releng/11.0/gnu/usr.bin/gdb/kgdb/trgt_powerpc.c 298363 2016-04-20 20:22:48Z wma $");
 
 #include <sys/types.h>
 #ifdef CROSS_DEBUGGER

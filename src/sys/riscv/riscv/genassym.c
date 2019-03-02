@@ -33,7 +33,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/riscv/riscv/genassym.c 298580 2016-04-25 14:47:51Z br $");
+__FBSDID("$FreeBSD: releng/11.0/sys/riscv/riscv/genassym.c 298580 2016-04-25 14:47:51Z br $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

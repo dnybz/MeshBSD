@@ -29,7 +29,7 @@
 
 #include <sys/cdefs.h>
 
-__FBSDID("$FreeBSD: head/usr.bin/touch/touch.c 278817 2015-02-15 21:28:00Z jilles $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/touch/touch.c 278817 2015-02-15 21:28:00Z jilles $");
 
 #ifndef lint
 static const char copyright[] =

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.bin/mkuzip/mkuz_format.h 298505 2016-04-23 07:28:32Z sobomax $
+ * $FreeBSD: releng/11.0/usr.bin/mkuzip/mkuz_format.h 298505 2016-04-23 07:28:32Z sobomax $
  */
 
 DEFINE_RAW_METHOD(f_init, void *, uint32_t);

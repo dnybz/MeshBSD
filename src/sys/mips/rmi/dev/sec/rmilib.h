@@ -26,7 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $FreeBSD: head/sys/mips/rmi/dev/sec/rmilib.h 212763 2010-09-16 20:23:22Z jchandra $
+ * $FreeBSD: releng/11.0/sys/mips/rmi/dev/sec/rmilib.h 212763 2010-09-16 20:23:22Z jchandra $
  * RMI_BSD
  */
 

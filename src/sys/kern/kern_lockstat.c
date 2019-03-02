@@ -24,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_lockstat.c 285704 2015-07-19 22:24:33Z markj $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_lockstat.c 285704 2015-07-19 22:24:33Z markj $");
 
 #include <sys/param.h>
 #include <sys/lock.h>

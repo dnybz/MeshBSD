@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)namei.h	8.5 (Berkeley) 1/9/95
- * $FreeBSD: head/sys/sys/namei.h 296716 2016-03-12 08:50:38Z trasz $
+ * $FreeBSD: releng/11.0/sys/sys/namei.h 296716 2016-03-12 08:50:38Z trasz $
  */
 
 #ifndef _SYS_NAMEI_H_

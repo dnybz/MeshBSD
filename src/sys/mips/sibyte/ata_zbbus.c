@@ -44,7 +44,7 @@
 
 #include <machine/resource.h>
 
-__FBSDID("$FreeBSD: head/sys/mips/sibyte/ata_zbbus.c 295790 2016-02-19 03:37:56Z jhibbits $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/sibyte/ata_zbbus.c 295790 2016-02-19 03:37:56Z jhibbits $");
 
 static int
 ata_zbbus_probe(device_t dev)

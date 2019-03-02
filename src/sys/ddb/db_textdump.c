@@ -57,7 +57,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/ddb/db_textdump.c 298807 2016-04-29 20:53:39Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/ddb/db_textdump.c 298807 2016-04-29 20:53:39Z pfg $");
 
 #include "opt_config.h"
 

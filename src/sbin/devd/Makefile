@@ -1,4 +1,4 @@
-# $FreeBSD: head/sbin/devd/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/sbin/devd/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 .include <src.opts.mk>
 
@@ -17,5 +17,9 @@ YFLAGS+=-v
 CFLAGS+=-I. -I${.CURDIR}
 
 CLEANFILES= y.output
+
+.if ${MK_TESTS} != "no"
+SUBDIR+=    tests
+.endif
 
 .include <bsd.prog.mk>

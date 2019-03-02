@@ -1,4 +1,4 @@
-/* $FreeBSD: head/usr.bin/grep/regex/glue.h 296799 2016-03-13 14:53:12Z ian $ */
+/* $FreeBSD: releng/11.0/usr.bin/grep/regex/glue.h 296799 2016-03-13 14:53:12Z ian $ */
 
 #ifndef GLUE_H
 #define GLUE_H

@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/usr.bin/cc/Makefile.inc 272350 2014-10-01 08:26:51Z andrew $
+# $FreeBSD: releng/11.0/gnu/usr.bin/cc/Makefile.inc 272350 2014-10-01 08:26:51Z andrew $
 
 .include <src.opts.mk>
 .include "../Makefile.inc"
@@ -8,8 +8,8 @@
 __CC_MAKEFILE_INC__= ${MFILE}
 
 GCCVER=	4.2
-GCCDIR=	${.CURDIR}/../../../../tools/gcc
-GCCLIB=	${.CURDIR}/../../../../tools/gcclibs
+GCCDIR=	${.CURDIR}/../../../../contrib/gcc
+GCCLIB=	${.CURDIR}/../../../../contrib/gcclibs
 
 .include "Makefile.tgt"
 

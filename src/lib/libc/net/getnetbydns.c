@@ -58,7 +58,7 @@
 static char sccsid[] = "@(#)gethostnamadr.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/net/getnetbydns.c 288045 2015-09-20 21:21:01Z rodrigc $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/net/getnetbydns.c 288045 2015-09-20 21:21:01Z rodrigc $");
 
 #include <sys/param.h>
 #include <sys/socket.h>

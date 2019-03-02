@@ -1,4 +1,4 @@
-/* $FreeBSD: head/sys/fs/msdosfs/msdosfs_vnops.c 298806 2016-04-29 20:51:24Z pfg $ */
+/* $FreeBSD: releng/11.0/sys/fs/msdosfs/msdosfs_vnops.c 298806 2016-04-29 20:51:24Z pfg $ */
 /*	$NetBSD: msdosfs_vnops.c,v 1.68 1998/02/10 14:10:04 mrg Exp $	*/
 
 /*-

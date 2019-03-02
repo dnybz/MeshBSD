@@ -33,7 +33,7 @@
  * SUCH DAMAGE.
  *
  *	from: FreeBSD: src/sys/i386/include/globaldata.h,v 1.27 2001/04/27
- * $FreeBSD: head/sys/riscv/include/pcpu.h 298580 2016-04-25 14:47:51Z br $
+ * $FreeBSD: releng/11.0/sys/riscv/include/pcpu.h 298580 2016-04-25 14:47:51Z br $
  */
 
 #ifndef	_MACHINE_PCPU_H_

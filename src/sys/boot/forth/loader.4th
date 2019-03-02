@@ -23,7 +23,7 @@
 \ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 \ SUCH DAMAGE.
 \
-\ $FreeBSD: head/sys/boot/forth/loader.4th 298831 2016-04-30 02:47:41Z pfg $
+\ $FreeBSD: releng/11.0/sys/boot/forth/loader.4th 300115 2016-05-18 05:58:57Z imp $
 
 only forth definitions
 
@@ -230,6 +230,13 @@ only forth definitions also support-functions
 
 : .? 2 spaces 2swap 15 #type 2 spaces type cr ;
 
+\ Execute the ? command to print all the commands defined in
+\ C, then list the ones we support here. Please note that this
+\ doesn't use pager_* routines that the C implementation of ?
+\ does, so these will always appear, even if you stop early
+\ there. And they may cause the commands to scroll off the
+\ screen if the number of commands modulus LINES is close
+\ to LINEs....
 : ?
   ['] ? execute
   s" boot-conf" s" load kernel and modules, then autoboot" .?

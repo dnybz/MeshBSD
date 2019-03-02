@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_exp2.c 286515 2015-08-09 10:00:13Z dim $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/src/s_exp2.c 286515 2015-08-09 10:00:13Z dim $");
 
 #include <float.h>
 

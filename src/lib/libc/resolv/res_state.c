@@ -22,7 +22,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/resolv/res_state.c 292216 2015-12-14 17:21:06Z vangyzen $
+ * $FreeBSD: releng/11.0/lib/libc/resolv/res_state.c 292216 2015-12-14 17:21:06Z vangyzen $
  */
 
 #include <sys/types.h>

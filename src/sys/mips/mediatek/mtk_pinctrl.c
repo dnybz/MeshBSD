@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mediatek/mtk_pinctrl.c 299755 2016-05-14 20:05:35Z gonzo $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mediatek/mtk_pinctrl.c 299755 2016-05-14 20:05:35Z gonzo $");
 
 #include <sys/param.h>
 #include <sys/kernel.h>

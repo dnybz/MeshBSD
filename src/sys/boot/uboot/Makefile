@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/boot/uboot/Makefile 273934 2014-11-01 17:12:44Z andrew $
+# $FreeBSD: releng/11.0/sys/boot/uboot/Makefile 273934 2014-11-01 17:12:44Z andrew $
 
 .include <src.opts.mk>
 

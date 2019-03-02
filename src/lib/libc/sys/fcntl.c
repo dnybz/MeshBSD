@@ -32,7 +32,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/sys/fcntl.c 281714 2015-04-18 21:50:13Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/sys/fcntl.c 281714 2015-04-18 21:50:13Z kib $");
 
 #include <fcntl.h>
 #include <stdarg.h>

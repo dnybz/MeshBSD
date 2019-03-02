@@ -33,7 +33,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/c99/c99.c 247953 2013-03-07 21:37:23Z dim $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/c99/c99.c 247953 2013-03-07 21:37:23Z dim $");
 
 #include <sys/types.h>
 

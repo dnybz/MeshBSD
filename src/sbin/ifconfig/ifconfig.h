@@ -31,7 +31,7 @@
  *
  * so there!
  *
- * $FreeBSD: head/sbin/ifconfig/ifconfig.h 295836 2016-02-20 11:36:35Z kp $
+ * $FreeBSD: releng/11.0/sbin/ifconfig/ifconfig.h 295836 2016-02-20 11:36:35Z kp $
  */
 
 #define	__constructor	__attribute__((constructor))

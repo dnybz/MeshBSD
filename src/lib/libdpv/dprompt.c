@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libdpv/dprompt.c 283975 2015-06-04 02:48:04Z araujo $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libdpv/dprompt.c 283975 2015-06-04 02:48:04Z araujo $");
 
 #include <sys/types.h>
 

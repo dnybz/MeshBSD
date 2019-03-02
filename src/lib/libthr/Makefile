@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/libthr/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/libthr/Makefile 298107 2016-04-16 07:45:30Z gjb $
 #
 # All library objects contain FreeBSD revision strings by default; they may be
 # excluded as a space-saving measure.  To produce a library that does
@@ -60,6 +60,10 @@ SYMLINKS+=lib${LIB}.so ${LIBDIR}/libpthread.so
 .endif
 .if ${MK_PROFILE} != "no"
 SYMLINKS+=lib${LIB}_p.a ${LIBDIR}/libpthread_p.a
+.endif
+
+.if ${MK_TESTS} != "no"
+SUBDIR+=	tests
 .endif
 
 .include <bsd.lib.mk>

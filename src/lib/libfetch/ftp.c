@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libfetch/ftp.c 297754 2016-04-09 18:08:21Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libfetch/ftp.c 297754 2016-04-09 18:08:21Z pfg $");
 
 /*
  * Portions of this code were taken from or based on ftpio.c:

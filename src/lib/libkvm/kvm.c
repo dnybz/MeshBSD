@@ -32,7 +32,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libkvm/kvm.c 298896 2016-05-01 19:37:33Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libkvm/kvm.c 298896 2016-05-01 19:37:33Z pfg $");
 
 #if defined(LIBC_SCCS) && !defined(lint)
 #if 0

@@ -1,4 +1,4 @@
-/*	$FreeBSD: head/usr.sbin/rtadvd/if.c 299867 2016-05-15 22:06:21Z truckman $	*/
+/*	$FreeBSD: releng/11.0/usr.sbin/rtadvd/if.c 299867 2016-05-15 22:06:21Z truckman $	*/
 /*	$KAME: if.c,v 1.17 2001/01/21 15:27:30 itojun Exp $	*/
 
 /*

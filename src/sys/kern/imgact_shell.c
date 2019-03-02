@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/imgact_shell.c 271141 2014-09-04 21:31:25Z sbruno $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/imgact_shell.c 271141 2014-09-04 21:31:25Z sbruno $");
 
 #include <sys/param.h>
 #include <sys/vnode.h>

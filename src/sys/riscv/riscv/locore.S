@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/riscv/riscv/locore.S 298580 2016-04-25 14:47:51Z br $
+ * $FreeBSD: releng/11.0/sys/riscv/riscv/locore.S 298580 2016-04-25 14:47:51Z br $
  */
 
 #include "assym.s"

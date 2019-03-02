@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/sys/sleepqueue.h 296973 2016-03-17 01:05:53Z cem $
+ * $FreeBSD: releng/11.0/sys/sys/sleepqueue.h 296973 2016-03-17 01:05:53Z cem $
  */
 
 #ifndef _SYS_SLEEPQUEUE_H_

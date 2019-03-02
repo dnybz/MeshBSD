@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/nscd/cachelib.c 238094 2012-07-04 09:02:12Z se $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/nscd/cachelib.c 238094 2012-07-04 09:02:12Z se $");
 
 #include <sys/time.h>
 

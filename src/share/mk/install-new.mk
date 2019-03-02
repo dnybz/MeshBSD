@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/install-new.mk 291732 2015-12-04 03:17:07Z bdrewery $
+# $FreeBSD: releng/11.0/share/mk/install-new.mk 291732 2015-12-04 03:17:07Z bdrewery $
 # $Id: install-new.mk,v 1.3 2012/03/24 18:25:49 sjg Exp $
 #
 #	@(#) Copyright (c) 2009, Simon J. Gerraty

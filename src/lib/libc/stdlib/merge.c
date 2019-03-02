@@ -34,7 +34,7 @@
 static char sccsid[] = "@(#)merge.c	8.2 (Berkeley) 2/14/94";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/stdlib/merge.c 288026 2015-09-20 20:15:44Z rodrigc $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/stdlib/merge.c 288026 2015-09-20 20:15:44Z rodrigc $");
 
 /*
  * Hybrid exponential search/linear search merge sort with hybrid

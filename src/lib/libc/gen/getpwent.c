@@ -31,7 +31,7 @@
  *
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/gen/getpwent.c 298120 2016-04-16 17:52:00Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/gen/getpwent.c 298120 2016-04-16 17:52:00Z pfg $");
 
 #include "namespace.h"
 #include <sys/param.h>

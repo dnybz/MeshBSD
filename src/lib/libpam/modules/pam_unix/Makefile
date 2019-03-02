@@ -32,7 +32,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $FreeBSD: head/lib/libpam/modules/pam_unix/Makefile 275024 2014-11-25 11:07:26Z bapt $
+# $FreeBSD: releng/11.0/lib/libpam/modules/pam_unix/Makefile 275024 2014-11-25 11:07:26Z bapt $
 
 .include <src.opts.mk>
 .include <bsd.init.mk>
@@ -42,10 +42,5 @@ SRCS=	pam_unix.c
 MAN=	pam_unix.8
 
 LIBADD+=	util crypt
-
-.if ${MK_NIS} != "no"
-CFLAGS+= -DYP
-LIBADD+=	ypclnt
-.endif
 
 .include <bsd.lib.mk>

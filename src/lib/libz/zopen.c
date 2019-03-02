@@ -3,7 +3,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libz/zopen.c 257462 2013-10-31 18:44:40Z emaste $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libz/zopen.c 257462 2013-10-31 18:44:40Z emaste $");
 
 #include <stdio.h>
 #include <zlib.h>

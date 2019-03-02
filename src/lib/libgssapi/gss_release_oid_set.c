@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	$FreeBSD: head/lib/libgssapi/gss_release_oid_set.c 293168 2016-01-04 17:42:12Z dfr $
+ *	$FreeBSD: releng/11.0/lib/libgssapi/gss_release_oid_set.c 293168 2016-01-04 17:42:12Z dfr $
  */
 
 #include <gssapi/gssapi.h>

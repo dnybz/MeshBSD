@@ -41,7 +41,7 @@
  * allocate and release resources.
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/fs/tmpfs/tmpfs_vfsops.c 285182 2015-07-05 22:37:33Z markj $");
+__FBSDID("$FreeBSD: releng/11.0/sys/fs/tmpfs/tmpfs_vfsops.c 285182 2015-07-05 22:37:33Z markj $");
 
 #include <sys/param.h>
 #include <sys/limits.h>

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	$FreeBSD: head/lib/libc/gen/tls.c 298215 2016-04-18 16:25:37Z pfg $
+ *	$FreeBSD: releng/11.0/lib/libc/gen/tls.c 298215 2016-04-18 16:25:37Z pfg $
  */
 
 /*

@@ -1,5 +1,5 @@
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libutil/kinfo_getfile.c 287442 2015-09-03 20:32:10Z cem $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libutil/kinfo_getfile.c 287442 2015-09-03 20:32:10Z cem $");
 
 #include <sys/param.h>
 #include <sys/user.h>

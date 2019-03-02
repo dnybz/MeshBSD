@@ -1,4 +1,4 @@
-# $FreeBSD: head/usr.bin/xzdec/Makefile 275042 2014-11-25 14:29:10Z bapt $
+# $FreeBSD: releng/11.0/usr.bin/xzdec/Makefile 275042 2014-11-25 14:29:10Z bapt $
 
 PROG=	xzdec
 
@@ -6,7 +6,7 @@ LINKS=	${BINDIR}/xzdec ${BINDIR}/lzdec
 
 MLINKS= xzdec.1 lzmadec.1
 
-XZDIR=	${.CURDIR}/../../external/xz/src
+XZDIR=	${.CURDIR}/../../contrib/xz/src
 LZMALIBDIR=	${.CURDIR}/../../lib/liblzma
 
 .PATH: ${XZDIR}/xzdec

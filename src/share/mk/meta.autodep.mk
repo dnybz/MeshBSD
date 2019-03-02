@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/meta.autodep.mk 298225 2016-04-18 20:56:21Z sjg $
+# $FreeBSD: releng/11.0/share/mk/meta.autodep.mk 300805 2016-05-26 23:20:33Z bdrewery $
 # $Id: meta.autodep.mk,v 1.40 2016/02/22 22:44:58 sjg Exp $
 
 #
@@ -267,7 +267,7 @@ ${_DEPENDFILE}: ${_depend} ${.PARSEDIR}/gendirdeps.mk  ${META2DEPS} $${.MAKE.MET
 	DPADD='${FORCE_DPADD:O:u}' ${_gendirdeps_mutex} \
 	MAKESYSPATH=${_makesyspath} \
 	${.MAKE} -f gendirdeps.mk RELDIR=${RELDIR} _DEPENDFILE=${_DEPENDFILE} \
-	META_FILES='${META_XTRAS:T:O:u} ${META_FILES:T:O:u:${META_FILE_FILTER:ts:}}')
+	META_FILES='${META_XTRAS:O:u} ${META_FILES:T:O:u:${META_FILE_FILTER:ts:}}')
 	@test -s $@ && touch $@; :
 .endif
 

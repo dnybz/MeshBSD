@@ -1,5 +1,5 @@
 /*	$NetBSD: grep.c,v 1.6 2011/04/18 03:48:23 joerg Exp $	*/
-/* 	$FreeBSD: head/usr.bin/grep/grep.c 280307 2015-03-21 00:21:30Z pfg $	*/
+/* 	$FreeBSD: releng/11.0/usr.bin/grep/grep.c 280307 2015-03-21 00:21:30Z pfg $	*/
 /*	$OpenBSD: grep.c,v 1.42 2010/07/02 22:18:03 tedu Exp $	*/
 
 /*-
@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/grep/grep.c 280307 2015-03-21 00:21:30Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/grep/grep.c 280307 2015-03-21 00:21:30Z pfg $");
 
 #include <sys/stat.h>
 #include <sys/types.h>

@@ -43,7 +43,7 @@
  * property and the name of the SoC, and add the second SATA host which control
  * the 2 other ports.
  *
- * $FreeBSD: head/sys/boot/fdt/dts/arm/armada-388.dtsi 294416 2016-01-20 13:14:36Z zbb $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/arm/armada-388.dtsi 294416 2016-01-20 13:14:36Z zbb $
  */
 
 #include "armada-385.dtsi"

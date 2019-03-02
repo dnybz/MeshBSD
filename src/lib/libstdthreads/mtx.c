@@ -23,11 +23,11 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libstdthreads/mtx.c 279326 2015-02-26 16:39:57Z kib $
+ * $FreeBSD: releng/11.0/lib/libstdthreads/mtx.c 279326 2015-02-26 16:39:57Z kib $
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libstdthreads/mtx.c 279326 2015-02-26 16:39:57Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libstdthreads/mtx.c 279326 2015-02-26 16:39:57Z kib $");
 
 #include <errno.h>
 #include <pthread.h>

@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/mkuzip/mkuzip.c 298577 2016-04-25 13:20:35Z bz $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/mkuzip/mkuzip.c 298577 2016-04-25 13:20:35Z bz $");
 
 #include <sys/types.h>
 #include <sys/disk.h>

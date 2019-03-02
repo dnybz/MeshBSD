@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/sys/elf32.h 276539 2015-01-02 15:36:29Z emaste $
+ * $FreeBSD: releng/11.0/sys/sys/elf32.h 276539 2015-01-02 15:36:29Z emaste $
  */
 
 #ifndef _SYS_ELF32_H_

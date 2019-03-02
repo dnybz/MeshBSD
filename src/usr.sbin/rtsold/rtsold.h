@@ -28,7 +28,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/rtsold/rtsold.h 289677 2015-10-21 05:37:09Z eadler $
+ * $FreeBSD: releng/11.0/usr.sbin/rtsold/rtsold.h 289677 2015-10-21 05:37:09Z eadler $
  */
 
 struct script_msg {

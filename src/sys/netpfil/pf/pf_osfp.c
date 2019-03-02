@@ -17,7 +17,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netpfil/pf/pf_osfp.c 257176 2013-10-26 17:58:36Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netpfil/pf/pf_osfp.c 257176 2013-10-26 17:58:36Z glebius $");
 
 #include <sys/param.h>
 #include <sys/kernel.h>

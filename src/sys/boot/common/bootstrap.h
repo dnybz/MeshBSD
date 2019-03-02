@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/common/bootstrap.h 300056 2016-05-17 14:10:45Z imp $
+ * $FreeBSD: releng/11.0/sys/boot/common/bootstrap.h 300056 2016-05-17 14:10:45Z imp $
  */
 
 #ifndef _BOOTSTRAP_H_

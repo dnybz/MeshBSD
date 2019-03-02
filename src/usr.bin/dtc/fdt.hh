@@ -27,7 +27,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.bin/dtc/fdt.hh 292876 2015-12-29 16:29:42Z theraven $
+ * $FreeBSD: releng/11.0/usr.bin/dtc/fdt.hh 292876 2015-12-29 16:29:42Z theraven $
  */
 
 #ifndef _FDT_HH_

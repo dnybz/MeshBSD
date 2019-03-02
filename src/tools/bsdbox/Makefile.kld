@@ -1,27 +1,6 @@
 #
-# Infrastructure for loading kernel modules.
+# This builds the kld related programs.
 #
-
-###################################################################
-# Programs from stock /bin
-#
-
-###################################################################
-# Programs from standard /sbin
+# $FreeBSD: releng/11.0/tools/bsdbox/Makefile.kld 229675 2012-01-06 00:56:31Z adrian $
 #
 CRUNCH_PROGS_sbin+=	kldload kldunload kldstat
-
-##################################################################
-# Programs from stock /usr/bin
-#
-
-##################################################################
-# Programs from stock /usr/sbin
-#
-
-##################################################################
-# Library dependencies
-#
-
-
-

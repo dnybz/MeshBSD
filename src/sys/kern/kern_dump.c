@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_dump.c 298310 2016-04-19 23:48:27Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_dump.c 298310 2016-04-19 23:48:27Z pfg $");
 
 #include "opt_watchdog.h"
 

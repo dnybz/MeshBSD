@@ -1,4 +1,4 @@
-/*	$OpenBSD: imsg-buffer.c,v 1.8 2015/12/29 18:05:01 benno Exp $	*/
+/*	$OpenBSD: imsg-buffer.c,v 1.4 2014/06/30 00:25:17 deraadt Exp $	*/
 
 /*
  * Copyright (c) 2003, 2004 Henning Brauer <henning@openbsd.org>
@@ -74,7 +74,7 @@ ibuf_realloc(struct ibuf *buf, size_t len)
 
 	/* on static buffers max is eq size and so the following fails */
 	if (buf->wpos + len > buf->max) {
-		errno = ERANGE;
+		errno = ENOMEM;
 		return (-1);
 	}
 
@@ -149,7 +149,7 @@ ibuf_write(struct msgbuf *msgbuf)
 	unsigned int	 i = 0;
 	ssize_t	n;
 
-	memset(&iov, 0, sizeof(iov));
+	bzero(&iov, sizeof(iov));
 	TAILQ_FOREACH(buf, &msgbuf->bufs, entry) {
 		if (i >= IOV_MAX)
 			break;
@@ -180,8 +180,6 @@ again:
 void
 ibuf_free(struct ibuf *buf)
 {
-	if (buf == NULL)
-		return;
 	free(buf->buf);
 	free(buf);
 }
@@ -235,9 +233,8 @@ msgbuf_write(struct msgbuf *msgbuf)
 		char		buf[CMSG_SPACE(sizeof(int))];
 	} cmsgbuf;
 
-	memset(&iov, 0, sizeof(iov));
-	memset(&msg, 0, sizeof(msg));
-	memset(&cmsgbuf, 0, sizeof(cmsgbuf));
+	bzero(&iov, sizeof(iov));
+	bzero(&msg, sizeof(msg));
 	TAILQ_FOREACH(buf, &msgbuf->bufs, entry) {
 		if (i >= IOV_MAX)
 			break;

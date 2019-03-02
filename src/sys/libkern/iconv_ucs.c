@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/libkern/iconv_ucs.c 267291 2014-06-09 19:27:47Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/sys/libkern/iconv_ucs.c 267291 2014-06-09 19:27:47Z jhb $");
 
 #include <sys/param.h>
 #include <sys/kernel.h>

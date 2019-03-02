@@ -1,8 +1,8 @@
-# $FreeBSD: head/usr.bin/lex/lib/Makefile 265420 2014-05-06 04:22:01Z imp $
+# $FreeBSD: releng/11.0/usr.bin/lex/lib/Makefile 265420 2014-05-06 04:22:01Z imp $
 
 .include <src.opts.mk>
 
-.PATH:	${.CURDIR}/../../../external/flex
+.PATH:	${.CURDIR}/../../../contrib/flex
 
 LIB=    ln
 SRCS=   libmain.c libyywrap.c

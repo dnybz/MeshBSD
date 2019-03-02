@@ -27,7 +27,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/mips/beri/common/cons.h 262197 2014-02-18 23:18:32Z rwatson $
+ * $FreeBSD: releng/11.0/sys/boot/mips/beri/common/cons.h 262197 2014-02-18 23:18:32Z rwatson $
  */
 
 #ifndef _CONS_H_

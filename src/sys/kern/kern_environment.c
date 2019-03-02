@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_environment.c 298025 2016-04-15 03:09:55Z imp $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_environment.c 298025 2016-04-15 03:09:55Z imp $");
 
 #include <sys/types.h>
 #include <sys/param.h>

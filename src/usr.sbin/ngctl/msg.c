@@ -38,7 +38,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/ngctl/msg.c 216588 2010-12-20 09:36:54Z charnier $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/ngctl/msg.c 216588 2010-12-20 09:36:54Z charnier $");
 
 #include <err.h>
 #include <netgraph.h>

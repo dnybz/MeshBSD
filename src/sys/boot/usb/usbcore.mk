@@ -1,5 +1,5 @@
 #
-# $FreeBSD: head/sys/boot/usb/usbcore.mk 291405 2015-11-27 18:22:04Z zbb $
+# $FreeBSD: releng/11.0/sys/boot/usb/usbcore.mk 291405 2015-11-27 18:22:04Z zbb $
 #
 # Copyright (c) 2013 Hans Petter Selasky.
 # Copyright (c) 2014 SRI International

@@ -63,7 +63,7 @@
 //	  - devd.conf needs more details on the supported statements.
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sbin/devd/devd.cc 297529 2016-04-03 20:29:21Z imp $");
+__FBSDID("$FreeBSD: releng/11.0/sbin/devd/devd.cc 297529 2016-04-03 20:29:21Z imp $");
 
 #include <sys/param.h>
 #include <sys/socket.h>

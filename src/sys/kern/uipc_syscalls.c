@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/uipc_syscalls.c 300090 2016-05-17 22:28:53Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/uipc_syscalls.c 300168 2016-05-18 22:05:50Z glebius $");
 
 #include "opt_capsicum.h"
 #include "opt_inet.h"
@@ -84,6 +84,7 @@ static int getsockname1(struct thread *td, struct getsockname_args *uap,
 			int compat);
 static int getpeername1(struct thread *td, struct getpeername_args *uap,
 			int compat);
+static int sockargs(struct mbuf **, char *, socklen_t, int);
 
 /*
  * Convert a user file descriptor to a kernel file entry and check if required
@@ -1689,18 +1690,12 @@ ogetpeername(td, uap)
 }
 #endif /* COMPAT_OLDSOCK */
 
-int
-sockargs(mp, buf, buflen, type)
-	struct mbuf **mp;
-	caddr_t buf;
-	int buflen, type;
+static int
+sockargs(struct mbuf **mp, char *buf, socklen_t buflen, int type)
 {
 	struct sockaddr *sa;
 	struct mbuf *m;
 	int error;
-
-	if (buflen < 0)
-		return (EINVAL);
 
 	if (buflen > MLEN) {
 #ifdef COMPAT_OLDSOCK
@@ -1713,7 +1708,7 @@ sockargs(mp, buf, buflen, type)
 	}
 	m = m_get2(buflen, M_WAITOK, type, 0);
 	m->m_len = buflen;
-	error = copyin(buf, mtod(m, caddr_t), (u_int)buflen);
+	error = copyin(buf, mtod(m, void *), buflen);
 	if (error != 0)
 		(void) m_free(m);
 	else {

@@ -1,5 +1,5 @@
 # $OpenBSD: Makefile,v 1.9 2004/05/04 12:52:05 henning Exp $
-# $FreeBSD: head/sbin/dhclient/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/sbin/dhclient/Makefile 298107 2016-04-16 07:45:30Z gjb $
 #
 # Copyright (c) 1996, 1997 The Internet Software Consortium.
 # All rights reserved.
@@ -45,5 +45,9 @@ MAN=	dhclient.8 dhclient.conf.5 dhclient.leases.5 dhcp-options.5 \
 LIBADD=	util
 
 WARNS?=	2
+
+.if ${MK_TESTS} != "no"
+SUBDIR+=    tests
+.endif
 
 .include <bsd.prog.mk>

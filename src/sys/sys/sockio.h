@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)sockio.h	8.1 (Berkeley) 3/28/94
- * $FreeBSD: head/sys/sys/sockio.h 298981 2016-05-03 15:14:17Z pfg $
+ * $FreeBSD: releng/11.0/sys/sys/sockio.h 298981 2016-05-03 15:14:17Z pfg $
  */
 
 #ifndef _SYS_SOCKIO_H_

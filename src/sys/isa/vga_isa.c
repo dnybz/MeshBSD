@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/isa/vga_isa.c 295790 2016-02-19 03:37:56Z jhibbits $");
+__FBSDID("$FreeBSD: releng/11.0/sys/isa/vga_isa.c 295790 2016-02-19 03:37:56Z jhibbits $");
 
 #include "opt_vga.h"
 #include "opt_fb.h"

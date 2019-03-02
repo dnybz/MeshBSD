@@ -1,4 +1,4 @@
-/*	$FreeBSD: head/lib/libnetbsd/util.h 244557 2012-12-21 20:37:38Z brooks $	*/
+/*	$FreeBSD: releng/11.0/lib/libnetbsd/util.h 244557 2012-12-21 20:37:38Z brooks $	*/
 
 /*-
  * Copyright (c) 2012 SRI International

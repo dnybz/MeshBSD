@@ -1,5 +1,5 @@
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/arm/at91/boot2/bwct_board.c 204900 2010-03-09 00:50:58Z ticso $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/arm/at91/boot2/bwct_board.c 204900 2010-03-09 00:50:58Z ticso $");
 
 #include <sys/param.h>
 

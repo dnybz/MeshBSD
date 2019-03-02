@@ -40,7 +40,7 @@ static char sccsid[] = "@(#)vmstat.c	8.1 (Berkeley) 6/6/93";
 #endif
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/vmstat/vmstat.c 298444 2016-04-22 03:46:57Z araujo $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/vmstat/vmstat.c 298444 2016-04-22 03:46:57Z araujo $");
 
 #include <sys/param.h>
 #include <sys/proc.h>

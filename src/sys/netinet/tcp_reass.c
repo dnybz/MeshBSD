@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/tcp_reass.c 293470 2016-01-09 09:34:39Z melifaro $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/tcp_reass.c 293470 2016-01-09 09:34:39Z melifaro $");
 
 #include "opt_inet.h"
 #include "opt_inet6.h"

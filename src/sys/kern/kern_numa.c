@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_numa.c 285387 2015-07-11 15:21:37Z adrian $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_numa.c 285387 2015-07-11 15:21:37Z adrian $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/Makefile 296124 2016-02-26 22:14:00Z bdrewery $
+# $FreeBSD: releng/11.0/share/mk/Makefile 296124 2016-02-26 22:14:00Z bdrewery $
 #	@(#)Makefile	8.1 (Berkeley) 6/8/93
 
 # Only parse this if executing make in this directory, not in other places
@@ -40,6 +40,11 @@ FILES=	\
 	bsd.obj.mk \
 	bsd.opts.mk \
 	bsd.own.mk \
+	bsd.port.mk \
+	bsd.port.options.mk \
+	bsd.port.post.mk \
+	bsd.port.pre.mk \
+	bsd.port.subdir.mk \
 	bsd.prog.mk \
 	bsd.progs.mk \
 	bsd.snmpmod.mk \
@@ -61,8 +66,11 @@ FILES=	\
 
 FILESDIR=	${BINDIR}/mk
 
-.if ${MK_ATF} != "no"
+.if ${MK_TESTS} != "no"
 FILES+=	atf.test.mk
+FILES+=	plain.test.mk
+FILES+=	suite.test.mk
+FILES+=	tap.test.mk
 .endif
 
 .include <bsd.prog.mk>

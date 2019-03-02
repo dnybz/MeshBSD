@@ -1,6 +1,6 @@
-# $FreeBSD: head/lib/libpam/modules/Makefile.inc 297946 2016-04-14 01:17:03Z bdrewery $
+# $FreeBSD: releng/11.0/lib/libpam/modules/Makefile.inc 297946 2016-04-14 01:17:03Z bdrewery $
 
-PAMDIR=		${.CURDIR}/../../../../external/openpam
+PAMDIR=		${.CURDIR}/../../../../contrib/openpam
 
 MK_INSTALLLIB=	no
 MK_PROFILE=	no

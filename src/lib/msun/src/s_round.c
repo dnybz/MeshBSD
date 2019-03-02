@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_round.c 257823 2013-11-07 22:46:13Z kargl $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/src/s_round.c 257823 2013-11-07 22:46:13Z kargl $");
 
 #include <float.h>
 

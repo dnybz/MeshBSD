@@ -25,7 +25,7 @@
 
 . /etc/rc.local || exit 1
 
-echo "*** Storing configuration files from /etc/cfg/manifest -> ${CFG_PATH}.."
+echo "*** Storing configuration files from /etc/cfg/manifest -> ${cfg_path}.."
 cd /
-cat /etc/cfg/manifest | cpio -ov | gzip -9 | dd of=${CFG_PATH} bs=${CFG_SIZE} count=1 conv=sync || exit 1
+cat /etc/cfg/manifest | cpio -ov | gzip -9 | dd of=${cfg_path} bs=${cfg_size} count=1 conv=sync || exit 1
 echo "*** Completed."

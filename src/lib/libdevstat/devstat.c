@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libdevstat/devstat.c 283976 2015-06-04 02:50:13Z araujo $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libdevstat/devstat.c 283976 2015-06-04 02:50:13Z araujo $");
 
 #include <sys/types.h>
 #include <sys/sysctl.h>

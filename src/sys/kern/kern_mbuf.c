@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_mbuf.c 300097 2016-05-17 23:15:16Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_mbuf.c 300113 2016-05-18 04:35:58Z scottl $");
 
 #include "opt_param.h"
 
@@ -444,7 +444,7 @@ mb_dtor_mbuf(void *mem, int size, void *arg)
 	flags = (unsigned long)arg;
 
 	KASSERT((m->m_flags & M_NOFREE) == 0, ("%s: M_NOFREE set", __func__));
-	if ((m->m_flags & M_PKTHDR) && !SLIST_EMPTY(&m->m_pkthdr.tags))
+	if (!(flags & MB_DTOR_SKIP) && (m->m_flags & M_PKTHDR) && !SLIST_EMPTY(&m->m_pkthdr.tags))
 		m_tag_delete_chain(m, NULL);
 #ifdef INVARIANTS
 	trash_dtor(mem, size, arg);

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/ppp/server.h 74001 2001-03-08 23:51:50Z brian $
+ * $FreeBSD: releng/11.0/usr.sbin/ppp/server.h 74001 2001-03-08 23:51:50Z brian $
  */
 
 struct bundle;

@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/common/interp.c 269153 2014-07-27 16:12:51Z marcel $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/common/interp.c 269153 2014-07-27 16:12:51Z marcel $");
 
 /*
  * Simple commandline interpreter, toplevel and misc.

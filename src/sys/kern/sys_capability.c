@@ -56,7 +56,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/sys_capability.c 286618 2015-08-11 08:43:50Z ed $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/sys_capability.c 286618 2015-08-11 08:43:50Z ed $");
 
 #include "opt_capsicum.h"
 #include "opt_ktrace.h"

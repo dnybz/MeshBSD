@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/libcompiler_rt/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/libcompiler_rt/Makefile 300119 2016-05-18 06:01:18Z imp $
 
 .include <src.opts.mk>
 
@@ -8,11 +8,15 @@ NO_PIC=
 WARNS?=	2
 
 CFLAGS+=${PICFLAG} -fvisibility=hidden -DVISIBILITY_HIDDEN
-CFLAGS+=-I${.CURDIR}/../../tools/libcxxrt
+CFLAGS+=-I${.CURDIR}/../../contrib/libcxxrt
 
+.if ${MACHINE_CPUARCH} == "amd64"
+CRTARCH=x86_64
+.else
 CRTARCH=${MACHINE_CPUARCH}
+.endif
 
-CRTSRC=${.CURDIR}/../../tools/compiler-rt/lib/builtins
+CRTSRC=${.CURDIR}/../../contrib/compiler-rt/lib/builtins
 
 .PATH: ${CRTSRC}/${CRTARCH} ${CRTSRC}
 
@@ -195,9 +199,10 @@ SRCF+=	stdatomic
 .endif
 
 .for file in ${SRCF}
-. if ${MACHINE_ARCH:Marm*hf*} != "" && exists(${CRTSRC}/${CRTARCH}/${file}vfp.S)
+.if ${MACHINE_ARCH:Marmv6*} && (!defined(CPUTYPE) || ${CPUTYPE:M*soft*} == "") && \
+    exists(${CRTSRC}/${CRTARCH}/${file}vfp.S)
 SRCS+= ${file}vfp.S
-. elif !(${MACHINE_CPUARCH} == "arm" && ${MACHINE_ARCH:Marm*hf*} == "") && exists(${CRTSRC}/${CRTARCH}/${file}.S)
+. elif exists(${CRTSRC}/${CRTARCH}/${file}.S)
 SRCS+=	${file}.S
 . else
 SRCS+=	${file}.c
@@ -230,7 +235,8 @@ SYMLINKS+=libcompiler_rt.a ${LIBDIR}/libgcc.a
 SYMLINKS+=libcompiler_rt_p.a ${LIBDIR}/libgcc_p.a
 .endif
 
-.if ${MACHINE_ARCH:Marmv6*}
+.if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386" || \
+    ${MACHINE_CPUARCH} == "powerpc" || ${MACHINE_ARCH:Marmv6*}
 AFLAGS+=--noexecstack
 ACFLAGS+=-Wa,--noexecstack
 .endif

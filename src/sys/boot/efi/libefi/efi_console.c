@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/efi/libefi/efi_console.c 300056 2016-05-17 14:10:45Z imp $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/efi/libefi/efi_console.c 301703 2016-06-08 23:13:20Z andrew $");
 
 #include <efi.h>
 #include <efilib.h>
@@ -111,9 +111,9 @@ efi_cons_probe(struct console *cp)
 static int
 efi_cons_init(int arg)
 {
+#ifdef TERM_EMU
 	conout->SetAttribute(conout, EFI_TEXT_ATTR(DEFAULT_FGCOLOR,
 	    DEFAULT_BGCOLOR));
-#ifdef TERM_EMU
 	end_term();
 	get_pos(&curx, &cury);
 	curs_move(&curx, &cury, curx, cury);
@@ -139,8 +139,7 @@ efi_cons_rawputchar(int c)
 #ifndef	TERM_EMU
 		if (c == '\n')
 			efi_cons_efiputchar('\r');
-		else
-			efi_cons_efiputchar(c);
+		efi_cons_efiputchar(c);
 #else
 		switch (c) {
 		case '\r':
@@ -178,6 +177,7 @@ efi_cons_rawputchar(int c)
 	}
 }
 
+#ifdef TERM_EMU
 /* Gracefully exit ESC-sequence processing in case of misunderstanding. */
 static void
 bail_out(int c)
@@ -412,6 +412,12 @@ efi_term_emu(int c)
 		break;
 	}
 }
+#else
+void
+HO(void)
+{
+}
+#endif
 
 void
 efi_cons_putchar(int c)

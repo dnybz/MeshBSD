@@ -27,7 +27,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libpjdlog/pjdlog.h 258791 2013-12-01 09:41:06Z pjd $
+ * $FreeBSD: releng/11.0/lib/libpjdlog/pjdlog.h 258791 2013-12-01 09:41:06Z pjd $
  */
 
 #ifndef	_PJDLOG_H_

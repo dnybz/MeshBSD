@@ -1,4 +1,4 @@
-/* $FreeBSD: head/lib/libc/iconv/citrus_iconv.c 279404 2015-02-28 20:30:25Z kan $ */
+/* $FreeBSD: releng/11.0/lib/libc/iconv/citrus_iconv.c 279404 2015-02-28 20:30:25Z kan $ */
 /*	$NetBSD: citrus_iconv.c,v 1.10 2011/11/19 18:34:21 tnozaki Exp $	*/
 
 /*-

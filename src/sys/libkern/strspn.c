@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/libkern/strspn.c 144545 2005-04-02 18:52:44Z das $");
+__FBSDID("$FreeBSD: releng/11.0/sys/libkern/strspn.c 144545 2005-04-02 18:52:44Z das $");
 
 #include <sys/libkern.h>
 #include <sys/limits.h>

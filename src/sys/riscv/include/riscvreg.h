@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/riscv/include/riscvreg.h 298636 2016-04-26 12:56:44Z br $
+ * $FreeBSD: releng/11.0/sys/riscv/include/riscvreg.h 301621 2016-06-08 13:57:18Z br $
  */
 
 #ifndef _MACHINE_RISCVREG_H_
@@ -123,6 +123,10 @@
 #define	CSR_IO_IRQ	0x7c0	/* lowRISC only? */
 #define	XLEN		8
 #define	INSN_SIZE	4
+
+#define	RISCV_INSN_NOP		0x00000013
+#define	RISCV_INSN_BREAK	0x00100073
+#define	RISCV_INSN_RET		0x00008067
 
 #define	CSR_ZIMM(val)							\
 	(__builtin_constant_p(val) && ((u_long)(val) < 32))

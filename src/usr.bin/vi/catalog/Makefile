@@ -1,10 +1,10 @@
 #	$Id: Makefile,v 9.0 2012/10/19 15:13:11 zy Exp $
-# $FreeBSD: head/usr.bin/vi/catalog/Makefile 299289 2016-05-09 22:21:09Z bdrewery $
+# $FreeBSD: releng/11.0/usr.bin/vi/catalog/Makefile 299289 2016-05-09 22:21:09Z bdrewery $
 
 .include <bsd.own.mk>
 
 PACKAGE=vi
-V=	${.CURDIR}/../../../tools/nvi
+V=	${.CURDIR}/../../../contrib/nvi
 
 FILESGROUPS+=VICAT
 CAT=	dutch english french german polish ru_RU.KOI8-R spanish swedish \

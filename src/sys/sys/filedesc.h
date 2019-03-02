@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)filedesc.h	8.1 (Berkeley) 6/2/93
- * $FreeBSD: head/sys/sys/filedesc.h 287539 2015-09-07 20:02:56Z mjg $
+ * $FreeBSD: releng/11.0/sys/sys/filedesc.h 287539 2015-09-07 20:02:56Z mjg $
  */
 
 #ifndef _SYS_FILEDESC_H_

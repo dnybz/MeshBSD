@@ -31,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/sctp_uio.h 297662 2016-04-07 09:10:34Z rrs $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/sctp_uio.h 303267 2016-07-24 14:50:16Z tuexen $");
 
 #ifndef _NETINET_SCTP_UIO_H_
 #define _NETINET_SCTP_UIO_H_
@@ -259,7 +259,8 @@ struct sctp_snd_all_completes {
 /* The lower four bits is an enumeration of PR-SCTP policies */
 #define SCTP_PR_SCTP_NONE 0x0000/* Reliable transfer */
 #define SCTP_PR_SCTP_TTL  0x0001/* Time based PR-SCTP */
-#define SCTP_PR_SCTP_BUF  0x0002/* Buffer based PR-SCTP */
+#define SCTP_PR_SCTP_PRIO 0x0002/* Buffer based PR-SCTP */
+#define SCTP_PR_SCTP_BUF  SCTP_PR_SCTP_PRIO	/* For backwards compatibility */
 #define SCTP_PR_SCTP_RTX  0x0003/* Number of retransmissions based PR-SCTP */
 #define SCTP_PR_SCTP_MAX  SCTP_PR_SCTP_RTX
 #define SCTP_PR_SCTP_ALL  0x000f/* Used for aggregated stats */
@@ -590,6 +591,7 @@ struct sctp_paddrthlds {
 	sctp_assoc_t spt_assoc_id;
 	uint16_t spt_pathmaxrxt;
 	uint16_t spt_pathpfthld;
+	uint16_t spt_pathcpthld;
 };
 
 struct sctp_paddrinfo {

@@ -19,7 +19,7 @@
  * only.
  * END_BLOCK
  * 
- * $FreeBSD: head/sys/boot/arm/at91/libat91/emac.c 269110 2014-07-26 03:19:13Z ian $
+ * $FreeBSD: releng/11.0/sys/boot/arm/at91/libat91/emac.c 269110 2014-07-26 03:19:13Z ian $
  ******************************************************************************/
 
 #include "at91rm9200.h"

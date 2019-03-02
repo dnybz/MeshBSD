@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/ofw/common/main.c 298826 2016-04-30 00:26:38Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/ofw/common/main.c 298826 2016-04-30 00:26:38Z pfg $");
 
 #include <stand.h>
 #include "openfirm.h"

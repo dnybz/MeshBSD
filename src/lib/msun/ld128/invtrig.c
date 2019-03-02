@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/ld128/invtrig.c 181074 2008-07-31 22:41:26Z das $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/ld128/invtrig.c 181074 2008-07-31 22:41:26Z das $");
 
 #include "invtrig.h"
 

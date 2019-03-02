@@ -24,7 +24,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/uuid/uuid_compare.c 168377 2007-04-05 02:07:33Z delphij $
+ * $FreeBSD: releng/11.0/lib/libc/uuid/uuid_compare.c 168377 2007-04-05 02:07:33Z delphij $
  */
 
 #include <string.h>

@@ -1,4 +1,4 @@
-$ $FreeBSD: head/lib/libc/nls/sk_SK.ISO8859-2.msg 189765 2009-03-13 10:40:38Z gabor $
+$ $FreeBSD: releng/11.0/lib/libc/nls/sk_SK.ISO8859-2.msg 189765 2009-03-13 10:40:38Z gabor $
 $
 $ Message catalog for sk_SK.ISO8859-2 locale
 $

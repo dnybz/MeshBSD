@@ -34,7 +34,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/m4/misc.c 294298 2016-01-18 22:12:07Z bapt $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/m4/misc.c 294298 2016-01-18 22:12:07Z bapt $");
 
 #include <sys/types.h>
 #include <errno.h>

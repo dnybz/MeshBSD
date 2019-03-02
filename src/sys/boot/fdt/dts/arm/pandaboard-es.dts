@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  * 
- * $FreeBSD: head/sys/boot/fdt/dts/arm/pandaboard-es.dts 283276 2015-05-22 03:16:18Z gonzo $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/arm/pandaboard-es.dts 283276 2015-05-22 03:16:18Z gonzo $
  */
 
 

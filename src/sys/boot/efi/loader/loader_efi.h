@@ -25,7 +25,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/efi/loader/loader_efi.h 293724 2016-01-12 02:17:39Z smh $
+ * $FreeBSD: releng/11.0/sys/boot/efi/loader/loader_efi.h 293724 2016-01-12 02:17:39Z smh $
  */
 
 #ifndef	_LOADER_EFI_COPY_H_

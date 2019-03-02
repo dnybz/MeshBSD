@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/net80211/ieee80211_crypto.c 288635 2015-10-03 21:48:27Z adrian $");
+__FBSDID("$FreeBSD: releng/11.0/sys/net80211/ieee80211_crypto.c 288635 2015-10-03 21:48:27Z adrian $");
 
 /*
  * IEEE 802.11 generic crypto support.

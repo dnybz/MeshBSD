@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/libexec/ulog-helper/ulog-helper.c 234469 2012-04-19 21:12:08Z ed $");
+__FBSDID("$FreeBSD: releng/11.0/libexec/ulog-helper/ulog-helper.c 234469 2012-04-19 21:12:08Z ed $");
 
 #include <pwd.h>
 #include <unistd.h>

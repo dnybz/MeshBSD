@@ -28,7 +28,7 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/sbin/pfctl/pfctl_parser.h 287009 2015-08-21 22:02:22Z loos $
+ * $FreeBSD: releng/11.0/sbin/pfctl/pfctl_parser.h 287009 2015-08-21 22:02:22Z loos $
  */
 
 #ifndef _PFCTL_PARSER_H_

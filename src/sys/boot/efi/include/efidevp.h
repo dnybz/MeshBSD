@@ -1,4 +1,4 @@
-/* $FreeBSD: head/sys/boot/efi/include/efidevp.h 295320 2016-02-05 15:35:33Z smh $ */
+/* $FreeBSD: releng/11.0/sys/boot/efi/include/efidevp.h 295320 2016-02-05 15:35:33Z smh $ */
 #ifndef _DEVPATH_H
 #define _DEVPATH_H
 

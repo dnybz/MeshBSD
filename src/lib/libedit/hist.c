@@ -41,7 +41,7 @@ __RCSID("$NetBSD: hist.c,v 1.20 2011/07/29 15:16:33 christos Exp $");
 #endif
 #endif /* not lint && not SCCSID */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libedit/hist.c 296435 2016-03-06 21:32:54Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libedit/hist.c 296435 2016-03-06 21:32:54Z pfg $");
 
 /*
  * hist.c: History access functions

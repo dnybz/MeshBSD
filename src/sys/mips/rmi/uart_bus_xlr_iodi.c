@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/rmi/uart_bus_xlr_iodi.c 202175 2010-01-12 21:36:08Z imp $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/rmi/uart_bus_xlr_iodi.c 202175 2010-01-12 21:36:08Z imp $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

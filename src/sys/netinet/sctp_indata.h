@@ -31,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/sctp_indata.h 297663 2016-04-07 09:34:41Z rrs $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/sctp_indata.h 297663 2016-04-07 09:34:41Z rrs $");
 
 #ifndef _NETINET_SCTP_INDATA_H_
 #define _NETINET_SCTP_INDATA_H_

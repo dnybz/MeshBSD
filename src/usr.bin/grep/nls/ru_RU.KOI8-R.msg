@@ -1,4 +1,4 @@
-$ $FreeBSD: head/usr.bin/grep/nls/ru_RU.KOI8-R.msg 210622 2010-07-29 18:02:57Z gabor $
+$ $FreeBSD: releng/11.0/usr.bin/grep/nls/ru_RU.KOI8-R.msg 210622 2010-07-29 18:02:57Z gabor $
 $
 $set 1
 $quote "

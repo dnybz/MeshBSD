@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/posix1e/acl_strip.c 287427 2015-09-03 11:31:34Z trasz $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/posix1e/acl_strip.c 287427 2015-09-03 11:31:34Z trasz $");
 
 #include <errno.h>
 #include <stdio.h>

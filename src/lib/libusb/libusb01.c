@@ -1,4 +1,4 @@
-/* $FreeBSD: head/lib/libusb/libusb01.c 264344 2014-04-11 14:11:55Z hselasky $ */
+/* $FreeBSD: releng/11.0/lib/libusb/libusb01.c 264344 2014-04-11 14:11:55Z hselasky $ */
 /*-
  * Copyright (c) 2008 Hans Petter Selasky. All rights reserved.
  *

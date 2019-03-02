@@ -38,7 +38,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/cam/ctl/ctl_error.c 288348 2015-09-28 20:54:18Z mav $");
+__FBSDID("$FreeBSD: releng/11.0/sys/cam/ctl/ctl_error.c 288348 2015-09-28 20:54:18Z mav $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

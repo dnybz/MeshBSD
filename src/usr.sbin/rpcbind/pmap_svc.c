@@ -1,5 +1,5 @@
 /*	$NetBSD: pmap_svc.c,v 1.2 2000/10/20 11:49:40 fvdl Exp $	*/
-/*	$FreeBSD: head/usr.sbin/rpcbind/pmap_svc.c 258564 2013-11-25 16:44:02Z hrs $ */
+/*	$FreeBSD: releng/11.0/usr.sbin/rpcbind/pmap_svc.c 258564 2013-11-25 16:44:02Z hrs $ */
 
 /*-
  * Copyright (c) 2009, Sun Microsystems, Inc.

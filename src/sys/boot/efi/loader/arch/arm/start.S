@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/efi/loader/arch/arm/start.S 282727 2015-05-10 13:24:26Z ian $
+ * $FreeBSD: releng/11.0/sys/boot/efi/loader/arch/arm/start.S 282727 2015-05-10 13:24:26Z ian $
  */
 
 #include <machine/asm.h>

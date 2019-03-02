@@ -25,7 +25,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.bin/systat/convtbl.h 164675 2006-11-27 16:33:44Z yar $
+ * $FreeBSD: releng/11.0/usr.bin/systat/convtbl.h 164675 2006-11-27 16:33:44Z yar $
  */
 
 #ifndef _CONVTBL_H_

@@ -34,7 +34,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)conf.h	8.5 (Berkeley) 1/9/95
- * $FreeBSD: head/sys/sys/conf.h 298890 2016-05-01 17:46:56Z kib $
+ * $FreeBSD: releng/11.0/sys/sys/conf.h 298890 2016-05-01 17:46:56Z kib $
  */
 
 #ifndef _SYS_CONF_H_

@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/subr_lock.c 275751 2014-12-13 21:00:10Z dchagin $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/subr_lock.c 303953 2016-08-11 09:28:49Z mjg $");
 
 #include "opt_ddb.h"
 #include "opt_mprof.h"
@@ -101,6 +101,34 @@ lock_destroy(struct lock_object *lock)
 	WITNESS_DESTROY(lock);
 	LOCK_LOG_DESTROY(lock, 0);
 	lock->lo_flags &= ~LO_INITIALIZED;
+}
+
+void
+lock_delay(struct lock_delay_arg *la)
+{
+	u_int i, delay, backoff, min, max;
+	struct lock_delay_config *lc = la->config;
+
+	delay = la->delay;
+
+	if (delay == 0)
+		delay = lc->initial;
+	else {
+		delay += lc->step;
+		max = lc->max;
+		if (delay > max)
+			delay = max;
+	}
+
+	backoff = cpu_ticks() % delay;
+	min = lc->min;
+	if (backoff < min)
+		backoff = min;
+	for (i = 0; i < backoff; i++)
+		cpu_spinwait();
+
+	la->delay = delay;
+	la->spin_cnt += backoff;
 }
 
 #ifdef DDB

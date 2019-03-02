@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/libiconv_modules/HZ/Makefile 219019 2011-02-25 00:04:39Z gabor $
+# $FreeBSD: releng/11.0/lib/libiconv_modules/HZ/Makefile 219019 2011-02-25 00:04:39Z gabor $
 
 SHLIB=	HZ
 SRCS+=	citrus_hz.c

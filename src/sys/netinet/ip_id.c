@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/ip_id.c 280989 2015-04-02 14:22:59Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/ip_id.c 302372 2016-07-06 14:09:49Z nwhitehorn $");
 
 /*
  * IP ID generation is a fascinating topic.
@@ -275,10 +275,12 @@ ip_fillid(struct ip *ip)
 static void
 ipid_sysinit(void)
 {
+	int i;
 
 	mtx_init(&V_ip_id_mtx, "ip_id_mtx", NULL, MTX_DEF);
 	V_ip_id = counter_u64_alloc(M_WAITOK);
-	for (int i = 0; i < mp_ncpus; i++)
+	
+	CPU_FOREACH(i)
 		arc4rand(zpcpu_get_cpu(V_ip_id, i), sizeof(uint64_t), 0);
 }
 VNET_SYSINIT(ip_id, SI_SUB_PROTO_DOMAIN, SI_ORDER_ANY, ipid_sysinit, NULL);
@@ -287,11 +289,11 @@ static void
 ipid_sysuninit(void)
 {
 
-	mtx_destroy(&V_ip_id_mtx);
 	if (V_id_array != NULL) {
 		free(V_id_array, M_IPID);
 		free(V_id_bits, M_IPID);
 	}
 	counter_u64_free(V_ip_id);
+	mtx_destroy(&V_ip_id_mtx);
 }
-VNET_SYSUNINIT(ip_id, SI_SUB_PROTO_DOMAIN, SI_ORDER_ANY, ipid_sysuninit, NULL);
+VNET_SYSUNINIT(ip_id, SI_SUB_PROTO_DOMAIN, SI_ORDER_THIRD, ipid_sysuninit, NULL);

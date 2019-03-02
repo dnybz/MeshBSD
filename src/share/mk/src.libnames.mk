@@ -1,11 +1,7 @@
-# $FreeBSD: head/share/mk/src.libnames.mk 296398 2016-03-04 22:37:09Z bdrewery $
+# $FreeBSD: releng/11.0/share/mk/src.libnames.mk 301226 2016-06-02 19:06:04Z lidl $
 #
 # The include file <src.libnames.mk> define library names suitable
 # for INTERNALLIB and PRIVATELIB definition
-
-#
-# XXX: file is subject of ongoing changes 
-#
 
 .if !target(__<bsd.init.mk>__)
 .error src.libnames.mk cannot be included directly.
@@ -19,9 +15,9 @@ __<src.libnames.mk>__:
 _PRIVATELIBS=	\
 		atf_c \
 		atf_cxx \
+		bsdstat \
+		devdctl \
 		event \
-		heimipcc \
-		heimipcs \
 		ldns \
 		sqlite3 \
 		ssh \
@@ -30,15 +26,10 @@ _PRIVATELIBS=	\
 
 _INTERNALLIBS=	\
 		amu \
-		bsnmptools \
 		cron \
 		elftc \
 		fifolog \
-		ipf \
-		lpr \
 		netbsd \
-		ntp \
-		ntpevent \
 		opts \
 		parse \
 		pe \
@@ -47,7 +38,6 @@ _INTERNALLIBS=	\
 		sm \
 		smdb \
 		smutil \
-		telnet \
 		vers
 
 _LIBRARIES=	\
@@ -57,14 +47,9 @@ _LIBRARIES=	\
 		80211 \
 		alias \
 		archive \
-		asn1 \
-		auditd \
 		avl \
 		begemot \
-		bluetooth \
 		bsdxml \
-		bsm \
-		bsnmp \
 		bz2 \
 		c \
 		c_pic \
@@ -76,14 +61,13 @@ _LIBRARIES=	\
 		cap_pwd \
 		cap_random \
 		cap_sysctl \
-		com_err \
 		compiler_rt \
 		crypt \
 		crypto \
 		ctf \
-		cuse \
 		cxxrt \
 		devctl \
+		devdctl \
 		devinfo \
 		devstat \
 		dialog \
@@ -99,20 +83,9 @@ _LIBRARIES=	\
 		gnuregex \
 		gpio \
 		gssapi \
-		gssapi_krb5 \
-		hdb \
-		heimbase \
-		heimntlm \
-		heimsqlite \
-		hx509 \
 		ipsec \
 		jail \
-		kadm5clnt \
-		kadm5srv \
-		kafs5 \
-		kdc \
 		kiconv \
-		krb5 \
 		kvm \
 		l \
 		lzma \
@@ -126,7 +99,6 @@ _LIBRARIES=	\
 		ncurses \
 		ncursesw \
 		netgraph \
-		ngatm \
 		nv \
 		nvpair \
 		opie \
@@ -151,7 +123,6 @@ _LIBRARIES=	\
 		sbuf \
 		sdp \
 		sm \
-		smb \
 		ssl \
 		ssp_nonshared \
 		stdthreads \
@@ -174,16 +145,21 @@ _LIBRARIES=	\
 		wrap \
 		xo \
 		y \
-		ypclnt \
-		z \
-		zfs_core \
-		zfs \
-		zpool 
+		z
+
+.if ${MK_BLACKLIST} != "no"
+_LIBRARIES+= \
+		blacklist \
+
+.endif
 
 # Each library's LIBADD needs to be duplicated here for static linkage of
 # 2nd+ order consumers.  Auto-generating this would be better.
 _DP_80211=	sbuf bsdxml
 _DP_archive=	z bz2 lzma bsdxml
+.if ${MK_BLACKLIST} != "no"
+_DP_blacklist+=	pthread
+.endif
 .if ${MK_LIBRESSL} != "no"
 _DP_archive+=	crypto
 .else
@@ -197,7 +173,8 @@ _DP_ssh+=	ldns
 .endif
 _DP_edit=	ncursesw
 .if ${MK_LIBRESSL} != "no"
-_DP_bsnmp=	crypto
+_DP_racoon= 	crypto
+_DP_tls= 	ssl crypto 
 .endif
 _DP_geom=	bsdxml sbuf
 _DP_cam=	sbuf
@@ -234,8 +211,6 @@ _DP_mt=		sbuf bsdxml
 _DP_ldns=	crypto
 .if ${MK_LIBRESSL} != "no"
 _DP_fetch=	ssl crypto
-_DP_racoon= 	crypto
-_DP_tls= 	ssl crypto  
 .else
 _DP_fetch=	md
 .endif
@@ -243,40 +218,16 @@ _DP_execinfo=	elf
 _DP_dwarf=	elf
 _DP_dpv=	dialog figpar util ncursesw
 _DP_dialog=	ncursesw m
-_DP_cuse=	pthread
 _DP_atf_cxx=	atf_c
 _DP_devstat=	kvm
 _DP_pam=	radius tacplus opie md util
-.if ${MK_KERBEROS} != "no"
-_DP_pam+=	krb5
-.endif
 .if ${MK_OPENSSH} != "no"
 _DP_pam+=	ssh
 .endif
-.if ${MK_NIS} != "no"
-_DP_pam+=	ypclnt
-.endif
 _DP_readline=	ncursesw
-_DP_roken=	crypt
-_DP_kadm5clnt=	com_err krb5 roken
-_DP_kadm5srv=	com_err hdb krb5 roken
-_DP_heimntlm=	crypto com_err krb5 roken
-_DP_hx509=	asn1 com_err crypto roken wind
-_DP_hdb=	asn1 com_err krb5 roken sqlite3
-_DP_asn1=	com_err roken
-_DP_kdc=	roken hdb hx509 krb5 heimntlm asn1 crypto
-_DP_wind=	com_err roken
-_DP_heimbase=	pthread
-_DP_heimipcc=	heimbase roken pthread
-_DP_heimipcs=	heimbase roken pthread
-_DP_kafs5=	asn1 krb5 roken
-_DP_krb5+=	asn1 com_err crypt crypto hx509 roken wind heimbase heimipcc
-_DP_gssapi_krb5+=	gssapi krb5 crypto roken asn1 com_err
 _DP_lzma=	pthread
 _DP_ucl=	m
 _DP_vmmapi=	util
-_DP_ctf=	z
-_DP_dtrace=	ctf elf proc pthread rtld_db
 _DP_xo=		util
 # The libc dependencies are not strictly needed but are defined to make the
 # assert happy.
@@ -289,14 +240,8 @@ _DP_tacplus=	md
 _DP_panel=	ncurses
 _DP_panelw=	ncursesw
 _DP_rpcsec_gss=	gssapi
-_DP_smb=	kiconv
 _DP_ulog=	md
 _DP_fifolog=	z
-_DP_ipf=	kvm
-_DP_zfs=	md pthread umem util uutil m nvpair avl bsdxml geom nvpair z \
-		zfs_core
-_DP_zfs_core=	nvpair
-_DP_zpool=	md pthread z nvpair avl umem
 
 # Define special cases
 LDADD_supcplusplus=	-lsupc++
@@ -367,29 +312,8 @@ LIBPE?=		${LIBPEDIR}/libpe.a
 LIBREADLINEDIR=	${OBJTOP}/gnu/lib/libreadline/readline
 LIBREADLINE?=	${LIBREADLINEDIR}/libreadline.a
 
-LIBVERSDIR?=	${OBJTOP}/kerberos5/lib/libvers
-LIBVERS?=	${LIBVERSDIR}/libvers.a
-
-LIBSLDIR=	${OBJTOP}/kerberos5/lib/libsl
-LIBSL?=		${LIBSLDIR}/libsl.a
-
-LIBTLSDIR=	${OBJTOP}/lib/libtls
-LIBTLS?=	${LIBTELNETDIR}/libtls.a
-
 LIBCRONDIR=	${OBJTOP}/usr.sbin/cron/lib
 LIBCRON?=	${LIBCRONDIR}/libcron.a
-
-LIBNTPDIR=	${OBJTOP}/usr.sbin/ntp/libntp
-LIBNTP?=	${LIBNTPDIR}/libntp.a
-
-LIBNTPEVENTDIR=	${OBJTOP}/usr.sbin/ntp/libntpevent
-LIBNTPEVENT?=	${LIBNTPEVENTDIR}/libntpevent.a
-
-LIBOPTSDIR=	${OBJTOP}/usr.sbin/ntp/libopts
-LIBOPTS?=	${LIBOPTSDIR}/libopts.a
-
-LIBPARSEDIR=	${OBJTOP}/usr.sbin/ntp/libparse
-LIBPARSE?=	${LIBPARSEDIR}/libparse.a
 
 LIBLPRDIR=	${OBJTOP}/usr.sbin/lpr/common_source
 LIBLPR?=	${LIBOPTSDIR}/liblpr.a
@@ -397,30 +321,9 @@ LIBLPR?=	${LIBOPTSDIR}/liblpr.a
 LIBFIFOLOGDIR=	${OBJTOP}/usr.sbin/fifolog/lib
 LIBFIFOLOG?=	${LIBOPTSDIR}/libfifolog.a
 
-LIBBSNMPTOOLSDIR=	${OBJTOP}/usr.sbin/bsnmpd/tools/libbsnmptools
-LIBBSNMPTOOLS?=	${LIBBSNMPTOOLSDIR}/libbsnmptools.a
-
-LIBAMUDIR=	${OBJTOP}/usr.sbin/amd/libamu
-LIBAMU?=	${LIBAMUDIR}/libamu/libamu.a
-
 # Define a directory for each library.  This is useful for adding -L in when
 # not using a --sysroot or for meta mode bootstrapping when there is no
 # Makefile.depend.  These are sorted by directory.
-
-#
-# XXX: dtrace stuff will be integrated sonner or later ...
-#
-# LIBAVLDIR=	${OBJTOP}/cddl/lib/libavl
-# LIBCTFDIR=	${OBJTOP}/cddl/lib/libctf
-# LIBDTRACEDIR=	${OBJTOP}/cddl/lib/libdtrace
-# LIBNVPAIRDIR=	${OBJTOP}/cddl/lib/libnvpair
-# LIBUMEMDIR=	${OBJTOP}/cddl/lib/libumem
-# LIBUUTILDIR=	${OBJTOP}/cddl/lib/libuutil
-# LIBZFSDIR=	${OBJTOP}/cddl/lib/libzfs
-# LIBZFS_COREDIR=	${OBJTOP}/cddl/lib/libzfs_core
-# LIBZPOOLDIR=	${OBJTOP}/cddl/lib/libzpool
-#
-LIBIBSDPDIR=	${OBJTOP}/lib/libsdp
 LIBDIALOGDIR=	${OBJTOP}/gnu/lib/libdialog
 LIBGCOVDIR=	${OBJTOP}/gnu/lib/libgcov
 LIBGOMPDIR=	${OBJTOP}/gnu/lib/libgomp
@@ -428,29 +331,13 @@ LIBGNUREGEXDIR=	${OBJTOP}/gnu/lib/libregex
 LIBSSPDIR=	${OBJTOP}/gnu/lib/libssp
 LIBSSP_NONSHAREDDIR=	${OBJTOP}/gnu/lib/libssp/libssp_nonshared
 LIBSUPCPLUSPLUSDIR=	${OBJTOP}/gnu/lib/libsupc++
-LIBASN1DIR=	${OBJTOP}/kerberos5/lib/libasn1
-LIBGSSAPI_KRB5DIR=	${OBJTOP}/kerberos5/lib/libgssapi_krb5
-LIBGSSAPI_NTLMDIR=	${OBJTOP}/kerberos5/lib/libgssapi_ntlm
-LIBGSSAPI_SPNEGODIR=	${OBJTOP}/kerberos5/lib/libgssapi_spnego
-LIBHDBDIR=	${OBJTOP}/kerberos5/lib/libhdb
-LIBHEIMBASEDIR=	${OBJTOP}/kerberos5/lib/libheimbase
-LIBHEIMIPCCDIR=	${OBJTOP}/kerberos5/lib/libheimipcc
-LIBHEIMIPCSDIR=	${OBJTOP}/kerberos5/lib/libheimipcs
-LIBHEIMNTLMDIR=	${OBJTOP}/kerberos5/lib/libheimntlm
-LIBHX509DIR=	${OBJTOP}/kerberos5/lib/libhx509
-LIBKADM5CLNTDIR=	${OBJTOP}/kerberos5/lib/libkadm5clnt
-LIBKADM5SRVDIR=	${OBJTOP}/kerberos5/lib/libkadm5srv
-LIBKAFS5DIR=	${OBJTOP}/kerberos5/lib/libkafs5
-LIBKDCDIR=	${OBJTOP}/kerberos5/lib/libkdc
-LIBKRB5DIR=	${OBJTOP}/kerberos5/lib/libkrb5
-LIBROKENDIR=	${OBJTOP}/kerberos5/lib/libroken
-LIBWINDDIR=	${OBJTOP}/kerberos5/lib/libwind
+
 LIBATF_CDIR=	${OBJTOP}/lib/atf/libatf-c
 LIBATF_CXXDIR=	${OBJTOP}/lib/atf/libatf-c++
 LIBALIASDIR=	${OBJTOP}/lib/libalias/libalias
+LIBBLACKLISTDIR=	${OBJTOP}/lib/libblacklist
 LIBBLOCKSRUNTIMEDIR=	${OBJTOP}/lib/libblocksruntime
-LIBBSNMPDIR=	${OBJTOP}/lib/libbsnmp/libbsnmp
-LIBCAP_CASPERDIR=	${OBJTOP}/lib/libcasper/libcasper
+LIBCASPERDIR=	${OBJTOP}/lib/libcasper/libcasper
 LIBCAP_DNSDIR=	${OBJTOP}/lib/libcasper/services/cap_dns
 LIBCAP_GRPDIR=	${OBJTOP}/lib/libcasper/services/cap_grp
 LIBCAP_PWDDIR=	${OBJTOP}/lib/libcasper/services/cap_pwd
@@ -476,6 +363,9 @@ LIBEGACYDIR=	${OBJTOP}/tools/build
 LIBLNDIR=	${OBJTOP}/usr.bin/lex/lib
 
 LIBRACOONDIR= 	${OBJTOP}/lib/libracoon
+
+LIBTLSDIR=	${OBJTOP}/lib/libtls
+LIBTLS?=	${LIBTELNETDIR}/libtls.a
 
 LIBTERMCAPDIR=	${LIBNCURSESDIR}
 LIBTERMCAPWDIR=	${LIBNCURSESWDIR}

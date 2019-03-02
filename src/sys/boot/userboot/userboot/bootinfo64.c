@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/userboot/userboot/bootinfo64.c 261504 2014-02-05 04:39:03Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/userboot/userboot/bootinfo64.c 261504 2014-02-05 04:39:03Z jhb $");
 
 #include <stand.h>
 #include <sys/param.h>

@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/common/console.c 294506 2016-01-21 15:27:44Z smh $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/common/console.c 294506 2016-01-21 15:27:44Z smh $");
 
 #include <stand.h>
 #include <string.h>

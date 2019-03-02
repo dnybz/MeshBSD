@@ -14,7 +14,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/e_hypotf.c 226380 2011-10-15 07:00:28Z das $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/src/e_hypotf.c 226380 2011-10-15 07:00:28Z das $");
 
 #include "math.h"
 #include "math_private.h"

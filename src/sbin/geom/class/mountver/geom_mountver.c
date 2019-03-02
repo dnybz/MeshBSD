@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sbin/geom/class/mountver/geom_mountver.c 283074 2015-05-18 19:37:55Z allanjude $");
+__FBSDID("$FreeBSD: releng/11.0/sbin/geom/class/mountver/geom_mountver.c 283074 2015-05-18 19:37:55Z allanjude $");
 
 #include <stdio.h>
 #include <stdint.h>

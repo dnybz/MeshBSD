@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/riscv/include/smp.h 295972 2016-02-24 16:50:34Z br $
+ * $FreeBSD: releng/11.0/sys/riscv/include/smp.h 295972 2016-02-24 16:50:34Z br $
  */
 
 #ifndef	_MACHINE_SMP_H_

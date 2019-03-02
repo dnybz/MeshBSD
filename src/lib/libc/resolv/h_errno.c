@@ -22,7 +22,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/resolv/h_errno.c 288018 2015-09-20 04:26:55Z rodrigc $
+ * $FreeBSD: releng/11.0/lib/libc/resolv/h_errno.c 288018 2015-09-20 04:26:55Z rodrigc $
  */
 
 #include <sys/types.h>

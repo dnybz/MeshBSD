@@ -34,7 +34,7 @@
 static char sccsid[] = "@(#)atexit.c	8.2 (Berkeley) 7/3/94";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/stdlib/atexit.c 288026 2015-09-20 20:15:44Z rodrigc $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/stdlib/atexit.c 288026 2015-09-20 20:15:44Z rodrigc $");
 
 #include "namespace.h"
 #include <errno.h>

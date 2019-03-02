@@ -1,5 +1,5 @@
 /*
- * $FreeBSD: head/lib/libc/stdio/Symbol.map 299572 2016-05-12 21:30:22Z cem $
+ * $FreeBSD: releng/11.0/lib/libc/stdio/Symbol.map 299572 2016-05-12 21:30:22Z cem $
  */
 
 FBSD_1.0 {

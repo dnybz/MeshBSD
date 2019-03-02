@@ -1,4 +1,4 @@
-/* $FreeBSD: head/usr.bin/grep/regex/xmalloc.c 241737 2012-10-19 14:49:42Z ed $ */
+/* $FreeBSD: releng/11.0/usr.bin/grep/regex/xmalloc.c 241737 2012-10-19 14:49:42Z ed $ */
 
 /*
   xmalloc.c - Simple malloc debugging library implementation

@@ -37,7 +37,7 @@
 ** SUCH DAMAGE.
 */
 
-/* $FreeBSD: head/sys/boot/ficl/testmain.c 94290 2002-04-09 17:45:28Z dcs $ */
+/* $FreeBSD: releng/11.0/sys/boot/ficl/testmain.c 94290 2002-04-09 17:45:28Z dcs $ */
 
 #include <stdlib.h>
 #include <stdio.h>

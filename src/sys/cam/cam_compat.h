@@ -25,7 +25,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/cam/cam_compat.h 259397 2013-12-14 22:07:40Z nwhitehorn $
+ * $FreeBSD: releng/11.0/sys/cam/cam_compat.h 259397 2013-12-14 22:07:40Z nwhitehorn $
  */
 
 #ifndef _CAM_CAM_COMPAT_H

@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/mips/mediatek/files.mediatek 299928 2016-05-16 09:11:40Z andrew $
+# $FreeBSD: releng/11.0/sys/mips/mediatek/files.mediatek 300659 2016-05-25 06:47:28Z sgalabov $
 
 mips/mediatek/mtk_machdep.c 		standard
 mips/mediatek/mtk_sysctl.c 		standard
@@ -40,3 +40,8 @@ mips/mips/tick.c 			standard
 # Temporary Reset if
 mips/mediatek/fdt_reset.c 		standard
 mips/mediatek/fdt_reset_if.m 		standard
+
+# Switch
+dev/etherswitch/mtkswitch/mtkswitch.c 	optional mtkswitch
+dev/etherswitch/mtkswitch/mtkswitch_rt3050.c 	optional mtkswitch
+dev/etherswitch/mtkswitch/mtkswitch_mt7620.c 	optional mtkswitch

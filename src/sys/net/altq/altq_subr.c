@@ -24,7 +24,7 @@
  * SUCH DAMAGE.
  *
  * $KAME: altq_subr.c,v 1.21 2003/11/06 06:32:53 kjc Exp $
- * $FreeBSD: head/sys/net/altq/altq_subr.c 287009 2015-08-21 22:02:22Z loos $
+ * $FreeBSD: releng/11.0/sys/net/altq/altq_subr.c 287009 2015-08-21 22:02:22Z loos $
  */
 
 #include "opt_altq.h"

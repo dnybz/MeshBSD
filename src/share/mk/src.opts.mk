@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/src.opts.mk 297280 2016-03-25 22:36:29Z bdrewery $
+# $FreeBSD: releng/11.0/share/mk/src.opts.mk 306143 2016-09-21 21:23:09Z bdrewery $
 #
 # Option file for FreeBSD /usr/src builds.
 #
@@ -44,22 +44,13 @@ __<src.opts.mk>__:
 # These options are used by src the builds
 
 __DEFAULT_YES_OPTIONS = \
-    ACCT \
-    AMD \
     AT \
-	ATF \
-	AUDIT \
     AUTHPF \
-    AUTOFS \
     BINUTILS \
     BINUTILS_BOOTSTRAP \
-    BLUETOOTH \
+    BLACKLIST \
     BOOT \
-    BOOTPARAMD \
-    BOOTPD \
     BSD_CPIO \
-    BSDINSTALL \
-    BSNMP \
     BZIP2 \
     CALENDAR \
     CAPSICUM \
@@ -69,7 +60,6 @@ __DEFAULT_YES_OPTIONS = \
     CROSS_COMPILER \
     CRYPT \
     CTM \
-    CUSE \
     CXX \
     DICT \
     DMAGENT \
@@ -91,14 +81,12 @@ __DEFAULT_YES_OPTIONS = \
     GPIO \
     GPL_DTC \
     GROFF \
-    HTML \
     ICONV \
     INET \
     INET6 \
     INETD \
     JAIL \
     KDUMP \
-    KVM \
     LDNS \
     LDNS_UTILS \
     LEGACY_CONSOLE \
@@ -109,41 +97,31 @@ __DEFAULT_YES_OPTIONS = \
     LOCATE \
     LS_COLORS \
     LZMA_SUPPORT \
-    MAIL \
     MAKE \
-    MANDOCDB \
-    NAND \
     NETCAT \
     NETGRAPH \
     NLS_CATALOGS \
     NS_CACHING \
-    NTP \
     LIBRESSL \
     PAM \
     PF \
     PMC \
-    PORTSNAP \
     PPP \
-    QUOTAS \
-    RACOON2 \
     RADIUS_SUPPORT \
     RCMDS \
-    RBOOTD \
     RCS \
     ROUTED \
     SETUID_LOGIN \
+    SHAREDOCS \
     SOURCELESS \
     SOURCELESS_HOST \
     SOURCELESS_UCODE \
-    SVNLITE \
     SYSCONS \
-    TALK \
     TCP_WRAPPERS \
     TEXTPROC \
     TFTP \
-    TIMED \
-	TOOLCHAIN \
-	USB \
+    UNBOUND \
+    USB \
     UTMPX \
     VI \
     VT \
@@ -153,15 +131,19 @@ __DEFAULT_YES_OPTIONS = \
 
 __DEFAULT_NO_OPTIONS = \
     BSD_GREP \
-	CDDL \
-	CLANG_EXTRAS \
+    CLANG_EXTRAS \
+    DTRACE_TESTS \
     HESIOD \
+	HTML \
     LIBSOFT \
-	OPENLDAP \
-	SHARED_TOOLCHAIN \
+    NAND \
+    OPENLDAP \
+    SHARED_TOOLCHAIN \
     SORT_THREADS \
-    SVN \
- 	UCL
+    SYSTEM_COMPILER \
+	TESTS
+
+
 #
 # Default behaviour of some options depends on the architecture.  Unfortunately
 # this means that we have to test TARGET_ARCH (the buildworld case) as well
@@ -187,17 +169,23 @@ __TT=${MACHINE}
 # This means that architectures that have GCC 4.2 as default can not
 # build Clang without using an external compiler.
 
-.if ${COMPILER_FEATURES:Mc++11} && (${__TT} == "arm")
+.if ${COMPILER_FEATURES:Mc++11} && (${__T} == "aarch64" || \
+    ${__T} == "amd64" || ${__TT} == "arm" || ${__T} == "i386")
 # Clang is enabled, and will be installed as the default /usr/bin/cc.
 __DEFAULT_YES_OPTIONS+=CLANG CLANG_BOOTSTRAP CLANG_FULL CLANG_IS_CC
 __DEFAULT_NO_OPTIONS+=GCC GCC_BOOTSTRAP GNUCXX
+.elif ${COMPILER_FEATURES:Mc++11} && ${__T:Mpowerpc*}
+# On powerpc, if an external compiler that supports C++11 is used as ${CC},
+# then Clang is enabled, but GCC is installed as the default /usr/bin/cc.
+__DEFAULT_YES_OPTIONS+=CLANG CLANG_FULL GCC GCC_BOOTSTRAP GNUCXX
+__DEFAULT_NO_OPTIONS+=CLANG_BOOTSTRAP CLANG_IS_CC
 .else
 # Everything else disables Clang, and uses GCC instead.
 __DEFAULT_YES_OPTIONS+=GCC GCC_BOOTSTRAP GNUCXX
 __DEFAULT_NO_OPTIONS+=CLANG CLANG_BOOTSTRAP CLANG_FULL CLANG_IS_CC
 .endif
 # In-tree binutils/gcc are older versions without modern architecture support.
-.if ${__T} == "riscv64"
+.if ${__T} == "aarch64" || ${__T} == "riscv64"
 BROKEN_OPTIONS+=BINUTILS BINUTILS_BOOTSTRAP GCC GCC_BOOTSTRAP GDB
 __DEFAULT_YES_OPTIONS+=LLVM_LIBUNWIND
 .else
@@ -208,9 +196,11 @@ BROKEN_OPTIONS+=PROFILE # "sorry, unimplemented: profiler support for RISC-V"
 BROKEN_OPTIONS+=TESTS   # "undefined reference to `_Unwind_Resume'"
 BROKEN_OPTIONS+=CXX     # "libcxxrt.so: undefined reference to `_Unwind_Resume_or_Rethrow'"
 .endif
-
+.if ${__T} == "aarch64" || ${__T} == "amd64"
+__DEFAULT_YES_OPTIONS+=LLDB
+.else
 __DEFAULT_NO_OPTIONS+=LLDB
-
+.endif
 # LLVM lacks support for FreeBSD 64-bit atomic operations for ARMv4/ARMv5
 .if ${__T} == "arm" || ${__T} == "armeb"
 BROKEN_OPTIONS+=LLDB
@@ -254,6 +244,7 @@ MK_LIBTHR:=	no
 
 .if ${MK_LDNS} == "no"
 MK_LDNS_UTILS:=	no
+MK_UNBOUND:= no
 .endif
 
 .if ${MK_SOURCELESS} == "no"
@@ -264,7 +255,6 @@ MK_SOURCELESS_UCODE:= no
 .if ${MK_CRYPT} == "no"
 MK_LIBRESSL:=	no
 MK_OPENSSH:=	no
-MK_KERBEROS:=	no
 .endif
 
 .if ${MK_CXX} == "no"
@@ -275,21 +265,14 @@ MK_GNUCXX:=	no
 
 .if ${MK_LIBRESSL} == "no"
 MK_OPENSSH:=	no
-MK_KERBEROS:=	no
-MK_NETCAT:= 	no
-MK_RACOON2:= 	no
-.endif
-
-.if ${MK_MAIL} == "no"
-MK_DMAGENT:=	no
-.endif
-
-.if ${MK_NETGRAPH} == "no"
-MK_BLUETOOTH:=	no
 .endif
 
 .if ${MK_PF} == "no"
 MK_AUTHPF:=	no
+.endif
+
+.if ${MK_TESTS} == "no"
+MK_DTRACE_TESTS:= no
 .endif
 
 .if ${MK_TEXTPROC} == "no"
@@ -301,6 +284,10 @@ MK_BINUTILS_BOOTSTRAP:= no
 MK_CLANG_BOOTSTRAP:= no
 MK_ELFTOOLCHAIN_BOOTSTRAP:= no
 MK_GCC_BOOTSTRAP:= no
+.endif
+
+.if ${MK_META_MODE} == "yes"
+MK_SYSTEM_COMPILER:= no
 .endif
 
 .if ${MK_TOOLCHAIN} == "no"
@@ -326,37 +313,21 @@ MK_CLANG_FULL:= no
 # MK_* variable is set to "no".
 #
 .for var in \
+    BLACKLIST \
     BZIP2 \
     GNU \
     INET \
     INET6 \
-	KERBEROS \
-	KVM \
     NETGRAPH \
     PAM \
-	WIRELESS
+    TESTS \
+    WIRELESS
 .if defined(WITHOUT_${var}_SUPPORT) || ${MK_${var}} == "no"
 MK_${var}_SUPPORT:= no
 .else
 MK_${var}_SUPPORT:= yes
 .endif
 .endfor
-
-#
-# XXX ...
-#
-
-.if ${MK_INET_SUPPORT} == "no" && ${MK_INET6_SUPPORT} == "no"
-MK_BSNMP:= 	no
-MK_FTP:= 	no
-MK_INETD:= 	no
-MK_PF:= 	no
-MK_LIBRESSL:= 	no
-MK_MAIL:= 	no
-MK_NIS:= 	no
-MK_RCMDS:= 	no
-MK_TFTP:= 	no
-.endif
 
 #
 # MK_* options whose default value depends on another option.
@@ -380,6 +351,9 @@ MK_LLDB:=	no
 # gcc 4.8 and newer supports libc++, so suppress gnuc++ in that case.
 # while in theory we could build it with that, we don't want to do
 # that since it creates too much confusion for too little gain.
+# XXX: This is incomplete and needs X_COMPILER_TYPE/VERSION checks too
+#      to prevent Makefile.inc1 from bootstrapping unneeded dependencies
+#      and to support 'make delete-old' when supplying an external toolchain.
 .if ${COMPILER_TYPE} == "gcc" && ${COMPILER_VERSION} >= 40800
 MK_GNUCXX:=no
 MK_GCC:=no

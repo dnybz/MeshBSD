@@ -1,4 +1,4 @@
-/* $OpenBSD: cryptutil.c,v 1.12 2015/09/13 15:33:48 guenther Exp $ */
+/* $OpenBSD: cryptutil.c,v 1.1 2014/05/12 19:13:14 tedu Exp $ */
 /*
  * Copyright (c) 2014 Ted Unangst <tedu@openbsd.org>
  *
@@ -18,55 +18,18 @@
 #include <unistd.h>
 #include <string.h>
 #include <pwd.h>
-#include <login_cap.h>
 #include <errno.h>
-#include <time.h>
-
-static int	_bcrypt_autorounds(void);
-
-/*
- * Measure this system's performance by measuring the time for 8 rounds.
- * We are aiming for something that takes around 0.1s, but not too much over.
- */
-
-static int
-_bcrypt_autorounds(void)
-{
-	struct timespec before, after;
-	int r = 8;
-	char buf[_PASSWORD_LEN];
-	int duration;
-
-	clock_gettime(CLOCK_THREAD_CPUTIME_ID, &before);
-	bcrypt_newhash("testpassword", r, buf, sizeof(buf));
-	clock_gettime(CLOCK_THREAD_CPUTIME_ID, &after);
-
-	duration = after.tv_sec - before.tv_sec;
-	duration *= 1000000;
-	duration += (after.tv_nsec - before.tv_nsec) / 1000;
-
-	/* too quick? slow it down. */
-	while (r < 16 && duration <= 60000) {
-		r += 1;
-		duration *= 2;
-	}
-	/* too slow? speed it up. */
-	while (r > 6 && duration > 120000) {
-		r -= 1;
-		duration /= 2;
-	}
-
-	return r;
-}
 
 int
 crypt_checkpass(const char *pass, const char *goodhash)
 {
 	char dummy[_PASSWORD_LEN];
+	char *res;
 
 	if (goodhash == NULL) {
 		/* fake it */
-		goto fake;
+		bcrypt_newhash(pass, 8, dummy, sizeof(dummy));
+		goto fail;
 	}
 
 	/* empty password */
@@ -74,62 +37,18 @@ crypt_checkpass(const char *pass, const char *goodhash)
 		return 0;
 
 	if (goodhash[0] == '$' && goodhash[1] == '2') {
-		if (bcrypt_checkpass(pass, goodhash))
-			goto fail;
-		return 0;
+		return bcrypt_checkpass(pass, goodhash);
 	}
 
-	/* unsupported. fake it. */
-fake:
-	bcrypt_newhash(pass, 8, dummy, sizeof(dummy));
+	/* have to do it the hard way */
+	res = crypt(pass, goodhash);
+	if (strlen(res) != strlen(goodhash) ||
+	    timingsafe_bcmp(res, goodhash, strlen(goodhash)) != 0) {
+		goto fail;
+	}
+
+	return 0;
 fail:
 	errno = EACCES;
 	return -1;
 }
-__weak_reference(crypt_checkpass, crypt_checkpass);
-
-int
-crypt_newhash(const char *pass, const char *pref, char *hash, size_t hashlen)
-{
-	int rv = -1;
-	const char *defaultpref = "blowfish,8";
-	const char *errstr;
-	const char *choices[] = { "blowfish", "bcrypt" };
-	size_t maxchoice = sizeof(choices) / sizeof(choices[0]);
-	int i;
-	int rounds;
-
-	if (pref == NULL)
-		pref = defaultpref;
-
-	for (i = 0; i < maxchoice; i++) {
-		const char *choice = choices[i];
-		size_t len = strlen(choice);
-		if (strcmp(pref, choice) == 0) {
-			rounds = _bcrypt_autorounds();
-			break;
-		} else if (strncmp(pref, choice, len) == 0 &&
-		    pref[len] == ',') {
-			if (strcmp(pref + len + 1, "a") == 0) {
-				rounds = _bcrypt_autorounds();
-			} else {
-				rounds = strtonum(pref + len + 1, 4, 31, &errstr);
-				if (errstr) {
-					errno = EINVAL;
-					goto err;
-				}
-			}
-			break;
-		}
-	}
-	if (i == maxchoice) {
-		errno = EINVAL;
-		goto err;
-	}
-
-	rv = bcrypt_newhash(pass, rounds, hash, hashlen);
-
-err:
-	return rv;
-}
-__weak_reference(crypt_newhash, crypt_newhash);

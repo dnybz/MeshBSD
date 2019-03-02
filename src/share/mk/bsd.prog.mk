@@ -1,5 +1,5 @@
 #	from: @(#)bsd.prog.mk	5.26 (Berkeley) 6/25/91
-# $FreeBSD: head/share/mk/bsd.prog.mk 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/share/mk/bsd.prog.mk 302176 2016-06-24 18:45:16Z emaste $
 
 .include <bsd.init.mk>
 .include <bsd.compiler.mk>
@@ -66,7 +66,8 @@ PROG_FULL=${PROG}.full
     ${BINDIR} == "/bin" ||\
     ${BINDIR:C%/libexec(/.*)?%/libexec%} == "/libexec" ||\
     ${BINDIR} == "/sbin" ||\
-    ${BINDIR:C%/usr/(bin|bsdinstall|libexec|lpr|sendmail|sm.bin|sbin|tests)(/.*)?%/usr/bin%} == "/usr/bin"\
+    ${BINDIR:C%/usr/(bin|bsdinstall|libexec|sbin|tests)(/.*)?%/usr/bin%} == "/usr/bin" ||\
+    ${BINDIR} == "/usr/lib" \
      )
 DEBUGFILEDIR=	${DEBUGDIR}${BINDIR}
 .else
@@ -98,9 +99,6 @@ ${PROG_FULL}: ${OBJS}
 	${CC:N${CCACHE_BIN}} ${CFLAGS:N-M*} ${LDFLAGS} -o ${.TARGET} ${OBJS} \
 	    ${LDADD}
 .endif
-.if ${MK_CTF} != "no"
-	${CTFMERGE} ${CTFFLAGS} -o ${.TARGET} ${OBJS}
-.endif
 
 .else	# !defined(SRCS)
 
@@ -130,9 +128,6 @@ ${PROG_FULL}: ${OBJS}
 	${CC:N${CCACHE_BIN}} ${CFLAGS:N-M*} ${LDFLAGS} -o ${.TARGET} ${OBJS} \
 	    ${LDADD}
 .endif
-.if ${MK_CTF} != "no"
-	${CTFMERGE} ${CTFFLAGS} -o ${.TARGET} ${OBJS}
-.endif
 .endif # !target(${PROG})
 
 .endif # !defined(SRCS)
@@ -145,23 +140,12 @@ ${PROG}: ${PROG_FULL} ${PROGNAME}.debug
 ${PROGNAME}.debug: ${PROG_FULL}
 	${OBJCOPY} --only-keep-debug ${PROG_FULL} ${.TARGET}
 .endif
-
-.if	${MK_MAN} != "no" && !defined(MAN) && \
-	!defined(MAN1) && !defined(MAN2) && !defined(MAN3) && \
-	!defined(MAN4) && !defined(MAN5) && !defined(MAN6) && \
-	!defined(MAN7) && !defined(MAN8) && !defined(MAN9)
-MAN=	${PROG}.1
-MAN1=	${MAN}
-.endif
 .endif # defined(PROG)
 
 .if defined(_SKIP_BUILD)
 all:
 .else
 all: ${PROG} ${SCRIPTS}
-.if ${MK_MAN} != "no"
-all: all-man
-.endif
 .endif
 
 .if defined(PROG)
@@ -178,6 +162,7 @@ CLEANFILES+= ${OBJS}
 .include <bsd.libnames.mk>
 
 .if defined(PROG)
+.if !defined(NO_EXTRADEPEND)
 _EXTRADEPEND:
 .if defined(LDFLAGS) && !empty(LDFLAGS:M-nostdlib)
 .if defined(DPADD) && !empty(DPADD)
@@ -193,6 +178,7 @@ _EXTRADEPEND:
 .endif
 .endif
 .endif
+.endif	# !defined(NO_EXTRADEPEND)
 .endif
 
 .if !target(install)
@@ -267,11 +253,6 @@ NLSNAME?=	${PROG}
 .include <bsd.incs.mk>
 .include <bsd.links.mk>
 
-.if ${MK_MAN} != "no"
-realinstall: maninstall
-.ORDER: beforeinstall maninstall
-.endif
-
 .endif	# !target(install)
 
 .if !target(lint)
@@ -279,10 +260,6 @@ lint: ${SRCS:M*.c}
 .if defined(PROG)
 	${LINT} ${LINTFLAGS} ${CFLAGS:M-[DIU]*} ${.ALLSRC}
 .endif
-.endif
-
-.if ${MK_MAN} != "no"
-.include <bsd.man.mk>
 .endif
 
 .if defined(PROG)

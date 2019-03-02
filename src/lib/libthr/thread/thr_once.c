@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libthr/thread/thr_once.c 297706 2016-04-08 11:15:26Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libthr/thread/thr_once.c 303708 2016-08-03 10:18:52Z kib $");
 
 #include "namespace.h"
 #include <pthread.h>
@@ -100,9 +100,4 @@ _pthread_once(pthread_once_t *once_control, void (*init_routine) (void))
 	atomic_store_rel_int(&once_control->state, ONCE_DONE);
 	_thr_umtx_wake(&once_control->state, INT_MAX, 0);
 	return (0);
-}
-
-void
-_thr_once_init(void)
-{
 }

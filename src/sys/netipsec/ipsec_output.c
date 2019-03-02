@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/netipsec/ipsec_output.c 298995 2016-05-03 18:05:43Z pfg $
+ * $FreeBSD: releng/11.0/sys/netipsec/ipsec_output.c 298995 2016-05-03 18:05:43Z pfg $
  */
 
 /*

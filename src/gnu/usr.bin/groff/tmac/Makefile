@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/usr.bin/groff/tmac/Makefile 288429 2015-09-30 20:47:27Z bdrewery $
+# $FreeBSD: releng/11.0/gnu/usr.bin/groff/tmac/Makefile 288429 2015-09-30 20:47:27Z bdrewery $
 
 .include <bsd.own.mk>			# SHAREDIR
 

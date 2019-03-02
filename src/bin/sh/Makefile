@@ -1,5 +1,5 @@
 #	@(#)Makefile	8.4 (Berkeley) 5/5/95
-# $FreeBSD: head/bin/sh/Makefile 299289 2016-05-09 22:21:09Z bdrewery $
+# $FreeBSD: releng/11.0/bin/sh/Makefile 301285 2016-06-03 19:25:41Z bdrewery $
 
 .include <src.opts.mk>
 
@@ -39,6 +39,7 @@ CLEANFILES+= ${GENSRCS} ${GENHDRS}
 build-tools: mknodes mksyntax
 
 .ORDER: builtins.c builtins.h
+builtins.h: .NOMETA
 builtins.c builtins.h: mkbuiltins builtins.def
 	sh ${.CURDIR}/mkbuiltins ${.CURDIR}
 
@@ -51,14 +52,20 @@ mknodes: mknodes.o ${BUILD_TOOLS_META}
 mksyntax: mksyntax.o ${BUILD_TOOLS_META}
 
 .ORDER: nodes.c nodes.h
+nodes.h: .NOMETA
 nodes.c nodes.h: mknodes nodetypes nodes.c.pat
 	${BTOOLSPATH:U.}/mknodes ${.CURDIR}/nodetypes ${.CURDIR}/nodes.c.pat
 
 .ORDER: syntax.c syntax.h
+syntax.h: .NOMETA
 syntax.c syntax.h: mksyntax
 	${BTOOLSPATH:U.}/mksyntax
 
 token.h: mktokens
 	sh ${.CURDIR}/mktokens
+
+.if ${MK_TESTS} != "no"
+SUBDIR+=    tests
+.endif
 
 .include <bsd.prog.mk>

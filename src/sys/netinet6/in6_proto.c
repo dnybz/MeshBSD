@@ -61,7 +61,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet6/in6_proto.c 299827 2016-05-15 03:18:03Z markj $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet6/in6_proto.c 301114 2016-06-01 10:14:04Z bz $");
 
 #include "opt_inet.h"
 #include "opt_inet6.h"
@@ -153,9 +153,6 @@ struct protosw inet6sw[] = {
 	.pr_domain =		&inet6domain,
 	.pr_protocol =		IPPROTO_IPV6,
 	.pr_init =		ip6_init,
-#ifdef VIMAGE
-	.pr_destroy =		ip6_destroy,
-#endif
 	.pr_slowtimo =		frag6_slowtimo,
 	.pr_drain =		frag6_drain,
 	.pr_usrreqs =		&nousrreqs,
@@ -207,7 +204,7 @@ struct protosw inet6sw[] = {
 	.pr_type =		SOCK_STREAM,
 	.pr_domain =		&inet6domain,
 	.pr_protocol =		IPPROTO_SCTP,
-	.pr_flags =		PR_WANTRCVD,
+	.pr_flags =		PR_CONNREQUIRED|PR_WANTRCVD,
 	.pr_input =		sctp6_input,
 	.pr_ctlinput =		sctp6_ctlinput,
 	.pr_ctloutput =		sctp_ctloutput,

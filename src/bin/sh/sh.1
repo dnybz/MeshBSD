@@ -30,9 +30,9 @@
 .\" SUCH DAMAGE.
 .\"
 .\"	from: @(#)sh.1	8.6 (Berkeley) 5/4/95
-.\" $FreeBSD: head/bin/sh/sh.1 296723 2016-03-12 14:54:34Z kib $
+.\" $FreeBSD: releng/11.0/bin/sh/sh.1 301007 2016-05-31 00:23:29Z wblock $
 .\"
-.Dd January 30, 2016
+.Dd May 30, 2016
 .Dt SH 1
 .Os
 .Sh NAME
@@ -1403,9 +1403,9 @@ may include any of the following formatting sequences,
 which are replaced by the given information:
 .Bl -tag -width indent
 .It Li \eH
-The local hostname.
+This system's fully-qualified hostname (FQDN).
 .It Li \eh
-The fully-qualified hostname.
+This system's hostname.
 .It Li \eW
 The final component of the current working directory.
 .It Li \ew

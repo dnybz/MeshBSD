@@ -51,7 +51,7 @@ static const char sccsid[] = "From: @(#)rsh.c	8.3 (Berkeley) 4/6/94";
 #endif
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/rsh/rsh.c 284065 2015-06-06 12:43:05Z bapt $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/rsh/rsh.c 284065 2015-06-06 12:43:05Z bapt $");
 
 #include <sys/param.h>
 #include <sys/signal.h>

@@ -1,4 +1,4 @@
-/* $FreeBSD: head/lib/liblzma/config.h 291125 2015-11-21 09:09:25Z delphij $ */
+/* $FreeBSD: releng/11.0/lib/liblzma/config.h 291125 2015-11-21 09:09:25Z delphij $ */
 /* config.h.  Generated from config.h.in by configure.  */
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 

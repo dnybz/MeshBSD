@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/devctl/devctl.c 298709 2016-04-27 16:33:17Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/devctl/devctl.c 298709 2016-04-27 16:33:17Z jhb $");
 
 #include <sys/linker_set.h>
 #include <devctl.h>

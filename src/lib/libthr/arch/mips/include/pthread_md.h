@@ -24,7 +24,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * from: src/lib/libthr/arch/arm/include/pthread_md.h,v 1.3 2005/10/29 13:40:31 davidxu
- * $FreeBSD: head/lib/libthr/arch/mips/include/pthread_md.h 277490 2015-01-21 16:41:05Z andrew $
+ * $FreeBSD: releng/11.0/lib/libthr/arch/mips/include/pthread_md.h 277490 2015-01-21 16:41:05Z andrew $
  */
 
 /*

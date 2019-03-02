@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	$FreeBSD: head/lib/librpcsec_gss/svc_rpcsec_gss.c 299455 2016-05-11 14:37:33Z pfg $
+ *	$FreeBSD: releng/11.0/lib/librpcsec_gss/svc_rpcsec_gss.c 299455 2016-05-11 14:37:33Z pfg $
  */
 /*
   svc_rpcsec_gss.c

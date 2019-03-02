@@ -34,7 +34,7 @@
 static char sccsid[] = "@(#)putw.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/stdio/putw.c 269001 2014-07-22 23:29:54Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/stdio/putw.c 269001 2014-07-22 23:29:54Z pfg $");
 
 #include "namespace.h"
 #include <stdio.h>

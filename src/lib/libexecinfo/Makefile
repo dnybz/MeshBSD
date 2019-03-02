@@ -1,7 +1,7 @@
-# $FreeBSD: head/lib/libexecinfo/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/libexecinfo/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 PACKAGE=lib${LIB}
-LIBEXECINFO=	${.CURDIR}/../../tools/libexecinfo
+LIBEXECINFO=	${.CURDIR}/../../contrib/libexecinfo
 
 LIB=		execinfo
 SHLIB_MAJOR=	1
@@ -12,12 +12,5 @@ INCS=		execinfo.h
 SRCS=		backtrace.c symtab.c unwind.c
 
 LIBADD=		elf
-
-MAN=		backtrace.3
-
-MLINKS+=	backtrace.3 backtrace_symbols.3
-MLINKS+=	backtrace.3 backtrace_symbols_fmt.3
-MLINKS+=	backtrace.3 backtrace_symbols_fd.3
-MLINKS+=	backtrace.3 backtrace_symbols_fd_fmt.3
 
 .include <bsd.lib.mk>

@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)extern.h	8.2 (Berkeley) 4/1/94
- * $FreeBSD: head/bin/cp/extern.h 284106 2015-06-07 06:30:25Z bdrewery $
+ * $FreeBSD: releng/11.0/bin/cp/extern.h 284106 2015-06-07 06:30:25Z bdrewery $
  */
 
 typedef struct {

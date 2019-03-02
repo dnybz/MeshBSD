@@ -26,7 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/sys/tty.h 259549 2013-12-18 12:50:43Z glebius $
+ * $FreeBSD: releng/11.0/sys/sys/tty.h 259549 2013-12-18 12:50:43Z glebius $
  */
 
 #ifndef _SYS_TTY_H_

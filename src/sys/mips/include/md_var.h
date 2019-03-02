@@ -28,7 +28,7 @@
  *
  *	from: src/sys/i386/include/md_var.h,v 1.35 2000/02/20 20:51:23 bsd
  *	JNPR: md_var.h,v 1.4 2006/10/16 12:30:34 katta
- * $FreeBSD: head/sys/mips/include/md_var.h 276772 2015-01-07 01:01:39Z markj $
+ * $FreeBSD: releng/11.0/sys/mips/include/md_var.h 276772 2015-01-07 01:01:39Z markj $
  */
 
 #ifndef _MACHINE_MD_VAR_H_

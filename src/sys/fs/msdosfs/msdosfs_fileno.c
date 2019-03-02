@@ -43,7 +43,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/fs/msdosfs/msdosfs_fileno.c 276887 2015-01-09 14:50:08Z emaste $");
+__FBSDID("$FreeBSD: releng/11.0/sys/fs/msdosfs/msdosfs_fileno.c 276887 2015-01-09 14:50:08Z emaste $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

@@ -1,4 +1,4 @@
-/*	$FreeBSD: head/sys/netipsec/ipsec.h 298399 2016-04-21 11:02:06Z ae $	*/
+/*	$FreeBSD: releng/11.0/sys/netipsec/ipsec.h 298399 2016-04-21 11:02:06Z ae $	*/
 /*	$KAME: ipsec.h,v 1.53 2001/11/20 08:32:38 itojun Exp $	*/
 
 /*-

@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_sharedpage.c 291171 2015-11-23 07:09:35Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_sharedpage.c 291171 2015-11-23 07:09:35Z kib $");
 
 #include "opt_compat.h"
 #include "opt_vm.h"

@@ -31,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sbin/pfctl/pf_print_state.c 295086 2016-01-30 22:03:14Z ian $");
+__FBSDID("$FreeBSD: releng/11.0/sbin/pfctl/pf_print_state.c 295086 2016-01-30 22:03:14Z ian $");
 
 #include <sys/types.h>
 #include <sys/socket.h>

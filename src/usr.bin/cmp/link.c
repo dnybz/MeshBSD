@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/cmp/link.c 149388 2005-08-23 13:13:13Z brian $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/cmp/link.c 149388 2005-08-23 13:13:13Z brian $");
 
 #include <sys/types.h>
 #include <err.h>

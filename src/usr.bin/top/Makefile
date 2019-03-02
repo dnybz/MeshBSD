@@ -1,6 +1,6 @@
-# $FreeBSD: head/usr.bin/top/Makefile 284345 2015-06-13 19:20:56Z sjg $
+# $FreeBSD: releng/11.0/usr.bin/top/Makefile 284345 2015-06-13 19:20:56Z sjg $
 
-TOPDIR=	${.CURDIR}/../../external/top
+TOPDIR=	${.CURDIR}/../../contrib/top
 .PATH: ${TOPDIR}
 
 PROG=	top
@@ -24,7 +24,7 @@ CFLAGS+= -D"Table_size=${TOP_TABLE_SIZE}"
 LIBADD=	ncursesw m kvm jail
 
 CLEANFILES= sigdesc.h
-SIGCONV_AWK= ${.CURDIR}/../../external/top/sigconv.awk
+SIGCONV_AWK= ${.CURDIR}/../../contrib/top/sigconv.awk
 STAGED_INCLUDE_DIR?= ${DESTDIR}/usr/include
 SIGNAL_H= ${STAGED_INCLUDE_DIR}/sys/signal.h
 sigdesc.h: ${SIGCONV_AWK} ${SIGNAL_H}

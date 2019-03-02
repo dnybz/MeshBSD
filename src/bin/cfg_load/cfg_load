@@ -20,8 +20,8 @@
 
 . /etc/rc.local || exit 1
 
-echo "*** Restoring from ${CFG_PATH} .. "
+echo "*** Restoring from ${cfg_path} .. "
 cd /
-dd if=${CFG_PATH} bs=${CFG_SIZE} | gunzip | cpio -iudv || exit 1
+dd if=${cfg_path} bs=${cfg_size} | gunzip | cpio -iudv || exit 1
 
 echo "*** Completed."

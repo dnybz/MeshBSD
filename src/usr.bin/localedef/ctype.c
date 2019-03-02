@@ -33,7 +33,7 @@
  * LC_CTYPE database generation routines for localedef.
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/localedef/ctype.c 297057 2016-03-20 03:27:06Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/localedef/ctype.c 297057 2016-03-20 03:27:06Z pfg $");
 
 #include <sys/tree.h>
 
@@ -407,9 +407,9 @@ dump_ctype(void)
 			continue;
 		}
 
-		if ((last_ct != NULL) && (last_ct->ctype == ctn->ctype)) {
+		if ((last_ct != NULL) && (last_ct->ctype == ctn->ctype) &&
+		    (last_ct->wc + 1 == wc)) {
 			ct[rl.runetype_ext_nranges-1].max = wc;
-			last_ct = ctn;
 		} else {
 			rl.runetype_ext_nranges++;
 			ct = realloc(ct,
@@ -417,8 +417,8 @@ dump_ctype(void)
 			ct[rl.runetype_ext_nranges - 1].min = wc;
 			ct[rl.runetype_ext_nranges - 1].max = wc;
 			ct[rl.runetype_ext_nranges - 1].map = ctn->ctype;
-			last_ct = ctn;
 		}
+		last_ct = ctn;
 		if (ctn->tolower == 0) {
 			last_lo = NULL;
 		} else if ((last_lo != NULL) &&

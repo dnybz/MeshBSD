@@ -30,7 +30,7 @@
  * SUCH DAMAGE.
  *
  *	from: @(#)ls.h	8.1 (Berkeley) 5/31/93
- * $FreeBSD: head/bin/ls/ls.h 285734 2015-07-21 05:03:59Z allanjude $
+ * $FreeBSD: releng/11.0/bin/ls/ls.h 285734 2015-07-21 05:03:59Z allanjude $
  */
 
 #define NO_PRINT	1

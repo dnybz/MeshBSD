@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/fs/pseudofs/pseudofs.c 283495 2015-05-24 18:11:22Z dchagin $");
+__FBSDID("$FreeBSD: releng/11.0/sys/fs/pseudofs/pseudofs.c 303906 2016-08-10 12:34:49Z kib $");
 
 #include "opt_pseudofs.h"
 
@@ -383,11 +383,9 @@ pfs_init(struct pfs_info *pi, struct vfsconf *vfc)
 	struct pfs_node *root;
 	int error;
 
-	mtx_assert(&Giant, MA_OWNED);
-
 	pfs_fileno_init(pi);
 
-	/* set up the root diretory */
+	/* set up the root directory */
 	root = pfs_alloc_node(pi, "/", pfstype_root);
 	pi->pi_root = root;
 	pfs_fileno_alloc(root);
@@ -413,8 +411,6 @@ int
 pfs_uninit(struct pfs_info *pi, struct vfsconf *vfc)
 {
 	int error;
-
-	mtx_assert(&Giant, MA_OWNED);
 
 	pfs_destroy(pi->pi_root);
 	pi->pi_root = NULL;

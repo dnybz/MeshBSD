@@ -31,7 +31,7 @@
  *	@(#)kernfs_vfsops.c	8.10 (Berkeley) 5/14/95
  * From: FreeBSD: src/sys/miscfs/kernfs/kernfs_vfsops.c 1.36
  *
- * $FreeBSD: head/sys/fs/devfs/devfs_vfsops.c 287109 2015-08-24 14:04:44Z trasz $
+ * $FreeBSD: releng/11.0/sys/fs/devfs/devfs_vfsops.c 287109 2015-08-24 14:04:44Z trasz $
  */
 
 #include <sys/param.h>

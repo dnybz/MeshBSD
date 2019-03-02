@@ -1,4 +1,4 @@
-# $FreeBSD: head/usr.sbin/uathload/Makefile 296889 2016-03-15 04:42:37Z imp $
+# $FreeBSD: releng/11.0/usr.sbin/uathload/Makefile 296889 2016-03-15 04:42:37Z imp $
 
 PROG=	uathload
 MAN=	uathload.8
@@ -10,7 +10,7 @@ FILESMODE=	444
 
 CLEANFILES=	ar5523.bin
 
-ar5523.bin: ${.CURDIR}/../../sys/dev/uath/ar5523.bin.uu
-	uudecode -p ${.CURDIR}/../../sys/dev/uath/ar5523.bin.uu > ${.TARGET}
+ar5523.bin: ${.CURDIR}/../../sys/contrib/dev/uath/ar5523.bin.uu
+	uudecode -p ${.CURDIR}/../../sys/contrib/dev/uath/ar5523.bin.uu > ${.TARGET}
 
 .include <bsd.prog.mk>

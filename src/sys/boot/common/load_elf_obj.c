@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/common/load_elf_obj.c 297702 2016-04-08 10:23:48Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/common/load_elf_obj.c 297702 2016-04-08 10:23:48Z kib $");
 
 #include <sys/param.h>
 #include <sys/exec.h>

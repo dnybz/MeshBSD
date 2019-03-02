@@ -33,7 +33,7 @@
 #	
 
 # RCSid:
-# 	$FreeBSD: head/share/mk/stage-install.sh 284345 2015-06-13 19:20:56Z sjg $
+# 	$FreeBSD: releng/11.0/share/mk/stage-install.sh 284345 2015-06-13 19:20:56Z sjg $
 #	$Id: stage-install.sh,v 1.5 2013/04/19 16:32:24 sjg Exp $
 #
 #	@(#) Copyright (c) 2013, Simon J. Gerraty

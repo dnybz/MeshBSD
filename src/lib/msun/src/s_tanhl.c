@@ -13,7 +13,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_tanhl.c 260145 2013-12-31 23:59:33Z kargl $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/src/s_tanhl.c 260145 2013-12-31 23:59:33Z kargl $");
 
 /*
  * See s_tanh.c for complete comments.

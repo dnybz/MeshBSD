@@ -26,7 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/netinet/ip_ipsec.h 275710 2014-12-11 18:35:34Z ae $
+ * $FreeBSD: releng/11.0/sys/netinet/ip_ipsec.h 275710 2014-12-11 18:35:34Z ae $
  */
 
 #ifndef _NETINET_IP_IPSEC_H_

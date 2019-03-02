@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/atheros/ar71xx_wdog.c 257338 2013-10-29 14:07:31Z nwhitehorn $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/atheros/ar71xx_wdog.c 257338 2013-10-29 14:07:31Z nwhitehorn $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

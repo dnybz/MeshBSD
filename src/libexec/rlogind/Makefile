@@ -1,5 +1,5 @@
 #	@(#)Makefile	8.1 (Berkeley) 6/4/93
-# $FreeBSD: head/libexec/rlogind/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/libexec/rlogind/Makefile 301417 2016-06-05 01:42:58Z lidl $
 
 .include <src.opts.mk>
 
@@ -12,6 +12,12 @@ WARNS?=	2
 
 .if ${MK_INET6_SUPPORT} != "no"
 CFLAGS+= -DINET6
+.endif
+
+.if ${MK_BLACKLIST_SUPPORT} != "no"
+CFLAGS+= -DUSE_BLACKLIST -I${SRCTOP}/contrib/blacklist/include
+LIBADD+= blacklist
+LDFLAGS+=-L${LIBBLACKLISTDIR}
 .endif
 
 .include <bsd.prog.mk>

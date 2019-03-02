@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/libproc/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/libproc/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 .include <src.opts.mk>
 
@@ -26,21 +26,14 @@ LIBADD+=	supcplusplus
 
 LIBADD+=	elf rtld_db util
 
-#
-# XXX I-ll re-integrate OpenSolaris specific compoonents sooner or later...
-#
-#.if ${MK_CDDL} != "no"
-#LIBADD+=	ctf
-#IGNORE_PRAGMA=	YES
-#CFLAGS+=	-I${.CURDIR}/../../cddl/contrib/opensolaris/lib/libctf/common \
-#		-I${.CURDIR}/../../sys/cddl/contrib/opensolaris/uts/common \
-#		-I${.CURDIR}/../../sys/cddl/compat/opensolaris
-#.else
 CFLAGS+=	-DNO_CTF
-#.endif
 
 SHLIB_MAJOR=	3
 
 MAN=
+
+.if ${MK_TESTS} != "no"
+SUBDIR+=	tests
+.endif
 
 .include <bsd.lib.mk>

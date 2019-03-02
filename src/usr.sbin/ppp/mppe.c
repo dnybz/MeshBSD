@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/ppp/mppe.c 256574 2013-10-16 02:55:31Z kevlo $
+ * $FreeBSD: releng/11.0/usr.sbin/ppp/mppe.c 256574 2013-10-16 02:55:31Z kevlo $
  */
 
 #include <sys/param.h>

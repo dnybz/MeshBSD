@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/bsd.man.mk 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/share/mk/bsd.man.mk 301284 2016-06-03 19:25:36Z bdrewery $
 #
 # The include file <bsd.man.mk> handles installing manual pages and
 # their links.

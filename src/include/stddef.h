@@ -28,7 +28,7 @@
  *
  *	@(#)stddef.h	8.1 (Berkeley) 6/2/93
  *
- * $FreeBSD: head/include/stddef.h 270277 2014-08-21 15:10:10Z kan $
+ * $FreeBSD: releng/11.0/include/stddef.h 270277 2014-08-21 15:10:10Z kan $
  */
 
 #ifndef _STDDEF_H_

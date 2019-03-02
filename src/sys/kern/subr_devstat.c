@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/subr_devstat.c 298819 2016-04-29 22:15:33Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/subr_devstat.c 300207 2016-05-19 14:08:36Z ken $");
 
 #include <sys/param.h>
 #include <sys/kernel.h>
@@ -354,7 +354,9 @@ devstat_end_transaction_bio_bt(struct devstat *ds, struct bio *bp,
 
 	if (bp->bio_cmd == BIO_DELETE)
 		flg = DEVSTAT_FREE;
-	else if (bp->bio_cmd == BIO_READ)
+	else if ((bp->bio_cmd == BIO_READ)
+	      || ((bp->bio_cmd == BIO_ZONE)
+	       && (bp->bio_zone.zone_cmd == DISK_ZONE_REPORT_ZONES)))
 		flg = DEVSTAT_READ;
 	else if (bp->bio_cmd == BIO_WRITE)
 		flg = DEVSTAT_WRITE;

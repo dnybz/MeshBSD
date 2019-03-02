@@ -1,5 +1,5 @@
 #	@(#)Makefile	8.1 (Berkeley) 6/4/93
-# $FreeBSD: head/libexec/tftpd/Makefile 275077 2014-11-25 21:18:18Z bapt $
+# $FreeBSD: releng/11.0/libexec/tftpd/Makefile 275077 2014-11-25 21:18:18Z bapt $
 
 PROG=	tftpd
 MAN=	tftpd.8

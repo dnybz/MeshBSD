@@ -1,4 +1,4 @@
-/*	$FreeBSD: head/usr.sbin/rtadvd/rtadvd.c 298886 2016-05-01 16:41:25Z pfg $	*/
+/*	$FreeBSD: releng/11.0/usr.sbin/rtadvd/rtadvd.c 298886 2016-05-01 16:41:25Z pfg $	*/
 /*	$KAME: rtadvd.c,v 1.82 2003/08/05 12:34:23 itojun Exp $	*/
 
 /*

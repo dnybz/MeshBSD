@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/tcp_subr.c 300096 2016-05-17 23:14:17Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/tcp_subr.c 303966 2016-08-11 19:05:47Z gallatin $");
 
 #include "opt_compat.h"
 #include "opt_inet.h"
@@ -728,21 +728,24 @@ tcp_init(void)
 }
 
 #ifdef VIMAGE
-void
-tcp_destroy(void)
+static void
+tcp_destroy(void *unused __unused)
 {
-	int error;
+	int error, n;
 
 	/*
 	 * All our processes are gone, all our sockets should be cleaned
 	 * up, which means, we should be past the tcp_discardcb() calls.
-	 * Sleep to let all tcpcb timers really disappear and then cleanup.
-	 * Timewait will cleanup its queue and will be ready to go.
-	 * XXX-BZ In theory a few ticks should be good enough to make sure
-	 * the timers are all really gone.  We should see if we could use a
-	 * better metric here and, e.g., check a tcbcb count as an optimization?
+	 * Sleep to let all tcpcb timers really disappear and cleanup.
 	 */
-	DELAY(1000000 / hz);
+	for (;;) {
+		INP_LIST_RLOCK(&V_tcbinfo);
+		n = V_tcbinfo.ipi_count;
+		INP_LIST_RUNLOCK(&V_tcbinfo);
+		if (n == 0)
+			break;
+		pause("tcpdes", hz / 10);
+	}
 	tcp_hc_destroy();
 	syncache_destroy();
 	tcp_tw_destroy();
@@ -772,6 +775,7 @@ tcp_destroy(void)
 		    HHOOK_TYPE_TCP, HHOOK_TCP_EST_OUT, error);
 	}
 }
+VNET_SYSUNINIT(tcp, SI_SUB_PROTO_DOMAIN, SI_ORDER_FOURTH, tcp_destroy, NULL);
 #endif
 
 void
@@ -934,16 +938,54 @@ tcp_respond(struct tcpcb *tp, void *ipgen, struct tcphdr *th, struct mbuf *m,
 		}
 		bcopy((caddr_t)th, (caddr_t)nth, sizeof(struct tcphdr));
 		flags = TH_ACK;
+	} else if (!M_WRITABLE(m)) {
+		struct mbuf *n;
+
+		/* Can't reuse 'm', allocate a new mbuf. */
+		n = m_gethdr(M_NOWAIT, MT_DATA);
+		if (n == NULL) {
+			m_freem(m);
+			return;
+		}
+
+		if (!m_dup_pkthdr(n, m, M_NOWAIT)) {
+			m_freem(m);
+			m_freem(n);
+			return;
+		}
+
+		n->m_data += max_linkhdr;
+		/* m_len is set later */
+#define xchg(a,b,type) { type t; t=a; a=b; b=t; }
+#ifdef INET6
+		if (isipv6) {
+			bcopy((caddr_t)ip6, mtod(n, caddr_t),
+			      sizeof(struct ip6_hdr));
+			ip6 = mtod(n, struct ip6_hdr *);
+			xchg(ip6->ip6_dst, ip6->ip6_src, struct in6_addr);
+			nth = (struct tcphdr *)(ip6 + 1);
+		} else
+#endif /* INET6 */
+		{
+			bcopy((caddr_t)ip, mtod(n, caddr_t), sizeof(struct ip));
+			ip = mtod(n, struct ip *);
+			xchg(ip->ip_dst.s_addr, ip->ip_src.s_addr, uint32_t);
+			nth = (struct tcphdr *)(ip + 1);
+		}
+		bcopy((caddr_t)th, (caddr_t)nth, sizeof(struct tcphdr));
+		xchg(nth->th_dport, nth->th_sport, uint16_t);
+		th = nth;
+		m_freem(m);
+		m = n;
 	} else {
 		/*
 		 *  reuse the mbuf. 
-		 * XXX MRT We inherrit the FIB, which is lucky.
+		 * XXX MRT We inherit the FIB, which is lucky.
 		 */
 		m_freem(m->m_next);
 		m->m_next = NULL;
 		m->m_data = (caddr_t)ipgen;
 		/* m_len is set later */
-#define xchg(a,b,type) { type t; t=a; a=b; b=t; }
 #ifdef INET6
 		if (isipv6) {
 			xchg(ip6->ip6_dst, ip6->ip6_src, struct in6_addr);
@@ -1563,6 +1605,13 @@ tcp_drain(void)
 			if ((tcpb = intotcpcb(inpb)) != NULL) {
 				tcp_reass_flush(tcpb);
 				tcp_clean_sackreport(tcpb);
+#ifdef TCPPCAP
+				if (tcp_pcap_aggressive_free) {
+					/* Free the TCP PCAP queues. */
+					tcp_pcap_drain(&(tcpb->t_inpkts));
+					tcp_pcap_drain(&(tcpb->t_outpkts));
+				}
+#endif
 			}
 			INP_WUNLOCK(inpb);
 		}
@@ -1901,11 +1950,7 @@ tcp_ctlinput(int cmd, struct sockaddr *sa, void *vip)
 	else if (V_icmp_may_rst && (cmd == PRC_UNREACH_ADMIN_PROHIB ||
 		cmd == PRC_UNREACH_PORT || cmd == PRC_TIMXCEED_INTRANS) && ip)
 		notify = tcp_drop_syn_sent;
-	else if (PRC_IS_REDIRECT(cmd)) {
-		/* signal EHOSTDOWN, as it flushes the cached route */
-		in_pcbnotifyall(&V_tcbinfo, faddr, EHOSTDOWN, notify);
-		return;
-	}
+
 	/*
 	 * Hostdead is ugly because it goes linearly through all PCBs.
 	 * XXX: We never get this from ICMP, otherwise it makes an
@@ -1926,7 +1971,12 @@ tcp_ctlinput(int cmd, struct sockaddr *sa, void *vip)
 	INP_INFO_RLOCK(&V_tcbinfo);
 	inp = in_pcblookup(&V_tcbinfo, faddr, th->th_dport, ip->ip_src,
 	    th->th_sport, INPLOOKUP_WLOCKPCB, NULL);
-	if (inp != NULL)  {
+	if (inp != NULL && PRC_IS_REDIRECT(cmd)) {
+		/* signal EHOSTDOWN, as it flushes the cached route */
+		inp = (*notify)(inp, EHOSTDOWN);
+		if (inp != NULL)
+			INP_WUNLOCK(inp);
+	} else if (inp != NULL)  {
 		if (!(inp->inp_flags & INP_TIMEWAIT) &&
 		    !(inp->inp_flags & INP_DROPPED) &&
 		    !(inp->inp_socket == NULL)) {

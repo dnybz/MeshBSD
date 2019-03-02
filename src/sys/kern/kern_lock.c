@@ -31,7 +31,7 @@
 #include "opt_hwpmc_hooks.h"
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_lock.c 298819 2016-04-29 22:15:33Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_lock.c 301157 2016-06-01 18:32:20Z mjg $");
 
 #include <sys/param.h>
 #include <sys/kdb.h>
@@ -787,8 +787,10 @@ __lockmgr_args(struct lock *lk, u_int flags, struct lock_object *ilk,
 			break;
 		}
 
-		while (!atomic_cmpset_acq_ptr(&lk->lk_lock, LK_UNLOCKED,
-		    tid)) {
+		for (;;) {
+			if (lk->lk_lock == LK_UNLOCKED &&
+			    atomic_cmpset_acq_ptr(&lk->lk_lock, LK_UNLOCKED, tid))
+				break;
 #ifdef HWPMC_HOOKS
 			PMC_SOFT_CALL( , , lock, failed);
 #endif
@@ -1124,7 +1126,11 @@ __lockmgr_args(struct lock *lk, u_int flags, struct lock_object *ilk,
 			    __func__, iwmesg, file, line);
 		}
 
-		while (!atomic_cmpset_acq_ptr(&lk->lk_lock, LK_UNLOCKED, tid)) {
+		for (;;) {
+			if (lk->lk_lock == LK_UNLOCKED &&
+			    atomic_cmpset_acq_ptr(&lk->lk_lock, LK_UNLOCKED, tid))
+				break;
+
 #ifdef HWPMC_HOOKS
 			PMC_SOFT_CALL( , , lock, failed);
 #endif

@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/net/ieee8023ad_lacp.c 290450 2015-11-06 15:33:27Z smh $");
+__FBSDID("$FreeBSD: releng/11.0/sys/net/ieee8023ad_lacp.c 290450 2015-11-06 15:33:27Z smh $");
 
 #include <sys/param.h>
 #include <sys/callout.h>

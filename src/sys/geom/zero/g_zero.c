@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/geom/zero/g_zero.c 256880 2013-10-22 08:22:19Z mav $");
+__FBSDID("$FreeBSD: releng/11.0/sys/geom/zero/g_zero.c 256880 2013-10-22 08:22:19Z mav $");
 
 #include <sys/param.h>
 #include <sys/bio.h>

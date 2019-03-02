@@ -28,7 +28,7 @@
 static char *rcsid = "$NetBSD: stringlist.c,v 1.2 1997/01/17 07:26:20 lukem Exp $";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/gen/stringlist.c 283201 2015-05-21 08:38:25Z bapt $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/gen/stringlist.c 283201 2015-05-21 08:38:25Z bapt $");
 
 #include "namespace.h"
 #include <stdio.h>

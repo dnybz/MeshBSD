@@ -4,7 +4,7 @@
 #
 # This includes all the required drivers for the SoCs.
 #
-# $FreeBSD: head/sys/mips/mediatek/std.mediatek 298397 2016-04-21 07:40:03Z sgalabov $
+# $FreeBSD: releng/11.0/sys/mips/mediatek/std.mediatek 300659 2016-05-25 06:47:28Z sgalabov $
 #
 
 # Include the standard file list for Mediatek SoCs.
@@ -82,3 +82,9 @@ device 		loop
 
 # ether device support
 device 		ether
+
+# ether switch support
+device 		etherswitch
+device 		miibus
+device 		mtkswitch
+device 		mdio

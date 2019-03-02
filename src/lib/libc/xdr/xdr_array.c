@@ -36,7 +36,7 @@ static char *sccsid2 = "@(#)xdr_array.c 1.10 87/08/11 Copyr 1984 Sun Micro";
 static char *sccsid = "@(#)xdr_array.c	2.1 88/07/29 4.0 RPCSRC";
 #endif
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/xdr/xdr_array.c 283833 2015-05-31 18:08:58Z rodrigc $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/xdr/xdr_array.c 283833 2015-05-31 18:08:58Z rodrigc $");
 
 /*
  * xdr_array.c, Generic XDR routines impelmentation.

@@ -44,7 +44,7 @@ static char sccsid[] = "@(#)mesg.c	8.2 (Berkeley) 1/21/94";
 #endif
 #endif /* not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/mesg/mesg.c 265866 2014-05-11 02:04:40Z eadler $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/mesg/mesg.c 265866 2014-05-11 02:04:40Z eadler $");
 
 #include <sys/types.h>
 #include <sys/stat.h>

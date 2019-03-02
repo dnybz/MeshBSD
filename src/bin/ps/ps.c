@@ -47,7 +47,7 @@ static char sccsid[] = "@(#)ps.c	8.4 (Berkeley) 4/2/94";
 #endif
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/bin/ps/ps.c 298233 2016-04-19 00:40:43Z araujo $");
+__FBSDID("$FreeBSD: releng/11.0/bin/ps/ps.c 303550 2016-07-30 09:46:29Z kib $");
 
 #include <sys/param.h>
 #include <sys/jail.h>
@@ -612,6 +612,7 @@ main(int argc, char *argv[])
 
 	if (nkept == 0) {
 		printheader();
+		xo_finish();
 		exit(1);
 	}
 
@@ -1235,6 +1236,7 @@ fmt(char **(*fn)(kvm_t *, const struct kinfo_proc *, int), KINFO *ki,
 static void
 saveuser(KINFO *ki)
 {
+	char *argsp;
 
 	if (ki->ki_p->ki_flag & P_INMEM) {
 		/*
@@ -1253,10 +1255,12 @@ saveuser(KINFO *ki)
 		if (ki->ki_p->ki_stat == SZOMB)
 			ki->ki_args = strdup("<defunct>");
 		else if (UREADOK(ki) || (ki->ki_p->ki_args != NULL))
-			ki->ki_args = strdup(fmt(kvm_getargv, ki,
-			    ki->ki_p->ki_comm, ki->ki_p->ki_tdname, MAXCOMLEN));
-		else
-			asprintf(&ki->ki_args, "(%s)", ki->ki_p->ki_comm);
+			ki->ki_args = fmt(kvm_getargv, ki,
+			    ki->ki_p->ki_comm, ki->ki_p->ki_tdname, MAXCOMLEN);
+		else {
+			asprintf(&argsp, "(%s)", ki->ki_p->ki_comm);
+			ki->ki_args = argsp;
+		}
 		if (ki->ki_args == NULL)
 			xo_errx(1, "malloc failed");
 	} else {
@@ -1264,8 +1268,8 @@ saveuser(KINFO *ki)
 	}
 	if (needenv) {
 		if (UREADOK(ki))
-			ki->ki_env = strdup(fmt(kvm_getenvv, ki,
-			    (char *)NULL, (char *)NULL, 0));
+			ki->ki_env = fmt(kvm_getenvv, ki,
+			    (char *)NULL, (char *)NULL, 0);
 		else
 			ki->ki_env = strdup("()");
 		if (ki->ki_env == NULL)

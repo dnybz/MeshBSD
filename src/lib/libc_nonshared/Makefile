@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/libc_nonshared/Makefile 265420 2014-05-06 04:22:01Z imp $
+# $FreeBSD: releng/11.0/lib/libc_nonshared/Makefile 265420 2014-05-06 04:22:01Z imp $
 
 # We're actually creating a libc_noshared.a that is PIC along side libc.so.*
 # It is used exclusively with libc.so.* - there is no need for any other

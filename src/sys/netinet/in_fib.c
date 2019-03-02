@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/in_fib.c 294706 2016-01-25 06:33:15Z melifaro $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/in_fib.c 294706 2016-01-25 06:33:15Z melifaro $");
 
 #include "opt_inet.h"
 #include "opt_route.h"

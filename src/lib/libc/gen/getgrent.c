@@ -31,7 +31,7 @@
  *
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/gen/getgrent.c 290179 2015-10-30 05:50:05Z ngie $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/gen/getgrent.c 290179 2015-10-30 05:50:05Z ngie $");
 
 #include "namespace.h"
 #include <sys/param.h>

@@ -31,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/bin/pkill/pkill.c 295435 2016-02-09 16:30:16Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/bin/pkill/pkill.c 295435 2016-02-09 16:30:16Z kib $");
 
 #include <sys/types.h>
 #include <sys/param.h>

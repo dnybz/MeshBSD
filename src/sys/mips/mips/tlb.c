@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/mips/tlb.c 298433 2016-04-21 19:57:40Z pfg $
+ * $FreeBSD: releng/11.0/sys/mips/mips/tlb.c 298433 2016-04-21 19:57:40Z pfg $
  */
 
 #include "opt_ddb.h"

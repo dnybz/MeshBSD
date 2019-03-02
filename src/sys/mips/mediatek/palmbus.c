@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mediatek/palmbus.c 298498 2016-04-23 04:21:18Z sgalabov $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mediatek/palmbus.c 298498 2016-04-23 04:21:18Z sgalabov $");
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/module.h>

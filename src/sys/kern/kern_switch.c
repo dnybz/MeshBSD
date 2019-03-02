@@ -26,7 +26,7 @@
 
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_switch.c 277528 2015-01-22 11:12:42Z hselasky $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_switch.c 277528 2015-01-22 11:12:42Z hselasky $");
 
 #include "opt_sched.h"
 

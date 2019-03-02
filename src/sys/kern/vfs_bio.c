@@ -43,7 +43,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/vfs_bio.c 298817 2016-04-29 21:54:28Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/vfs_bio.c 298817 2016-04-29 21:54:28Z pfg $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

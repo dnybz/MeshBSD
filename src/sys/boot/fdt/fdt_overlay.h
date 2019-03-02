@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/fdt/fdt_overlay.h 298821 2016-04-29 22:42:59Z gonzo $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/fdt_overlay.h 298821 2016-04-29 22:42:59Z gonzo $
  */
 
 #ifndef FDT_OVERLAY_H

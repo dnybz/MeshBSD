@@ -36,7 +36,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/makefs/ffs/buf.c 214921 2010-11-07 16:05:04Z cognet $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/makefs/ffs/buf.c 214921 2010-11-07 16:05:04Z cognet $");
 
 #include <sys/param.h>
 #include <sys/time.h>

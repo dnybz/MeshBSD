@@ -25,7 +25,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.bin/systat/ifstat.c 272284 2014-09-29 17:38:50Z rstone $
+ * $FreeBSD: releng/11.0/usr.bin/systat/ifstat.c 272284 2014-09-29 17:38:50Z rstone $
  */
 
 #include <sys/types.h>

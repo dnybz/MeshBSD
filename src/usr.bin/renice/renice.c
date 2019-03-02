@@ -40,7 +40,7 @@ static char sccsid[] = "@(#)renice.c	8.1 (Berkeley) 6/9/93";
 #endif
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/renice/renice.c 216370 2010-12-11 08:32:16Z joel $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/renice/renice.c 216370 2010-12-11 08:32:16Z joel $");
 
 #include <sys/types.h>
 #include <sys/time.h>

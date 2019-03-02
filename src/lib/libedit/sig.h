@@ -32,7 +32,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)sig.h	8.1 (Berkeley) 6/4/93
- * $FreeBSD: head/lib/libedit/sig.h 296435 2016-03-06 21:32:54Z pfg $
+ * $FreeBSD: releng/11.0/lib/libedit/sig.h 296435 2016-03-06 21:32:54Z pfg $
  */
 
 /*

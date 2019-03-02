@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libthr/thread/thr_sig.c 299114 2016-05-05 10:20:22Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libthr/thread/thr_sig.c 299114 2016-05-05 10:20:22Z kib $");
 
 #include "namespace.h"
 #include <sys/param.h>

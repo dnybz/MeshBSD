@@ -24,7 +24,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $FreeBSD: head/sbin/reboot/nextboot.sh 297980 2016-04-14 18:03:55Z markj $
+# $FreeBSD: releng/11.0/sbin/reboot/nextboot.sh 297980 2016-04-14 18:03:55Z markj $
 
 append="NO"
 delete="NO"

@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libproc/proc_sym.c 279946 2015-03-13 04:26:48Z stas $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libproc/proc_sym.c 279946 2015-03-13 04:26:48Z stas $");
 
 #include <sys/types.h>
 #ifndef NO_CTF

@@ -1,4 +1,4 @@
-# $FreeBSD: head/sbin/ggate/ggated/Makefile 294973 2016-01-28 03:24:06Z ngie $
+# $FreeBSD: releng/11.0/sbin/ggate/ggated/Makefile 294973 2016-01-28 03:24:06Z ngie $
 
 .PATH: ${.CURDIR}/../shared
 

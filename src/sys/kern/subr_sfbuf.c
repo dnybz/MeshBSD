@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/subr_sfbuf.c 269813 2014-08-11 15:06:07Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/subr_sfbuf.c 269813 2014-08-11 15:06:07Z glebius $");
 
 #include <sys/param.h>
 #include <sys/kernel.h>

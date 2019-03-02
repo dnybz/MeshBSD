@@ -52,7 +52,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/net/getaddrinfo.c 298830 2016-04-30 01:24:24Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/net/getaddrinfo.c 298830 2016-04-30 01:24:24Z pfg $");
 
 #include "namespace.h"
 #include <sys/param.h>

@@ -33,7 +33,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/fdt/dts/mips/beri-netfpga.dts 275860 2014-12-17 11:05:44Z br $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/mips/beri-netfpga.dts 275860 2014-12-17 11:05:44Z br $
  */
 
 /dts-v1/;

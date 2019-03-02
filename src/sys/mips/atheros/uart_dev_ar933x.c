@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/atheros/uart_dev_ar933x.c 281438 2015-04-11 17:16:23Z andrew $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/atheros/uart_dev_ar933x.c 281438 2015-04-11 17:16:23Z andrew $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

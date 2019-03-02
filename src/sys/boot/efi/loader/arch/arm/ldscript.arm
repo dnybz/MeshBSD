@@ -1,4 +1,4 @@
-/* $FreeBSD: head/sys/boot/efi/loader/arch/arm/ldscript.arm 295420 2016-02-09 00:01:43Z andrew $ */
+/* $FreeBSD: releng/11.0/sys/boot/efi/loader/arch/arm/ldscript.arm 295420 2016-02-09 00:01:43Z andrew $ */
 OUTPUT_ARCH(arm)
 ENTRY(_start)
 SECTIONS

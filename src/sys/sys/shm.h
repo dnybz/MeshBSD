@@ -1,4 +1,4 @@
-/* $FreeBSD: head/sys/sys/shm.h 298981 2016-05-03 15:14:17Z pfg $ */
+/* $FreeBSD: releng/11.0/sys/sys/shm.h 301074 2016-05-31 19:24:32Z ed $ */
 /*	$NetBSD: shm.h,v 1.15 1994/06/29 06:45:17 cgd Exp $	*/
 
 /*-
@@ -42,6 +42,8 @@
 #include <sys/cdefs.h>
 #include <sys/ipc.h>
 #include <sys/_types.h>
+
+#include <machine/param.h>
 
 #define SHM_RDONLY  010000  /* Attach read-only (else read-write) */
 #define SHM_RND     020000  /* Round attach address to SHMLBA */

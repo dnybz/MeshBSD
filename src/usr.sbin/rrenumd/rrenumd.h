@@ -32,7 +32,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/rrenumd/rrenumd.h 78064 2001-06-11 12:39:29Z ume $
+ * $FreeBSD: releng/11.0/usr.sbin/rrenumd/rrenumd.h 78064 2001-06-11 12:39:29Z ume $
  */
 
 struct dst_list {

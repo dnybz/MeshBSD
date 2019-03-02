@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libfetch/fetch.c 252375 2013-06-29 15:51:27Z kientzle $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libfetch/fetch.c 252375 2013-06-29 15:51:27Z kientzle $");
 
 #include <sys/param.h>
 #include <sys/errno.h>

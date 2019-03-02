@@ -24,7 +24,7 @@
 \ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 \ SUCH DAMAGE.
 \ 
-\ $FreeBSD: head/sys/boot/forth/beastie.4th 293234 2016-01-06 15:50:21Z emaste $
+\ $FreeBSD: releng/11.0/sys/boot/forth/beastie.4th 293234 2016-01-06 15:50:21Z emaste $
 
 marker task-beastie.4th
 

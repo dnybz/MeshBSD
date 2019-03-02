@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGES.
  *
  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_private.h#7 $
- * $FreeBSD: head/sys/cam/ctl/ctl_private.h 290670 2015-11-11 13:18:38Z mav $
+ * $FreeBSD: releng/11.0/sys/cam/ctl/ctl_private.h 290670 2015-11-11 13:18:38Z mav $
  */
 /*
  * CAM Target Layer driver private data structures/definitions.

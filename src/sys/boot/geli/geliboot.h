@@ -24,7 +24,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/geli/geliboot.h 299661 2016-05-13 11:24:55Z ngie $
+ * $FreeBSD: releng/11.0/sys/boot/geli/geliboot.h 299661 2016-05-13 11:24:55Z ngie $
  */
 
 #include <sys/endian.h>

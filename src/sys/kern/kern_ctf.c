@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/kern/kern_ctf.c 279089 2015-02-20 20:49:00Z markj $
+ * $FreeBSD: releng/11.0/sys/kern/kern_ctf.c 279089 2015-02-20 20:49:00Z markj $
  */
 
 /*

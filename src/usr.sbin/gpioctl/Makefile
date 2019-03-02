@@ -1,4 +1,4 @@
-# $FreeBSD: head/usr.sbin/gpioctl/Makefile 275436 2014-12-03 03:05:15Z rpaulo $
+# $FreeBSD: releng/11.0/usr.sbin/gpioctl/Makefile 275436 2014-12-03 03:05:15Z rpaulo $
 
 PROG=	gpioctl
 MAN=	gpioctl.8

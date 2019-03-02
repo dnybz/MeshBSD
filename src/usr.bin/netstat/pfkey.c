@@ -64,7 +64,7 @@ static char sccsid[] = "@(#)inet.c	8.5 (Berkeley) 5/24/95";
 #endif
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/netstat/pfkey.c 285708 2015-07-20 02:38:51Z markj $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/netstat/pfkey.c 285708 2015-07-20 02:38:51Z markj $");
 
 #include <sys/param.h>
 #include <sys/queue.h>

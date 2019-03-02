@@ -1,11 +1,11 @@
-# $FreeBSD: head/lib/libxo/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/libxo/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 PACKAGE=lib${LIB}
 SHLIBDIR?=      /lib
 
 .include <src.opts.mk>
 
-LIBXOSRC=	${SRCTOP}/external/libxo
+LIBXOSRC=	${SRCTOP}/contrib/libxo
 
 .PATH:	${LIBXOSRC}/libxo
 
@@ -106,5 +106,9 @@ MLINKS=	xo_attr.3 xo_attr_h.3 \
 	xo_syslog.3 xo_open_log.3 \
 	xo_syslog.3 xo_set_logmask.3 \
 	xo_syslog.3 xo_vsyslog.3
+
+.if ${MK_TESTS} != "no"
+SUBDIR+=	tests
+.endif
 
 .include <bsd.lib.mk>

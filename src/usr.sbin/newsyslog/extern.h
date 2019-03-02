@@ -29,7 +29,7 @@
  * official policies, either expressed or implied, of the FreeBSD Project.
  *
  * ------+---------+---------+---------+---------+---------+---------+---------*
- * $FreeBSD: head/usr.sbin/newsyslog/extern.h 120361 2003-09-23 00:00:26Z gad $
+ * $FreeBSD: releng/11.0/usr.sbin/newsyslog/extern.h 120361 2003-09-23 00:00:26Z gad $
  * ------+---------+---------+---------+---------+---------+---------+---------*
  */
 

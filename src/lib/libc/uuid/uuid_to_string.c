@@ -24,7 +24,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/uuid/uuid_to_string.c 297790 2016-04-10 19:33:58Z pfg $
+ * $FreeBSD: releng/11.0/lib/libc/uuid/uuid_to_string.c 297790 2016-04-10 19:33:58Z pfg $
  */
 
 #include <stdio.h>

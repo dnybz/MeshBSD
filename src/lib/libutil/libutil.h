@@ -33,7 +33,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libutil/libutil.h 283984 2015-06-04 08:00:11Z bapt $
+ * $FreeBSD: releng/11.0/lib/libutil/libutil.h 283984 2015-06-04 08:00:11Z bapt $
  */
 
 #ifndef _LIBUTIL_H_
@@ -200,6 +200,7 @@ int	quota_read(struct quotafile *_qf, struct dqblk *_dqb, int _id);
 int	quota_write_limits(struct quotafile *_qf, struct dqblk *_dqb, int _id);
 int	quota_write_usage(struct quotafile *_qf, struct dqblk *_dqb, int _id);
 #endif
+
 __END_DECLS
 
 /* fparseln(3) */

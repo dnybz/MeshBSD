@@ -31,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/libkern/memcmp.c 183299 2008-09-23 14:45:10Z obrien $");
+__FBSDID("$FreeBSD: releng/11.0/sys/libkern/memcmp.c 183299 2008-09-23 14:45:10Z obrien $");
 
 #include <sys/libkern.h>
 

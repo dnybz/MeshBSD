@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/subr_terminal.c 273932 2014-11-01 17:05:15Z dumbbell $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/subr_terminal.c 273932 2014-11-01 17:05:15Z dumbbell $");
 
 #include <sys/param.h>
 #include <sys/cons.h>

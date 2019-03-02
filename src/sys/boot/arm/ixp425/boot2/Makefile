@@ -1,4 +1,4 @@
-#  $FreeBSD: head/sys/boot/arm/ixp425/boot2/Makefile 272350 2014-10-01 08:26:51Z andrew $
+#  $FreeBSD: releng/11.0/sys/boot/arm/ixp425/boot2/Makefile 272350 2014-10-01 08:26:51Z andrew $
 
 .include <src.opts.mk>
 

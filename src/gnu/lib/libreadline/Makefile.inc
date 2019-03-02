@@ -1,9 +1,9 @@
-# $FreeBSD: head/gnu/lib/libreadline/Makefile.inc 195767 2009-07-19 17:25:24Z kensmith $
+# $FreeBSD: releng/11.0/gnu/lib/libreadline/Makefile.inc 195767 2009-07-19 17:25:24Z kensmith $
 
 SHLIB_MAJOR=8
 RL_LIBRARY_VERSION=5.2
 
-SRCDIR= ${.CURDIR}/../../../../tools/libreadline
+SRCDIR= ${.CURDIR}/../../../../contrib/libreadline
 .PATH: ${SRCDIR} ${.CURDIR}/..
 
 LOCAL_CFLAGS= -DRL_LIBRARY_VERSION='"$(RL_LIBRARY_VERSION)"'

@@ -32,7 +32,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)errno.h	8.5 (Berkeley) 1/21/94
- * $FreeBSD: head/sys/sys/errno.h 296715 2016-03-12 07:54:42Z trasz $
+ * $FreeBSD: releng/11.0/sys/sys/errno.h 296715 2016-03-12 07:54:42Z trasz $
  */
 
 #ifndef _SYS_ERRNO_H_

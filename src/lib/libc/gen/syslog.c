@@ -31,7 +31,7 @@
 static char sccsid[] = "@(#)syslog.c	8.5 (Berkeley) 4/29/95";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/gen/syslog.c 275071 2014-11-25 20:59:22Z delphij $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/gen/syslog.c 275071 2014-11-25 20:59:22Z delphij $");
 
 #include "namespace.h"
 #include <sys/types.h>

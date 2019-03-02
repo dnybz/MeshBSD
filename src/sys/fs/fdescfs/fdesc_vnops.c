@@ -31,7 +31,7 @@
  *
  *	@(#)fdesc_vnops.c	8.9 (Berkeley) 1/21/94
  *
- * $FreeBSD: head/sys/fs/fdescfs/fdesc_vnops.c 298853 2016-04-30 16:01:37Z emaste $
+ * $FreeBSD: releng/11.0/sys/fs/fdescfs/fdesc_vnops.c 298853 2016-04-30 16:01:37Z emaste $
  */
 
 /*

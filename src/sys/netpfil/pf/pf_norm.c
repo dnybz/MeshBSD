@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netpfil/pf/pf_norm.c 298995 2016-05-03 18:05:43Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netpfil/pf/pf_norm.c 300307 2016-05-20 15:41:05Z kp $");
 
 #include "opt_inet.h"
 #include "opt_inet6.h"
@@ -374,7 +374,7 @@ pf_fillup_fragment(struct pf_fragment_cmp *key, struct pf_frent *frent,
 		}
 
 		*(struct pf_fragment_cmp *)frag = *key;
-		frag->fr_timeout = time_second;
+		frag->fr_timeout = time_uptime;
 		frag->fr_maxlen = frent->fe_len;
 		TAILQ_INIT(&frag->fr_queue);
 

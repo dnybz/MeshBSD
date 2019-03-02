@@ -28,7 +28,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libedit/filecomplete.h 276881 2015-01-09 07:40:56Z bapt $
+ * $FreeBSD: releng/11.0/lib/libedit/filecomplete.h 276881 2015-01-09 07:40:56Z bapt $
  */
 #ifndef _FILECOMPLETE_H_
 #define _FILECOMPLETE_H_

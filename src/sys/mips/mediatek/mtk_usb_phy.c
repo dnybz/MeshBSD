@@ -24,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mediatek/mtk_usb_phy.c 298350 2016-04-20 14:47:16Z sgalabov $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mediatek/mtk_usb_phy.c 298350 2016-04-20 14:47:16Z sgalabov $");
 
 #include <sys/stddef.h>
 #include <sys/param.h>

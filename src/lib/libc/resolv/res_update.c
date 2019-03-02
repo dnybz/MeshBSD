@@ -26,7 +26,7 @@ static const char rcsid[] = "$Id: res_update.c,v 1.13 2005/04/27 04:56:43 sra Ex
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/resolv/res_update.c 269867 2014-08-12 12:36:06Z ume $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/resolv/res_update.c 269867 2014-08-12 12:36:06Z ume $");
 
 #include "port_before.h"
 

@@ -26,7 +26,7 @@
  *
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/rmi/xlr_machdep.c 273234 2014-10-17 17:34:05Z davide $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/rmi/xlr_machdep.c 273234 2014-10-17 17:34:05Z davide $");
 
 #include "opt_ddb.h"
 

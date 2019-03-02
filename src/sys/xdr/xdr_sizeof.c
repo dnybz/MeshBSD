@@ -36,7 +36,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/xdr/xdr_sizeof.c 177633 2008-03-26 15:23:12Z dfr $");
+__FBSDID("$FreeBSD: releng/11.0/sys/xdr/xdr_sizeof.c 177633 2008-03-26 15:23:12Z dfr $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

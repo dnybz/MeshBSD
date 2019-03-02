@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/gen/telldir.h 282485 2015-05-05 14:52:33Z julian $
+ * $FreeBSD: releng/11.0/lib/libc/gen/telldir.h 282485 2015-05-05 14:52:33Z julian $
  */
 
 #ifndef _TELLDIR_H_

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sbin/ggate/shared/ggate.c 204075 2010-02-18 23:04:01Z pjd $
+ * $FreeBSD: releng/11.0/sbin/ggate/shared/ggate.c 204075 2010-02-18 23:04:01Z pjd $
  */
 
 #include <stdio.h>

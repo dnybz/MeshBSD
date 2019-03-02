@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/boot/uboot/lib/Makefile 296706 2016-03-11 23:45:51Z bdrewery $
+# $FreeBSD: releng/11.0/sys/boot/uboot/lib/Makefile 296706 2016-03-11 23:45:51Z bdrewery $
 
 .include <src.opts.mk>
 

@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/rt305x/rt305x_spi.c 292701 2015-12-24 18:34:46Z adrian $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/rt305x/rt305x_spi.c 292701 2015-12-24 18:34:46Z adrian $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

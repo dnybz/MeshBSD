@@ -59,7 +59,9 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_lockf.c 298819 2016-04-29 22:15:33Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_lockf.c 302216 2016-06-26 20:08:42Z kib $");
+
+#include "opt_debug_lockf.h"
 
 #include <sys/param.h>
 #include <sys/systm.h>
@@ -78,7 +80,7 @@ __FBSDID("$FreeBSD: head/sys/kern/kern_lockf.c 298819 2016-04-29 22:15:33Z pfg $
 #include <sys/lockf.h>
 #include <sys/taskqueue.h>
 
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 #include <sys/sysctl.h>
 
 #include <ufs/ufs/quota.h>
@@ -136,7 +138,7 @@ static int	 lf_setlock(struct lockf *, struct lockf_entry *,
 static int	 lf_cancel(struct lockf *, struct lockf_entry *, void *);
 static void	 lf_split(struct lockf *, struct lockf_entry *,
     struct lockf_entry *, struct lockf_entry_list *);
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 static int	 graph_reaches(struct owner_vertex *x, struct owner_vertex *y,
     struct owner_vertex_list *path);
 static void	 graph_check(struct owner_graph *g, int checkorder);
@@ -161,7 +163,7 @@ static struct owner_vertex *graph_alloc_vertex(struct owner_graph *g,
 static void	 graph_free_vertex(struct owner_graph *g,
     struct owner_vertex *v);
 static struct owner_graph * graph_init(struct owner_graph *g);
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 static void	 lf_print(char *, struct lockf_entry *);
 static void	 lf_printlist(char *, struct lockf_entry *);
 static void	 lf_print_owner(struct lock_owner *);
@@ -331,7 +333,7 @@ lf_alloc_lock(struct lock_owner *lo)
 
 	lf = malloc(sizeof(struct lockf_entry), M_LOCKF, M_WAITOK|M_ZERO);
 
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 	if (lockf_debug & 4)
 		printf("Allocated lock %p\n", lf);
 #endif
@@ -367,7 +369,7 @@ lf_free_lock(struct lockf_entry *lock)
 		KASSERT(lo->lo_refs > 0, ("lock owner refcount"));
 		lo->lo_refs--;
 		if (lo->lo_refs == 0) {
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 			if (lockf_debug & 1)
 				printf("lf_free_lock: freeing lock owner %p\n",
 				    lo);
@@ -380,7 +382,7 @@ lf_free_lock(struct lockf_entry *lock)
 			}
 			LIST_REMOVE(lo, lo_link);
 			free(lo, M_LOCKF);
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 			if (lockf_debug & 4)
 				printf("Freed lock owner %p\n", lo);
 #endif
@@ -391,7 +393,7 @@ lf_free_lock(struct lockf_entry *lock)
 		vrele(lock->lf_vnode);
 		lock->lf_vnode = NULL;
 	}
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 	if (lockf_debug & 4)
 		printf("Freed lock %p\n", lock);
 #endif
@@ -500,7 +502,7 @@ retry_setlock:
 		 */
 		lo = malloc(sizeof(struct lock_owner), M_LOCKF,
 		    M_WAITOK|M_ZERO);
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 		if (lockf_debug & 4)
 			printf("Allocated lock owner %p\n", lo);
 #endif
@@ -521,7 +523,7 @@ retry_setlock:
 		}
 		lo->lo_vertex = NULL;
 
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 		if (lockf_debug & 1) {
 			printf("lf_advlockasync: new lock owner %p ", lo);
 			lf_print_owner(lo);
@@ -562,7 +564,7 @@ retry_setlock:
 
 	/*
 	 * XXX The problem is that VTOI is ufs specific, so it will
-	 * break DEBUG for all other FS's other than UFS because
+	 * break LOCKF_DEBUG for all other FS's other than UFS because
 	 * it casts the vnode->data ptr to struct inode *.
 	 */
 /*	lock->lf_inode = VTOI(ap->a_vp); */
@@ -1123,10 +1125,10 @@ lf_wakeup_lock(struct lockf *state, struct lockf_entry *wakelock)
 	 * or start the async notification, as appropriate.
 	 */
 	LIST_REMOVE(wakelock, lf_link);
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 	if (lockf_debug & 1)
 		lf_print("lf_wakeup_lock: awakening", wakelock);
-#endif /* DEBUG */
+#endif /* LOCKF_DEBUG */
 	if (wakelock->lf_async_task) {
 		taskqueue_enqueue(taskqueue_thread, wakelock->lf_async_task);
 	} else {
@@ -1229,7 +1231,7 @@ lf_activate_lock(struct lockf *state, struct lockf_entry *lock)
 		for (;;) {
 			ovcase = lf_findoverlap(&overlap, lock, SELF);
 
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 			if (ovcase && (lockf_debug & 2)) {
 				printf("lf_setlock: overlap %d", ovcase);
 				lf_print("", overlap);
@@ -1302,7 +1304,7 @@ lf_activate_lock(struct lockf *state, struct lockf_entry *lock)
 			}
 			break;
 		}
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 		if (lockf_debug & 1) {
 			if (lock->lf_type != F_UNLCK)
 				lf_print("lf_activate_lock: activated", lock);
@@ -1310,7 +1312,7 @@ lf_activate_lock(struct lockf *state, struct lockf_entry *lock)
 				lf_print("lf_activate_lock: unlocked", lock);
 			lf_printlist("lf_activate_lock", lock);
 		}
-#endif /* DEBUG */
+#endif /* LOCKF_DEBUG */
 		if (lock->lf_type != F_UNLCK)
 			lf_insert_lock(state, lock);
 	}
@@ -1376,12 +1378,12 @@ lf_setlock(struct lockf *state, struct lockf_entry *lock, struct vnode *vp,
     void **cookiep)
 {
 	static char lockstr[] = "lockf";
-	int priority, error;
+	int error, priority, stops_deferred;
 
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 	if (lockf_debug & 1)
 		lf_print("lf_setlock", lock);
-#endif /* DEBUG */
+#endif /* LOCKF_DEBUG */
 
 	/*
 	 * Set the priority
@@ -1428,7 +1430,7 @@ lf_setlock(struct lockf *state, struct lockf_entry *lock, struct vnode *vp,
 		sx_xunlock(&lf_owner_graph_lock);
 
 		if (error) {
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 			if (lockf_debug & 1)
 				lf_print("lf_setlock: deadlock", lock);
 #endif
@@ -1441,7 +1443,7 @@ lf_setlock(struct lockf *state, struct lockf_entry *lock, struct vnode *vp,
 		 * us. Sleep until they all go away.
 		 */
 		LIST_INSERT_HEAD(&state->ls_pending, lock, lf_link);
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 		if (lockf_debug & 1) {
 			struct lockf_edge *e;
 			LIST_FOREACH(e, &lock->lf_outedges, le_outlink) {
@@ -1449,7 +1451,7 @@ lf_setlock(struct lockf *state, struct lockf_entry *lock, struct vnode *vp,
 				lf_printlist("lf_setlock", e->le_to);
 			}
 		}
-#endif /* DEBUG */
+#endif /* LOCKF_DEBUG */
 
 		if ((lock->lf_flags & F_WAIT) == 0) {
 			/*
@@ -1464,7 +1466,9 @@ lf_setlock(struct lockf *state, struct lockf_entry *lock, struct vnode *vp,
 		}
 
 		lock->lf_refs++;
+		stops_deferred = sigdeferstop(SIGDEFERSTOP_ERESTART);
 		error = sx_sleep(lock, &state->ls_lock, priority, lockstr, 0);
+		sigallowstop(stops_deferred);
 		if (lf_free_lock(lock)) {
 			error = EDOOFUS;
 			goto out;
@@ -1502,7 +1506,7 @@ lf_setlock(struct lockf *state, struct lockf_entry *lock, struct vnode *vp,
 			lf_cancel_lock(state, lock);
 			goto out;
 		}
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 		if (lockf_debug & 1) {
 			lf_print("lf_setlock: granted", lock);
 		}
@@ -1518,7 +1522,7 @@ lf_setlock(struct lockf *state, struct lockf_entry *lock, struct vnode *vp,
 	error = lf_add_incoming(state, lock);
 	sx_xunlock(&lf_owner_graph_lock);
 	if (error) {
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 		if (lockf_debug & 1)
 			lf_print("lf_setlock: deadlock", lock);
 #endif
@@ -1552,12 +1556,12 @@ lf_clearlock(struct lockf *state, struct lockf_entry *unlock)
 
 	if (overlap == NOLOCKF)
 		return (0);
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 	if (unlock->lf_type != F_UNLCK)
 		panic("lf_clearlock: bad type");
 	if (lockf_debug & 1)
 		lf_print("lf_clearlock", unlock);
-#endif /* DEBUG */
+#endif /* LOCKF_DEBUG */
 
 	lf_activate_lock(state, unlock);
 
@@ -1573,10 +1577,10 @@ lf_getlock(struct lockf *state, struct lockf_entry *lock, struct flock *fl)
 {
 	struct lockf_entry *block;
 
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 	if (lockf_debug & 1)
 		lf_print("lf_getlock", lock);
-#endif /* DEBUG */
+#endif /* LOCKF_DEBUG */
 
 	if ((block = lf_getblock(state, lock))) {
 		fl->l_type = block->lf_type;
@@ -1704,10 +1708,10 @@ lf_findoverlap(struct lockf_entry **overlap, struct lockf_entry *lock, int type)
 	if ((*overlap) == NOLOCKF) {
 		return (0);
 	}
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 	if (lockf_debug & 2)
 		lf_print("lf_findoverlap: looking for overlap in", lock);
-#endif /* DEBUG */
+#endif /* LOCKF_DEBUG */
 	start = lock->lf_start;
 	end = lock->lf_end;
 	res = 0;
@@ -1720,10 +1724,10 @@ lf_findoverlap(struct lockf_entry **overlap, struct lockf_entry *lock, int type)
 			*overlap = LIST_NEXT(lf, lf_link);
 			continue;
 		}
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 		if (lockf_debug & 2)
 			lf_print("\tchecking", lf);
-#endif /* DEBUG */
+#endif /* LOCKF_DEBUG */
 		/*
 		 * OK, check for overlap
 		 *
@@ -1737,55 +1741,55 @@ lf_findoverlap(struct lockf_entry **overlap, struct lockf_entry *lock, int type)
 		 */
 		if (start > lf->lf_end) {
 			/* Case 0 */
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 			if (lockf_debug & 2)
 				printf("no overlap\n");
-#endif /* DEBUG */
+#endif /* LOCKF_DEBUG */
 			*overlap = LIST_NEXT(lf, lf_link);
 			continue;
 		}
 		if (lf->lf_start == start && lf->lf_end == end) {
 			/* Case 1 */
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 			if (lockf_debug & 2)
 				printf("overlap == lock\n");
-#endif /* DEBUG */
+#endif /* LOCKF_DEBUG */
 			res = 1;
 			break;
 		}
 		if (lf->lf_start <= start && lf->lf_end >= end) {
 			/* Case 2 */
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 			if (lockf_debug & 2)
 				printf("overlap contains lock\n");
-#endif /* DEBUG */
+#endif /* LOCKF_DEBUG */
 			res = 2;
 			break;
 		}
 		if (start <= lf->lf_start && end >= lf->lf_end) {
 			/* Case 3 */
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 			if (lockf_debug & 2)
 				printf("lock contains overlap\n");
-#endif /* DEBUG */
+#endif /* LOCKF_DEBUG */
 			res = 3;
 			break;
 		}
 		if (lf->lf_start < start && lf->lf_end >= start) {
 			/* Case 4 */
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 			if (lockf_debug & 2)
 				printf("overlap starts before lock\n");
-#endif /* DEBUG */
+#endif /* LOCKF_DEBUG */
 			res = 4;
 			break;
 		}
 		if (lf->lf_start > start && lf->lf_end > end) {
 			/* Case 5 */
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 			if (lockf_debug & 2)
 				printf("overlap ends after lock\n");
-#endif /* DEBUG */
+#endif /* LOCKF_DEBUG */
 			res = 5;
 			break;
 		}
@@ -1808,12 +1812,12 @@ lf_split(struct lockf *state, struct lockf_entry *lock1,
 {
 	struct lockf_entry *splitlock;
 
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 	if (lockf_debug & 2) {
 		lf_print("lf_split", lock1);
 		lf_print("splitting from", lock2);
 	}
-#endif /* DEBUG */
+#endif /* LOCKF_DEBUG */
 	/*
 	 * Check to see if we don't need to split at all.
 	 */
@@ -2028,7 +2032,7 @@ lf_countlocks(int sysid)
 	return (count);
 }
 
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 
 /*
  * Return non-zero if y is reachable from x using a brute force
@@ -2242,7 +2246,7 @@ graph_add_edge(struct owner_graph *g, struct owner_vertex *x,
 		}
 	}
 
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 	if (lockf_debug & 8) {
 		printf("adding edge %d:", x->v_order);
 		lf_print_owner(x->v_owner);
@@ -2277,7 +2281,7 @@ graph_add_edge(struct owner_graph *g, struct owner_vertex *x,
 		}
 		nF = graph_delta_forward(g, x, y, &deltaF);
 		if (nF < 0) {
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 			if (lockf_debug & 8) {
 				struct owner_vertex_list path;
 				printf("deadlock: ");
@@ -2289,7 +2293,7 @@ graph_add_edge(struct owner_graph *g, struct owner_vertex *x,
 			return (EDEADLK);
 		}
 
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 		if (lockf_debug & 8) {
 			printf("re-ordering graph vertices\n");
 			printf("deltaF = ");
@@ -2299,7 +2303,7 @@ graph_add_edge(struct owner_graph *g, struct owner_vertex *x,
 
 		nB = graph_delta_backward(g, x, y, &deltaB);
 
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 		if (lockf_debug & 8) {
 			printf("deltaB = ");
 			graph_print_vertices(&deltaB);
@@ -2328,7 +2332,7 @@ graph_add_edge(struct owner_graph *g, struct owner_vertex *x,
 		i = graph_assign_indices(g, indices, 0, &deltaB);
 		graph_assign_indices(g, indices, i, &deltaF);
 
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 		if (lockf_debug & 8) {
 			struct owner_vertex_list set;
 			TAILQ_INIT(&set);
@@ -2343,7 +2347,7 @@ graph_add_edge(struct owner_graph *g, struct owner_vertex *x,
 
 	KASSERT(x->v_order < y->v_order, ("Failed to re-order graph"));
 
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 	if (lockf_debug & 8) {
 		graph_check(g, TRUE);
 	}
@@ -2379,7 +2383,7 @@ graph_remove_edge(struct owner_graph *g, struct owner_vertex *x,
 
 	e->e_refs--;
 	if (e->e_refs == 0) {
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 		if (lockf_debug & 8) {
 			printf("removing edge %d:", x->v_order);
 			lf_print_owner(x->v_owner);
@@ -2466,7 +2470,7 @@ graph_init(struct owner_graph *g)
 	return (g);
 }
 
-#ifdef DEBUG
+#ifdef LOCKF_DEBUG
 /*
  * Print description of a lock owner
  */
@@ -2549,4 +2553,4 @@ lf_printlist(char *tag, struct lockf_entry *lock)
 		printf("\n");
 	}
 }
-#endif /* DEBUG */
+#endif /* LOCKF_DEBUG */

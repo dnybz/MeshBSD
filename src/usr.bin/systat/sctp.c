@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/systat/sctp.c 289873 2015-10-24 09:34:40Z tuexen $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/systat/sctp.c 289873 2015-10-24 09:34:40Z tuexen $");
 
 #include <sys/param.h>
 #include <sys/types.h>

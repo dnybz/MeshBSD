@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libusbhid/usage.c 297764 2016-04-09 20:36:07Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libusbhid/usage.c 297764 2016-04-09 20:36:07Z pfg $");
 
 #include <sys/param.h>
 #include <assert.h>

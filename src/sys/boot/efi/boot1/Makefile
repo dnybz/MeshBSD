@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/boot/efi/boot1/Makefile 296769 2016-03-12 21:44:33Z emaste $
+# $FreeBSD: releng/11.0/sys/boot/efi/boot1/Makefile 296769 2016-03-12 21:44:33Z emaste $
 
 MAN=
 
@@ -9,6 +9,17 @@ MK_SSP=		no
 PROG=		boot1.sym
 INTERNALPROG=
 WARNS?=		6
+
+.if ${MK_ZFS} != "no"
+# Disable warnings that are currently incompatible with the zfs boot code
+CWARNFLAGS.zfs_module.c += -Wno-array-bounds
+CWARNFLAGS.zfs_module.c += -Wno-cast-align
+CWARNFLAGS.zfs_module.c += -Wno-cast-qual
+CWARNFLAGS.zfs_module.c += -Wno-missing-prototypes
+CWARNFLAGS.zfs_module.c += -Wno-sign-compare
+CWARNFLAGS.zfs_module.c += -Wno-unused-parameter
+CWARNFLAGS.zfs_module.c += -Wno-unused-function
+.endif
 
 # architecture-specific loader code
 SRCS=	boot1.c self_reloc.c start.S ufs_module.c
@@ -26,6 +37,12 @@ CFLAGS+=	-DEFI_UFS_BOOT
 CFLAGS+=	-DEFI_DEBUG
 .endif
 
+.if ${MK_ZFS} != "no"
+CFLAGS+=	-I${.CURDIR}/../../zfs/
+CFLAGS+=	-I${.CURDIR}/../../../cddl/boot/zfs/
+CFLAGS+=	-DEFI_ZFS_BOOT
+.endif
+
 # Always add MI sources and REGULAR efi loader bits
 .PATH:		${.CURDIR}/../loader/arch/${MACHINE}
 .PATH:		${.CURDIR}/../loader
@@ -41,6 +58,10 @@ LDFLAGS+=	-Wl,-T${LDSCRIPT} -Wl,-Bsymbolic -shared
 .if ${MACHINE_CPUARCH} == "aarch64"
 CFLAGS+=	-msoft-float -mgeneral-regs-only
 .endif
+.if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386"
+CFLAGS+=	-fPIC
+LDFLAGS+=	-Wl,-znocombreloc
+.endif
 
 #
 # Add libstand for the runtime functions used by the compiler - for example
@@ -55,8 +76,13 @@ DPADD+=		${LDSCRIPT}
 NM?=		nm
 OBJCOPY?=	objcopy
 
+.if ${MACHINE_CPUARCH} == "amd64"
+EFI_TARGET=	efi-app-x86_64
+.elif ${MACHINE_CPUARCH} == "i386"
+EFI_TARGET=	efi-app-ia32
+.else
 EFI_TARGET=	binary
-
+.endif
 
 boot1.efi: ${PROG}
 	if ${NM} ${.ALLSRC} | grep ' U '; then \
@@ -101,3 +127,10 @@ CLEANFILES+=   machine
 machine: .NOMETA
 	ln -sf ${.CURDIR}/../../../${MACHINE}/include machine
 
+.if ${MACHINE_CPUARCH} == "amd64" || ${MACHINE_CPUARCH} == "i386"
+beforedepend ${OBJS}: x86
+CLEANFILES+=   x86
+
+x86: .NOMETA
+	ln -sf ${.CURDIR}/../../../x86/include x86
+.endif

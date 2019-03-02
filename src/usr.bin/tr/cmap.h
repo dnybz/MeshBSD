@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.bin/tr/cmap.h 200462 2009-12-13 03:14:06Z delphij $
+ * $FreeBSD: releng/11.0/usr.bin/tr/cmap.h 200462 2009-12-13 03:14:06Z delphij $
  */
 
 #ifndef CMAP_H

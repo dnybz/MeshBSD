@@ -26,7 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/kern/kern_loginclass.c 290857 2015-11-15 12:10:51Z trasz $
+ * $FreeBSD: releng/11.0/sys/kern/kern_loginclass.c 290857 2015-11-15 12:10:51Z trasz $
  */
 
 /*
@@ -43,7 +43,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_loginclass.c 290857 2015-11-15 12:10:51Z trasz $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_loginclass.c 290857 2015-11-15 12:10:51Z trasz $");
 
 #include <sys/param.h>
 #include <sys/eventhandler.h>

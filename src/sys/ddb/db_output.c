@@ -33,7 +33,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/ddb/db_output.c 298848 2016-04-30 14:41:18Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/ddb/db_output.c 298848 2016-04-30 14:41:18Z pfg $");
 
 #include "opt_ddb.h"
 

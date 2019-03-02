@@ -24,7 +24,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.bin/procstat/procstat_args.c 287486 2015-09-05 17:02:01Z allanjude $
+ * $FreeBSD: releng/11.0/usr.bin/procstat/procstat_args.c 287486 2015-09-05 17:02:01Z allanjude $
  */
 
 #include <sys/param.h>

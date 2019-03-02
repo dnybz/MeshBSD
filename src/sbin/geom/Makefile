@@ -1,4 +1,4 @@
-# $FreeBSD: head/sbin/geom/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/sbin/geom/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 PACKAGE=runtime
 .if defined(RESCUE) || defined(RELEASE_CRUNCH)

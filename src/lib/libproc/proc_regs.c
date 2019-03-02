@@ -28,7 +28,7 @@
  */ 
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libproc/proc_regs.c 294662 2016-01-24 12:10:29Z br $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libproc/proc_regs.c 294662 2016-01-24 12:10:29Z br $");
 
 #include <sys/types.h>
 #include <sys/ptrace.h>

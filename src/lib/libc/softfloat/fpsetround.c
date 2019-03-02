@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/softfloat/fpsetround.c 189647 2009-03-10 21:13:26Z delphij $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/softfloat/fpsetround.c 189647 2009-03-10 21:13:26Z delphij $");
 
 #include "namespace.h"
 

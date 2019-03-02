@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/meta2deps.sh 296323 2016-03-02 20:06:24Z bdrewery $
+# $FreeBSD: releng/11.0/share/mk/meta2deps.sh 296323 2016-03-02 20:06:24Z bdrewery $
 #!/bin/sh
 
 # NAME:

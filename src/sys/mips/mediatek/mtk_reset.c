@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mediatek/mtk_reset.c 297667 2016-04-07 11:08:50Z sgalabov $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mediatek/mtk_reset.c 297667 2016-04-07 11:08:50Z sgalabov $");
 
 #include <sys/param.h>
 #include <sys/kernel.h>

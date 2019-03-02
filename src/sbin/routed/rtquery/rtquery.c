@@ -26,7 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sbin/routed/rtquery/rtquery.c 299768 2016-05-14 22:40:08Z pfg $
+ * $FreeBSD: releng/11.0/sbin/routed/rtquery/rtquery.c 299768 2016-05-14 22:40:08Z pfg $
  */
 
 #include <sys/cdefs.h>
@@ -62,7 +62,7 @@ __COPYRIGHT("@(#) Copyright (c) 1983, 1988, 1993\n"
 #ifdef __NetBSD__
 __RCSID("$NetBSD$");
 #elif defined(__FreeBSD__)
-__RCSID("$FreeBSD: head/sbin/routed/rtquery/rtquery.c 299768 2016-05-14 22:40:08Z pfg $");
+__RCSID("$FreeBSD: releng/11.0/sbin/routed/rtquery/rtquery.c 299768 2016-05-14 22:40:08Z pfg $");
 #else
 __RCSID("$Revision: 2.26 $");
 #ident "$Revision: 2.26 $"

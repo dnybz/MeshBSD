@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/boot/userboot/userboot/Makefile 298298 2016-04-19 20:56:45Z allanjude $
+# $FreeBSD: releng/11.0/sys/boot/userboot/userboot/Makefile 298298 2016-04-19 20:56:45Z allanjude $
 
 MAN=
 
@@ -50,6 +50,11 @@ CFLAGS+=        -DBOOT_FORTH -I${.CURDIR}/../../ficl -I${.CURDIR}/../../ficl/i38
 CFLAGS+=	-DBF_DICTSIZE=15000
 LIBFICL=	${.OBJDIR}/../ficl/libficl.a
 LIBSTAND=	${.OBJDIR}/../libstand/libstand.a
+.endif
+
+.if ${MK_ZFS} != "no"
+CFLAGS+=	-DUSERBOOT_ZFS_SUPPORT
+LIBZFSBOOT=	${.OBJDIR}/../zfs/libzfsboot.a
 .endif
 
 # Always add MI sources 

@@ -26,7 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sbin/routed/parms.c 299821 2016-05-15 02:30:34Z pfg $
+ * $FreeBSD: releng/11.0/sbin/routed/parms.c 299821 2016-05-15 02:30:34Z pfg $
  */
 
 #include "defs.h"
@@ -36,7 +36,7 @@
 #ifdef __NetBSD__
 __RCSID("$NetBSD$");
 #elif defined(__FreeBSD__)
-__RCSID("$FreeBSD: head/sbin/routed/parms.c 299821 2016-05-15 02:30:34Z pfg $");
+__RCSID("$FreeBSD: releng/11.0/sbin/routed/parms.c 299821 2016-05-15 02:30:34Z pfg $");
 #else
 __RCSID("$Revision: 2.26 $");
 #ident "$Revision: 2.26 $"

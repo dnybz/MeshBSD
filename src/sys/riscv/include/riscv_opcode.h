@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/riscv/include/riscv_opcode.h 296614 2016-03-10 15:51:43Z br $
+ * $FreeBSD: releng/11.0/sys/riscv/include/riscv_opcode.h 296614 2016-03-10 15:51:43Z br $
  */
 
 #ifndef _MACHINE_RISCV_OPCODE_H_

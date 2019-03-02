@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libcrypt/crypt.c 272830 2014-10-09 16:45:11Z des $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libcrypt/crypt.c 272830 2014-10-09 16:45:11Z des $");
 
 #include <sys/types.h>
 

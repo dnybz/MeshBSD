@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/net80211/ieee80211.c 300063 2016-05-17 16:38:18Z avos $");
+__FBSDID("$FreeBSD: releng/11.0/sys/net80211/ieee80211.c 300232 2016-05-19 21:08:33Z avos $");
 
 /*
  * IEEE 802.11 generic handler
@@ -1207,7 +1207,7 @@ add_chanlist(struct ieee80211_channel chans[], int maxchans, int *nchans,
 		}
 	}
 
-	return (error);
+	return (0);
 }
 
 int

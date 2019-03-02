@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_roundf.c 257770 2013-11-06 23:44:52Z kargl $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/src/s_roundf.c 257770 2013-11-06 23:44:52Z kargl $");
 
 #include "math.h"
 #include "math_private.h"

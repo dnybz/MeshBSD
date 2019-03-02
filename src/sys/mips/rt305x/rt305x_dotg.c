@@ -1,5 +1,5 @@
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/rt305x/rt305x_dotg.c 292703 2015-12-24 18:40:10Z adrian $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/rt305x/rt305x_dotg.c 292703 2015-12-24 18:40:10Z adrian $");
 
 /*-
  * Copyright (c) 2015 Stanislav Galabov. All rights reserved.

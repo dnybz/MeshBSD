@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/bsd.stand.mk 287227 2015-08-27 23:46:42Z imp $
+# $FreeBSD: releng/11.0/share/mk/bsd.stand.mk 287227 2015-08-27 23:46:42Z imp $
 #
 # Common definitons for programs building in the stand-alone environment
 # and/or using libstand.

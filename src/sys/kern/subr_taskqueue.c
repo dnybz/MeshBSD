@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/subr_taskqueue.c 296272 2016-03-01 17:47:32Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/subr_taskqueue.c 304716 2016-08-24 01:56:30Z shurd $");
 
 #include <sys/param.h>
 #include <sys/systm.h>
@@ -34,12 +34,14 @@ __FBSDID("$FreeBSD: head/sys/kern/subr_taskqueue.c 296272 2016-03-01 17:47:32Z j
 #include <sys/interrupt.h>
 #include <sys/kernel.h>
 #include <sys/kthread.h>
+#include <sys/libkern.h>
 #include <sys/limits.h>
 #include <sys/lock.h>
 #include <sys/malloc.h>
 #include <sys/mutex.h>
 #include <sys/proc.h>
 #include <sys/sched.h>
+#include <sys/smp.h>
 #include <sys/taskqueue.h>
 #include <sys/unistd.h>
 #include <machine/stdarg.h>
@@ -62,6 +64,7 @@ struct taskqueue {
 	STAILQ_HEAD(, task)	tq_queue;
 	taskqueue_enqueue_fn	tq_enqueue;
 	void			*tq_context;
+	char			*tq_name;
 	TAILQ_HEAD(, taskqueue_busy) tq_active;
 	struct mtx		tq_mutex;
 	struct thread		**tq_threads;
@@ -119,20 +122,30 @@ TQ_SLEEP(struct taskqueue *tq, void *p, struct mtx *m, int pri, const char *wm,
 }
 
 static struct taskqueue *
-_taskqueue_create(const char *name __unused, int mflags,
+_taskqueue_create(const char *name, int mflags,
 		 taskqueue_enqueue_fn enqueue, void *context,
-		 int mtxflags, const char *mtxname)
+		 int mtxflags, const char *mtxname __unused)
 {
 	struct taskqueue *queue;
+	char *tq_name;
+
+	tq_name = malloc(TASKQUEUE_NAMELEN, M_TASKQUEUE, mflags | M_ZERO);
+	if (tq_name == NULL)
+		return (NULL);
 
 	queue = malloc(sizeof(struct taskqueue), M_TASKQUEUE, mflags | M_ZERO);
-	if (!queue)
-		return NULL;
+	if (queue == NULL) {
+		free(tq_name, M_TASKQUEUE);
+		return (NULL);
+	}
+
+	snprintf(tq_name, TASKQUEUE_NAMELEN, "%s", (name) ? name : "taskqueue");
 
 	STAILQ_INIT(&queue->tq_queue);
 	TAILQ_INIT(&queue->tq_active);
 	queue->tq_enqueue = enqueue;
 	queue->tq_context = context;
+	queue->tq_name = tq_name;
 	queue->tq_spin = (mtxflags & MTX_SPIN) != 0;
 	queue->tq_flags |= TQ_FLAGS_ACTIVE;
 	if (enqueue == taskqueue_fast_enqueue ||
@@ -140,17 +153,18 @@ _taskqueue_create(const char *name __unused, int mflags,
 	    enqueue == taskqueue_swi_giant_enqueue ||
 	    enqueue == taskqueue_thread_enqueue)
 		queue->tq_flags |= TQ_FLAGS_UNLOCKED_ENQUEUE;
-	mtx_init(&queue->tq_mutex, mtxname, NULL, mtxflags);
+	mtx_init(&queue->tq_mutex, tq_name, NULL, mtxflags);
 
-	return queue;
+	return (queue);
 }
 
 struct taskqueue *
 taskqueue_create(const char *name, int mflags,
 		 taskqueue_enqueue_fn enqueue, void *context)
 {
+
 	return _taskqueue_create(name, mflags, enqueue, context,
-			MTX_DEF, "taskqueue");
+			MTX_DEF, name);
 }
 
 void
@@ -194,6 +208,7 @@ taskqueue_free(struct taskqueue *queue)
 	KASSERT(queue->tq_callouts == 0, ("Armed timeout tasks"));
 	mtx_destroy(&queue->tq_mutex);
 	free(queue->tq_threads, M_TASKQUEUE);
+	free(queue->tq_name, M_TASKQUEUE);
 	free(queue, M_TASKQUEUE);
 }
 
@@ -203,6 +218,7 @@ taskqueue_enqueue_locked(struct taskqueue *queue, struct task *task)
 	struct task *ins;
 	struct task *prev;
 
+	KASSERT(task->ta_func != NULL, ("enqueueing task with NULL func"));
 	/*
 	 * Count multiple enqueues.
 	 */
@@ -410,6 +426,7 @@ taskqueue_run_locked(struct taskqueue *queue)
 	struct task *task;
 	int pending;
 
+	KASSERT(queue != NULL, ("tq is NULL"));
 	TQ_ASSERT_LOCKED(queue);
 	tb.tb_running = NULL;
 
@@ -421,12 +438,14 @@ taskqueue_run_locked(struct taskqueue *queue)
 		 * zero its pending count.
 		 */
 		task = STAILQ_FIRST(&queue->tq_queue);
+		KASSERT(task != NULL, ("task is NULL"));
 		STAILQ_REMOVE_HEAD(&queue->tq_queue, ta_link);
 		pending = task->ta_pending;
 		task->ta_pending = 0;
 		tb.tb_running = task;
 		TQ_UNLOCK(queue);
 
+		KASSERT(task->ta_func != NULL, ("task->ta_func is NULL"));
 		task->ta_func(task->ta_context, pending);
 
 		TQ_LOCK(queue);
@@ -680,6 +699,7 @@ taskqueue_thread_loop(void *arg)
 	taskqueue_run_callback(tq, TASKQUEUE_CALLBACK_TYPE_INIT);
 	TQ_LOCK(tq);
 	while ((tq->tq_flags & TQ_FLAGS_ACTIVE) != 0) {
+		/* XXX ? */
 		taskqueue_run_locked(tq);
 		/*
 		 * Because taskqueue_run() can drop tq_mutex, we need to
@@ -691,7 +711,6 @@ taskqueue_thread_loop(void *arg)
 		TQ_SLEEP(tq, tq, &tq->tq_mutex, 0, "-", 0);
 	}
 	taskqueue_run_locked(tq);
-
 	/*
 	 * This thread is on its way out, so just drop the lock temporarily
 	 * in order to call the shutdown callback.  This allows the callback
@@ -715,7 +734,6 @@ taskqueue_thread_enqueue(void *context)
 
 	tqp = context;
 	tq = *tqp;
-
 	wakeup_one(tq);
 }
 

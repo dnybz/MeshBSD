@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_khelp.c 251778 2013-06-15 06:45:17Z lstewart $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_khelp.c 251778 2013-06-15 06:45:17Z lstewart $");
 
 #include <sys/param.h>
 #include <sys/kernel.h>

@@ -1,6 +1,6 @@
 /* Emulate getpagesize on systems that lack it.  */
 
-/* $FreeBSD: head/gnu/usr.bin/grep/getpagesize.h 131557 2004-07-04 10:02:03Z tjr $ */
+/* $FreeBSD: releng/11.0/gnu/usr.bin/grep/getpagesize.h 131557 2004-07-04 10:02:03Z tjr $ */
 
 #ifndef HAVE_GETPAGESIZE
 

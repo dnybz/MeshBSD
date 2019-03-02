@@ -41,7 +41,7 @@ __RCSID("$NetBSD: read.c,v 1.71 2014/07/06 18:15:34 christos Exp $");
 #endif
 #endif /* not lint && not SCCSID */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libedit/read.c 296435 2016-03-06 21:32:54Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libedit/read.c 296435 2016-03-06 21:32:54Z pfg $");
 
 /*
  * read.c: Clean this junk up! This is horrible code.

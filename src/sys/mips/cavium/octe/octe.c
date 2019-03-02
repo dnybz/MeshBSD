@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/cavium/octe/octe.c 270856 2014-08-30 19:55:54Z glebius $
+ * $FreeBSD: releng/11.0/sys/mips/cavium/octe/octe.c 270856 2014-08-30 19:55:54Z glebius $
  */
 
 /*
@@ -61,7 +61,7 @@
 
 #ifdef INET
 #include <netinet/in.h>
-#include <netinet/if_ether.h>
+#include <netarp/if_ether.h>
 #endif
 
 #include <dev/mii/mii.h>
@@ -430,7 +430,7 @@ octe_ioctl(struct ifnet *ifp, u_long cmd, caddr_t data)
 			ifp->if_flags |= IFF_UP;
 			if ((ifp->if_drv_flags & IFF_DRV_RUNNING) == 0)
 				octe_init(priv);
-			arp_ifinit(ifp, ifa);
+			in_arp_ifinit(ifp, ifa);
 
 			return (0);
 		}

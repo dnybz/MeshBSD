@@ -33,7 +33,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/libexec/rtld-elf/riscv/reloc.c 294373 2016-01-20 07:21:33Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/libexec/rtld-elf/riscv/reloc.c 294373 2016-01-20 07:21:33Z kib $");
 
 #include <sys/types.h>
 

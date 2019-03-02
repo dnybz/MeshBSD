@@ -54,7 +54,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/ofw/libofw/openfirm.h 279799 2015-03-09 02:57:34Z nwhitehorn $
+ * $FreeBSD: releng/11.0/sys/boot/ofw/libofw/openfirm.h 279799 2015-03-09 02:57:34Z nwhitehorn $
  */
 #ifndef _OPENFIRM_H_
 #define	_OPENFIRM_H_

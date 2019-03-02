@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/imgact_elf.c 298433 2016-04-21 19:57:40Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/imgact_elf.c 302344 2016-07-05 14:46:06Z emaste $");
 
 #include "opt_capsicum.h"
 #include "opt_compat.h"
@@ -80,9 +80,6 @@ __FBSDID("$FreeBSD: head/sys/kern/imgact_elf.c 298433 2016-04-21 19:57:40Z pfg $
 
 #include <machine/elf.h>
 #include <machine/md_var.h>
-#ifdef __arm__
-#include <machine/acle-compat.h>
-#endif
 
 #define ELF_NOTE_ROUNDSIZE	4
 #define OLD_EI_BRAND	8
@@ -116,7 +113,8 @@ SYSCTL_INT(__CONCAT(_kern_elf, __ELF_WORD_SIZE), OID_AUTO,
 
 static int elf_legacy_coredump = 0;
 SYSCTL_INT(_debug, OID_AUTO, __elfN(legacy_coredump), CTLFLAG_RW, 
-    &elf_legacy_coredump, 0, "");
+    &elf_legacy_coredump, 0,
+    "include all and only RW pages in core dumps");
 
 int __elfN(nxstack) =
 #if defined(__amd64__) || defined(__powerpc64__) /* both 64 and 32 bit */ || \

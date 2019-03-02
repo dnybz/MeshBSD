@@ -17,7 +17,7 @@
 __RCSID("$NetBSD: twalk.c,v 1.4 2012/03/20 16:38:45 matt Exp $");
 #endif /* LIBC_SCCS and not lint */
 #endif
-__FBSDID("$FreeBSD: head/lib/libc/stdlib/twalk.c 268644 2014-07-15 03:28:37Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/stdlib/twalk.c 268644 2014-07-15 03:28:37Z pfg $");
 
 #define _SEARCH_PRIVATE
 #include <search.h>

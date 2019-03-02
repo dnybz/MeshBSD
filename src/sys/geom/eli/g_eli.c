@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/geom/eli/g_eli.c 299746 2016-05-14 18:22:52Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/sys/geom/eli/g_eli.c 300288 2016-05-20 08:25:37Z kib $");
 
 #include <sys/param.h>
 #include <sys/systm.h>
@@ -309,6 +309,7 @@ g_eli_start(struct bio *bp)
 	case BIO_WRITE:
 	case BIO_GETATTR:
 	case BIO_FLUSH:
+	case BIO_ZONE:
 		break;
 	case BIO_DELETE:
 		/*
@@ -348,6 +349,7 @@ g_eli_start(struct bio *bp)
 	case BIO_GETATTR:
 	case BIO_FLUSH:
 	case BIO_DELETE:
+	case BIO_ZONE:
 		cbp->bio_done = g_std_done;
 		cp = LIST_FIRST(&sc->sc_geom->consumer);
 		cbp->bio_to = cp->provider;
@@ -1229,7 +1231,6 @@ g_eli_shutdown_pre_sync(void *arg, int howto)
 	int error;
 
 	mp = arg;
-	DROP_GIANT();
 	g_topology_lock();
 	LIST_FOREACH_SAFE(gp, &mp->geom, geom, gp2) {
 		sc = gp->softc;
@@ -1245,7 +1246,6 @@ g_eli_shutdown_pre_sync(void *arg, int howto)
 		}
 	}
 	g_topology_unlock();
-	PICKUP_GIANT();
 }
 
 static void

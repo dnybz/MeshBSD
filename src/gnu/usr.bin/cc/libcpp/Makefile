@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/usr.bin/cc/libcpp/Makefile 258507 2013-11-24 04:08:47Z pfg $
+# $FreeBSD: releng/11.0/gnu/usr.bin/cc/libcpp/Makefile 258507 2013-11-24 04:08:47Z pfg $
 
 .include <bsd.own.mk>
 

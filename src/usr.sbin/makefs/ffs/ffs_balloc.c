@@ -33,7 +33,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/makefs/ffs/ffs_balloc.c 186334 2008-12-19 18:45:43Z sam $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/makefs/ffs/ffs_balloc.c 186334 2008-12-19 18:45:43Z sam $");
 
 #include <sys/param.h>
 #include <sys/time.h>

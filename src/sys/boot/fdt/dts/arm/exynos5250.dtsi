@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/fdt/dts/arm/exynos5250.dtsi 269369 2014-08-01 06:20:25Z br $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/arm/exynos5250.dtsi 269369 2014-08-01 06:20:25Z br $
  */
 
 /include/ "exynos5.dtsi"

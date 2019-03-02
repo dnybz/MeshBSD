@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/mips/uboot/conf.c 296183 2016-02-29 07:47:04Z sgalabov $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/mips/uboot/conf.c 296183 2016-02-29 07:47:04Z sgalabov $");
 
 #include <stand.h>
 #include "bootstrap.h"

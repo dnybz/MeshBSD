@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sbin/newfs_nandfs/newfs_nandfs.c 298871 2016-05-01 02:19:49Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sbin/newfs_nandfs/newfs_nandfs.c 298871 2016-05-01 02:19:49Z pfg $");
 
 #include <sys/param.h>
 #include <sys/fdcio.h>
@@ -54,8 +54,7 @@ __FBSDID("$FreeBSD: head/sbin/newfs_nandfs/newfs_nandfs.c 298871 2016-05-01 02:1
 #include <unistd.h>
 
 #include <fs/nandfs/nandfs_fs.h>
-
-#include "../../sys/dev/nand/nand_dev.h"
+#include <dev/nand/nand_dev.h>
 
 #define DEBUG
 #undef DEBUG

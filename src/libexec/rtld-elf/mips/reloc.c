@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/libexec/rtld-elf/mips/reloc.c 298285 2016-04-19 19:03:55Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/libexec/rtld-elf/mips/reloc.c 298285 2016-04-19 19:03:55Z pfg $");
 
 #include <sys/types.h>
 #include <sys/stat.h>

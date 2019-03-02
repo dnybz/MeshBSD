@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)extern.h	8.1 (Berkeley) 5/31/93
- * $FreeBSD: head/bin/rcp/extern.h 127958 2004-04-06 20:06:54Z markm $
+ * $FreeBSD: releng/11.0/bin/rcp/extern.h 127958 2004-04-06 20:06:54Z markm $
  */
 
 typedef struct {

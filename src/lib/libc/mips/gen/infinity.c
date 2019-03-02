@@ -3,7 +3,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/mips/gen/infinity.c 178580 2008-04-26 12:08:02Z imp $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/mips/gen/infinity.c 178580 2008-04-26 12:08:02Z imp $");
 
 #include <math.h>
 

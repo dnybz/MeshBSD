@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libufs/block.c 228349 2011-12-08 12:31:47Z rmh $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libufs/block.c 228349 2011-12-08 12:31:47Z rmh $");
 
 #include <sys/param.h>
 #include <sys/mount.h>

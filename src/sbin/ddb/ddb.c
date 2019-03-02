@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sbin/ddb/ddb.c 241844 2012-10-22 03:00:37Z eadler $");
+__FBSDID("$FreeBSD: releng/11.0/sbin/ddb/ddb.c 241844 2012-10-22 03:00:37Z eadler $");
 
 #include <err.h>
 #include <stdio.h>

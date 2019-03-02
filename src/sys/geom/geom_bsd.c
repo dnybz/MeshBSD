@@ -40,7 +40,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/geom/geom_bsd.c 276737 2015-01-06 05:28:37Z imp $");
+__FBSDID("$FreeBSD: releng/11.0/sys/geom/geom_bsd.c 276737 2015-01-06 05:28:37Z imp $");
 
 #include <sys/param.h>
 #include <sys/endian.h>

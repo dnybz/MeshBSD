@@ -25,7 +25,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/geom/uzip/g_uzip.h 295952 2016-02-24 02:52:49Z adrian $
+ * $FreeBSD: releng/11.0/sys/geom/uzip/g_uzip.h 295952 2016-02-24 02:52:49Z adrian $
  */
 #ifndef	__GEOM_G_UZIP_H__
 #define	__GEOM_G_UZIP_H__

@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/split/split.c 257884 2013-11-09 08:57:21Z eadler $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/split/split.c 257884 2013-11-09 08:57:21Z eadler $");
 
 #ifndef lint
 static const char copyright[] =

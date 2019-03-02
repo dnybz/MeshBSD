@@ -2,7 +2,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libmd/md4c.c 282774 2015-05-11 16:45:33Z thomas $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libmd/md4c.c 282774 2015-05-11 16:45:33Z thomas $");
 
 /* Copyright (C) 1990-2, RSA Data Security, Inc. All rights reserved.
 

@@ -26,7 +26,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGES.
  *
- * $FreeBSD: head/usr.sbin/uathload/uathload.c 297205 2016-03-23 04:18:57Z imp $
+ * $FreeBSD: releng/11.0/usr.sbin/uathload/uathload.c 297205 2016-03-23 04:18:57Z imp $
  */
 
 /*

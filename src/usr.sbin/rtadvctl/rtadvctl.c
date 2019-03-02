@@ -23,7 +23,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/rtadvctl/rtadvctl.c 281143 2015-04-06 09:42:23Z glebius $
+ * $FreeBSD: releng/11.0/usr.sbin/rtadvctl/rtadvctl.c 281143 2015-04-06 09:42:23Z glebius $
  *
  */
 

@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/mld6query/mld6.c 281143 2015-04-06 09:42:23Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/mld6query/mld6.c 281143 2015-04-06 09:42:23Z glebius $");
 
 #include <sys/param.h>
 #include <sys/uio.h>

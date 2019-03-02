@@ -24,7 +24,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/fdt/dts/arm/annapurna-alpine.dts 282985 2015-05-15 18:25:48Z zbb $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/arm/annapurna-alpine.dts 282985 2015-05-15 18:25:48Z zbb $
  */
 
 /dts-v1/;

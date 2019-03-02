@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/beri/beri_pic.c 261410 2014-02-02 19:17:28Z ian $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/beri/beri_pic.c 261410 2014-02-02 19:17:28Z ian $");
 
 #include <sys/param.h>
 #include <sys/kernel.h>

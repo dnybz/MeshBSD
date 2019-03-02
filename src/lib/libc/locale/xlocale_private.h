@@ -26,7 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/locale/xlocale_private.h 297790 2016-04-10 19:33:58Z pfg $
+ * $FreeBSD: releng/11.0/lib/libc/locale/xlocale_private.h 297790 2016-04-10 19:33:58Z pfg $
  */
 
 #ifndef _XLOCALE_PRIVATE__H_

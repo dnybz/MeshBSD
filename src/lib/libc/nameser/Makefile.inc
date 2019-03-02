@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/libc/nameser/Makefile.inc 262722 2014-03-04 02:19:39Z marcel $
+# $FreeBSD: releng/11.0/lib/libc/nameser/Makefile.inc 262722 2014-03-04 02:19:39Z marcel $
 
 # nameser sources
 .PATH: ${LIBC_SRCTOP}/nameser

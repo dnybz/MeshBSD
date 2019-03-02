@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/libpam/modules/pam_exec/Makefile 201381 2010-01-02 09:58:07Z ed $
+# $FreeBSD: releng/11.0/lib/libpam/modules/pam_exec/Makefile 201381 2010-01-02 09:58:07Z ed $
 
 LIB=	pam_exec
 SRCS=	pam_exec.c

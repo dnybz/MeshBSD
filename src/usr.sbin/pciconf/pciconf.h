@@ -27,7 +27,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/pciconf/pciconf.h 279466 2015-03-01 00:59:35Z rstone $
+ * $FreeBSD: releng/11.0/usr.sbin/pciconf/pciconf.h 279466 2015-03-01 00:59:35Z rstone $
  */
 
 #ifndef __PCICONF_H__

@@ -4,7 +4,7 @@
 PACKAGE= 	iked
 PROG= 	iked
 
-RACOONDIR= 	${.CURDIR}/../../external/racoon2
+RACOONDIR= 	${.CURDIR}/../../contrib/racoon2
 
 .PATH: 	${RACOONDIR}/iked
 IKEV1_SRC= 	ikev1/ikev1.c ikev1/genlist.c ikev1/ipsec_doi.c \

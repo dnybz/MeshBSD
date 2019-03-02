@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/bsd.confs.mk 296585 2016-03-09 22:45:00Z bdrewery $
+# $FreeBSD: releng/11.0/share/mk/bsd.confs.mk 296585 2016-03-09 22:45:00Z bdrewery $
 
 .if !target(__<bsd.init.mk>__)
 .error bsd.conf.mk cannot be included directly.

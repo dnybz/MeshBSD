@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/include/pte.h 292609 2015-12-22 15:59:41Z adrian $
+ * $FreeBSD: releng/11.0/sys/mips/include/pte.h 292609 2015-12-22 15:59:41Z adrian $
  */
 
 #ifndef	_MACHINE_PTE_H_

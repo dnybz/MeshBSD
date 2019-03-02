@@ -26,7 +26,7 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/gen/sem_new.c 294565 2016-01-22 14:52:31Z jilles $
+ * $FreeBSD: releng/11.0/lib/libc/gen/sem_new.c 294565 2016-01-22 14:52:31Z jilles $
  */
 
 #include "namespace.h"

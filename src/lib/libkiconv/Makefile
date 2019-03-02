@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/libkiconv/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/libkiconv/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 SHLIBDIR?=	/lib
 

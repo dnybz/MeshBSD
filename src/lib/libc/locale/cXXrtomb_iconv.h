@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/locale/cXXrtomb_iconv.h 281550 2015-04-15 09:09:20Z tijl $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/locale/cXXrtomb_iconv.h 281550 2015-04-15 09:09:20Z tijl $");
 
 #include <sys/queue.h>
 

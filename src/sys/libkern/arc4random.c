@@ -9,7 +9,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/libkern/arc4random.c 284959 2015-06-30 17:00:45Z markm $");
+__FBSDID("$FreeBSD: releng/11.0/sys/libkern/arc4random.c 284959 2015-06-30 17:00:45Z markm $");
 
 #include <sys/types.h>
 #include <sys/param.h>

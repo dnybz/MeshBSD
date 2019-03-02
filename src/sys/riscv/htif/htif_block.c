@@ -33,7 +33,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/riscv/htif/htif_block.c 298476 2016-04-22 15:12:05Z br $");
+__FBSDID("$FreeBSD: releng/11.0/sys/riscv/htif/htif_block.c 298476 2016-04-22 15:12:05Z br $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

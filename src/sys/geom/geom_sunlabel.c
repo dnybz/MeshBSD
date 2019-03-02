@@ -34,7 +34,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/geom/geom_sunlabel.c 223921 2011-07-11 05:22:31Z ae $");
+__FBSDID("$FreeBSD: releng/11.0/sys/geom/geom_sunlabel.c 223921 2011-07-11 05:22:31Z ae $");
 
 #include <sys/param.h>
 #include <sys/endian.h>

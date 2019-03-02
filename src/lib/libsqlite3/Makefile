@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/libsqlite3/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/libsqlite3/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 PACKAGE=lib${LIB}
 PRIVATELIB=	yes
@@ -8,7 +8,7 @@ LIBADD+=	pthread
 
 SRCS=	sqlite3.c
 
-SQLITE=	${.CURDIR}/../../tools/sqlite3
+SQLITE=	${.CURDIR}/../../contrib/sqlite3
 .PATH:	${SQLITE}
 
 WARNS=	3

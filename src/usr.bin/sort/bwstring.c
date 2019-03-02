@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/sort/bwstring.c 298089 2016-04-15 22:31:22Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/sort/bwstring.c 298089 2016-04-15 22:31:22Z pfg $");
 
 #include <ctype.h>
 #include <errno.h>

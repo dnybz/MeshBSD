@@ -1,7 +1,7 @@
-# $FreeBSD: head/usr.bin/host/Makefile 275042 2014-11-25 14:29:10Z bapt $
+# $FreeBSD: releng/11.0/usr.bin/host/Makefile 275042 2014-11-25 14:29:10Z bapt $
 
-LDNSDIR=	${.CURDIR}/../../external/ldns
-LDNSHOSTDIR=	${.CURDIR}/../../external/ldns-host
+LDNSDIR=	${.CURDIR}/../../contrib/ldns
+LDNSHOSTDIR=	${.CURDIR}/../../contrib/ldns-host
 
 .PATH:		${LDNSHOSTDIR}
 

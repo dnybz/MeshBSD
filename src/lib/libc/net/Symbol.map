@@ -1,5 +1,5 @@
 /*
- * $FreeBSD: head/lib/libc/net/Symbol.map 280782 2015-03-28 09:08:57Z tuexen $
+ * $FreeBSD: releng/11.0/lib/libc/net/Symbol.map 280782 2015-03-28 09:08:57Z tuexen $
  */
 
 FBSD_1.0 {

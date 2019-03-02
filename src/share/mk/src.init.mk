@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/src.init.mk 290467 2015-11-06 21:49:17Z bdrewery $
+# $FreeBSD: releng/11.0/share/mk/src.init.mk 290467 2015-11-06 21:49:17Z bdrewery $
 
 .if !target(__<src.init.mk>__)
 __<src.init.mk>__:

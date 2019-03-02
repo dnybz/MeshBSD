@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/gen/ctermid.c 225897 2011-10-01 12:19:48Z ed $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/gen/ctermid.c 225897 2011-10-01 12:19:48Z ed $");
 
 #include <sys/param.h>
 #include <sys/stat.h>

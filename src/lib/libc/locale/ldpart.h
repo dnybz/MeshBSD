@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/locale/ldpart.h 116274 2003-06-13 00:14:07Z jkh $
+ * $FreeBSD: releng/11.0/lib/libc/locale/ldpart.h 116274 2003-06-13 00:14:07Z jkh $
  */
 
 #ifndef _LDPART_H_

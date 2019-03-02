@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/mips/beri/loader/metadata.c 262197 2014-02-18 23:18:32Z rwatson $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/mips/beri/loader/metadata.c 262197 2014-02-18 23:18:32Z rwatson $");
 
 #include <stand.h>
 #include <sys/param.h>

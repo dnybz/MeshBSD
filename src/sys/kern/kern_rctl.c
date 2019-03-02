@@ -26,11 +26,11 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/kern/kern_rctl.c 298819 2016-04-29 22:15:33Z pfg $
+ * $FreeBSD: releng/11.0/sys/kern/kern_rctl.c 298819 2016-04-29 22:15:33Z pfg $
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_rctl.c 298819 2016-04-29 22:15:33Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_rctl.c 298819 2016-04-29 22:15:33Z pfg $");
 
 #include <sys/param.h>
 #include <sys/bus.h>

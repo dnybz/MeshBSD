@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/bsd.files.mk 298864 2016-04-30 21:32:29Z ngie $
+# $FreeBSD: releng/11.0/share/mk/bsd.files.mk 298864 2016-04-30 21:32:29Z ngie $
 
 .if !target(__<bsd.init.mk>__)
 .error bsd.files.mk cannot be included directly.

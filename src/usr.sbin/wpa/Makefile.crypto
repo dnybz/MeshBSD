@@ -1,4 +1,4 @@
-# $FreeBSD: head/usr.sbin/wpa/Makefile.crypto 289549 2015-10-18 21:38:25Z rpaulo $
+# $FreeBSD: releng/11.0/usr.sbin/wpa/Makefile.crypto 289549 2015-10-18 21:38:25Z rpaulo $
 
 .if ${MK_LIBRESSL} != "no" && !defined(RELEASE_CRUNCH)
 SRCS+=	crypto_openssl.c random.c sha1-prf.c sha256-prf.c sha256-tlsprf.c

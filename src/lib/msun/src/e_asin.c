@@ -12,7 +12,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/e_asin.c 218509 2011-02-10 07:37:50Z das $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/src/e_asin.c 218509 2011-02-10 07:37:50Z das $");
 
 /* __ieee754_asin(x)
  * Method :                  

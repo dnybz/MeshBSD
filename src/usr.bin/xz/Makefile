@@ -1,4 +1,4 @@
-# $FreeBSD: head/usr.bin/xz/Makefile 278433 2015-02-09 06:20:34Z rpaulo $
+# $FreeBSD: releng/11.0/usr.bin/xz/Makefile 278433 2015-02-09 06:20:34Z rpaulo $
 
 PROG=	xz
 
@@ -10,7 +10,7 @@ LINKS+=	${BINDIR}/xz ${BINDIR}/lzcat
 
 MLINKS= xz.1 unxz.1 xz.1 lzma.1 xz.1 unlzma.1 xz.1 xzcat.1 xz.1 lzcat.1
 
-XZDIR=	${.CURDIR}/../../external/xz/src
+XZDIR=	${.CURDIR}/../../contrib/xz/src
 LZMALIBDIR=	${.CURDIR}/../../lib/liblzma
 
 .PATH: ${XZDIR}/xz

@@ -26,7 +26,7 @@
 
 #ifndef lint
 static const char rcsid[] =
-  "$FreeBSD: head/usr.sbin/pw/rm_r.c 286047 2015-07-29 23:26:14Z bapt $";
+  "$FreeBSD: releng/11.0/usr.sbin/pw/rm_r.c 303256 2016-07-24 08:12:23Z bapt $";
 #endif /* not lint */
 
 #include <sys/stat.h>
@@ -50,6 +50,9 @@ rm_r(int rootfd, const char *path, uid_t uid)
 		path++;
 
 	dirfd = openat(rootfd, path, O_DIRECTORY);
+	if (dirfd == -1) {
+		return;
+	}
 
 	d = fdopendir(dirfd);
 	while ((e = readdir(d)) != NULL) {

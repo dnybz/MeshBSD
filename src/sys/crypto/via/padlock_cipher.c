@@ -45,7 +45,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/crypto/via/padlock_cipher.c 267767 2014-06-23 07:37:54Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/sys/crypto/via/padlock_cipher.c 267767 2014-06-23 07:37:54Z kib $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

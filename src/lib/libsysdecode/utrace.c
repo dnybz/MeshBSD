@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libsysdecode/utrace.c 292236 2015-12-15 00:05:07Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libsysdecode/utrace.c 292236 2015-12-15 00:05:07Z jhb $");
 
 #include <sys/param.h>
 #include <dlfcn.h>

@@ -34,7 +34,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/makefs/ffs.h 226169 2011-10-09 16:22:31Z nwhitehorn $
+ * $FreeBSD: releng/11.0/usr.sbin/makefs/ffs.h 226169 2011-10-09 16:22:31Z nwhitehorn $
  */
 
 #ifndef _FFS_H

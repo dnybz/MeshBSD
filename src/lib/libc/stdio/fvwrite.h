@@ -30,7 +30,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)fvwrite.h	8.1 (Berkeley) 6/4/93
- * $FreeBSD: head/lib/libc/stdio/fvwrite.h 165903 2007-01-09 00:28:16Z imp $
+ * $FreeBSD: releng/11.0/lib/libc/stdio/fvwrite.h 165903 2007-01-09 00:28:16Z imp $
  */
 
 /*

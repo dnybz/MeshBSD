@@ -1,4 +1,4 @@
-/* $FreeBSD: head/lib/libusb/libusb20_desc.c 298896 2016-05-01 19:37:33Z pfg $ */
+/* $FreeBSD: releng/11.0/lib/libusb/libusb20_desc.c 298896 2016-05-01 19:37:33Z pfg $ */
 /*-
  * Copyright (c) 2008 Hans Petter Selasky. All rights reserved.
  *

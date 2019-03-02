@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/cam/ctl/ctl_tpc.c 299348 2016-05-10 08:37:41Z mav $");
+__FBSDID("$FreeBSD: releng/11.0/sys/cam/ctl/ctl_tpc.c 299348 2016-05-10 08:37:41Z mav $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

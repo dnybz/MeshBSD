@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/usr.bin/binutils/libbinutils/Makefile 228601 2011-12-16 22:19:13Z dim $
+# $FreeBSD: releng/11.0/gnu/usr.bin/binutils/libbinutils/Makefile 228601 2011-12-16 22:19:13Z dim $
 
 .include "../Makefile.inc0"
 

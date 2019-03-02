@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libdpv/dprompt.h 274116 2014-11-04 23:46:01Z dteske $
+ * $FreeBSD: releng/11.0/lib/libdpv/dprompt.h 274116 2014-11-04 23:46:01Z dteske $
  */
 
 #ifndef _DPROMPT_H_

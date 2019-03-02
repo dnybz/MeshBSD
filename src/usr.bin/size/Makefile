@@ -1,8 +1,8 @@
-# $FreeBSD: head/usr.bin/size/Makefile 298401 2016-04-21 12:58:29Z emaste $
+# $FreeBSD: releng/11.0/usr.bin/size/Makefile 298401 2016-04-21 12:58:29Z emaste $
 
 .include <src.opts.mk>
 
-ELFTCDIR=	${SRCTOP}/tools/elftoolchain
+ELFTCDIR=	${SRCTOP}/contrib/elftoolchain
 SIZEDIR=	${ELFTCDIR}/size
 
 .PATH: ${SIZEDIR}

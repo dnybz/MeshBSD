@@ -22,7 +22,7 @@
 \ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 \ SUCH DAMAGE.
 \ 
-\ $FreeBSD: head/sys/boot/forth/brand-fbsd.4th 280975 2015-04-02 01:48:12Z dteske $
+\ $FreeBSD: releng/11.0/sys/boot/forth/brand-fbsd.4th 280975 2015-04-02 01:48:12Z dteske $
 
 2 brandX ! 1 brandY ! \ Initialize brand placement defaults
 

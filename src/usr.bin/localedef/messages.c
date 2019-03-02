@@ -32,7 +32,7 @@
  * LC_MESSAGES database generation routines for localedef.
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/localedef/messages.c 286432 2015-08-07 23:53:31Z bapt $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/localedef/messages.c 286432 2015-08-07 23:53:31Z bapt $");
 
 #include <stdio.h>
 #include <stdlib.h>

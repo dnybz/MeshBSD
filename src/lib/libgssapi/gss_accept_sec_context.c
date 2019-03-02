@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	$FreeBSD: head/lib/libgssapi/gss_accept_sec_context.c 298896 2016-05-01 19:37:33Z pfg $
+ *	$FreeBSD: releng/11.0/lib/libgssapi/gss_accept_sec_context.c 298896 2016-05-01 19:37:33Z pfg $
  */
 
 #include <gssapi/gssapi.h>

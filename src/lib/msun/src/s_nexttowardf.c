@@ -10,7 +10,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_nexttowardf.c 218511 2011-02-10 07:38:38Z das $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/src/s_nexttowardf.c 218511 2011-02-10 07:38:38Z das $");
 
 #include <float.h>
 

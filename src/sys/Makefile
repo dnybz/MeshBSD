@@ -1,49 +1,14 @@
-# $FreeBSD: head/sys/Makefile 296192 2016-02-29 16:39:27Z andrew $
+# $FreeBSD: releng/11.0/sys/Makefile 296192 2016-02-29 16:39:27Z andrew $
 
 # Directories to include in cscope name file and TAGS.
-CSCOPEDIRS= 	boot 
-CSCOPEDIRS+= 	bsm 
-CSCOPEDIRS+= 	cam
-CSCOPEDIRS+= 	cddl
-CSCOPEDIRS+= 	conf
-CSCOPEDIRS+= 	crypto
-CSCOPEDIRS+= 	ddb
-CSCOPEDIRS+= 	dev
-CSCOPEDIRS+= 	fs
-CSCOPEDIRS+= 	freebsd32
-CSCOPEDIRS+= 	gdb 
-CSCOPEDIRS+= 	geom
-CSCOPEDIRS+= 	gnu
-CSCOPEDIRS+= 	isa
-CSCOPEDIRS+= 	kern
-CSCOPEDIRS+= 	libfdt
-CSCOPEDIRS+= 	libkern
-CSCOPEDIRS+= 	libnv
-CSCOPEDIRS+= 	modules
-CSCOPEDIRS+= 	net
-CSCOPEDIRS+= 	net80211
-CSCOPEDIRS+= 	netgraph
-CSCOPEDIRS+= 	netinet
-CSCOPEDIRS+= 	netinet6
-CSCOPEDIRS+= 	netipsec
-CSCOPEDIRS+= 	netpfil
-CSCOPEDIRS+= 	nfs
-CSCOPEDIRS+= 	nfsclient
-CSCOPEDIRS+= 	nfsserver
-CSCOPEDIRS+= 	nlm
-CSCOPEDIRS+= 	opencrypto
-CSCOPEDIRS+= 	rpc
-CSCOPEDIRS+= 	security
-CSCOPEDIRS+= 	sys
-CSCOPEDIRS+= 	ufs
-CSCOPEDIRS+= 	vm
-CSCOPEDIRS+= 	xdr
-CSCOPEDIRS+= 	${CSCOPE_ARCHDIR}
+CSCOPEDIRS=	boot bsm cam compat conf contrib crypto ddb dev fs gdb \
+		geom gnu isa kern libkern modules net net80211 \
+		netarp netgraph netinet netinet6 netipsec netpfil \
+		opencrypto \
+		rpc security sys ufs vm xdr xen ${CSCOPE_ARCHDIR}
 .if !defined(CSCOPE_ARCHDIR)
 .if defined(ALL_ARCH)
-CSCOPE_ARCHDIR= 	arm
-CSCOPE_ARCHDIR+= 	mips
-CSCOPE_ARCHDIR+= 	riscv
+CSCOPE_ARCHDIR = mips riscv
 .else
 CSCOPE_ARCHDIR = ${MACHINE}
 .if ${MACHINE} != ${MACHINE_CPUARCH}

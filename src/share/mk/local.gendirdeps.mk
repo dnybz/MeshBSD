@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/local.gendirdeps.mk 299472 2016-05-11 17:40:51Z bdrewery $
+# $FreeBSD: releng/11.0/share/mk/local.gendirdeps.mk 299472 2016-05-11 17:40:51Z bdrewery $
 
 # we need a keyword, this noise is to prevent it being expanded
 GENDIRDEPS_HEADER= echo '\# ${FreeBSD:L:@v@$$$v$$ @:M*F*}';

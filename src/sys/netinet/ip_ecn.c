@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/ip_ecn.c 172467 2007-10-07 20:44:24Z silby $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/ip_ecn.c 172467 2007-10-07 20:44:24Z silby $");
 
 #include "opt_inet.h"
 #include "opt_inet6.h"

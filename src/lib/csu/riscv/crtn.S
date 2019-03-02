@@ -33,7 +33,7 @@
  */
 
 #include <machine/asm.h>
-__FBSDID("$FreeBSD: head/lib/csu/riscv/crtn.S 292124 2015-12-11 22:55:23Z br $");
+__FBSDID("$FreeBSD: releng/11.0/lib/csu/riscv/crtn.S 292124 2015-12-11 22:55:23Z br $");
 
 	.section .init,"ax",@progbits
 	ld	ra, 0(sp)

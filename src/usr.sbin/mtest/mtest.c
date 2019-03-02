@@ -37,7 +37,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/mtest/mtest.c 297477 2016-04-01 01:35:52Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/mtest/mtest.c 297477 2016-04-01 01:35:52Z pfg $");
 
 #include <sys/types.h>
 #include <sys/param.h>

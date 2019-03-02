@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/libkern/memcchr.c 229198 2012-01-01 20:26:11Z ed $");
+__FBSDID("$FreeBSD: releng/11.0/sys/libkern/memcchr.c 229198 2012-01-01 20:26:11Z ed $");
 
 #include <sys/libkern.h>
 #include <sys/limits.h>

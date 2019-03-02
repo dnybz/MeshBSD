@@ -34,7 +34,7 @@
 static char sccsid[] = "@(#)tmpfile.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/stdio/tmpfile.c 287292 2015-08-29 14:25:01Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/stdio/tmpfile.c 287292 2015-08-29 14:25:01Z kib $");
 
 #include "namespace.h"
 #include <sys/types.h>

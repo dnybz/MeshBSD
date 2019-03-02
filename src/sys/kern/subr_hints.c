@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/subr_hints.c 278320 2015-02-06 16:09:01Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/subr_hints.c 278320 2015-02-06 16:09:01Z jhb $");
 
 #include <sys/param.h>
 #include <sys/lock.h>

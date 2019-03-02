@@ -63,7 +63,7 @@
  * OpenBSD: if_bridge.c,v 1.60 2001/06/15 03:38:33 itojun Exp
  */
 /*
- * Copyright (c) 2014, 2015, 2016 Henning Matyschok
+ * Copyright (c) 2014, 2015, 2016, 2017 Henning Matyschok
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -95,11 +95,11 @@
  *	- Currently only supports Ethernet-like interfaces (Ethernet,
  *	  802.11, VLANs on Ethernet, etc.)  Figure out a nice way
  *	  to bridge other types of interfaces (FDDI-FDDI, and maybe
- *	  consider heterogeneous bridges).
+ *	  consider heterogenous bridges).
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/net/if_bridge.c 298995 2016-05-03 18:05:43Z pfg $");
+__FBSDID("$FreeBSD: head/sys/net/if_bridge.c 284348 2015-06-13 19:39:21Z kp $");
 
 #include "opt_inet.h"
 #include "opt_inet6.h"
@@ -151,7 +151,7 @@ __FBSDID("$FreeBSD: head/sys/net/if_bridge.c 298995 2016-05-03 18:05:43Z pfg $")
 #include <netinet/ip_carp.h>
 #endif
 #include <machine/in_cksum.h>
-#include <netinet/if_ether.h>
+#include <netarp/if_ether.h>
 #include <net/bridgestp.h>
 #include <net/if_bridgevar.h>
 #include <net/if_llc.h>
@@ -269,7 +269,6 @@ static void	bridge_set_ifcap(struct bridge_softc *, struct bridge_iflist *,
 		    int);
 static void	bridge_ifdetach(void *arg __unused, struct ifnet *);
 static void	bridge_init(void *);
-static void	bridge_dummynet(struct mbuf *, struct ifnet *);
 static void	bridge_stop(struct ifnet *, int);
 static int	bridge_transmit(struct ifnet *, struct mbuf *);
 static void	bridge_qflush(struct ifnet *);
@@ -391,6 +390,17 @@ SYSCTL_INT(_net_link_bridge, OID_AUTO, pfil_bridge,
     CTLFLAG_RWTUN | CTLFLAG_VNET, &VNET_NAME(pfil_bridge), 0,
     "Packet filter on the bridge interface");
 
+/* layer2 filter with ipfw */
+static VNET_DEFINE(int, pfil_ipfw);
+#define	V_pfil_ipfw	VNET(pfil_ipfw)
+
+/* layer2 ARP filter with ipfw */
+static VNET_DEFINE(int, pfil_ipfw_arp);
+#define	V_pfil_ipfw_arp	VNET(pfil_ipfw_arp)
+SYSCTL_INT(_net_link_bridge, OID_AUTO, ipfw_arp,
+    CTLFLAG_RWTUN | CTLFLAG_VNET, &VNET_NAME(pfil_ipfw_arp), 0,
+    "Filter ARP packets through IPFW layer2");
+
 /* run pfil hooks on the member interface */
 static VNET_DEFINE(int, pfil_member) = 1;
 #define	V_pfil_member	VNET(pfil_member)
@@ -436,6 +446,7 @@ TUNABLE_INT("net.link.bridge.pfil_pppoe", &pfil_pppoe);
 SYSCTL_INT(_net_link_bridge, OID_AUTO, pfil_pppoe, CTLFLAG_RW,
     &pfil_pppoe, 0, "Only pass PPPoE packets when pfil is enabled");
 #endif /* PPPOE_PFIL */
+
 
 struct bridge_control {
 	int	(*bc_func)(struct bridge_softc *, void *);
@@ -608,6 +619,44 @@ static moduledata_t bridge_mod = {
 
 DECLARE_MODULE(if_bridge, bridge_mod, SI_SUB_PSEUDO, SI_ORDER_ANY);
 MODULE_DEPEND(if_bridge, bridgestp, 1, 1, 1);
+
+/*
+ * handler for net.link.bridge.ipfw
+ */
+static int
+sysctl_pfil_ipfw(SYSCTL_HANDLER_ARGS)
+{
+	int enable = V_pfil_ipfw;
+	int error;
+
+	error = sysctl_handle_int(oidp, &enable, 0, req);
+	enable &= 1;
+
+	if (enable != V_pfil_ipfw) {
+		V_pfil_ipfw = enable;
+
+		/*
+		 * Disable pfil so that ipfw doesnt run twice, if the user
+		 * really wants both then they can re-enable pfil_bridge and/or
+		 * pfil_member. Also allow non-ip packets as ipfw can filter by
+		 * layer2 type.
+		 */
+		if (V_pfil_ipfw) {
+#ifdef PPPOE_PFIL
+			pfil_pppoe = 0;
+#endif /* PPPOE_PFIL */
+			V_pfil_onlyip = 0;
+			V_pfil_bridge = 0;
+			V_pfil_member = 0;
+		}
+	}
+
+	return (error);
+}
+SYSCTL_PROC(_net_link_bridge, OID_AUTO, ipfw,
+    CTLTYPE_INT | CTLFLAG_RW | CTLFLAG_VNET,
+    &VNET_NAME(pfil_ipfw), 0, &sysctl_pfil_ipfw, "I",
+    "Layer2 filter with IPFW");
 
 /*
  * bridge_clone_create:
@@ -3061,7 +3110,7 @@ bridge_pfil(struct mbuf **mp, struct ifnet *bifp, struct ifnet *ifp, int dir)
 	KASSERT(M_WRITABLE(*mp), ("%s: modifying a shared mbuf", __func__));
 #endif
 
-	if (V_pfil_bridge == 0 && V_pfil_member == 0)
+	if (V_pfil_bridge == 0 && V_pfil_member == 0 && V_pfil_ipfw == 0)
 		return (0); /* filtering is disabled */
 
 	i = min((*mp)->m_pkthdr.len, max_protohdr);
@@ -3103,15 +3152,16 @@ bridge_pfil(struct mbuf **mp, struct ifnet *bifp, struct ifnet *ifp, int dir)
 	switch (ether_type) {
 		case ETHERTYPE_ARP:
 		case ETHERTYPE_REVARP:
+			if (V_pfil_ipfw_arp == 0)
+				return (0); /* Automatically pass */
+			break;
 #ifdef PPPOE_PFIL
-		case ETHERTYPE_PPPOEDISC:
-#endif /* PPPOE_PFIL */			
-			return (0); /* Automatically pass */
-#ifdef PPPOE_PFIL		
-case ETHERTYPE_PPPOE:
+	case ETHERTYPE_PPPOEDISC:
+		return (0); /* Automatically pass */
+	case ETHERTYPE_PPPOE:
 	
-			if (pfil_pppoe == 0)
-				return (0);
+		if (pfil_pppoe == 0)
+			return (0);
 	
 #endif /* PPPOE_PFIL */
 		case ETHERTYPE_IP:
@@ -3130,7 +3180,8 @@ case ETHERTYPE_PPPOE:
 	}
 
 	/* Run the packet through pfil before stripping link headers */
-	if (PFIL_HOOKED(&V_link_pfil_hook) && dir == PFIL_OUT && ifp != NULL) {
+	if (PFIL_HOOKED(&V_link_pfil_hook) && V_pfil_ipfw != 0 &&
+			dir == PFIL_OUT && ifp != NULL) {
 
 		error = pfil_run_hooks(&V_link_pfil_hook, mp, ifp, dir, NULL);
 
@@ -3264,7 +3315,7 @@ case ETHERTYPE_PPPOE:
 		if (hlen < sizeof(struct ip))
 			goto bad;
 		if (hlen > (*mp)->m_len) {
-			if ((*mp = m_pullup(*mp, hlen)) == NULL)
+			if ((*mp = m_pullup(*mp, hlen)) == 0)
 				goto bad;
 			ip = mtod(*mp, struct ip *);
 			if (ip == NULL)
@@ -3310,9 +3361,9 @@ case ETHERTYPE_PPPOE:
 
 	error = -1;
 
-/*
- * Finally, put everything back the way it was and return
- */
+	/*
+	 * Finally, put everything back the way it was and return
+	 */
 #ifdef PPPOE_PFIL
 out: 
 /*
@@ -3409,7 +3460,7 @@ bridge_ip_checkbasic(struct mbuf **mp)
 		goto bad;
 	}
 	if (hlen > m->m_len) {
-		if ((m = m_pullup(m, hlen)) == NULL) {
+		if ((m = m_pullup(m, hlen)) == 0) {
 			KMOD_IPSTAT_INC(ips_badhlen);
 			goto bad;
 		}

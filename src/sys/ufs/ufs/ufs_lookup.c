@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/ufs/ufs/ufs_lookup.c 300082 2016-05-17 21:28:28Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/sys/ufs/ufs/ufs_lookup.c 303375 2016-07-27 08:47:24Z kib $");
 
 #include "opt_ufs.h"
 #include "opt_quota.h"
@@ -881,6 +881,7 @@ ufs_direnter(dvp, tvp, dirp, cnp, newdirbp, isrename)
 	struct buf *bp;
 	u_int dsize;
 	struct direct *ep, *nep;
+	u_int64_t old_isize;
 	int error, ret, blkoff, loc, spacefree, flags, namlen;
 	char *dirbuf;
 
@@ -909,16 +910,18 @@ ufs_direnter(dvp, tvp, dirp, cnp, newdirbp, isrename)
 			return (error);
 		}
 #endif
+		old_isize = dp->i_size;
+		vnode_pager_setsize(dvp, (u_long)dp->i_offset + DIRBLKSIZ);
 		if ((error = UFS_BALLOC(dvp, (off_t)dp->i_offset, DIRBLKSIZ,
 		    cr, flags, &bp)) != 0) {
 			if (DOINGSOFTDEP(dvp) && newdirbp != NULL)
 				bdwrite(newdirbp);
+			vnode_pager_setsize(dvp, (u_long)old_isize);
 			return (error);
 		}
 		dp->i_size = dp->i_offset + DIRBLKSIZ;
 		DIP_SET(dp, i_size, dp->i_size);
 		dp->i_flag |= IN_CHANGE | IN_UPDATE;
-		vnode_pager_setsize(dvp, (u_long)dp->i_size);
 		dirp->d_reclen = DIRBLKSIZ;
 		blkoff = dp->i_offset &
 		    (VFSTOUFS(dvp->v_mount)->um_mountp->mnt_stat.f_iosize - 1);

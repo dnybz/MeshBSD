@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/boot/arm/ixp425/Makefile.inc 251250 2013-06-02 11:44:23Z tijl $
+# $FreeBSD: releng/11.0/sys/boot/arm/ixp425/Makefile.inc 251250 2013-06-02 11:44:23Z tijl $
 
 .if !target(__ixp425_boot_Makefile.inc__)
 .PATH:	${.CURDIR}/../../../../libkern ${.CURDIR}/../../../../libkern/arm

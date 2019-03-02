@@ -17,7 +17,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/libkern/strlcpy.c 242507 2012-11-03 04:29:24Z delphij $");
+__FBSDID("$FreeBSD: releng/11.0/sys/libkern/strlcpy.c 242507 2012-11-03 04:29:24Z delphij $");
 
 #include <sys/types.h>
 #include <sys/libkern.h>

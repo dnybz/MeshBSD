@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_cpuset.c 297748 2016-04-09 13:58:04Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_cpuset.c 297748 2016-04-09 13:58:04Z jhb $");
 
 #include "opt_ddb.h"
 

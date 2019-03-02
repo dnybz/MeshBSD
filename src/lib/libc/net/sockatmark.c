@@ -22,7 +22,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/net/sockatmark.c 288012 2015-09-20 04:15:37Z rodrigc $
+ * $FreeBSD: releng/11.0/lib/libc/net/sockatmark.c 288012 2015-09-20 04:15:37Z rodrigc $
  */
 #include "namespace.h"
 #include <sys/ioctl.h>

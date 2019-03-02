@@ -2,7 +2,7 @@
 static char sccsid[] = 	"@(#)authdes_prot.c	2.1 88/07/29 4.0 RPCSRC; from 1.6 88/02/08 SMI";
 #endif
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/rpc/authdes_prot.c 288113 2015-09-22 15:40:07Z rodrigc $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/rpc/authdes_prot.c 288113 2015-09-22 15:40:07Z rodrigc $");
 
 /*-
  * Copyright (c) 2009, Sun Microsystems, Inc.

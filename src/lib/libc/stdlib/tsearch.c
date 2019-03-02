@@ -24,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/stdlib/tsearch.c 292613 2015-12-22 18:12:11Z ed $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/stdlib/tsearch.c 292613 2015-12-22 18:12:11Z ed $");
 
 #define	_SEARCH_PRIVATE
 #include <search.h>

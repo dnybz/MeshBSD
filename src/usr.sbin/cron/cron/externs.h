@@ -1,4 +1,4 @@
-/*	$FreeBSD: head/usr.sbin/cron/cron/externs.h 173412 2007-11-07 10:53:41Z kevlo $	*/
+/*	$FreeBSD: releng/11.0/usr.sbin/cron/cron/externs.h 173412 2007-11-07 10:53:41Z kevlo $	*/
 
 /* Copyright 1993,1994 by Paul Vixie
  * All rights reserved

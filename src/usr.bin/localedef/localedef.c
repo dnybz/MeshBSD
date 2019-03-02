@@ -32,7 +32,7 @@
  * POSIX localedef.
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/localedef/localedef.c 290510 2015-11-07 20:27:31Z bapt $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/localedef/localedef.c 290510 2015-11-07 20:27:31Z bapt $");
 
 #include <stdio.h>
 #include <stdlib.h>

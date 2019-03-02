@@ -26,7 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libgeom/geom_stats.c 271721 2014-09-17 19:37:58Z jhb $
+ * $FreeBSD: releng/11.0/lib/libgeom/geom_stats.c 271721 2014-09-17 19:37:58Z jhb $
  */
 
 #include <paths.h>

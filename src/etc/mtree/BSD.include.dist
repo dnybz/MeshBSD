@@ -100,8 +100,6 @@
     dev
         filemon
         ..
-        firewire
-        ..
         hwpmc
         ..
         ic
@@ -122,16 +120,14 @@
         ..
         usb
         ..
-        vkbd
-        ..
     ..
+	devdctl
+	..
     edit
         readline
         ..
     ..
     fs
-        cuse
-        ..
         devfs
         ..
         fdescfs
@@ -139,8 +135,6 @@
         msdosfs
         ..
         nandfs
-        ..
-        nfs
         ..
         nullfs
         ..
@@ -154,8 +148,6 @@
     geom
         cache
         ..
-        concat
-        ..
         eli
         ..
         gate
@@ -164,23 +156,11 @@
         ..
         label
         ..
-        mirror
-        ..
         mountver
-        ..
-        multipath
         ..
         nop
         ..
-        raid
-        ..
-        raid3
-        ..
         shsec
-        ..
-        stripe
-        ..
-        virstor
         ..
     ..
     gnu
@@ -188,10 +168,6 @@
         ..
     ..
     gssapi
-    ..
-    kadm5
-    ..
-    krb5
     ..
     lib80211
     ..
@@ -208,12 +184,6 @@
     net80211
     ..
     netgraph
-        bluetooth
-            include
-            ..
-        ..
-        netflow
-        ..
     ..
     netinet
         cc
@@ -226,12 +196,6 @@
     netpfil
         pf
         ..
-    ..
-    nfs
-    ..
-    nfsclient
-    ..
-    nfsserver
     ..
     openssl
     ..

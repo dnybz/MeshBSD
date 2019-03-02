@@ -31,7 +31,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)dd.h	8.3 (Berkeley) 4/2/94
- * $FreeBSD: head/bin/dd/dd.h 295749 2016-02-18 08:44:16Z thomas $
+ * $FreeBSD: releng/11.0/bin/dd/dd.h 295749 2016-02-18 08:44:16Z thomas $
  */
 
 /* Input/output stream state. */

@@ -39,7 +39,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libnetgraph/sock.c 260418 2014-01-07 23:01:05Z jmg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libnetgraph/sock.c 260418 2014-01-07 23:01:05Z jmg $");
 
 #include <sys/types.h>
 #include <sys/socket.h>

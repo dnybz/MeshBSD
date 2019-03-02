@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/atheros/ar71xx_ohci.c 285121 2015-07-04 03:05:57Z adrian $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/atheros/ar71xx_ohci.c 285121 2015-07-04 03:05:57Z adrian $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/libc/riscv/gen/Makefile.inc 294227 2016-01-17 15:21:23Z br $
+# $FreeBSD: releng/11.0/lib/libc/riscv/gen/Makefile.inc 294227 2016-01-17 15:21:23Z br $
 
 SRCS+=	_ctx_start.S \
 	fabs.S \

@@ -1,4 +1,4 @@
-/* $FreeBSD: head/gnu/usr.bin/binutils/libbfd/bfd.h 275718 2014-12-12 03:58:51Z jhibbits $ */
+/* $FreeBSD: releng/11.0/gnu/usr.bin/binutils/libbfd/bfd.h 275718 2014-12-12 03:58:51Z jhibbits $ */
 
 /* DO NOT EDIT!  -*- buffer-read-only: t -*-  This file is automatically 
    generated from "bfd-in.h", "init.c", "opncls.c", "libbfd.c", 

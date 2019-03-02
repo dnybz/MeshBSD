@@ -25,7 +25,7 @@
 
 #include <sys/cdefs.h>
 #ifdef __FreeBSD__
-__FBSDID("$FreeBSD: head/sys/net80211/ieee80211_alq.c 257284 2013-10-28 22:26:03Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/net80211/ieee80211_alq.c 257284 2013-10-28 22:26:03Z glebius $");
 #endif
 
 /*

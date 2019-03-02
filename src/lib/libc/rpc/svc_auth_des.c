@@ -67,7 +67,7 @@
 static char sccsid[] = 	"@(#)svcauth_des.c	2.3 89/07/11 4.0 RPCSRC; from 1.15 88/02/08 SMI";
 #endif
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/rpc/svc_auth_des.c 287350 2015-09-01 08:34:44Z rodrigc $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/rpc/svc_auth_des.c 287350 2015-09-01 08:34:44Z rodrigc $");
 
 extern int key_decryptsession_pk(const char *, netobj *, des_block *);
 

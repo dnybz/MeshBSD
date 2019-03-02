@@ -1,5 +1,5 @@
 /*	$NetBSD: rpcbind.h,v 1.1 2000/06/03 00:47:21 fvdl Exp $	*/
-/*	$FreeBSD: head/usr.sbin/rpcbind/rpcbind.h 293229 2016-01-06 00:00:11Z asomers $ */
+/*	$FreeBSD: releng/11.0/usr.sbin/rpcbind/rpcbind.h 293229 2016-01-06 00:00:11Z asomers $ */
 
 /*-
  * Copyright (c) 2009, Sun Microsystems, Inc.

@@ -31,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_alq.c 296688 2016-03-11 23:18:06Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_alq.c 296688 2016-03-11 23:18:06Z jhb $");
 
 #include "opt_mac.h"
 

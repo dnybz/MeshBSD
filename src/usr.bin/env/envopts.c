@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/env/envopts.c 279779 2015-03-08 14:12:43Z jilles $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/env/envopts.c 279779 2015-03-08 14:12:43Z jilles $");
 
 #include <sys/stat.h>
 #include <sys/param.h>

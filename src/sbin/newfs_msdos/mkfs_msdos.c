@@ -27,7 +27,7 @@
 
 #ifndef lint
 static const char rcsid[] =
-  "$FreeBSD: head/sbin/newfs_msdos/mkfs_msdos.c 298250 2016-04-19 04:57:57Z araujo $";
+  "$FreeBSD: releng/11.0/sbin/newfs_msdos/mkfs_msdos.c 298250 2016-04-19 04:57:57Z araujo $";
 #endif /* not lint */
 
 #include <sys/param.h>

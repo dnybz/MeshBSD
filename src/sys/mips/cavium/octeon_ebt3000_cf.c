@@ -42,7 +42,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/cavium/octeon_ebt3000_cf.c 296607 2016-03-10 06:25:47Z imp $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/cavium/octeon_ebt3000_cf.c 296607 2016-03-10 06:25:47Z imp $");
 
 #include <sys/param.h>
 #include <sys/bio.h>

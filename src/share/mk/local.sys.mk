@@ -1,6 +1,18 @@
-# $FreeBSD: head/share/mk/local.sys.mk 297995 2016-04-14 21:04:45Z bdrewery $
+# $FreeBSD: releng/11.0/share/mk/local.sys.mk 301889 2016-06-14 16:20:25Z bdrewery $
 
-.if ${MK_DIRDEPS_BUILD} == "yes"
+.if ${MK_DIRDEPS_BUILD} == "yes" || ${MK_META_MODE} == "yes"
+
+# Not in the below list as it may make sense for non-meta mode
+# eventually.  meta.sys.mk (DIRDEPS_BUILD) also already adds these in.
+.if ${MK_DIRDEPS_BUILD} == "no" && ${MK_META_MODE} == "yes"
+MAKE_PRINT_VAR_ON_ERROR += \
+	.ERROR_TARGET \
+	.ERROR_META_FILE \
+	.MAKE.LEVEL \
+	MAKEFILE \
+	.MAKE.MODE
+.endif
+
 MAKE_PRINT_VAR_ON_ERROR+= \
 	.CURDIR \
 	.MAKE \
@@ -12,7 +24,7 @@ MAKE_PRINT_VAR_ON_ERROR+= \
 	MACHINE_ARCH \
 	MAKEOBJDIRPREFIX \
 	MAKESYSPATH \
-	MAKE_VERSION\
+	MAKE_VERSION \
 	PATH \
 	SRCTOP \
 	OBJTOP \

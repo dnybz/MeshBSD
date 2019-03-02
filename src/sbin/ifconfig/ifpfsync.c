@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sbin/ifconfig/ifpfsync.c 288305 2015-09-27 07:51:18Z ngie $
+ * $FreeBSD: releng/11.0/sbin/ifconfig/ifpfsync.c 288305 2015-09-27 07:51:18Z ngie $
  */
 
 #include <sys/param.h>

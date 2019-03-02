@@ -35,7 +35,7 @@
  */
 
 /*
- * $FreeBSD: head/include/time.h 245428 2013-01-14 18:01:19Z dim $
+ * $FreeBSD: releng/11.0/include/time.h 245428 2013-01-14 18:01:19Z dim $
  */
 
 #ifndef _TIME_H_

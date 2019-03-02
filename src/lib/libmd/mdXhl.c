@@ -8,7 +8,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libmd/mdXhl.c 294037 2016-01-14 21:08:23Z jtl $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libmd/mdXhl.c 294037 2016-01-14 21:08:23Z jtl $");
 
 #include <sys/types.h>
 #include <sys/stat.h>

@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/soelim/soelim.c 283197 2015-05-21 08:26:24Z bapt $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/soelim/soelim.c 283197 2015-05-21 08:26:24Z bapt $");
 
 #include <sys/types.h>
 

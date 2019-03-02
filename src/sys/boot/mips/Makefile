@@ -1,4 +1,4 @@
-# $FreeBSD: head/sys/boot/mips/Makefile 296183 2016-02-29 07:47:04Z sgalabov $
+# $FreeBSD: releng/11.0/sys/boot/mips/Makefile 296183 2016-02-29 07:47:04Z sgalabov $
 
 SUBDIR= 	uboot
 

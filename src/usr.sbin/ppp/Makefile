@@ -1,4 +1,4 @@
-# $FreeBSD: head/usr.sbin/ppp/Makefile 289148 2015-10-11 19:25:39Z bapt $
+# $FreeBSD: releng/11.0/usr.sbin/ppp/Makefile 302337 2016-07-04 21:18:57Z bapt $
 
 .include <src.opts.mk>
 
@@ -25,13 +25,8 @@ CONFS=	ppp.conf
 CONFSDIR=	${CONFDIR}/ppp
 CONFSMODE=	600
 
-#
-# XXX: I'll cleanup the sources 
-# XXX: on unwanted options for
-# XXX: reducing the size 
-#
-
 PPP_NO_ATM=
+CFLAGS+=-DNOATM
 
 .if ${MK_NETGRAPH} == "no"
 PPP_NO_NETGRAPH=
@@ -73,12 +68,6 @@ SRCS+=	nat_cmd.c
 LIBADD+=	alias
 .endif
 
-.if defined(PPP_NO_ATM)
-CFLAGS+=-DNOATM
-.else
-SRCS+=	atm.c
-.endif
-
 .if defined(PPP_NO_SUID)
 CFLAGS+=-DNOSUID
 .else
@@ -112,6 +101,7 @@ SRCS+=	netgraph.c
 
 .if defined(PPP_NO_PAM)
 CFLAGS+=-DNOPAM
+LIBADD+=	crypt
 .else
 LIBADD+=	pam
 .endif

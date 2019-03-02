@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/common/module.c 299499 2016-05-12 01:19:11Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/common/module.c 300117 2016-05-18 05:59:05Z imp $");
 
 /*
  * file/module function dispatcher, support, etc.
@@ -277,7 +277,8 @@ command_lsmod(int argc, char *argv[])
 	if (fp->f_args != NULL) {
 	    pager_output("    args: ");
 	    pager_output(fp->f_args);
-	    pager_output("\n");
+	    if (pager_output("\n"))
+		    break;
 	}
 	if (fp->f_modules) {
 	    pager_output("  modules: ");
@@ -285,13 +286,15 @@ command_lsmod(int argc, char *argv[])
 		sprintf(lbuf, "%s.%d ", mp->m_name, mp->m_version);
 		pager_output(lbuf);
 	    }
-	    pager_output("\n");
-	}
+	    if (pager_output("\n"))
+		    break;
+	    	}
 	if (verbose) {
 	    /* XXX could add some formatting smarts here to display some better */
 	    for (md = fp->f_metadata; md != NULL; md = md->md_next) {
 		sprintf(lbuf, "      0x%04x, 0x%lx\n", md->md_type, (long) md->md_size);
-		pager_output(lbuf);
+		if (pager_output(lbuf))
+			break;
 	    }
 	}
     }

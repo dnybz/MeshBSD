@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/subr_devmap.c 298631 2016-04-26 12:29:47Z br $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/subr_devmap.c 300694 2016-05-25 19:44:26Z ian $");
 
 /* Routines for mapping device memory. */
 
@@ -37,9 +37,6 @@ __FBSDID("$FreeBSD: head/sys/kern/subr_devmap.c 298631 2016-04-26 12:29:47Z br $
 #include <vm/vm.h>
 #include <vm/vm_extern.h>
 #include <vm/pmap.h>
-#ifdef __arm__
-#include <machine/acle-compat.h>
-#endif
 #include <machine/vmparam.h>
 
 static const struct devmap_entry *devmap_table;

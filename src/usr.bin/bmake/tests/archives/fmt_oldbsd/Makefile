@@ -1,4 +1,4 @@
-# $FreeBSD: head/usr.bin/bmake/tests/archives/fmt_oldbsd/Makefile 299094 2016-05-04 23:20:53Z ngie $
+# $FreeBSD: releng/11.0/usr.bin/bmake/tests/archives/fmt_oldbsd/Makefile 299094 2016-05-04 23:20:53Z ngie $
 
 PACKAGE=	tests
 TESTSDIR=	${TESTSBASE}/usr.bin/bmake/archives/fmt_oldbsd

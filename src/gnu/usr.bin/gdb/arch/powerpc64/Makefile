@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/usr.bin/gdb/arch/powerpc64/Makefile 169188 2007-05-01 18:29:34Z marcel $
+# $FreeBSD: releng/11.0/gnu/usr.bin/gdb/arch/powerpc64/Makefile 169188 2007-05-01 18:29:34Z marcel $
 
 .if !defined(GDB_CROSS_DEBUGGER)
 LIBSRCS+= fbsd-proc.c fbsd-threads.c gcore.c

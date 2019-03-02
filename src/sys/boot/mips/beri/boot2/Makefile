@@ -27,7 +27,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 #
-# $FreeBSD: head/sys/boot/mips/beri/boot2/Makefile 280980 2015-04-02 06:58:17Z dim $
+# $FreeBSD: releng/11.0/sys/boot/mips/beri/boot2/Makefile 280980 2015-04-02 06:58:17Z dim $
 
 BINDIR?=	/boot
 INSTALLFLAGS=	-b

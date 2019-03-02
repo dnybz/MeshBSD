@@ -24,7 +24,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/mediatek/fdt_reset.c 299755 2016-05-14 20:05:35Z gonzo $
+ * $FreeBSD: releng/11.0/sys/mips/mediatek/fdt_reset.c 299755 2016-05-14 20:05:35Z gonzo $
  */
 
 #include <sys/cdefs.h>

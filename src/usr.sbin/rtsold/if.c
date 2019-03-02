@@ -28,7 +28,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/rtsold/if.c 299868 2016-05-15 22:17:41Z truckman $
+ * $FreeBSD: releng/11.0/usr.sbin/rtsold/if.c 299868 2016-05-15 22:17:41Z truckman $
  */
 
 #include <sys/param.h>

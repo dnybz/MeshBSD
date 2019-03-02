@@ -23,11 +23,11 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/cavium/octeon_pci_console.c 243255 2012-11-19 01:58:20Z jmallett $
+ * $FreeBSD: releng/11.0/sys/mips/cavium/octeon_pci_console.c 243255 2012-11-19 01:58:20Z jmallett $
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/cavium/octeon_pci_console.c 243255 2012-11-19 01:58:20Z jmallett $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/cavium/octeon_pci_console.c 243255 2012-11-19 01:58:20Z jmallett $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

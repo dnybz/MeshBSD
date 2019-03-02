@@ -1,4 +1,4 @@
-/*	$FreeBSD: head/usr.sbin/rtadvd/config.c 299867 2016-05-15 22:06:21Z truckman $	*/
+/*	$FreeBSD: releng/11.0/usr.sbin/rtadvd/config.c 299867 2016-05-15 22:06:21Z truckman $	*/
 /*	$KAME: config.c,v 1.84 2003/08/05 12:34:23 itojun Exp $	*/
 
 /*

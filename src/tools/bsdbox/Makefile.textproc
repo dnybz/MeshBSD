@@ -1,30 +1,20 @@
 #
-# Toolbox for textprocessing
+# This builds a variety of text processing tools that
+# may be useful on an embedded device.
+#
+# $FreeBSD: releng/11.0/tools/bsdbox/Makefile.textproc 229675 2012-01-06 00:56:31Z adrian $
 #
 
-# Awk(1) schould be disabled, because increases 
-# the size of crunched binary dramatically.
+# Sed
+CRUNCH_PROGS_usr.bin+=	sed
 
-###################################################################
-# Programs from stock /bin
-#
+# Awk
+# Disable - it's big! -adrian
+#CRUNCH_PROGS_usr.bin+=	awk
+#CRUNCH_BUILDTOOLS+=	usr.bin/awk
 
-###################################################################
-# Programs from standard /sbin
-#
+# vi
+# Disable - it's big! -adrian
+#CRUNCH_PROGS_usr.bin+=	vi
 
-##################################################################
-# Programs from stock /usr/bin
-#
-
-##################################################################
-# Programs from stock /usr/sbin
-#
-CRUNCH_PROGS_usr.bin+=	awk ee sed
-CRUNCH_BUILDTOOLS+=	usr.bin/awk
-
-##################################################################
-# Library dependencies
-#
-CRUNCH_LIBS+= -lncurses
-
+CRUNCH_PROGS_usr.bin+=	ee

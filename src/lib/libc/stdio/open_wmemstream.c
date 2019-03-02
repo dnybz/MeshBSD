@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/stdio/open_wmemstream.c 292013 2015-12-09 09:14:57Z ngie $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/stdio/open_wmemstream.c 292013 2015-12-09 09:14:57Z ngie $");
 
 #include "namespace.h"
 #include <assert.h>

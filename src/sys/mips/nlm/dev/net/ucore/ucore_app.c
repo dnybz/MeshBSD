@@ -25,7 +25,7 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/nlm/dev/net/ucore/ucore_app.c 279388 2015-02-28 00:22:10Z jchandra $
+ * $FreeBSD: releng/11.0/sys/mips/nlm/dev/net/ucore/ucore_app.c 279388 2015-02-28 00:22:10Z jchandra $
  */
 
 #include "ucore.h"

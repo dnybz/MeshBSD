@@ -34,7 +34,7 @@
 __RCSID("$NetBSD: filecomplete.c,v 1.34 2014/10/18 15:07:02 riz Exp $");
 #endif /* not lint && not SCCSID */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libedit/filecomplete.c 297757 2016-04-09 18:52:09Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libedit/filecomplete.c 297757 2016-04-09 18:52:09Z pfg $");
 
 #include <sys/types.h>
 #include <sys/stat.h>

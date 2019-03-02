@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/nscd/nscd.c 194104 2009-06-13 13:07:56Z des $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/nscd/nscd.c 194104 2009-06-13 13:07:56Z des $");
 
 #include <sys/param.h>
 #include <sys/event.h>

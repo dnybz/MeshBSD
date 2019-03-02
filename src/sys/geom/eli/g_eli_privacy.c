@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/geom/eli/g_eli_privacy.c 286373 2015-08-06 17:13:34Z pjd $");
+__FBSDID("$FreeBSD: releng/11.0/sys/geom/eli/g_eli_privacy.c 286373 2015-08-06 17:13:34Z pjd $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

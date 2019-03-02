@@ -1,6 +1,6 @@
 #	$NetBSD: Makefile,v 1.37 2009/01/18 12:17:49 lukem Exp $
 #	@(#)Makefile	8.1 (Berkeley) 6/4/93
-# $FreeBSD: head/lib/libedit/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/libedit/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 PACKAGE=clibs
 LIB=	edit
@@ -12,18 +12,6 @@ OSRCS=	chared.c common.c el.c emacs.c fcns.c filecomplete.c help.c \
 	parse.c prompt.c read.c refresh.c search.c sig.c terminal.c tty.c vi.c
 
 LIBADD=	ncursesw
-
-MAN=	editline.3 editrc.5
-
-MLINKS=	editline.3 el_deletestr.3 editline.3 el_end.3 editline.3 el_init.3 \
-	editline.3 el_get.3 editline.3 el_getc.3 editline.3 el_gets.3 \
-	editline.3 history.3 editline.3 history_end.3 \
-	editline.3 history_init.3 editline.3 el_insertstr.3 \
-	editline.3 el_line.3 editline.3 el_parse.3 editline.3 el_push.3 \
-	editline.3 el_reset.3 editline.3 el_resize.3 editline.3 el_set.3 \
-	editline.3 el_source.3 \
-	editline.3 tok_init.3 editline.3 tok_end.3 editline.3 tok_reset.3 \
-	editline.3 tok_line.3 editline.3 tok_str.3
 
 # For speed and debugging
 #SRCS=   ${OSRCS}

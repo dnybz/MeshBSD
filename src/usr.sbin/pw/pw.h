@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/pw/pw.h 286201 2015-08-02 13:22:46Z bapt $
+ * $FreeBSD: releng/11.0/usr.sbin/pw/pw.h 286201 2015-08-02 13:22:46Z bapt $
  */
 
 #include <sys/stat.h>

@@ -22,7 +22,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/sys/lockstat.h 285709 2015-07-20 04:41:25Z markj $
+ * $FreeBSD: releng/11.0/sys/sys/lockstat.h 285709 2015-07-20 04:41:25Z markj $
  */
  
 /*

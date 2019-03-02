@@ -1,5 +1,5 @@
 #  @(#)Makefile 5.1beta 93/09/24
-# $FreeBSD: head/lib/msun/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/msun/Makefile 298107 2016-04-16 07:45:30Z gjb $
 #
 #  ====================================================
 #  Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
@@ -14,7 +14,7 @@
 
 PACKAGE=	clibs
 
-ARCH_SUBDIR= ${TARGET_ARCH}
+ARCH_SUBDIR= ${MACHINE_CPUARCH}
 
 .include "${ARCH_SUBDIR}/Makefile.inc"
 
@@ -76,9 +76,9 @@ COMMON_SRCS= b_exp.c b_log.c b_tgamma.c \
 
 # Location of fpmath.h and _fpmath.h
 .if exists(${LIBCSRCDIR}/${MACHINE_ARCH})
-LIBC_ARCH=${TARGET}
+LIBC_ARCH=${MACHINE_ARCH}
 .else
-LIBC_ARCH=${TARGET_ARCH}
+LIBC_ARCH=${MACHINE_CPUARCH}
 .endif
 CFLAGS+=	-I${.CURDIR}/src -I${LIBCSRCDIR}/include \
 	-I${LIBCSRCDIR}/${LIBC_ARCH}
@@ -216,5 +216,9 @@ MLINKS+=tanh.3 tanhf.3 tanh.3 tanhl.3
 MLINKS+=trunc.3 truncf.3 trunc.3 truncl.3
 
 .include <src.opts.mk>
+
+.if ${MK_TESTS} != "no"
+SUBDIR+=	tests
+.endif
 
 .include <bsd.lib.mk>

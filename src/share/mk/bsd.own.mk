@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/bsd.own.mk 299393 2016-05-10 22:32:23Z jhb $
+# $FreeBSD: releng/11.0/share/mk/bsd.own.mk 300763 2016-05-26 18:28:10Z jhb $
 #
 # The include file <bsd.own.mk> set common variables for owner,
 # group, mode, and directories. Defaults are in brackets.
@@ -49,7 +49,7 @@
 #
 #
 # KMODDIR	Base path for loadable kernel modules
-#		(see kld(4)). [/boot/kernel]
+#		(see kld(4)). [/boot/module]
 #
 # KMODOWN	Kernel and KLD owner. [${BINOWN}]
 #
@@ -124,13 +124,7 @@ __<bsd.own.mk>__:
 
 .if !defined(_WITHOUT_SRCCONF)
 
-.if ${MK_CTF} != "no"
-CTFCONVERT_CMD=	${CTFCONVERT} ${CTFFLAGS} ${.TARGET}
-.elif defined(.PARSEDIR) || (defined(MAKE_VERSION) && ${MAKE_VERSION} >= 5201111300)
-CTFCONVERT_CMD=
-.else
 CTFCONVERT_CMD=	@:
-.endif 
 
 .if ${MK_INSTALL_AS_USER} != "no"
 .if !defined(_uid)

@@ -31,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/ipcrm/ipcrm.c 286093 2015-07-30 19:44:46Z rodrigc $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/ipcrm/ipcrm.c 286093 2015-07-30 19:44:46Z rodrigc $");
 
 #include <sys/param.h>
 #define _WANT_MSG_PROTOTYPES

@@ -41,10 +41,10 @@ options 	GEOM_UZIP
 device          geom_map
 
 # yes, this board has a PCI connected atheros device
-#device		ath_pci
-#options 	AR71XX_ATH_EEPROM
-#device		firmware		# Used by the above
-#options 	ATH_EEPROM_FIRMWARE
+device		ath_pci
+options 	AR71XX_ATH_EEPROM
+device		firmware		# Used by the above
+options 	ATH_EEPROM_FIRMWARE
 
 # Boot off of the rootfs, as defined in the geom_map setup.
 options 	ROOTDEVNAME=\"ufs:map/rootfs.uzip\"

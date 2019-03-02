@@ -32,7 +32,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)map.h	8.1 (Berkeley) 6/4/93
- * $FreeBSD: head/lib/libedit/map.h 276881 2015-01-09 07:40:56Z bapt $
+ * $FreeBSD: releng/11.0/lib/libedit/map.h 276881 2015-01-09 07:40:56Z bapt $
  */
 
 /*

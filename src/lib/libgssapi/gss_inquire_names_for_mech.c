@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	$FreeBSD: head/lib/libgssapi/gss_inquire_names_for_mech.c 178828 2008-05-07 13:53:12Z dfr $
+ *	$FreeBSD: releng/11.0/lib/libgssapi/gss_inquire_names_for_mech.c 178828 2008-05-07 13:53:12Z dfr $
  */
 
 #include <gssapi/gssapi.h>

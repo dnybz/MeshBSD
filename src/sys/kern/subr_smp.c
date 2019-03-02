@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/subr_smp.c 297710 2016-04-08 11:59:11Z avg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/subr_smp.c 297710 2016-04-08 11:59:11Z avg $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

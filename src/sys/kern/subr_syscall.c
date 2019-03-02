@@ -41,7 +41,7 @@
 #include "opt_capsicum.h"
 #include "opt_ktrace.h"
 
-__FBSDID("$FreeBSD: head/sys/kern/subr_syscall.c 292388 2015-12-17 00:00:27Z markj $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/subr_syscall.c 292388 2015-12-17 00:00:27Z markj $");
 
 #include <sys/capsicum.h>
 #include <sys/ktr.h>

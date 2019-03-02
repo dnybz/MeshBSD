@@ -27,7 +27,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/fdt/dts/arm/tegra124-jetson-tk1-fbsd.dts 296936 2016-03-16 13:01:48Z mmel $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/arm/tegra124-jetson-tk1-fbsd.dts 296936 2016-03-16 13:01:48Z mmel $
  */
 
 #include "tegra124-jetson-tk1.dts"

@@ -26,7 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sbin/setkey/test-policy.c 298261 2016-04-19 09:43:51Z araujo $
+ * $FreeBSD: releng/11.0/sbin/setkey/test-policy.c 298261 2016-04-19 09:43:51Z araujo $
  */
 
 #include <sys/types.h>

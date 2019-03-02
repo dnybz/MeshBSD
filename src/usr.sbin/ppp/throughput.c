@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/ppp/throughput.c 235822 2012-05-23 06:49:50Z delphij $
+ * $FreeBSD: releng/11.0/usr.sbin/ppp/throughput.c 235822 2012-05-23 06:49:50Z delphij $
  */
 
 #include <sys/types.h>

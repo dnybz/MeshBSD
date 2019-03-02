@@ -13,7 +13,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/e_lgamma.c 271651 2014-09-15 23:21:57Z kargl $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/src/e_lgamma.c 271651 2014-09-15 23:21:57Z kargl $");
 
 /* __ieee754_lgamma(x)
  * Return the logarithm of the Gamma function of x.

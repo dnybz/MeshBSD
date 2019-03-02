@@ -1,4 +1,4 @@
-# $FreeBSD: head/usr.sbin/rtadvctl/Makefile 224144 2011-07-17 19:24:54Z hrs $
+# $FreeBSD: releng/11.0/usr.sbin/rtadvctl/Makefile 224144 2011-07-17 19:24:54Z hrs $
 #
 .PATH:	${.CURDIR}/../rtadvd
 

@@ -25,7 +25,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/libexec/rtld-elf/rtld.c 298897 2016-05-01 19:39:23Z pfg $
+ * $FreeBSD: releng/11.0/libexec/rtld-elf/rtld.c 304456 2016-08-19 08:44:37Z kib $
  */
 
 /*
@@ -1667,14 +1667,16 @@ static const char *
 gethints(bool nostdlib)
 {
 	static char *hints, *filtered_path;
-	struct elfhints_hdr hdr;
+	static struct elfhints_hdr hdr;
 	struct fill_search_info_args sargs, hargs;
 	struct dl_serinfo smeta, hmeta, *SLPinfo, *hintinfo;
 	struct dl_serpath *SLPpath, *hintpath;
 	char *p;
+	struct stat hint_stat;
 	unsigned int SLPndx, hintndx, fndx, fcount;
 	int fd;
 	size_t flen;
+	uint32_t dl;
 	bool skip;
 
 	/* First call, read the hints file */
@@ -1684,19 +1686,38 @@ gethints(bool nostdlib)
 
 		if ((fd = open(ld_elf_hints_path, O_RDONLY | O_CLOEXEC)) == -1)
 			return (NULL);
+
+		/*
+		 * Check of hdr.dirlistlen value against type limit
+		 * intends to pacify static analyzers.  Further
+		 * paranoia leads to checks that dirlist is fully
+		 * contained in the file range.
+		 */
 		if (read(fd, &hdr, sizeof hdr) != sizeof hdr ||
 		    hdr.magic != ELFHINTS_MAGIC ||
-		    hdr.version != 1) {
+		    hdr.version != 1 || hdr.dirlistlen > UINT_MAX / 2 ||
+		    fstat(fd, &hint_stat) == -1) {
+cleanup1:
 			close(fd);
+			hdr.dirlistlen = 0;
 			return (NULL);
 		}
+		dl = hdr.strtab;
+		if (dl + hdr.dirlist < dl)
+			goto cleanup1;
+		dl += hdr.dirlist;
+		if (dl + hdr.dirlistlen < dl)
+			goto cleanup1;
+		dl += hdr.dirlistlen;
+		if (dl > hint_stat.st_size)
+			goto cleanup1;
 		p = xmalloc(hdr.dirlistlen + 1);
+
 		if (lseek(fd, hdr.strtab + hdr.dirlist, SEEK_SET) == -1 ||
 		    read(fd, p, hdr.dirlistlen + 1) !=
-		    (ssize_t)hdr.dirlistlen + 1) {
+		    (ssize_t)hdr.dirlistlen + 1 || p[hdr.dirlistlen] != '\0') {
 			free(p);
-			close(fd);
-			return (NULL);
+			goto cleanup1;
 		}
 		hints = p;
 		close(fd);
@@ -1729,7 +1750,7 @@ gethints(bool nostdlib)
 	hargs.serinfo = &hmeta;
 
 	path_enumerate(ld_standard_library_path, fill_search_info, &sargs);
-	path_enumerate(p, fill_search_info, &hargs);
+	path_enumerate(hints, fill_search_info, &hargs);
 
 	SLPinfo = xmalloc(smeta.dls_size);
 	hintinfo = xmalloc(hmeta.dls_size);
@@ -1748,7 +1769,7 @@ gethints(bool nostdlib)
 	hargs.strspace = (char *)&hintinfo->dls_serpath[hmeta.dls_cnt];
 
 	path_enumerate(ld_standard_library_path, fill_search_info, &sargs);
-	path_enumerate(p, fill_search_info, &hargs);
+	path_enumerate(hints, fill_search_info, &hargs);
 
 	/*
 	 * Now calculate the difference between two sets, by excluding
@@ -1895,6 +1916,7 @@ static void
 init_rtld(caddr_t mapbase, Elf_Auxinfo **aux_info)
 {
     Obj_Entry objtmp;	/* Temporary rtld object */
+    const Elf_Ehdr *ehdr;
     const Elf_Dyn *dyn_rpath;
     const Elf_Dyn *dyn_soname;
     const Elf_Dyn *dyn_runpath;
@@ -1933,6 +1955,9 @@ init_rtld(caddr_t mapbase, Elf_Auxinfo **aux_info)
 
 	relocate_objects(&objtmp, true, &objtmp, 0, NULL);
     }
+    ehdr = (Elf_Ehdr *)mapbase;
+    objtmp.phdr = (Elf_Phdr *)((char *)mapbase + ehdr->e_phoff);
+    objtmp.phsize = ehdr->e_phnum * sizeof(objtmp.phdr[0]);
 
     /* Initialize the object list. */
     TAILQ_INIT(&obj_list);
@@ -2143,8 +2168,7 @@ load_needed_objects(Obj_Entry *first, int flags)
 {
     Obj_Entry *obj;
 
-    obj = first;
-    TAILQ_FOREACH_FROM(obj, &obj_list, next) {
+    for (obj = first; obj != NULL; obj = TAILQ_NEXT(obj, next)) {
 	if (obj->marker)
 	    continue;
 	if (process_needed(obj, obj->needed, flags) == -1)
@@ -2748,9 +2772,8 @@ relocate_objects(Obj_Entry *first, bool bind_now, Obj_Entry *rtldobj,
 	Obj_Entry *obj;
 	int error;
 
-	error = 0;
-	obj = first;
-	TAILQ_FOREACH_FROM(obj, &obj_list, next) {
+	for (error = 0, obj = first;  obj != NULL;
+	    obj = TAILQ_NEXT(obj, next)) {
 		if (obj->marker)
 			continue;
 		error = relocate_object(obj, bind_now, rtldobj, flags,
@@ -2790,8 +2813,7 @@ resolve_objects_ifunc(Obj_Entry *first, bool bind_now, int flags,
 {
 	Obj_Entry *obj;
 
-	obj = first;
-	TAILQ_FOREACH_FROM(obj, &obj_list, next) {
+	for (obj = first; obj != NULL; obj = TAILQ_NEXT(obj, next)) {
 		if (obj->marker)
 			continue;
 		if (resolve_object_ifunc(obj, bind_now, flags, lockstate) == -1)
@@ -3270,7 +3292,7 @@ do_dlsym(void *handle, const char *name, void *retaddr, const Ver_Entry *ve,
 		   handle == RTLD_SELF) { /* ... caller included */
 	    if (handle == RTLD_NEXT)
 		obj = globallist_next(obj);
-	    TAILQ_FOREACH_FROM(obj, &obj_list, next) {
+	    for (; obj != NULL; obj = TAILQ_NEXT(obj, next)) {
 		if (obj->marker)
 		    continue;
 		res = symlook_obj(&req, obj);
@@ -4295,7 +4317,7 @@ trace_loaded_objects(Obj_Entry *obj)
 
     list_containers = getenv(_LD("TRACE_LOADED_OBJECTS_ALL"));
 
-    TAILQ_FOREACH_FROM(obj, &obj_list, next) {
+    for (; obj != NULL; obj = TAILQ_NEXT(obj, next)) {
 	Needed_Entry		*needed;
 	char			*name, *path;
 	bool			is_lib;
@@ -4640,8 +4662,7 @@ allocate_tls(Obj_Entry *objs, void *oldtls, size_t tcbsize, size_t tcbalign)
 	 */
 	free_tls(oldtls, 2*sizeof(Elf_Addr), sizeof(Elf_Addr));
     } else {
-	obj = objs;
-	TAILQ_FOREACH_FROM(obj, &obj_list, next) {
+	for (obj = objs; obj != NULL; obj = TAILQ_NEXT(obj, next)) {
 		if (obj->marker || obj->tlsoffset == 0)
 			continue;
 		addr = segbase - obj->tlsoffset;

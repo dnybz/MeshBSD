@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/common/util.h 219083 2011-02-27 12:25:47Z pjd $
+ * $FreeBSD: releng/11.0/sys/boot/common/util.h 219083 2011-02-27 12:25:47Z pjd $
  */
 
 #ifndef _UTIL_H_

@@ -1,5 +1,5 @@
 #	$NetBSD: Makefile,v 1.4 2011/02/16 01:31:33 joerg Exp $
-#	$FreeBSD: head/usr.bin/grep/Makefile 285884 2015-07-26 00:11:04Z pfg $
+#	$FreeBSD: releng/11.0/usr.bin/grep/Makefile 285884 2015-07-26 00:11:04Z pfg $
 #	$OpenBSD: Makefile,v 1.6 2003/06/25 15:00:04 millert Exp $
 
 .include <src.opts.mk>
@@ -84,6 +84,10 @@ LIBADD+=	gnuregex
 .include "${.CURDIR}/nls/Makefile.inc"
 .else
 CFLAGS+= -DWITHOUT_NLS
+.endif
+
+.if ${MK_TESTS} != "no"
+SUBDIR+=	tests
 .endif
 
 .include <bsd.prog.mk>

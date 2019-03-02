@@ -1,4 +1,4 @@
-/*	$FreeBSD: head/sys/net/pfkeyv2.h 290982 2015-11-17 14:39:33Z fabient $	*/
+/*	$FreeBSD: releng/11.0/sys/net/pfkeyv2.h 290982 2015-11-17 14:39:33Z fabient $	*/
 /*	$KAME: pfkeyv2.h,v 1.37 2003/09/06 05:15:43 itojun Exp $	*/
 
 /*-

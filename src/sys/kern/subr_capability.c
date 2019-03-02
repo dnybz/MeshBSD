@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/subr_capability.c 291553 2015-12-01 02:48:42Z mjg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/subr_capability.c 291553 2015-12-01 02:48:42Z mjg $");
 
 /*
  * Note that this file is compiled into the kernel and into libc.

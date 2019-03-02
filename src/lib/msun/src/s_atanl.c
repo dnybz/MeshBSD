@@ -12,7 +12,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_atanl.c 181074 2008-07-31 22:41:26Z das $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/src/s_atanl.c 181074 2008-07-31 22:41:26Z das $");
 
 /*
  * See comments in s_atan.c.

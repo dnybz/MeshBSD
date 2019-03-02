@@ -24,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/ofwdump/ofwdump.c 277256 2015-01-16 18:42:49Z nwhitehorn $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/ofwdump/ofwdump.c 277256 2015-01-16 18:42:49Z nwhitehorn $");
 
 #include <dev/ofw/openfirm.h>
 #include <dev/ofw/openfirmio.h>

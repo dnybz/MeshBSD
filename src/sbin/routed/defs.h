@@ -28,11 +28,11 @@
  *
  *	@(#)defs.h	8.1 (Berkeley) 6/5/93
  *
- * $FreeBSD: head/sbin/routed/defs.h 271919 2014-09-21 04:00:28Z hrs $
+ * $FreeBSD: releng/11.0/sbin/routed/defs.h 271919 2014-09-21 04:00:28Z hrs $
  */
 
 #ifdef  sgi
-#ident "$FreeBSD: head/sbin/routed/defs.h 271919 2014-09-21 04:00:28Z hrs $"
+#ident "$FreeBSD: releng/11.0/sbin/routed/defs.h 271919 2014-09-21 04:00:28Z hrs $"
 #endif
 
 /* Definitions for RIPv2 routing process.

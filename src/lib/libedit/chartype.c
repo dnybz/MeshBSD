@@ -34,7 +34,7 @@
 __RCSID("$NetBSD: chartype.c,v 1.12 2015/02/22 02:16:19 christos Exp $");
 #endif /* not lint && not SCCSID */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libedit/chartype.c 296435 2016-03-06 21:32:54Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libedit/chartype.c 296435 2016-03-06 21:32:54Z pfg $");
 
 #include "el.h"
 #include <stdlib.h>

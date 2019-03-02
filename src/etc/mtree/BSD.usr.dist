@@ -94,15 +94,27 @@
         ..
         dict
         ..
-        dtrace
-            toolkit
-            ..
+        doc
+           ncurses
+           ..
+           ntp
+              drivers
+                 icons 
+                 ..
+                 scripts
+                 ..
+              ..
+              hints
+              .. 
+              icons
+              ..
+              pic
+              ..
+              scripts
+              ..
+           ..
         ..
         firmware
-        ..
-        games
-            fortune
-            ..
         ..
         i18n
             csmapper

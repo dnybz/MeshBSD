@@ -23,7 +23,7 @@
  * SUCH DAMAGE.
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mediatek/mtk_pcie.c 300014 2016-05-17 06:45:25Z sgalabov $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mediatek/mtk_pcie.c 300149 2016-05-18 15:05:44Z andrew $");
 
 #include <sys/param.h>
 #include <sys/systm.h>
@@ -319,7 +319,7 @@ mtk_pci_attach(device_t dev)
 	}
 
 	/* Register ourselves as an interrupt controller */
-	if (intr_pic_register(dev, xref) != 0) {
+	if (intr_pic_register(dev, xref) == NULL) {
 		device_printf(dev, "could not register PIC\n");
 		goto cleanup_rman;
 	}

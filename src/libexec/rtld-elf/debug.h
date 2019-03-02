@@ -22,7 +22,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/libexec/rtld-elf/debug.h 282551 2015-05-06 15:29:11Z emaste $
+ * $FreeBSD: releng/11.0/libexec/rtld-elf/debug.h 282551 2015-05-06 15:29:11Z emaste $
  */
 
 /*

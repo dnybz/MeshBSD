@@ -1,4 +1,4 @@
-/* $FreeBSD: head/sys/boot/efi/include/efiuga.h 298826 2016-04-30 00:26:38Z pfg $ */
+/* $FreeBSD: releng/11.0/sys/boot/efi/include/efiuga.h 298826 2016-04-30 00:26:38Z pfg $ */
 /** @file
   UGA Draw protocol from the EFI 1.1 specification.
 

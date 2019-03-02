@@ -1,8 +1,8 @@
-# $FreeBSD: head/lib/liblzma/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/liblzma/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 PACKAGE=lib${LIB}
 LIB=		lzma
-LZMADIR=	${.CURDIR}/../../external/xz/src/liblzma
+LZMADIR=	${.CURDIR}/../../contrib/xz/src/liblzma
 
 .PATH: ${LZMADIR}/../common
 SRCS+=	tuklib_physmem.c tuklib_cpucores.c

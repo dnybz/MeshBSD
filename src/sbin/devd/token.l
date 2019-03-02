@@ -26,7 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sbin/devd/token.l 250227 2013-05-03 23:51:32Z jkim $
+ * $FreeBSD: releng/11.0/sbin/devd/token.l 250227 2013-05-03 23:51:32Z jkim $
  */
 
 #include <ctype.h>

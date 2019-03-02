@@ -1,6 +1,6 @@
 #!/bin/sh -
 #
-# $FreeBSD: head/sys/boot/common/newvers.sh 289896 2015-10-24 21:59:58Z ngie $
+# $FreeBSD: releng/11.0/sys/boot/common/newvers.sh 289896 2015-10-24 21:59:58Z ngie $
 #	$NetBSD: newvers.sh,v 1.1 1997/07/26 01:50:38 thorpej Exp $
 #
 # Copyright (c) 1984, 1986, 1990, 1993

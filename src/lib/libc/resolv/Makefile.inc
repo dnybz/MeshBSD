@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/libc/resolv/Makefile.inc 269867 2014-08-12 12:36:06Z ume $
+# $FreeBSD: releng/11.0/lib/libc/resolv/Makefile.inc 269867 2014-08-12 12:36:06Z ume $
 
 # resolv sources
 .PATH: ${LIBC_SRCTOP}/resolv

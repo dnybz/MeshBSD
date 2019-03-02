@@ -33,7 +33,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/libkern/strtol.c 298069 2016-04-15 16:10:11Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/libkern/strtol.c 298069 2016-04-15 16:10:11Z pfg $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

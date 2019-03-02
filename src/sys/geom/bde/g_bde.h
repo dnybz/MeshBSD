@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/geom/bde/g_bde.h 274341 2014-11-10 09:55:35Z des $
+ * $FreeBSD: releng/11.0/sys/geom/bde/g_bde.h 274341 2014-11-10 09:55:35Z des $
  */
 
 #ifndef _SYS_GEOM_BDE_G_BDE_H_

@@ -34,7 +34,7 @@
  * tmpfs vnode interface.
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/fs/tmpfs/tmpfs_vnops.c 298806 2016-04-29 20:51:24Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/fs/tmpfs/tmpfs_vnops.c 298806 2016-04-29 20:51:24Z pfg $");
 
 #include <sys/param.h>
 #include <sys/fcntl.h>

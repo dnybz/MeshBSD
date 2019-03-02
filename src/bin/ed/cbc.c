@@ -32,7 +32,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/bin/ed/cbc.c 298640 2016-04-26 14:31:48Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/bin/ed/cbc.c 300340 2016-05-21 00:45:42Z pfg $");
 
 #include <sys/types.h>
 #include <errno.h>
@@ -90,16 +90,13 @@ void
 init_des_cipher(void)
 {
 #ifdef DES
-	int i;
-
 	des_ct = des_n = 0;
 
 	/* initialize the initialization vector */
 	MEMZERO(ivec, 8);
 
 	/* initialize the padding vector */
-	for (i = 0; i < 8; i++)
-		pvec[i] = (char) (arc4random() % 256);
+	arc4random_buf(pvec, sizeof(pvec));
 #endif
 }
 
@@ -164,7 +161,7 @@ get_keyword(void)
 	/*
 	 * get the key
 	 */
-	if (*(p = getpass("Enter key: "))) {
+	if ((p = getpass("Enter key: ")) != NULL && *p != '\0') {
 
 		/*
 		 * copy it, nul-padded, into the key area

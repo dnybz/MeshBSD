@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	from: @(#)param.h	5.8 (Berkeley) 6/28/91
- * $FreeBSD: head/sys/riscv/include/_align.h 292407 2015-12-17 18:44:30Z br $
+ * $FreeBSD: releng/11.0/sys/riscv/include/_align.h 292407 2015-12-17 18:44:30Z br $
  */
 
 #ifndef _MACHINE__ALIGN_H_

@@ -22,7 +22,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/kern/kern_sdt.c 262325 2014-02-22 01:41:45Z markj $
+ * $FreeBSD: releng/11.0/sys/kern/kern_sdt.c 262325 2014-02-22 01:41:45Z markj $
  */
 
 #include <sys/param.h>

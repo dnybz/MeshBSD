@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/riscv/htif/htif.h 295041 2016-01-29 15:12:31Z br $
+ * $FreeBSD: releng/11.0/sys/riscv/htif/htif.h 295041 2016-01-29 15:12:31Z br $
  */
 
 #define	HTIF_DEV_ID_SHIFT	(56)

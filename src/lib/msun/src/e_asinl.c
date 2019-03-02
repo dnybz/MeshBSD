@@ -13,7 +13,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/e_asinl.c 181258 2008-08-03 17:49:05Z das $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/src/e_asinl.c 181258 2008-08-03 17:49:05Z das $");
 
 /*
  * See comments in e_asin.c.

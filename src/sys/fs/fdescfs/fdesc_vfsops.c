@@ -31,7 +31,7 @@
  *
  *	@(#)fdesc_vfsops.c	8.4 (Berkeley) 1/21/94
  *
- * $FreeBSD: head/sys/fs/fdescfs/fdesc_vfsops.c 298853 2016-04-30 16:01:37Z emaste $
+ * $FreeBSD: releng/11.0/sys/fs/fdescfs/fdesc_vfsops.c 298853 2016-04-30 16:01:37Z emaste $
  */
 
 /*

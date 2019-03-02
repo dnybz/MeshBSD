@@ -33,7 +33,7 @@
 static char sccsid[] = "@(#)mkheaders.c	8.1 (Berkeley) 6/6/93";
 #endif
 static const char rcsid[] =
-  "$FreeBSD: head/usr.sbin/config/mkoptions.c 298687 2016-04-27 03:06:53Z araujo $";
+  "$FreeBSD: releng/11.0/usr.sbin/config/mkoptions.c 298687 2016-04-27 03:06:53Z araujo $";
 #endif /* not lint */
 
 /*

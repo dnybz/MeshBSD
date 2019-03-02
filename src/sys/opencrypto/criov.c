@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/opencrypto/criov.c 285247 2015-07-07 18:45:32Z jmg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/opencrypto/criov.c 285247 2015-07-07 18:45:32Z jmg $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

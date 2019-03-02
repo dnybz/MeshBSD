@@ -29,7 +29,7 @@
  *
  *	From: @(#)ansi.h	8.2 (Berkeley) 1/4/94
  *	From: @(#)types.h	8.3 (Berkeley) 1/5/94
- * $FreeBSD: head/sys/riscv/include/_types.h 292407 2015-12-17 18:44:30Z br $
+ * $FreeBSD: releng/11.0/sys/riscv/include/_types.h 292407 2015-12-17 18:44:30Z br $
  */
 
 #ifndef _MACHINE__TYPES_H_

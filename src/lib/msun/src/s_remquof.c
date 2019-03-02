@@ -11,7 +11,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_remquof.c 233973 2012-04-07 03:59:12Z das $");
+__FBSDID("$FreeBSD: releng/11.0/lib/msun/src/s_remquof.c 233973 2012-04-07 03:59:12Z das $");
 
 #include "math.h"
 #include "math_private.h"

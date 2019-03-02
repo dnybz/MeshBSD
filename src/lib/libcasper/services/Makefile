@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/libcasper/services/Makefile 296125 2016-02-26 22:14:04Z bdrewery $
+# $FreeBSD: releng/11.0/lib/libcasper/services/Makefile 296125 2016-02-26 22:14:04Z bdrewery $
 
 SUBDIR=		cap_dns
 SUBDIR+=	cap_grp

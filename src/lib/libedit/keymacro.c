@@ -41,7 +41,7 @@ __RCSID("$NetBSD: keymacro.c,v 1.7 2011/08/16 16:25:15 christos Exp $");
 #endif
 #endif /* not lint && not SCCSID */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libedit/keymacro.c 296435 2016-03-06 21:32:54Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libedit/keymacro.c 296435 2016-03-06 21:32:54Z pfg $");
 
 /*
  * keymacro.c: This module contains the procedures for maintaining

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/fdt/dts/arm/exynos5420-peach-pit.dts 272712 2014-10-07 17:39:30Z br $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/arm/exynos5420-peach-pit.dts 272712 2014-10-07 17:39:30Z br $
  */
 
 /dts-v1/;

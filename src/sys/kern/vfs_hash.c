@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/vfs_hash.c 299412 2016-05-11 06:32:22Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/vfs_hash.c 299412 2016-05-11 06:32:22Z kib $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

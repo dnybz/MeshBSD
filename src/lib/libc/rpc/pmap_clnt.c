@@ -33,7 +33,7 @@ static char *sccsid2 = "@(#)pmap_clnt.c 1.37 87/08/11 Copyr 1984 Sun Micro";
 static char *sccsid = "@(#)pmap_clnt.c	2.2 88/08/01 4.0 RPCSRC";
 #endif
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/rpc/pmap_clnt.c 258578 2013-11-25 19:04:36Z hrs $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/rpc/pmap_clnt.c 258578 2013-11-25 19:04:36Z hrs $");
 
 /*
  * pmap_clnt.c

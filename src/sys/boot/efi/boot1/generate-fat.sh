@@ -9,7 +9,7 @@
 # do this as part of the normal build. If makefs(8) grows workable FAT
 # support, this should be revisited.
 
-# $FreeBSD: head/sys/boot/efi/boot1/generate-fat.sh 297871 2016-04-12 20:52:28Z emaste $
+# $FreeBSD: releng/11.0/sys/boot/efi/boot1/generate-fat.sh 297871 2016-04-12 20:52:28Z emaste $
 
 FAT_SIZE=1600 			#Size in 512-byte blocks of the produced image
 

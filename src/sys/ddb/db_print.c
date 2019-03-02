@@ -34,7 +34,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/ddb/db_print.c 285783 2015-07-22 01:09:02Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/sys/ddb/db_print.c 285783 2015-07-22 01:09:02Z jhb $");
 
 #include <sys/param.h>
 #include <sys/kdb.h>

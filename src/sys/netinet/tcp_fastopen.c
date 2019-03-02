@@ -99,7 +99,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/tcp_fastopen.c 297738 2016-04-09 10:58:08Z bz $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/tcp_fastopen.c 304088 2016-08-14 18:30:30Z karels $");
 
 #include "opt_inet.h"
 
@@ -108,6 +108,7 @@ __FBSDID("$FreeBSD: head/sys/netinet/tcp_fastopen.c 297738 2016-04-09 10:58:08Z 
 #include <sys/limits.h>
 #include <sys/lock.h>
 #include <sys/rmlock.h>
+#include <sys/socket.h>
 #include <sys/socketvar.h>
 #include <sys/sysctl.h>
 #include <sys/systm.h>

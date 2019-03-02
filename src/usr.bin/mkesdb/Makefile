@@ -1,4 +1,4 @@
-# $FreeBSD: head/usr.bin/mkesdb/Makefile 284945 2015-06-30 06:02:42Z jhibbits $
+# $FreeBSD: releng/11.0/usr.bin/mkesdb/Makefile 284945 2015-06-30 06:02:42Z jhibbits $
 
 .PATH: ${.CURDIR}/../../lib/libc/iconv
 

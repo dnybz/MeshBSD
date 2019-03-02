@@ -40,7 +40,7 @@ static char sccsid[] = "@(#)wc.c	8.1 (Berkeley) 6/6/93";
 #endif
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/wc/wc.c 281617 2015-04-16 21:44:35Z bdrewery $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/wc/wc.c 281617 2015-04-16 21:44:35Z bdrewery $");
 
 #include <sys/param.h>
 #include <sys/stat.h>

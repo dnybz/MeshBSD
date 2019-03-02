@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/geom/geom_vol_ffs.c 219029 2011-02-25 10:24:35Z netchild $");
+__FBSDID("$FreeBSD: releng/11.0/sys/geom/geom_vol_ffs.c 219029 2011-02-25 10:24:35Z netchild $");
 
 #include <sys/param.h>
 #include <sys/errno.h>

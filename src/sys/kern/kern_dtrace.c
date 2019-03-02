@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_dtrace.c 266827 2014-05-29 01:42:22Z markj $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_dtrace.c 266827 2014-05-29 01:42:22Z markj $");
 
 #include "opt_kdb.h"
 

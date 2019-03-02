@@ -39,7 +39,7 @@
 static char sccsid[] = "@(#)vfscanf.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/stdio/vfscanf.c 298830 2016-04-30 01:24:24Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/stdio/vfscanf.c 301777 2016-06-10 05:21:52Z pfg $");
 
 #include "namespace.h"
 #include <ctype.h>
@@ -873,7 +873,7 @@ doswitch:
 			n = *fmt;
 			if (n == ']'
 			    || (table->__collate_load_error ? n < c :
-				__collate_range_cmp (table, n, c) < 0
+				__wcollate_range_cmp(table, n, c) < 0
 			       )
 			   ) {
 				c = '-';
@@ -887,8 +887,8 @@ doswitch:
 				} while (c < n);
 			} else {
 				for (i = 0; i < 256; i ++)
-					if (   __collate_range_cmp (table, c, i) < 0
-					    && __collate_range_cmp (table, i, n) <= 0
+					if (__wcollate_range_cmp(table, c, i) < 0 &&
+					    __wcollate_range_cmp(table, i, n) <= 0
 					   )
 						tab[i] = v;
 			}

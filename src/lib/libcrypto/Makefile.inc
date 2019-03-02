@@ -5,7 +5,7 @@
 OPENSSL_VER=	2.5.0
 OPENSSL_DATE=	
 
-LIBRESSL_SRC=	${.CURDIR}/../../external/libressl
+LIBRESSL_SRC=	${.CURDIR}/../../contrib/libressl
 LCRYPTO_SRC=	${LIBRESSL_SRC}/crypto
 LCRYPTO_DOC=	${LCRYPTO_SRC}/doc
 LSSL_SRC=	${LIBRESSL_SRC}/ssl

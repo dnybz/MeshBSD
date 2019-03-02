@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/usr.bin/gdb/gdbtui/Makefile 275077 2014-11-25 21:18:18Z bapt $
+# $FreeBSD: releng/11.0/gnu/usr.bin/gdb/gdbtui/Makefile 275077 2014-11-25 21:18:18Z bapt $
 
 PROG=	gdbtui${GDB_SUFFIX}
 SRCS=	tui-main.c

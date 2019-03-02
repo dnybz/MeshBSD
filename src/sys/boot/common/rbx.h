@@ -12,7 +12,7 @@
  * warranties of merchantability and fitness for a particular
  * purpose.
  *
- * $FreeBSD: head/sys/boot/common/rbx.h 294766 2016-01-26 06:26:44Z imp $
+ * $FreeBSD: releng/11.0/sys/boot/common/rbx.h 294766 2016-01-26 06:26:44Z imp $
  */
 
 #ifndef _RBX_H_

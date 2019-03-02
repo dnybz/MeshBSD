@@ -1,5 +1,5 @@
 /*	$NetBSD: SYS.h,v 1.19 2009/12/14 01:07:41 matt Exp $ */
-/* $FreeBSD: head/lib/libc/mips/SYS.h 294515 2016-01-21 17:29:01Z brooks $ */
+/* $FreeBSD: releng/11.0/lib/libc/mips/SYS.h 294515 2016-01-21 17:29:01Z brooks $ */
 
 /*-
  * Copyright (c) 1996 Jonathan Stone

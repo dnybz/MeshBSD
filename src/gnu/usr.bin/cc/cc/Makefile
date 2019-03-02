@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/usr.bin/cc/cc/Makefile 265420 2014-05-06 04:22:01Z imp $
+# $FreeBSD: releng/11.0/gnu/usr.bin/cc/cc/Makefile 265420 2014-05-06 04:22:01Z imp $
 
 .include <src.opts.mk>
 
@@ -6,7 +6,6 @@
 .include "../Makefile.fe"
 
 PROG=	gcc
-MAN=	gcc.1
 SRCS+=  gccspec.c
 
 .if ${MK_SHARED_TOOLCHAIN} == "no"

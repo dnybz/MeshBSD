@@ -1,4 +1,4 @@
-/*	$FreeBSD: head/sys/net80211/ieee80211_rssadapt.c 283538 2015-05-25 19:18:16Z adrian $	*/
+/*	$FreeBSD: releng/11.0/sys/net80211/ieee80211_rssadapt.c 283538 2015-05-25 19:18:16Z adrian $	*/
 /* $NetBSD: ieee80211_rssadapt.c,v 1.9 2005/02/26 22:45:09 perry Exp $ */
 /*-
  * Copyright (c) 2010 Rui Paulo <rpaulo@FreeBSD.org>

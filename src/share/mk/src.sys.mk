@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/src.sys.mk 298487 2016-04-22 20:31:29Z bdrewery $
+# $FreeBSD: releng/11.0/share/mk/src.sys.mk 298487 2016-04-22 20:31:29Z bdrewery $
 
 # Note: This file is also duplicated in the sys/conf/kern.pre.mk so
 # it will always grab SRCCONF, even if it isn't being built in-tree

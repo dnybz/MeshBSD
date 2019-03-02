@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libprocstat/common_kvm.h 252356 2013-06-28 21:00:08Z davide $
+ * $FreeBSD: releng/11.0/lib/libprocstat/common_kvm.h 252356 2013-06-28 21:00:08Z davide $
  */
 
 #ifndef	_COMMON_KVM_H_
@@ -41,7 +41,10 @@ int	devfs_filestat(kvm_t *kd, struct vnode *vp, struct vnstat *vn);
 int	isofs_filestat(kvm_t *kd, struct vnode *vp, struct vnstat *vn);
 int	msdosfs_filestat(kvm_t *kd, struct vnode *vp, struct vnstat *vn);
 int	nfs_filestat(kvm_t *kd, struct vnode *vp, struct vnstat *vn);
+int	smbfs_filestat(kvm_t *kd, struct vnode *vp, struct vnstat *vn);
+int	udf_filestat(kvm_t *kd, struct vnode *vp, struct vnstat *vn);
 int	ufs_filestat(kvm_t *kd, struct vnode *vp, struct vnstat *vn);
+int	zfs_filestat(kvm_t *kd, struct vnode *vp, struct vnstat *vn);
 void	*getvnodedata(struct vnode *vp);
 struct mount	*getvnodemount(struct vnode *vp);
 

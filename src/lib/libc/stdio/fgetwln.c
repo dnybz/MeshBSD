@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/stdio/fgetwln.c 288032 2015-09-20 20:27:57Z rodrigc $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/stdio/fgetwln.c 288032 2015-09-20 20:27:57Z rodrigc $");
 
 #include "namespace.h"
 #include <stdio.h>

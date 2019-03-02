@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  * RMI_BSD
- * $FreeBSD: head/sys/mips/rmi/pic.h 258780 2013-11-30 22:17:27Z eadler $
+ * $FreeBSD: releng/11.0/sys/mips/rmi/pic.h 258780 2013-11-30 22:17:27Z eadler $
  */
 #ifndef _RMI_PIC_H_
 #define	_RMI_PIC_H_

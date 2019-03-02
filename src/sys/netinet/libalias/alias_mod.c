@@ -25,7 +25,7 @@
  *
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/libalias/alias_mod.c 259859 2013-12-25 03:24:20Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/libalias/alias_mod.c 259859 2013-12-25 03:24:20Z glebius $");
 
 #ifdef _KERNEL
 #include <sys/libkern.h>

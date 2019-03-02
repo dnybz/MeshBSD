@@ -1,4 +1,4 @@
-/* $FreeBSD: head/lib/libc/iconv/citrus_prop.c 281798 2015-04-20 22:09:50Z pfg $ */
+/* $FreeBSD: releng/11.0/lib/libc/iconv/citrus_prop.c 281798 2015-04-20 22:09:50Z pfg $ */
 /* $NetBSD: citrus_prop.c,v 1.4 2011/03/30 08:22:01 jruoho Exp $ */
 
 /*-

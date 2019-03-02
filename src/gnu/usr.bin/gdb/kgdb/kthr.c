@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/gnu/usr.bin/gdb/kgdb/kthr.c 275644 2014-12-09 14:21:43Z dchagin $");
+__FBSDID("$FreeBSD: releng/11.0/gnu/usr.bin/gdb/kgdb/kthr.c 275644 2014-12-09 14:21:43Z dchagin $");
 
 #include <sys/param.h>
 #include <sys/cpuset.h>

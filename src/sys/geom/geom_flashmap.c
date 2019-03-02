@@ -26,7 +26,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/geom/geom_flashmap.c 294616 2016-01-23 05:26:29Z adrian $");
+__FBSDID("$FreeBSD: releng/11.0/sys/geom/geom_flashmap.c 294616 2016-01-23 05:26:29Z adrian $");
 
 #include <sys/param.h>
 #include <sys/endian.h>

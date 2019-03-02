@@ -40,7 +40,7 @@
 #include <machine/riscvreg.h>
 #include <machine/pte.h>
 
-__FBSDID("$FreeBSD: head/sys/riscv/riscv/swtch.S 298580 2016-04-25 14:47:51Z br $");
+__FBSDID("$FreeBSD: releng/11.0/sys/riscv/riscv/swtch.S 298580 2016-04-25 14:47:51Z br $");
 
 /*
  * void cpu_throw(struct thread *old, struct thread *new)

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/common/paths.h 294925 2016-01-27 16:36:18Z imp $
+ * $FreeBSD: releng/11.0/sys/boot/common/paths.h 294925 2016-01-27 16:36:18Z imp $
  */
 
 #ifndef _PATHS_H_

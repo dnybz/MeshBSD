@@ -24,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/efi/libefi/env.c 300081 2016-05-17 21:25:20Z imp $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/efi/libefi/env.c 300081 2016-05-17 21:25:20Z imp $");
 
 #include <efi.h>
 #include <efilib.h>

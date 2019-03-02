@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/libthr/thread/Makefile.inc 296162 2016-02-28 17:52:33Z kib $
+# $FreeBSD: releng/11.0/lib/libthr/thread/Makefile.inc 296162 2016-02-28 17:52:33Z kib $
 
 # thr sources
 .PATH: ${.CURDIR}/thread

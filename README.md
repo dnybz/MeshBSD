@@ -1,18 +1,28 @@
 MeshBSD (under construction)
 ----------------------------
 
-After I've read 
+Well, I am entertained!!1!
 
 <pre><code>
-  https://www.kernel.org/doc/Documentation/stable_api_nonsense.txt
-</code></pre>
+    http://www.kroah.com/log/linux/stable_api_nonsense.html
  
-I was disgusted and I've decided to build an operating 
-system for embedded systems and mobile station based 
-on FreeBSD operating system and components adopted
-and ported from OpenBSD and NetBSD.
+Am I just really entertained? IMHO this view on operating system design does 
+not reflect a so called adorable way to build a set of core components still 
+necessary for creating or implemnting operating systems and it is IMHO a bad 
+idea to implement an operating system kernel without a designed infrastructure 
+for its core components like device drivers or something else it is necessary 
+for this purpose, e. g. stable Kernel Programmer Interfaces [KPIs], stable 
+Device Driver Developement Kits, etc.
+    Yet, I've decided to create a generating set of components for building 
+operating systems for embedded systems and non stationary systems based on the
+FreeBSD operating system and components adopted and ported from OpenBSD and 
+NetBSD operating system. Thus, it sounds like a provocation, but hold on, think 
+twice and ask yourself: 
 
-<pre><code>
+    Does a monoculture of a particular operating 
+    system kernel actually promise real freedom 
+    on implementing free software?
+
     This project is at an early stage!
 </code></pre>
 
@@ -51,8 +61,14 @@ Well, there are some pending operational tasks
  
  #2 Porting if_pppoe(4) from NetBSD for kernel ppp(4).
 
- #3 Integration of common or generic llc(4) domain
-    on top of Ethernet MAC layer. 
+ #3 Porting and refactoring i4b(4) on IEEE802.3 link-layer.
+ 
+     * implementaion of AF_ISDN protocol family
+     * implementaion of FRMR derived protocol performing SVC
+     * implementaion of LMI derived protocol on LME 
+    
+    Btw, only bearer services for audio / video intercom.
+  
 </code></pre>
 
 Additional information about contacting
@@ -140,6 +156,8 @@ Basic requirements for installation of (experimental) firmware image are:
      3.3V
 
  * Configured tftpd(8) daemon.
+
+ * Either in-kernel compiled or by kldload(8) attached uplcom(4) driver.
  
  * At least cu(1) -- Call Unix.
 </code></pre>
@@ -549,3 +567,4 @@ Some additional information:
 </code></pre>
 
 [![Flattr this git repo](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=hmatyschok&url=https://github.com/hmatyschok/MeshBSD&title=MeshBSD&language=&tags=github&category=software) Please feel free to support me anytime.
+

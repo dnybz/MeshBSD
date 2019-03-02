@@ -1,4 +1,4 @@
-# $FreeBSD: head/usr.sbin/wpa/hostapd/Makefile 289549 2015-10-18 21:38:25Z rpaulo $
+# $FreeBSD: releng/11.0/usr.sbin/wpa/hostapd/Makefile 289549 2015-10-18 21:38:25Z rpaulo $
 
 .include <src.opts.mk>
 .include "${.CURDIR}/../Makefile.inc"
@@ -27,10 +27,6 @@ SRCS=	accounting.c aes-omac1.c ap_config.c ap_drv_ops.c ap_mlme.c authsrv.c \
 	wps_upnp_ssdp.c wps_upnp_web.c
 
 MAN=	hostapd.8 hostapd.conf.5
-
-FILESDIR= /etc/hostapd
-.PATH:	${HOSTAPD_DISTDIR}
-FILES=	hostapd.conf hostapd.eap_user hostapd.wpa_psk
 
 CFLAGS+=-DCONFIG_DRIVER_BSD \
 	-DCONFIG_DRIVER_RADIUS_ACL \

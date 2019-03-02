@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/ac/ac.c 239954 2012-08-31 18:26:39Z ed $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/ac/ac.c 239954 2012-08-31 18:26:39Z ed $");
 
 #include <sys/queue.h>
 #include <sys/time.h>

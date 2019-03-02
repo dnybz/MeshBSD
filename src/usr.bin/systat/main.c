@@ -29,7 +29,7 @@
 
 #include <sys/cdefs.h>
 
-__FBSDID("$FreeBSD: head/usr.bin/systat/main.c 298684 2016-04-27 02:26:31Z araujo $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/systat/main.c 298684 2016-04-27 02:26:31Z araujo $");
 
 #ifdef lint
 static const char sccsid[] = "@(#)main.c	8.1 (Berkeley) 6/6/93";

@@ -28,7 +28,7 @@
  *
  *	@(#)radix.c	8.4 (Berkeley) 11/2/94
  *
- * $FreeBSD: head/sbin/routed/radix.c 299768 2016-05-14 22:40:08Z pfg $
+ * $FreeBSD: releng/11.0/sbin/routed/radix.c 299768 2016-05-14 22:40:08Z pfg $
  */
 
 /*
@@ -40,7 +40,7 @@
 #ifdef __NetBSD__
 __RCSID("$NetBSD$");
 #elif defined(__FreeBSD__)
-__RCSID("$FreeBSD: head/sbin/routed/radix.c 299768 2016-05-14 22:40:08Z pfg $");
+__RCSID("$FreeBSD: releng/11.0/sbin/routed/radix.c 299768 2016-05-14 22:40:08Z pfg $");
 #else
 __RCSID("$Revision: 2.23 $");
 #ident "$Revision: 2.23 $"

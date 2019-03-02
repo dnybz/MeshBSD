@@ -1,12 +1,12 @@
-# $FreeBSD: head/usr.bin/cpio/Makefile 299529 2016-05-12 10:16:16Z mm $
+# $FreeBSD: releng/11.0/usr.bin/cpio/Makefile 302075 2016-06-22 07:49:59Z mm $
 
 .include <src.opts.mk>
 
-_LIBARCHIVEDIR=	${.CURDIR}/../../tools/libarchive
+_LIBARCHIVEDIR=	${.CURDIR}/../../contrib/libarchive
 _LIBARCHIVECONFDIR=	${.CURDIR}/../../lib/libarchive
 
 PROG=	bsdcpio
-BSDCPIO_VERSION_STRING=	3.2.0
+BSDCPIO_VERSION_STRING=	3.2.1
 
 .PATH:	${_LIBARCHIVEDIR}/cpio
 SRCS=	cpio.c cmdline.c
@@ -31,5 +31,9 @@ CFLAGS+=	-DHAVE_ICONV=1 -DHAVE_ICONV_H=1 -DICONV_CONST=const
 
 SYMLINKS=bsdcpio ${BINDIR}/cpio
 MLINKS= bsdcpio.1 cpio.1
+
+.if ${MK_TESTS} != "no"
+SUBDIR+=	tests
+.endif
 
 .include <bsd.prog.mk>

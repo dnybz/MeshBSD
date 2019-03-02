@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)pathnames.h	8.1 (Berkeley) 6/6/93
- * $FreeBSD: head/usr.sbin/syslogd/pathnames.h 283003 2015-05-16 08:12:00Z delphij $
+ * $FreeBSD: releng/11.0/usr.sbin/syslogd/pathnames.h 283003 2015-05-16 08:12:00Z delphij $
  */
 
 #define	_PATH_KLOG	"/dev/klog"

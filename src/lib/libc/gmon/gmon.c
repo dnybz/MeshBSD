@@ -31,7 +31,7 @@
 static char sccsid[] = "@(#)gmon.c	8.1 (Berkeley) 6/4/93";
 #endif
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/gmon/gmon.c 294523 2016-01-21 18:17:19Z brooks $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/gmon/gmon.c 294523 2016-01-21 18:17:19Z brooks $");
 
 #include "namespace.h"
 #include <sys/param.h>

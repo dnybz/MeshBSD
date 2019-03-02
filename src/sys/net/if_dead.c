@@ -32,7 +32,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/net/if_dead.c 275730 2014-12-12 16:10:42Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/sys/net/if_dead.c 275730 2014-12-12 16:10:42Z jhb $");
 
 #include <sys/param.h>
 #include <sys/mbuf.h>

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/fdt/dts/arm/vsatv102-m6.dts 283352 2015-05-24 07:09:16Z ganbold $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/arm/vsatv102-m6.dts 283352 2015-05-24 07:09:16Z ganbold $
  */
 
 /*

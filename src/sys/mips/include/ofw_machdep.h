@@ -22,7 +22,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/include/ofw_machdep.h 292519 2015-12-20 19:09:12Z ian $
+ * $FreeBSD: releng/11.0/sys/mips/include/ofw_machdep.h 292519 2015-12-20 19:09:12Z ian $
  */
 
 #ifndef _MACHINE_OFW_MACHDEP_H_

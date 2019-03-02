@@ -26,7 +26,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/include/fdt.h 295501 2016-02-11 06:19:32Z adrian $
+ * $FreeBSD: releng/11.0/sys/mips/include/fdt.h 295501 2016-02-11 06:19:32Z adrian $
  */
 
 #ifndef _MACHINE_FDT_H_

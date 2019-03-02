@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/ppp/radius.c 298089 2016-04-15 22:31:22Z pfg $
+ * $FreeBSD: releng/11.0/usr.sbin/ppp/radius.c 298089 2016-04-15 22:31:22Z pfg $
  *
  */
 

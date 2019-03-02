@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/sys_process.c 292894 2015-12-29 23:25:26Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/sys_process.c 303197 2016-07-22 17:34:58Z kib $");
 
 #include "opt_compat.h"
 
@@ -433,7 +433,6 @@ ptrace_vm_entry(struct thread *td, struct proc *p, struct ptrace_vm_entry *pve)
 	} while (0);
 
 	vm_map_unlock_read(map);
-	vmspace_free(vm);
 
 	pve->pve_fsid = VNOVAL;
 	pve->pve_fileid = VNOVAL;
@@ -478,6 +477,7 @@ ptrace_vm_entry(struct thread *td, struct proc *p, struct ptrace_vm_entry *pve)
 				free(freepath, M_TEMP);
 		}
 	}
+	vmspace_free(vm);
 	if (error == 0)
 		CTR3(KTR_PTRACE, "PT_VM_ENTRY: pid %d, entry %d, start %p",
 		    p->p_pid, pve->pve_entry, pve->pve_start);

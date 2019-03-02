@@ -1,4 +1,4 @@
-# $FreeBSD: head/usr.bin/mkcsmapper/Makefile.inc 259730 2013-12-22 17:51:33Z dim $
+# $FreeBSD: releng/11.0/usr.bin/mkcsmapper/Makefile.inc 259730 2013-12-22 17:51:33Z dim $
 
 .include <bsd.compiler.mk>
 

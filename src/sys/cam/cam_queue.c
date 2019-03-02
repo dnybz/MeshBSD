@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/cam/cam_queue.c 298809 2016-04-29 21:04:06Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/cam/cam_queue.c 298809 2016-04-29 21:04:06Z pfg $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

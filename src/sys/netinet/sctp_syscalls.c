@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/sctp_syscalls.c 298066 2016-04-15 15:46:41Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/sctp_syscalls.c 298066 2016-04-15 15:46:41Z pfg $");
 
 #include "opt_capsicum.h"
 #include "opt_inet.h"

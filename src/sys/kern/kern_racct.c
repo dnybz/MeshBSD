@@ -26,11 +26,11 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/kern/kern_racct.c 298414 2016-04-21 16:22:52Z trasz $
+ * $FreeBSD: releng/11.0/sys/kern/kern_racct.c 298414 2016-04-21 16:22:52Z trasz $
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_racct.c 298414 2016-04-21 16:22:52Z trasz $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_racct.c 298414 2016-04-21 16:22:52Z trasz $");
 
 #include "opt_sched.h"
 

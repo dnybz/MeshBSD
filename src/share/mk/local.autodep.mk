@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/local.autodep.mk 291725 2015-12-03 22:39:42Z bdrewery $
+# $FreeBSD: releng/11.0/share/mk/local.autodep.mk 291725 2015-12-03 22:39:42Z bdrewery $
 
 .if ${.MAKE.DEPENDFILE:M*.${MACHINE}} == ""
 # by default only MACHINE0 does updates

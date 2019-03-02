@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/subr_hash.c 299040 2016-05-04 03:07:52Z sephe $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/subr_hash.c 299040 2016-05-04 03:07:52Z sephe $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

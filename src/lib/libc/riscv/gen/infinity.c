@@ -3,7 +3,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/riscv/gen/infinity.c 294227 2016-01-17 15:21:23Z br $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/riscv/gen/infinity.c 294227 2016-01-17 15:21:23Z br $");
 
 #include <math.h>
 

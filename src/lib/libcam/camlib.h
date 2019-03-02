@@ -22,7 +22,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libcam/camlib.h 297999 2016-04-14 21:10:53Z ngie $
+ * $FreeBSD: releng/11.0/lib/libcam/camlib.h 297999 2016-04-14 21:10:53Z ngie $
  */
 /*
  * Buffer encoding/decoding routines taken from the original FreeBSD SCSI

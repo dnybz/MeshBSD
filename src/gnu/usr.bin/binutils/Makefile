@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/usr.bin/binutils/Makefile 287262 2015-08-28 16:23:03Z imp $
+# $FreeBSD: releng/11.0/gnu/usr.bin/binutils/Makefile 287262 2015-08-28 16:23:03Z imp $
 
 .include <src.opts.mk>
 

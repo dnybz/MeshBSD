@@ -35,7 +35,7 @@ static const char copyright[] =
 #endif /* not lint */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/bin/ed/main.c 292455 2015-12-18 23:05:36Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/bin/ed/main.c 292455 2015-12-18 23:05:36Z pfg $");
 
 /*
  * CREDITS

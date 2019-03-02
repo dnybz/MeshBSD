@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sbin/kldstat/kldstat.c 297023 2016-03-18 14:49:11Z julian $");
+__FBSDID("$FreeBSD: releng/11.0/sbin/kldstat/kldstat.c 297023 2016-03-18 14:49:11Z julian $");
 
 #include <err.h>
 #include <libutil.h>

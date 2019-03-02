@@ -30,7 +30,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/locale/mbtowc.c 296278 2016-03-01 19:15:34Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/locale/mbtowc.c 296278 2016-03-01 19:15:34Z pfg $");
 
 #include <errno.h>
 #include <stdlib.h>

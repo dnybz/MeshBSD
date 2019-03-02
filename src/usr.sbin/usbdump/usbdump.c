@@ -26,7 +26,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGES.
  *
- * $FreeBSD: head/usr.sbin/usbdump/usbdump.c 298216 2016-04-18 17:30:33Z pfg $
+ * $FreeBSD: releng/11.0/usr.sbin/usbdump/usbdump.c 298216 2016-04-18 17:30:33Z pfg $
  */
 
 #include <sys/param.h>

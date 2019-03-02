@@ -31,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/rt305x/uart_dev_rt305x.c 281438 2015-04-11 17:16:23Z andrew $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/rt305x/uart_dev_rt305x.c 281438 2015-04-11 17:16:23Z andrew $");
 
 #include "opt_ddb.h"
 

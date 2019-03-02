@@ -27,7 +27,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/fdt/dts/arm/socfpga.dtsi 276533 2015-01-02 13:15:36Z br $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/arm/socfpga.dtsi 276533 2015-01-02 13:15:36Z br $
  */
 
 / {

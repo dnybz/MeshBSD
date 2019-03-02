@@ -1,5 +1,5 @@
 #	@(#)Makefile	8.1 (Berkeley) 6/12/93
-# $FreeBSD: head/usr.bin/netstat/Makefile 291330 2015-11-25 20:38:17Z bdrewery $
+# $FreeBSD: releng/11.0/usr.bin/netstat/Makefile 291330 2015-11-25 20:38:17Z bdrewery $
 
 .include <src.opts.mk>
 

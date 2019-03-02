@@ -25,7 +25,7 @@
  *
  * Netlogic Microsystems XLP8xx Device Tree Source.
  *
- * $FreeBSD: head/sys/boot/fdt/dts/mips/xlp-basic.dts 279345 2015-02-27 02:21:52Z jchandra $
+ * $FreeBSD: releng/11.0/sys/boot/fdt/dts/mips/xlp-basic.dts 279345 2015-02-27 02:21:52Z jchandra $
  */
 
 /dts-v1/;

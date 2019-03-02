@@ -1,4 +1,4 @@
-$ $FreeBSD: head/lib/libc/nls/ca_ES.ISO8859-1.msg 189765 2009-03-13 10:40:38Z gabor $
+$ $FreeBSD: releng/11.0/lib/libc/nls/ca_ES.ISO8859-1.msg 189765 2009-03-13 10:40:38Z gabor $
 $
 $ Message catalog for ca_ES.ISO8859-1 locale
 $

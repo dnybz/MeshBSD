@@ -34,7 +34,7 @@ static char sccsid[] = "@(#)logwtmp.c	8.1 (Berkeley) 6/4/93";
 #endif /* not lint */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/libexec/ftpd/logwtmp.c 262136 2014-02-17 22:27:32Z brueffer $");
+__FBSDID("$FreeBSD: releng/11.0/libexec/ftpd/logwtmp.c 262136 2014-02-17 22:27:32Z brueffer $");
 
 #include <sys/types.h>
 #include <sys/stat.h>

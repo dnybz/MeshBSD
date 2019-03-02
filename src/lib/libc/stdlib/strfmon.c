@@ -31,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/stdlib/strfmon.c 298830 2016-04-30 01:24:24Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/stdlib/strfmon.c 298830 2016-04-30 01:24:24Z pfg $");
 
 #include <sys/types.h>
 #include <ctype.h>

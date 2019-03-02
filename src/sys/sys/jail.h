@@ -24,7 +24,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/sys/jail.h 298683 2016-04-27 02:25:21Z jamie $
+ * $FreeBSD: releng/11.0/sys/sys/jail.h 298683 2016-04-27 02:25:21Z jamie $
  */
 
 #ifndef _SYS_JAIL_H_

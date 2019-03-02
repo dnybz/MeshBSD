@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libdpv/dialogrc.c 290275 2015-11-02 20:03:59Z dteske $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libdpv/dialogrc.c 290275 2015-11-02 20:03:59Z dteske $");
 
 #include <sys/types.h>
 

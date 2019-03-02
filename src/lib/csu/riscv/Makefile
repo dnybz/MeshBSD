@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/csu/riscv/Makefile 292124 2015-12-11 22:55:23Z br $
+# $FreeBSD: releng/11.0/lib/csu/riscv/Makefile 292124 2015-12-11 22:55:23Z br $
 
 .PATH: ${.CURDIR}/../common
 

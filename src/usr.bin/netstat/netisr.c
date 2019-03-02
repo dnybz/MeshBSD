@@ -29,7 +29,7 @@
 
 #include <sys/cdefs.h>
 
-__FBSDID("$FreeBSD: head/usr.bin/netstat/netisr.c 287407 2015-09-02 18:51:36Z hrs $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/netstat/netisr.c 287407 2015-09-02 18:51:36Z hrs $");
 
 #include <sys/param.h>
 #include <sys/sysctl.h>

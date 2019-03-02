@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/usr.bin/groff/font/devhtml/Makefile 151504 2005-10-20 10:57:53Z ru $
+# $FreeBSD: releng/11.0/gnu/usr.bin/groff/font/devhtml/Makefile 151504 2005-10-20 10:57:53Z ru $
 
 DEV=		html
 FONTS=		R I B BI CR CI CB CBI S

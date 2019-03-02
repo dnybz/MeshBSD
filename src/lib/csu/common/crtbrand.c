@@ -24,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/csu/common/crtbrand.c 232832 2012-03-11 20:04:09Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/lib/csu/common/crtbrand.c 306208 2016-09-22 19:04:08Z gjb $");
 
 #include <sys/param.h>
 #include "notes.h"
@@ -62,5 +62,5 @@ static const struct {
 	.descsz = sizeof(int32_t),
 	.type = ABI_NOTETYPE,
 	.name = NOTE_FREEBSD_VENDOR,
-	.desc = __FreeBSD_version
+	.desc = 1100122
 };

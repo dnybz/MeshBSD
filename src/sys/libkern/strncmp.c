@@ -28,7 +28,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/libkern/strncmp.c 274636 2014-11-17 21:01:35Z delphij $");
+__FBSDID("$FreeBSD: releng/11.0/sys/libkern/strncmp.c 274636 2014-11-17 21:01:35Z delphij $");
 
 #include <sys/libkern.h>
 

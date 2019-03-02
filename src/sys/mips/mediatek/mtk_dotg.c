@@ -1,5 +1,5 @@
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mediatek/mtk_dotg.c 297670 2016-04-07 11:20:03Z sgalabov $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mediatek/mtk_dotg.c 297670 2016-04-07 11:20:03Z sgalabov $");
 
 /*-
  * Copyright (c) 2015-2016 Stanislav Galabov. All rights reserved.

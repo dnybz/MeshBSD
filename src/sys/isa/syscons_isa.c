@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/isa/syscons_isa.c 221708 2011-05-09 18:46:49Z jkim $");
+__FBSDID("$FreeBSD: releng/11.0/sys/isa/syscons_isa.c 221708 2011-05-09 18:46:49Z jkim $");
 
 #include "opt_syscons.h"
 

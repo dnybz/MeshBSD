@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/ddb/db_sym.c 298073 2016-04-15 17:27:20Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/ddb/db_sym.c 298073 2016-04-15 17:27:20Z pfg $");
 
 #include "opt_kstack_pages.h"
 

@@ -1,4 +1,4 @@
-/* $FreeBSD: head/usr.bin/iconv/iconv.c 287319 2015-08-31 05:57:26Z delphij $ */
+/* $FreeBSD: releng/11.0/usr.bin/iconv/iconv.c 287319 2015-08-31 05:57:26Z delphij $ */
 /* $NetBSD: iconv.c,v 1.16 2009/02/20 15:28:21 yamt Exp $ */
 
 /*-

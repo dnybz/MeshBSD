@@ -1,4 +1,4 @@
-# $FreeBSD: head/usr.bin/ftp/Makefile 275042 2014-11-25 14:29:10Z bapt $
+# $FreeBSD: releng/11.0/usr.bin/ftp/Makefile 275042 2014-11-25 14:29:10Z bapt $
 #	$NetBSD: Makefile,v 1.15 1997/10/18 15:31:20 lukem Exp $
 #	from: @(#)Makefile	8.2 (Berkeley) 4/3/94
 
@@ -8,7 +8,7 @@
 #
 #CFLAGS+=-DGATE_SERVER=\"ftp-gw.host\" # -DGATE_PORT=21
 
-TNFTP=	${.CURDIR}/../../external/tnftp
+TNFTP=	${.CURDIR}/../../contrib/tnftp
 .PATH: ${TNFTP}/src
 
 PROG=	ftp

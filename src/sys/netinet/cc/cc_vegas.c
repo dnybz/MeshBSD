@@ -54,7 +54,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/cc/cc_vegas.c 294931 2016-01-27 17:59:39Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/cc/cc_vegas.c 294931 2016-01-27 17:59:39Z glebius $");
 
 #include <sys/param.h>
 #include <sys/kernel.h>

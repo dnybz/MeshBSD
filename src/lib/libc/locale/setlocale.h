@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/locale/setlocale.h 117270 2003-07-06 02:03:37Z ache $
+ * $FreeBSD: releng/11.0/lib/libc/locale/setlocale.h 117270 2003-07-06 02:03:37Z ache $
  */
 
 #ifndef _SETLOCALE_H_

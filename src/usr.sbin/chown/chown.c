@@ -40,7 +40,7 @@ static char sccsid[] = "@(#)chown.c	8.8 (Berkeley) 4/4/94";
 #endif
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.sbin/chown/chown.c 282208 2015-04-29 00:49:00Z smh $");
+__FBSDID("$FreeBSD: releng/11.0/usr.sbin/chown/chown.c 282208 2015-04-29 00:49:00Z smh $");
 
 #include <sys/param.h>
 #include <sys/stat.h>

@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libfetch/http.c 299520 2016-05-12 06:39:13Z truckman $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libfetch/http.c 301027 2016-05-31 08:27:39Z des $");
 
 /*
  * The following copyright applies to the base64 code:
@@ -114,6 +114,7 @@ __FBSDID("$FreeBSD: head/lib/libfetch/http.c 299520 2016-05-12 06:39:13Z truckma
 #define HTTP_REDIRECT(xyz) ((xyz) == HTTP_MOVED_PERM \
 			    || (xyz) == HTTP_MOVED_TEMP \
 			    || (xyz) == HTTP_TEMP_REDIRECT \
+			    || (xyz) == HTTP_PERM_REDIRECT \
 			    || (xyz) == HTTP_USE_PROXY \
 			    || (xyz) == HTTP_SEE_OTHER)
 
@@ -1767,6 +1768,8 @@ http_request_body(struct url *URL, const char *op, struct url_stat *us,
 			break;
 		case HTTP_MOVED_PERM:
 		case HTTP_MOVED_TEMP:
+		case HTTP_TEMP_REDIRECT:
+		case HTTP_PERM_REDIRECT:
 		case HTTP_SEE_OTHER:
 		case HTTP_USE_PROXY:
 			/*

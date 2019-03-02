@@ -32,7 +32,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)types.h	8.6 (Berkeley) 2/19/95
- * $FreeBSD: head/sys/sys/types.h 299571 2016-05-12 21:18:17Z cem $
+ * $FreeBSD: releng/11.0/sys/sys/types.h 299571 2016-05-12 21:18:17Z cem $
  */
 
 #ifndef _SYS_TYPES_H_

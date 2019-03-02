@@ -41,7 +41,7 @@ static char sccsid[] = "@(#)vfprintf.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 #endif
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/stdio/vfwprintf.c 268930 2014-07-20 21:24:29Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/stdio/vfwprintf.c 268930 2014-07-20 21:24:29Z pfg $");
 
 /*
  * Actual wprintf innards.

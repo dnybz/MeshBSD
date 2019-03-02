@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/usr.bin/binutils/ld/Makefile 293285 2016-01-07 00:15:02Z emaste $
+# $FreeBSD: releng/11.0/gnu/usr.bin/binutils/ld/Makefile 293285 2016-01-07 00:15:02Z emaste $
 
 ELF_SCR_EXT=	x xbn xc xd xdc xdw xn xr xs xsc xsw xu xw
 .include "../Makefile.inc0"

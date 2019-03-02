@@ -26,7 +26,7 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/sys/priv.h 298981 2016-05-03 15:14:17Z pfg $
+ * $FreeBSD: releng/11.0/sys/sys/priv.h 301496 2016-06-06 09:51:58Z araujo $
  */
 
 /*
@@ -342,6 +342,7 @@
 #define	PRIV_NET_SETIFDESCR	418	/* Set interface description. */
 #define	PRIV_NET_SETIFFIB	419	/* Set interface fib. */
 #define	PRIV_NET_VXLAN		420	/* Administer vxlan. */
+#define	PRIV_NET_SETVLANPCP	421	/* Set VLAN priority. */
 
 /*
  * 802.11-related privileges.

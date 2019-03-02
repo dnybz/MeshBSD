@@ -36,7 +36,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/mips/pm_machdep.c 294930 2016-01-27 17:55:01Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/mips/pm_machdep.c 294930 2016-01-27 17:55:01Z jhb $");
 
 #include "opt_compat.h"
 

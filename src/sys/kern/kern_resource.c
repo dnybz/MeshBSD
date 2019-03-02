@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_resource.c 296162 2016-02-28 17:52:33Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_resource.c 296162 2016-02-28 17:52:33Z kib $");
 
 #include "opt_compat.h"
 

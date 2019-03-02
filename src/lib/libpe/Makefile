@@ -1,9 +1,9 @@
-# $FreeBSD: head/lib/libpe/Makefile 295581 2016-02-12 21:12:47Z emaste $
+# $FreeBSD: releng/11.0/lib/libpe/Makefile 295581 2016-02-12 21:12:47Z emaste $
 .include <bsd.own.mk>
 
 INTERNALLIB=
 
-ELFTCDIR=	${.CURDIR}/../../tools/elftoolchain
+ELFTCDIR=	${.CURDIR}/../../contrib/elftoolchain
 
 .PATH:	${ELFTCDIR}/libpe
 

@@ -1,4 +1,4 @@
-/* $FreeBSD: head/lib/libiconv_modules/VIQR/citrus_viqr.c 281550 2015-04-15 09:09:20Z tijl $ */
+/* $FreeBSD: releng/11.0/lib/libiconv_modules/VIQR/citrus_viqr.c 281550 2015-04-15 09:09:20Z tijl $ */
 /* $NetBSD: citrus_viqr.c,v 1.5 2011/11/19 18:20:13 tnozaki Exp $ */
 
 /*-

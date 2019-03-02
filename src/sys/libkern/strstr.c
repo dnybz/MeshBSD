@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/libkern/strstr.c 161243 2006-08-12 15:28:39Z pjd $");
+__FBSDID("$FreeBSD: releng/11.0/sys/libkern/strstr.c 161243 2006-08-12 15:28:39Z pjd $");
 
 #include <sys/param.h>
 #include <sys/libkern.h>

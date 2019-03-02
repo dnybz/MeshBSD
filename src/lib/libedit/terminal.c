@@ -41,7 +41,7 @@ __RCSID("$NetBSD: terminal.c,v 1.14 2012/05/30 18:21:14 christos Exp $");
 #endif
 #endif /* not lint && not SCCSID */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libedit/terminal.c 296435 2016-03-06 21:32:54Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libedit/terminal.c 296435 2016-03-06 21:32:54Z pfg $");
 
 /*
  * terminal.c: Editor/termcap-curses interface

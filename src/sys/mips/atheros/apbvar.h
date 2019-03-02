@@ -24,7 +24,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/atheros/apbvar.h 263229 2014-03-16 08:39:46Z adrian $
+ * $FreeBSD: releng/11.0/sys/mips/atheros/apbvar.h 263229 2014-03-16 08:39:46Z adrian $
  */
 
 #ifndef _APBVAR_H_

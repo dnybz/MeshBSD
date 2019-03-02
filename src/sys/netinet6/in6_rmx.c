@@ -60,7 +60,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet6/in6_rmx.c 295529 2016-02-11 17:07:19Z dteske $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet6/in6_rmx.c 295529 2016-02-11 17:07:19Z dteske $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

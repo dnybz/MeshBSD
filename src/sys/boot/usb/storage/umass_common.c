@@ -1,4 +1,4 @@
-/* $FreeBSD: head/sys/boot/usb/storage/umass_common.c 291401 2015-11-27 18:16:10Z zbb $ */
+/* $FreeBSD: releng/11.0/sys/boot/usb/storage/umass_common.c 291401 2015-11-27 18:16:10Z zbb $ */
 /*-
  * Copyright (c) 2014 Hans Petter Selasky <hselasky@FreeBSD.org>
  * All rights reserved.

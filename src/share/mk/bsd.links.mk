@@ -1,4 +1,4 @@
-# $FreeBSD: head/share/mk/bsd.links.mk 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/share/mk/bsd.links.mk 298107 2016-04-16 07:45:30Z gjb $
 
 .if !target(__<bsd.init.mk>__)
 .error bsd.links.mk cannot be included directly.

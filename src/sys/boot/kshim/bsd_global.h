@@ -1,4 +1,4 @@
-/* $FreeBSD: head/sys/boot/kshim/bsd_global.h 294546 2016-01-22 06:05:31Z wma $ */
+/* $FreeBSD: releng/11.0/sys/boot/kshim/bsd_global.h 294546 2016-01-22 06:05:31Z wma $ */
 /*-
  * Copyright (c) 2013 Hans Petter Selasky. All rights reserved.
  *

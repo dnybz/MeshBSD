@@ -4,7 +4,7 @@ SHLIBDIR?= /lib
 
 .include <src.opts.mk>
 
-RACOONDIR= 	${.CURDIR}/../../external/racoon2
+RACOONDIR= 	${.CURDIR}/../../contrib/racoon2
 
 SHLIB_MAJOR= 0
 LIB=	racoon

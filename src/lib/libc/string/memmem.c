@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/string/memmem.c 283584 2015-05-26 21:16:07Z emaste $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/string/memmem.c 283584 2015-05-26 21:16:07Z emaste $");
 
 #include <string.h>
 

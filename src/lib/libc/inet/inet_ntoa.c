@@ -32,7 +32,7 @@ static const char sccsid[] = "@(#)inet_ntoa.c	8.1 (Berkeley) 6/4/93";
 static const char rcsid[] = "$Id: inet_ntoa.c,v 1.2 2005/04/27 04:56:21 sra Exp $";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/inet/inet_ntoa.c 269867 2014-08-12 12:36:06Z ume $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/inet/inet_ntoa.c 269867 2014-08-12 12:36:06Z ume $");
 
 #include "port_before.h"
 

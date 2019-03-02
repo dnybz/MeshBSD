@@ -28,7 +28,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/usr.sbin/rtsold/rtsold.c 295737 2016-02-18 01:58:26Z markj $
+ * $FreeBSD: releng/11.0/usr.sbin/rtsold/rtsold.c 295737 2016-02-18 01:58:26Z markj $
  */
 
 #include <sys/types.h>

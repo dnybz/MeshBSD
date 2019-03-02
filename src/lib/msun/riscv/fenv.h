@@ -32,7 +32,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/msun/riscv/fenv.h 292124 2015-12-11 22:55:23Z br $
+ * $FreeBSD: releng/11.0/lib/msun/riscv/fenv.h 292124 2015-12-11 22:55:23Z br $
  */
 
 #ifndef	_FENV_H_

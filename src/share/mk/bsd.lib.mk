@@ -1,5 +1,5 @@
 #	from: @(#)bsd.lib.mk	5.26 (Berkeley) 5/2/91
-# $FreeBSD: head/share/mk/bsd.lib.mk 299474 2016-05-11 17:55:09Z emaste $
+# $FreeBSD: releng/11.0/share/mk/bsd.lib.mk 301933 2016-06-15 23:57:32Z bdrewery $
 #
 
 .include <bsd.init.mk>
@@ -244,21 +244,21 @@ CLEANFILES+=	${SHLIB_LINK}
 ${SHLIB_NAME_FULL}: ${SOBJS}
 	@${ECHO} building shared library ${SHLIB_NAME}
 	@rm -f ${SHLIB_NAME} ${SHLIB_LINK}
-.if defined(SHLIB_LINK) && !commands(${SHLIB_LINK:R}.ld)
+.if defined(SHLIB_LINK) && !commands(${SHLIB_LINK:R}.ld) && ${MK_DEBUG_FILES} == "no"
 	@${INSTALL_SYMLINK} ${TAG_ARGS:D${TAG_ARGS},development} ${SHLIB_NAME} ${SHLIB_LINK}
 .endif
 	${_LD:N${CCACHE_BIN}} ${LDFLAGS} ${SSP_CFLAGS} ${SOLINKOPTS} \
 	    -o ${.TARGET} -Wl,-soname,${SONAME} \
 	    `NM='${NM}' NMFLAGS='${NMFLAGS}' lorder ${SOBJS} | tsort -q` ${LDADD}
-.if ${MK_CTF} != "no"
-	${CTFMERGE} ${CTFFLAGS} -o ${.TARGET} ${SOBJS}
-.endif
 
 .if ${MK_DEBUG_FILES} != "no"
 CLEANFILES+=	${SHLIB_NAME_FULL} ${SHLIB_NAME}.debug
 ${SHLIB_NAME}: ${SHLIB_NAME_FULL} ${SHLIB_NAME}.debug
 	${OBJCOPY} --strip-debug --add-gnu-debuglink=${SHLIB_NAME}.debug \
 	    ${SHLIB_NAME_FULL} ${.TARGET}
+.if defined(SHLIB_LINK) && !commands(${SHLIB_LINK:R}.ld)
+	@${INSTALL_SYMLINK} ${TAG_ARGS:D${TAG_ARGS},development} ${SHLIB_NAME} ${SHLIB_LINK}
+.endif
 
 ${SHLIB_NAME}.debug: ${SHLIB_NAME_FULL}
 	${OBJCOPY} --only-keep-debug ${SHLIB_NAME_FULL} ${.TARGET}
@@ -295,10 +295,6 @@ all:
 .if defined(_LIBS) && !empty(_LIBS)
 all: ${_LIBS}
 CLEANFILES+=	${_LIBS}
-.endif
-
-.if ${MK_MAN} != "no" && !defined(LIBRARIES_ONLY)
-all: all-man
 .endif
 .endif
 
@@ -402,11 +398,6 @@ _libinstall:
 
 .include <bsd.links.mk>
 
-.if ${MK_MAN} != "no" && !defined(LIBRARIES_ONLY)
-realinstall: maninstall
-.ORDER: beforeinstall maninstall
-.endif
-
 .endif
 
 .if !target(lint)
@@ -414,20 +405,16 @@ lint: ${SRCS:M*.c}
 	${LINT} ${LINTFLAGS} ${CFLAGS:M-[DIU]*} ${.ALLSRC}
 .endif
 
-.if ${MK_MAN} != "no" && !defined(LIBRARIES_ONLY)
-.include <bsd.man.mk>
-.endif
-
 .if defined(LIB) && !empty(LIB)
 OBJS_DEPEND_GUESS+= ${SRCS:M*.h}
 .for _S in ${SRCS:N*.[hly]}
-OBJS_DEPEND_GUESS.${_S:R}.po=	${_S}
+OBJS_DEPEND_GUESS.${_S:R}.po+=	${_S}
 .endfor
 .endif
 .if defined(SHLIB_NAME) || \
     defined(INSTALL_PIC_ARCHIVE) && defined(LIB) && !empty(LIB)
 .for _S in ${SRCS:N*.[hly]}
-OBJS_DEPEND_GUESS.${_S:R}.So=	${_S}
+OBJS_DEPEND_GUESS.${_S:R}.So+=	${_S}
 .endfor
 .endif
 

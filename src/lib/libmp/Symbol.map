@@ -1,5 +1,5 @@
 /*
- * $FreeBSD: head/lib/libmp/Symbol.map 226111 2011-10-07 15:05:24Z ed $
+ * $FreeBSD: releng/11.0/lib/libmp/Symbol.map 226111 2011-10-07 15:05:24Z ed $
  */
 
 FBSD_1.1 {

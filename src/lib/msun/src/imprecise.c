@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/msun/src/imprecise.c 271651 2014-09-15 23:21:57Z kargl $
+ * $FreeBSD: releng/11.0/lib/msun/src/imprecise.c 271651 2014-09-15 23:21:57Z kargl $
  */
 
 #include <float.h>

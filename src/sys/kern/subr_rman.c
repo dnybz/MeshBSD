@@ -58,7 +58,7 @@
 #include "opt_ddb.h"
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/subr_rman.c 299095 2016-05-04 23:31:52Z adrian $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/subr_rman.c 300317 2016-05-20 17:57:47Z jhb $");
 
 #include <sys/param.h>
 #include <sys/systm.h>
@@ -894,6 +894,27 @@ rman_get_bushandle(struct resource *r)
 {
 
 	return (r->r_bushandle);
+}
+
+void
+rman_set_mapping(struct resource *r, struct resource_map *map)
+{
+
+	KASSERT(rman_get_size(r) == map->r_size,
+	    ("rman_set_mapping: size mismatch"));
+	rman_set_bustag(r, map->r_bustag);
+	rman_set_bushandle(r, map->r_bushandle);
+	rman_set_virtual(r, map->r_vaddr);
+}
+
+void
+rman_get_mapping(struct resource *r, struct resource_map *map)
+{
+
+	map->r_bustag = rman_get_bustag(r);
+	map->r_bushandle = rman_get_bushandle(r);
+	map->r_size = rman_get_size(r);
+	map->r_vaddr = rman_get_virtual(r);
 }
 
 void

@@ -24,8 +24,12 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/boot/geli/geliboot_crypto.c 296963 2016-03-16 23:12:19Z allanjude $
+ * $FreeBSD: releng/11.0/sys/boot/geli/geliboot_crypto.c 301023 2016-05-31 06:24:09Z ngie $
  */
+
+#include <stdio.h>
+#include <string.h>
+#include <strings.h>
 
 #include "geliboot.h"
 

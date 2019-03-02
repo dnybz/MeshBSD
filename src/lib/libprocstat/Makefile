@@ -1,14 +1,17 @@
-# $FreeBSD: head/lib/libprocstat/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/lib/libprocstat/Makefile 298107 2016-04-16 07:45:30Z gjb $
 
 .include <src.opts.mk>
 
 PACKAGE=lib${LIB}
 LIB=	procstat
 
-SRCS=	common_kvm.c	\
+SRCS=	cd9660.c	\
+	common_kvm.c	\
 	core.c		\
 	libprocstat.c	\
-        msdosfs.c
+        msdosfs.c	\
+	smbfs.c		\
+	udf.c
 
 VERSION_DEF=	${.CURDIR}/Versions.def
 SYMBOL_MAPS=	${.CURDIR}/Symbol.map

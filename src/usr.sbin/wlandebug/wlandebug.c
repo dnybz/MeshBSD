@@ -26,7 +26,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF
  * THE POSSIBILITY OF SUCH DAMAGES.
  *
- * $FreeBSD: head/usr.sbin/wlandebug/wlandebug.c 270518 2014-08-25 05:52:05Z hiren $
+ * $FreeBSD: releng/11.0/usr.sbin/wlandebug/wlandebug.c 270518 2014-08-25 05:52:05Z hiren $
  */
 
 /*

@@ -1,4 +1,4 @@
-# $FreeBSD: head/lib/libiconv_modules/Makefile.inc 264928 2014-04-25 19:25:26Z imp $
+# $FreeBSD: releng/11.0/lib/libiconv_modules/Makefile.inc 264928 2014-04-25 19:25:26Z imp $
 
 .PATH: ${.CURDIR}/../../libc/iconv
 

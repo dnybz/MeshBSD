@@ -1,4 +1,4 @@
-/* $FreeBSD: head/lib/libc/iconv/citrus_bcs_strtol.c 263986 2014-04-01 10:36:11Z tijl $ */
+/* $FreeBSD: releng/11.0/lib/libc/iconv/citrus_bcs_strtol.c 263986 2014-04-01 10:36:11Z tijl $ */
 /* $NetBSD: citrus_bcs_strtol.c,v 1.4 2013/04/26 21:20:47 joerg Exp $ */
 
 /*-

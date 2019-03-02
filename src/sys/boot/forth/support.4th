@@ -22,7 +22,7 @@
 \ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 \ SUCH DAMAGE.
 \
-\ $FreeBSD: head/sys/boot/forth/support.4th 298831 2016-04-30 02:47:41Z pfg $
+\ $FreeBSD: releng/11.0/sys/boot/forth/support.4th 298831 2016-04-30 02:47:41Z pfg $
 
 \ Loader.rc support functions:
 \

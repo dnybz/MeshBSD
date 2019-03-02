@@ -37,7 +37,7 @@
  *	from: Utah Hdr: vmparam.h 1.16 91/01/18
  *	@(#)vmparam.h	8.2 (Berkeley) 4/22/94
  *	JNPR: vmparam.h,v 1.3.2.1 2007/09/10 06:01:28 girish
- * $FreeBSD: head/sys/mips/include/vmparam.h 284147 2015-06-08 04:59:32Z alc $
+ * $FreeBSD: releng/11.0/sys/mips/include/vmparam.h 284147 2015-06-08 04:59:32Z alc $
  */
 
 #ifndef _MACHINE_VMPARAM_H_

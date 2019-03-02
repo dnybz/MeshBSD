@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/nlm/xlp_simplebus.c 298053 2016-04-15 14:26:24Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/nlm/xlp_simplebus.c 298053 2016-04-15 14:26:24Z pfg $");
 #include <sys/param.h>
 #include <sys/systm.h>
 #include <sys/module.h>

@@ -42,7 +42,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libpam/modules/pam_lastlog/pam_lastlog.c 269115 2014-07-26 07:40:31Z des $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libpam/modules/pam_lastlog/pam_lastlog.c 269115 2014-07-26 07:40:31Z des $");
 
 #define _BSD_SOURCE
 

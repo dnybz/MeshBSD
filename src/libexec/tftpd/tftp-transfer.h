@@ -24,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/libexec/tftpd/tftp-transfer.h 207614 2010-05-04 13:07:40Z imp $");
+__FBSDID("$FreeBSD: releng/11.0/libexec/tftpd/tftp-transfer.h 207614 2010-05-04 13:07:40Z imp $");
 
 void	tftp_send(int peer, uint16_t *block, struct tftp_stats *tp);
 void	tftp_receive(int peer, uint16_t *block, struct tftp_stats *tp,

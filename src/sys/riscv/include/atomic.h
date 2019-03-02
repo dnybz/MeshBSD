@@ -31,7 +31,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/riscv/include/atomic.h 295891 2016-02-22 14:13:05Z br $
+ * $FreeBSD: releng/11.0/sys/riscv/include/atomic.h 295891 2016-02-22 14:13:05Z br $
  */
 
 #ifndef	_MACHINE_ATOMIC_H_

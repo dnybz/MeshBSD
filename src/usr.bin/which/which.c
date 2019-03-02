@@ -26,7 +26,7 @@
 
 #include <sys/cdefs.h>
 
-__FBSDID("$FreeBSD: head/usr.bin/which/which.c 227245 2011-11-06 18:50:26Z ed $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/which/which.c 227245 2011-11-06 18:50:26Z ed $");
 
 #include <sys/stat.h>
 #include <sys/param.h>

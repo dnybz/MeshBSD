@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/netinet/tcp_offload.c 294869 2016-01-27 00:45:46Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/netinet/tcp_offload.c 294869 2016-01-27 00:45:46Z glebius $");
 
 #include "opt_inet.h"
 

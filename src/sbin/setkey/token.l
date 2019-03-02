@@ -1,4 +1,4 @@
-/*	$FreeBSD: head/sbin/setkey/token.l 286143 2015-07-31 23:40:18Z gnn $	*/
+/*	$FreeBSD: releng/11.0/sbin/setkey/token.l 286143 2015-07-31 23:40:18Z gnn $	*/
 /*	$KAME: token.l,v 1.43 2003/07/25 09:35:28 itojun Exp $	*/
 
 /*

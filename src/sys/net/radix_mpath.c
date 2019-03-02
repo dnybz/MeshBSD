@@ -34,7 +34,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/net/radix_mpath.c 298663 2016-04-26 20:27:17Z cem $");
+__FBSDID("$FreeBSD: releng/11.0/sys/net/radix_mpath.c 298663 2016-04-26 20:27:17Z cem $");
 
 #include "opt_inet.h"
 #include "opt_inet6.h"

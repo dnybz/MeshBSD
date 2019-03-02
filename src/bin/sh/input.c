@@ -36,7 +36,7 @@ static char sccsid[] = "@(#)input.c	8.3 (Berkeley) 6/9/95";
 #endif
 #endif /* not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/bin/sh/input.c 295937 2016-02-23 22:44:01Z jilles $");
+__FBSDID("$FreeBSD: releng/11.0/bin/sh/input.c 295937 2016-02-23 22:44:01Z jilles $");
 
 #include <stdio.h>	/* defines BUFSIZ */
 #include <fcntl.h>

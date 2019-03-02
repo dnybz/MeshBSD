@@ -1,11 +1,11 @@
 #
-# $FreeBSD: head/usr.bin/vi/Makefile 298107 2016-04-16 07:45:30Z gjb $
+# $FreeBSD: releng/11.0/usr.bin/vi/Makefile 298107 2016-04-16 07:45:30Z gjb $
 #
 
 .include <src.opts.mk>
 
 PACKAGE=	vi
-SRCDIR=		${.CURDIR}/../../tools/nvi
+SRCDIR=		${.CURDIR}/../../contrib/nvi
 SUBDIR+=	catalog
 
 WARNS?=	0	# some warn issues on 32 bit machines

@@ -28,7 +28,7 @@
  * POSSIBILITY OF SUCH DAMAGES.
  *
  * $Id: //depot/users/kenm/FreeBSD-test2/sys/cam/ctl/ctl_ser_table.c#1 $
- * $FreeBSD: head/sys/cam/ctl/ctl_ser_table.c 288224 2015-09-25 18:49:25Z mav $
+ * $FreeBSD: releng/11.0/sys/cam/ctl/ctl_ser_table.c 288224 2015-09-25 18:49:25Z mav $
  */
 
 /*

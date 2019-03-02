@@ -25,7 +25,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/netinet/tcp_lro.h 297483 2016-04-01 06:43:05Z sephe $
+ * $FreeBSD: releng/11.0/sys/netinet/tcp_lro.h 300731 2016-05-26 11:10:31Z hselasky $
  */
 
 #ifndef _TCP_LRO_H_
@@ -37,9 +37,6 @@
 /* Define default number of LRO entries per RX queue */
 #define	TCP_LRO_ENTRIES	8
 #endif
-
-#define	TCP_LRO_SEQUENCE(mb) \
-    (mb)->m_pkthdr.PH_loc.thirtytwo[0]
 
 struct lro_entry {
 	LIST_ENTRY(lro_entry)	next;
@@ -80,10 +77,15 @@ LIST_HEAD(lro_head, lro_entry);
 #define	source_ip6		lesource.s_ip6
 #define	dest_ip6		ledest.d_ip6
 
+struct lro_mbuf_sort {
+	uint64_t seq;
+	struct mbuf *mb;
+};
+
 /* NB: This is part of driver structs. */
 struct lro_ctrl {
 	struct ifnet	*ifp;
-	struct mbuf	**lro_mbuf_data;
+	struct lro_mbuf_sort *lro_mbuf_data;
 	uint64_t	lro_queued;
 	uint64_t	lro_flushed;
 	uint64_t	lro_bad_csum;

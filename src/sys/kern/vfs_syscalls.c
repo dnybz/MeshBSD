@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/vfs_syscalls.c 296572 2016-03-09 19:05:11Z jhb $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/vfs_syscalls.c 303192 2016-07-22 17:22:37Z kib $");
 
 #include "opt_capsicum.h"
 #include "opt_compat.h"
@@ -1167,6 +1167,8 @@ kern_mknodat(struct thread *td, int fd, char *path, enum uio_seg pathseg,
 	case S_IFCHR:
 	case S_IFBLK:
 		error = priv_check(td, PRIV_VFS_MKNOD_DEV);
+		if (error == 0 && dev == VNOVAL)
+			error = EINVAL;
 		break;
 	case S_IFMT:
 		error = priv_check(td, PRIV_VFS_MKNOD_BAD);
@@ -2068,6 +2070,7 @@ cvtstat(st, ost)
 	struct ostat *ost;
 {
 
+	bzero(ost, sizeof(*ost));
 	ost->st_dev = st->st_dev;
 	ost->st_ino = st->st_ino;
 	ost->st_mode = st->st_mode;

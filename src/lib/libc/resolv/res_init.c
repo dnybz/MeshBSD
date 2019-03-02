@@ -69,7 +69,7 @@ static const char sccsid[] = "@(#)res_init.c	8.1 (Berkeley) 6/7/93";
 static const char rcsid[] = "$Id: res_init.c,v 1.26 2008/12/11 09:59:00 marka Exp $";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/resolv/res_init.c 298830 2016-04-30 01:24:24Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libc/resolv/res_init.c 301592 2016-06-08 09:40:06Z truckman $");
 
 #include "port_before.h"
 
@@ -411,20 +411,21 @@ __res_vinit(res_state statp, int preinit) {
 			hints.ai_socktype = SOCK_DGRAM;	/*dummy*/
 			hints.ai_flags = AI_NUMERICHOST;
 			sprintf(sbuf, "%u", NAMESERVER_PORT);
-			if (getaddrinfo(cp, sbuf, &hints, &ai) == 0 &&
-			    ai->ai_addrlen <= minsiz) {
-			    if (statp->_u._ext.ext != NULL) {
-				memcpy(&statp->_u._ext.ext->nsaddrs[nserv],
-				    ai->ai_addr, ai->ai_addrlen);
+			if (getaddrinfo(cp, sbuf, &hints, &ai) == 0) {
+			    if (ai->ai_addrlen <= minsiz) {
+				if (statp->_u._ext.ext != NULL) {
+				    memcpy(&statp->_u._ext.ext->nsaddrs[nserv],
+					ai->ai_addr, ai->ai_addrlen);
+				}
+				if (ai->ai_addrlen <=
+				    sizeof(statp->nsaddr_list[nserv])) {
+				    memcpy(&statp->nsaddr_list[nserv],
+					ai->ai_addr, ai->ai_addrlen);
+				} else
+				    statp->nsaddr_list[nserv].sin_family = 0;
+				nserv++;
 			    }
-			    if (ai->ai_addrlen <=
-			        sizeof(statp->nsaddr_list[nserv])) {
-				memcpy(&statp->nsaddr_list[nserv],
-				    ai->ai_addr, ai->ai_addrlen);
-			    } else
-				statp->nsaddr_list[nserv].sin_family = 0;
 			    freeaddrinfo(ai);
-			    nserv++;
 			}
 		    }
 		    continue;

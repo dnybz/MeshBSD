@@ -30,7 +30,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/stdio/xprintf_float.c 278932 2015-02-18 03:33:17Z pfg $
+ * $FreeBSD: releng/11.0/lib/libc/stdio/xprintf_float.c 278932 2015-02-18 03:33:17Z pfg $
  */
 
 #include <namespace.h>

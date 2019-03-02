@@ -1,4 +1,4 @@
-# $FreeBSD: head/usr.bin/dtc/Makefile 292876 2015-12-29 16:29:42Z theraven $
+# $FreeBSD: releng/11.0/usr.bin/dtc/Makefile 292876 2015-12-29 16:29:42Z theraven $
 
 PROG_CXX=dtc
 SRCS=	dtc.cc input_buffer.cc string.cc dtb.cc fdt.cc checking.cc

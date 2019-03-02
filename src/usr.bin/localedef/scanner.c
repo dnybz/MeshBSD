@@ -33,7 +33,7 @@
  * for localedef for processing by the higher level grammar processor.
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/localedef/scanner.c 298878 2016-05-01 16:10:56Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/localedef/scanner.c 298878 2016-05-01 16:10:56Z pfg $");
 
 #include <stdio.h>
 #include <stdlib.h>

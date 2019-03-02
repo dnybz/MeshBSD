@@ -41,7 +41,7 @@
 ** SUCH DAMAGE.
 */
 
-/* $FreeBSD: head/sys/boot/ficl/words.c 300055 2016-05-17 14:10:44Z imp $ */
+/* $FreeBSD: releng/11.0/sys/boot/ficl/words.c 300055 2016-05-17 14:10:44Z imp $ */
 
 #ifdef TESTMAIN
 #include <stdlib.h>

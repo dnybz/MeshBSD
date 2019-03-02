@@ -1,4 +1,4 @@
-# $FreeBSD: head/gnu/usr.bin/grep/Makefile 277273 2015-01-16 21:39:08Z will $
+# $FreeBSD: releng/11.0/gnu/usr.bin/grep/Makefile 277273 2015-01-16 21:39:08Z will $
 
 .include <src.opts.mk>
 

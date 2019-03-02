@@ -30,7 +30,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF 
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/include/pthread.h 300043 2016-05-17 09:56:22Z kib $
+ * $FreeBSD: releng/11.0/include/pthread.h 300043 2016-05-17 09:56:22Z kib $
  */
 #ifndef _PTHREAD_H_
 #define	_PTHREAD_H_

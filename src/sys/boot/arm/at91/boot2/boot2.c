@@ -16,7 +16,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/arm/at91/boot2/boot2.c 294766 2016-01-26 06:26:44Z imp $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/arm/at91/boot2/boot2.c 294766 2016-01-26 06:26:44Z imp $");
 
 #include <sys/param.h>
 #include <sys/disklabel.h>

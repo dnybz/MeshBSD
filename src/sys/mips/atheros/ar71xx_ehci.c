@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/atheros/ar71xx_ehci.c 294989 2016-01-28 14:11:59Z mmel $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/atheros/ar71xx_ehci.c 294989 2016-01-28 14:11:59Z mmel $");
 
 #include "opt_bus.h"
 

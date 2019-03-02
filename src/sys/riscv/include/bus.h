@@ -62,7 +62,7 @@
  *
  * From: sys/arm/include/bus.h
  *
- * $FreeBSD: head/sys/riscv/include/bus.h 292407 2015-12-17 18:44:30Z br $
+ * $FreeBSD: releng/11.0/sys/riscv/include/bus.h 292407 2015-12-17 18:44:30Z br $
  */
 
 #ifndef _MACHINE_BUS_H_

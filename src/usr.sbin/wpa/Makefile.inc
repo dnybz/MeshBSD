@@ -1,8 +1,8 @@
-# $FreeBSD: head/usr.sbin/wpa/Makefile.inc 252726 2013-07-04 21:12:58Z rpaulo $
+# $FreeBSD: releng/11.0/usr.sbin/wpa/Makefile.inc 252726 2013-07-04 21:12:58Z rpaulo $
 
 BINDIR?=	/usr/sbin
 
-WPA_DISTDIR?= 		${.CURDIR}/../../../external/wpa/
+WPA_DISTDIR?= 		${.CURDIR}/../../../contrib/wpa/
 WPA_SUPPLICANT_DISTDIR?=${WPA_DISTDIR}/wpa_supplicant
 HOSTAPD_DISTDIR?=	${WPA_DISTDIR}/hostapd
 

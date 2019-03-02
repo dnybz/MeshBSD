@@ -34,7 +34,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/p1003_1b.c 283377 2015-05-24 14:44:06Z dchagin $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/p1003_1b.c 283377 2015-05-24 14:44:06Z dchagin $");
 
 #include "opt_posix.h"
 

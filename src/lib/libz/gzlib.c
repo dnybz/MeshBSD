@@ -3,7 +3,7 @@
  * For conditions of distribution and use, see copyright notice in zlib.h
  */
 
-/* $FreeBSD: head/lib/libz/gzlib.c 250261 2013-05-05 06:20:49Z delphij $ */
+/* $FreeBSD: releng/11.0/lib/libz/gzlib.c 250261 2013-05-05 06:20:49Z delphij $ */
 
 #include "gzguts.h"
 #include "zutil.h"

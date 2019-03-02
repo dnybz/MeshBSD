@@ -25,7 +25,7 @@
  *
  */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/usr.bin/fstat/fuser.c 227239 2011-11-06 18:49:36Z ed $");
+__FBSDID("$FreeBSD: releng/11.0/usr.bin/fstat/fuser.c 227239 2011-11-06 18:49:36Z ed $");
 
 #include <sys/queue.h>
 #include <sys/stat.h>

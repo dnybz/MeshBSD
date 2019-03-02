@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/libc/gen/ulimit.c 278905 2015-02-17 16:01:00Z pfg $
+ * $FreeBSD: releng/11.0/lib/libc/gen/ulimit.c 278905 2015-02-17 16:01:00Z pfg $
  */
 
 #include <sys/types.h>

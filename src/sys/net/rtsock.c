@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)rtsock.c	8.7 (Berkeley) 10/12/95
- * $FreeBSD: head/sys/net/rtsock.c 298995 2016-05-03 18:05:43Z pfg $
+ * $FreeBSD: releng/11.0/sys/net/rtsock.c 301270 2016-06-03 13:57:10Z bz $
  */
 #include "opt_compat.h"
 #include "opt_mpath.h"
@@ -191,15 +191,33 @@ SYSCTL_PROC(_net_route, OID_AUTO, netisr_maxqlen, CTLTYPE_INT|CTLFLAG_RW,
     "maximum routing socket dispatch queue length");
 
 static void
-rts_init(void)
+vnet_rts_init(void)
 {
 	int tmp;
 
-	if (TUNABLE_INT_FETCH("net.route.netisr_maxqlen", &tmp))
-		rtsock_nh.nh_qlimit = tmp;
-	netisr_register(&rtsock_nh);
+	if (IS_DEFAULT_VNET(curvnet)) {
+		if (TUNABLE_INT_FETCH("net.route.netisr_maxqlen", &tmp))
+			rtsock_nh.nh_qlimit = tmp;
+		netisr_register(&rtsock_nh);
+	}
+#ifdef VIMAGE
+	 else
+		netisr_register_vnet(&rtsock_nh);
+#endif
 }
-SYSINIT(rtsock, SI_SUB_PROTO_DOMAIN, SI_ORDER_THIRD, rts_init, 0);
+VNET_SYSINIT(vnet_rtsock, SI_SUB_PROTO_DOMAIN, SI_ORDER_THIRD,
+    vnet_rts_init, 0);
+
+#ifdef VIMAGE
+static void
+vnet_rts_uninit(void)
+{
+
+	netisr_unregister_vnet(&rtsock_nh);
+}
+VNET_SYSUNINIT(vnet_rts_uninit, SI_SUB_PROTO_DOMAIN, SI_ORDER_THIRD,
+    vnet_rts_uninit, 0);
+#endif
 
 static int
 raw_input_rts_cb(struct mbuf *m, struct sockproto *proto, struct sockaddr *src,

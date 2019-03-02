@@ -1,10 +1,10 @@
-# $FreeBSD: head/usr.bin/tar/Makefile 299529 2016-05-12 10:16:16Z mm $
+# $FreeBSD: releng/11.0/usr.bin/tar/Makefile 302075 2016-06-22 07:49:59Z mm $
 .include <src.opts.mk>
 
-_LIBARCHIVEDIR=	${.CURDIR}/../../tools/libarchive
+_LIBARCHIVEDIR=	${.CURDIR}/../../contrib/libarchive
 
 PROG=	bsdtar
-BSDTAR_VERSION_STRING=	3.2.0
+BSDTAR_VERSION_STRING=	3.2.1
 
 .PATH: ${_LIBARCHIVEDIR}/tar
 SRCS=	bsdtar.c	\
@@ -32,5 +32,9 @@ CFLAGS+=	-I${_LIBARCHIVEDIR}/tar -I${_LIBARCHIVEDIR}/libarchive
 CFLAGS+=	-I${_LIBARCHIVEDIR}/libarchive_fe
 SYMLINKS=	bsdtar ${BINDIR}/tar
 MLINKS=	bsdtar.1 tar.1
+
+.if ${MK_TESTS} != "no"
+SUBDIR+=	tests
+.endif
 
 .include <bsd.prog.mk>

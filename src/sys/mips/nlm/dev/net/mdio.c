@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/nlm/dev/net/mdio.c 279388 2015-02-28 00:22:10Z jchandra $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/nlm/dev/net/mdio.c 279388 2015-02-28 00:22:10Z jchandra $");
 #include <sys/types.h>
 #include <sys/systm.h>
 

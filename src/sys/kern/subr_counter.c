@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/subr_counter.c 296883 2016-03-15 00:21:32Z glebius $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/subr_counter.c 296883 2016-03-15 00:21:32Z glebius $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

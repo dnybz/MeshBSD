@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sbin/geom/class/journal/geom_journal_ufs.c 245074 2013-01-05 21:52:38Z kib $");
+__FBSDID("$FreeBSD: releng/11.0/sbin/geom/class/journal/geom_journal_ufs.c 245074 2013-01-05 21:52:38Z kib $");
 
 #include <sys/param.h>
 #include <sys/disklabel.h>

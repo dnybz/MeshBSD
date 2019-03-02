@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/mips/cavium/octe/ethernet-mv88e61xx.c 259161 2013-12-10 09:38:18Z jmallett $
+ * $FreeBSD: releng/11.0/sys/mips/cavium/octe/ethernet-mv88e61xx.c 259161 2013-12-10 09:38:18Z jmallett $
  */
 
 /*
@@ -31,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/mips/cavium/octe/ethernet-mv88e61xx.c 259161 2013-12-10 09:38:18Z jmallett $");
+__FBSDID("$FreeBSD: releng/11.0/sys/mips/cavium/octe/ethernet-mv88e61xx.c 259161 2013-12-10 09:38:18Z jmallett $");
 
 #include <sys/param.h>
 #include <sys/systm.h>

@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/boot/efi/loader/conf.c 294068 2016-01-15 02:33:47Z smh $");
+__FBSDID("$FreeBSD: releng/11.0/sys/boot/efi/loader/conf.c 294068 2016-01-15 02:33:47Z smh $");
 
 #include <stand.h>
 #include <bootstrap.h>

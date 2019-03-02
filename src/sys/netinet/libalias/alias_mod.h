@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/netinet/libalias/alias_mod.h 259859 2013-12-25 03:24:20Z glebius $
+ * $FreeBSD: releng/11.0/sys/netinet/libalias/alias_mod.h 259859 2013-12-25 03:24:20Z glebius $
  */
 
 /*

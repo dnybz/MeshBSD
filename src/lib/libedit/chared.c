@@ -41,7 +41,7 @@ __RCSID("$NetBSD: chared.c,v 1.40 2014/06/18 18:12:28 christos Exp $");
 #endif
 #endif /* not lint && not SCCSID */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libedit/chared.c 296435 2016-03-06 21:32:54Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/lib/libedit/chared.c 296435 2016-03-06 21:32:54Z pfg $");
 
 /*
  * chared.c: Character editor utilities

@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/riscv/riscv/minidump_machdep.c 295882 2016-02-22 09:08:04Z skra $");
+__FBSDID("$FreeBSD: releng/11.0/sys/riscv/riscv/minidump_machdep.c 295882 2016-02-22 09:08:04Z skra $");
 
 #include "opt_watchdog.h"
 

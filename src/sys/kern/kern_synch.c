@@ -35,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/sys/kern/kern_synch.c 298649 2016-04-26 15:38:17Z pfg $");
+__FBSDID("$FreeBSD: releng/11.0/sys/kern/kern_synch.c 301456 2016-06-05 17:04:03Z kib $");
 
 #include "opt_ktrace.h"
 #include "opt_sched.h"
@@ -327,7 +327,7 @@ pause_sbt(const char *wmesg, sbintime_t sbt, sbintime_t pr, int flags)
 	if (sbt == 0)
 		sbt = tick_sbt;
 
-	if (cold || kdb_active) {
+	if (cold || kdb_active || SCHEDULER_STOPPED()) {
 		/*
 		 * We delay one second at a time to avoid overflowing the
 		 * system specific DELAY() function(s):
@@ -441,7 +441,7 @@ mi_switch(int flags, struct thread *newtd)
 	PCPU_INC(cnt.v_swtch);
 	PCPU_SET(switchticks, ticks);
 	CTR4(KTR_PROC, "mi_switch: old thread %ld (td_sched %p, pid %ld, %s)",
-	    td->td_tid, td->td_sched, td->td_proc->p_pid, td->td_name);
+	    td->td_tid, td_get_sched(td), td->td_proc->p_pid, td->td_name);
 #if (KTR_COMPILE & KTR_SCHED) != 0
 	if (TD_IS_IDLETHREAD(td))
 		KTR_STATE1(KTR_SCHED, "thread", sched_tdname(td), "idle",
@@ -457,7 +457,7 @@ mi_switch(int flags, struct thread *newtd)
 	    "prio:%d", td->td_priority);
 
 	CTR4(KTR_PROC, "mi_switch: new thread %ld (td_sched %p, pid %ld, %s)",
-	    td->td_tid, td->td_sched, td->td_proc->p_pid, td->td_name);
+	    td->td_tid, td_get_sched(td), td->td_proc->p_pid, td->td_name);
 
 	/* 
 	 * If the last thread was exiting, finish cleaning it up.

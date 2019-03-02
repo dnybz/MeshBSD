@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/sys/sys/taskqueue.h 296272 2016-03-01 17:47:32Z jhb $
+ * $FreeBSD: releng/11.0/sys/sys/taskqueue.h 304716 2016-08-24 01:56:30Z shurd $
  */
 
 #ifndef _SYS_TASKQUEUE_H_
@@ -39,6 +39,7 @@
 #include <sys/_cpuset.h>
 
 struct taskqueue;
+struct taskqgroup;
 struct thread;
 
 struct timeout_task {
@@ -55,6 +56,7 @@ enum taskqueue_callback_type {
 #define	TASKQUEUE_CALLBACK_TYPE_MIN	TASKQUEUE_CALLBACK_TYPE_INIT
 #define	TASKQUEUE_CALLBACK_TYPE_MAX	TASKQUEUE_CALLBACK_TYPE_SHUTDOWN
 #define	TASKQUEUE_NUM_CALLBACKS		TASKQUEUE_CALLBACK_TYPE_MAX + 1
+#define	TASKQUEUE_NAMELEN		32
 
 typedef void (*taskqueue_callback_fn)(void *context);
 
@@ -143,7 +145,7 @@ taskqueue_define_##name(void *arg)					\
 	init;								\
 }									\
 									\
-SYSINIT(taskqueue_##name, SI_SUB_CONFIGURE, SI_ORDER_SECOND,		\
+SYSINIT(taskqueue_##name, SI_SUB_INIT_IF, SI_ORDER_SECOND,		\
 	taskqueue_define_##name, NULL);					\
 									\
 struct __hack
@@ -168,7 +170,7 @@ taskqueue_define_##name(void *arg)					\
 	init;								\
 }									\
 									\
-SYSINIT(taskqueue_##name, SI_SUB_CONFIGURE, SI_ORDER_SECOND,		\
+SYSINIT(taskqueue_##name, SI_SUB_INIT_IF, SI_ORDER_SECOND,		\
 	taskqueue_define_##name, NULL);					\
 									\
 struct __hack
